@@ -4,6 +4,8 @@
 
 var React = require('react');
 
+var ContactComposer = require('./ContactComposer.react');
+
 var Header = React.createClass({
 
     render: function() {
@@ -22,7 +24,11 @@ var Header = React.createClass({
                     Отчеты
                   </a>
                 </div>
+                <div className="nav-b">
+                  <ContactComposer />
+                </div>
             </div>
+
         );
     }
 
