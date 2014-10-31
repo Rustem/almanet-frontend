@@ -14,14 +14,15 @@ var ContactComposerButton = React.createClass({
   getDefaultProps: function() {
     return {
       onClick: undefined,
-      disabled: false,
-      className: undefined
+      onKeyDown: undefined
     };
   },
 
   render: function() {
     return (
-      <button className="nav-btn" onClick={this.props.onClick} disabled={this.props.disabled} data-toggle="dropdown" type="button">
+      <button className="nav-btn" data-toggle="dropdown" type="button"
+          onClick={this.props.onClick}
+          onKeyDown={this.props.onKeyDown}>
         <div className="row-body">
           <div className="row-icon">
             <IconSvg iconKey="add" />
@@ -344,10 +345,11 @@ var ContactComposer = React.createClass({
         classNames.push(stateClass);
         classNames = _.compact(classNames)
         return (
-          <div ref="contactComposer" onKeyDown={this.onKeyDown} className={classNames.join(' ')}  data-verticalfit=".body-master">
+          <div ref="contactComposer" className={classNames.join(' ')}  data-verticalfit=".body-master">
             <ContactComposerButton
               ref="menuToggler"
-              onClick={this.onMenuToggle} />
+              onClick={this.onMenuToggle}
+              onKeyDown={this.onKeyDown} />
             <ContactComposerForm
               ref="contactForm"
               isOpen={this.isOpen()} />
@@ -359,7 +361,11 @@ var ContactComposer = React.createClass({
         }
     },
     onMenuToggle: function(evt) {
-        this.setState({isOpen: !this.isOpen()});
+        this.setState({isOpen: !this.isOpen()}, function() {
+            if(this.isOpen()) {
+              this.refs.menuToggler.getDOMNode().focus();
+            }
+        });
     },
     onKeyDown: function(evt) {
       if(evt.keyCode == ESCAPE_KEY_CODE) {
