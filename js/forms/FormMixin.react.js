@@ -72,8 +72,34 @@ var FormStateMixin = {
     }
 };
 
-var FormMixin = {
-    mixins: [FormStateMixin]
+var ContextTypes = {
+    value: React.PropTypes.object,
+    onValueUpdate: React.PropTypes.func
 };
 
+/**
+ * Mixin for components which exposes form context.
+ *
+ * See <Form />, <Fieldset /> and <RepeatingFieldset /> for components which
+ * expose form context.
+ */
+var FormContextMixin = {
+
+    childContextTypes: ContextTypes,
+
+    getChildContext: function() {
+        return {
+          value: this.value(),
+          onValueUpdate: this.onValueUpdate
+        };
+    }
+};
+
+var FormMixin = {
+    mixins: [FormStateMixin, FormContextMixin],
+};
+
+// console.log(FormMixin.getContextTypes());
+
 module.exports = FormMixin;
+module.exports.ContextTypes = ContextTypes;

@@ -4,7 +4,7 @@
 'use strict';
 
 var React            = require('react');
-
+var FormMixin = require('./FormMixin.react');
 /**
  * Mixin for components which serve as form elements.
  *
@@ -14,16 +14,23 @@ var React            = require('react');
  * See <Field />, <Fieldset /> and <RepeatingFieldset /> components for the
  * examples.
  */
+
 var FormElementMixin = {
 
   propTypes: {
-    value: React.PropTypes.object,
+    // value: React.PropTypes.object,
     onValueUpdate: React.PropTypes.func,
     name: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.number
     ])
   },
+
+  contextTypes: {
+    value: React.PropTypes.any,
+    onValueUpdate: React.PropTypes.func
+  },
+
   /**
    * Get the form value corresponding to an element.
    *
@@ -31,10 +38,14 @@ var FormElementMixin = {
    */
   value: function() {
     if (this.props.value) {
-      var value = this.props.value;
-      return value[this.props.name];
+      return this.props.value;
     }
-    return null;
+    var value = this.context.value;
+    console.log(this.context);
+    if(this.props.name !== undefined) {
+      value = value[this.props.name];
+    }
+    return value;
   },
 
   /**

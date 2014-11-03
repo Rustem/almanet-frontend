@@ -15,7 +15,6 @@ var ContactCreateForm = React.createClass({
   render: function() {
     return (
       <Form value={form_state}>
-        <div>
         <Field
           isStrong={true}
           name='fn'
@@ -24,7 +23,6 @@ var ContactCreateForm = React.createClass({
           isStrong={true}
           name='ln'
           input={<input type="hidden" />} />
-        </div>
       </Form>
 
     )

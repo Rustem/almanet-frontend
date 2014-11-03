@@ -1,2 +1,7 @@
-{CustomComponent} -> is not a component yet. It does not call render method. 
+each input field must be created using FieldInputMixin
+http://bl.ocks.org/sb/11253438
+https://github.com/facebook/react/issues/1521
+
+
+---- works!!! ---- {CustomComponent} -> is not a component yet. It does not call render method.
 <input type="hidden" /> is better I think
