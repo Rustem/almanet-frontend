@@ -30,21 +30,6 @@ var FormStateMixin = {
         }
     },
 
-    shareValue: function(child) {
-        if (child.props.children) {
-            return React.Children.map(child.props.children, this.shareValue);
-        } else{
-            if('name' in child.props && child.props.name in this.value()) {
-                var newProps = _.extend({}, {value: this.value()}, child.props)
-                var obj = cloneWithProps(child, newProps);
-                return obj;
-            } else {
-                return child;
-            }
-
-        }
-    },
-
     /**
        * Return current form value.
        *

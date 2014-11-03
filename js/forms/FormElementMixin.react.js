@@ -26,10 +26,7 @@ var FormElementMixin = {
     ])
   },
 
-  contextTypes: {
-    value: React.PropTypes.any,
-    onValueUpdate: React.PropTypes.func
-  },
+  contextTypes: FormMixin.ContextTypes,
 
   /**
    * Get the form value corresponding to an element.
