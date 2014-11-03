@@ -5,6 +5,7 @@
 
 var _ = require('lodash');
 var React       = require('react/addons');
+var mergeInto = require('../utils').mergeInto;
 var cx          = React.addons.classSet;
 var cloneWithProps   = React.addons.cloneWithProps;
 var FormElementMixin  = require('./FormElementMixin.react');
@@ -47,7 +48,8 @@ var Field = React.createClass({
         onBlur: this.onBlur,
         name: this.props.name,});
     return (
-      <div className={cx(className, this.props.className)}>
+      <div contentEditable={true} className={cx(className, this.props.className)}>
+        {value}
         {this.renderLabel(id)}
         {this.transferPropsTo(input)}
       </div>
@@ -71,7 +73,7 @@ var Field = React.createClass({
         value: value,
         onChange: this.onChange};
     if (props) {
-      inputProps = _.extend({}, inputProps, props);
+      inputProps = mergeInto(inputProps, props);
     }
     if (input) {
       return cloneWithProps(input, inputProps);

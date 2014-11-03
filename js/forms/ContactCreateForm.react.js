@@ -5,7 +5,6 @@
 var React = require('react');
 var Form = require('./Form.react');
 var Field = require('./Field.react');
-var InputDiv = require('./input').InputDiv;
 
 
 var form_state = {
@@ -20,13 +19,11 @@ var ContactCreateForm = React.createClass({
         <Field
           isStrong={true}
           name='fn'
-          type="hidden"
-          contenteditable={true} />
+          input={<input type="hidden" />} />
         <Field
           isStrong={true}
           name='ln'
-          type="hidden"
-          contenteditable={true} />
+          input={<input type="hidden" />} />
         </div>
       </Form>
 
