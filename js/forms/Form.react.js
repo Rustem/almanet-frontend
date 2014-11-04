@@ -17,6 +17,7 @@ var Form = React.createClass({
     },
 
     render: function() {
+        console.log(this.props.value);
         var component = this.props.component;
         var className = cx({
 

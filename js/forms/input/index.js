@@ -3,5 +3,5 @@
  * @jsx React.DOM
  */
 module.exports = {
-  InputDiv: require('./InputDiv.react'),
+  ContentEditableInput: require('./ContentEditableInput.react'),
 };

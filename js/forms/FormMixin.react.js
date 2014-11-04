@@ -4,7 +4,7 @@
 
 'use strict'
 
-var React = require('react');
+var React = require('react/addons');
 var cloneWithProps   = React.addons.cloneWithProps;
 var _ = require('lodash');
 var FormStateMixin = {
@@ -45,6 +45,7 @@ var FormStateMixin = {
     },
 
     onValueUpdate: function(value) {
+        console.log(value);
         this.setState(this._getFormState(value), function() {
             if (typeof this.valueUpdated === 'function') {
                 this.valueUpdated(this.state.value)
@@ -88,3 +89,4 @@ var FormMixin = {
 
 module.exports = FormMixin;
 module.exports.ContextTypes = ContextTypes;
+module.exports.FormContextMixin = FormContextMixin;
