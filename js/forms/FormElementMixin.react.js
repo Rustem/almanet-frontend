@@ -38,7 +38,6 @@ var FormElementMixin = {
       return this.props.value;
     }
     var value = this.context.value;
-    console.log(this.context);
     if(this.props.name !== undefined) {
       value = value[this.props.name];
     }

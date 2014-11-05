@@ -45,7 +45,6 @@ var FormStateMixin = {
     },
 
     onValueUpdate: function(value) {
-        console.log(value);
         this.setState(this._getFormState(value), function() {
             if (typeof this.valueUpdated === 'function') {
                 this.valueUpdated(this.state.value)
@@ -53,8 +52,8 @@ var FormStateMixin = {
         });
     },
 
-    _getFormState: function(value) {
-        return value;
+    _getFormState: function(updValue) {
+        return updValue;
     }
 };
 

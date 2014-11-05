@@ -42,6 +42,7 @@ var ContentEditableInput = React.createClass({
 
     render: function() {
         var value = this.value();
+        console.log(value, "Rerender")
         var className = cx({
           'input-div': true,
           'input-div--strong': this.props.isStrong,
