@@ -62,7 +62,8 @@ var RepeatingFieldsetMixin = {
         var value = this.value();
         var upd = {};
         if(idx === 0 && value.length === 1) {
-            upd[this.props.name] = [];
+            var defaultItem = this.props.getDefaultItemValue();
+            upd[this.props.name] = [defaultItem];
             this.context.onValueUpdate(upd);
         } else {
             value.splice(idx, 1);
@@ -76,11 +77,14 @@ var RepeatingFieldsetMixin = {
        */
     onAddItem: function(index) {
         var value = this.value();
-        if(value.length - 1 == index) {
+        if(value.length - 1 === index) {
             var itemValue = this.props.getDefaultItemValue();
             itemValue['idx'] = value.length;
             value.push(itemValue);
-            this.onValueUpdate(value);
+
+            var upd = {};
+            upd[this.props.name] = value;
+            this.onValueUpdate(upd);
         }
     }
 
