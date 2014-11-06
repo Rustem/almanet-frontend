@@ -13,7 +13,7 @@ var Fieldset = require('./Fieldset.react')
 var form_state = {
   'fn': 'Rustem',
   'ln': 'Kamun',
-  'companyName': 'Almacloud',
+  'companyName': 'Mobiliuz',
   'emails': [{'idx': 0, 'type': 'home', 'value': 'r.kamun@gmail.com'}]};
 
 var ContactCreateForm = React.createClass({

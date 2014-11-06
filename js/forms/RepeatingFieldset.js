@@ -39,14 +39,16 @@ var RepeatingFieldsetMixin = {
         var value = this.value();
         var itemComponent = this.props.item;
         var self = this;
-        var children = _.map(value, function(itemValue) {
+        var children = value.map(function(itemValue, idx){
+            var unique_name = self.props.name + '--' + idx;
             return (
                 <itemComponent
                     {...extraOptions}
-                    name="email"
-                    key={itemValue.idx}
+                    index={idx}
+                    name={unique_name}
+                    key={unique_name}
                     value={itemValue}
-                    onRemove={self.onRemoveItem.bind(null, itemValue.idx)} />
+                    onRemove={self.onRemoveItem.bind(null, idx)} />
             )
         });
         return children;
@@ -76,10 +78,11 @@ var RepeatingFieldsetMixin = {
        * Add new value to fieldset's value.
        */
     onAddItem: function(index) {
+        console.log(index, 'add');
         var value = this.value();
         if(value.length - 1 === index) {
             var itemValue = this.props.getDefaultItemValue();
-            itemValue['idx'] = value.length;
+            // itemValue['idx'] = value.length;
             value.push(itemValue);
 
             var upd = {};
@@ -95,6 +98,7 @@ var EmailVCardComponentItem = React.createClass({
     mixins: [ItemMixin],
 
     propTypes:  {
+        index: React.PropTypes.number,
         options: React.PropTypes.array,
         onFocus: React.PropTypes.func,
         onTypeChange: React.PropTypes.func
@@ -107,17 +111,17 @@ var EmailVCardComponentItem = React.createClass({
             <div className="inputLine inputLine--vcardRow">
                 <div className="row">
                     <div className="row-icon">
-                        <button type="button" onClick={this.onRemove.bind(null, value.idx)}>
+                        <button type="button" onClick={this.onRemove.bind(null, this.props.index)}>
                             <IconSvg iconKey="remove" />
                         </button>
                     </div>
                     <div className="row-body">
                         <div className="inputLine-negativeTrail row-body--aligned">
-                            <SimpleSelect options={options} value={value.type} component={React.DOM.div} onChange={this.props.onTypeChange.bind(null, value.idx)} />
+                            <SimpleSelect options={options} value={value.type} component={React.DOM.div} onChange={this.props.onTypeChange.bind(null, this.props.index)} />
                             <div className="inputLine-div">
                                 <ContentEditableInput
                                     value={value.value}
-                                    onFocus={this.props.onFocus.bind(null, value.idx)}
+                                    onFocus={this.props.onFocus.bind(null, this.props.index)}
                                     className='input-div' data-placeholder="Телефон" />
                             </div>
                         </div>
