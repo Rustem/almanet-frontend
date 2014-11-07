@@ -8,7 +8,11 @@ var ContentEditableInput = inputs.ContentEditableInput;
 var EmailVCardComponent = require('./RepeatingFieldset.js').EmailVCardComponent;
 var Form = require('./Form.react');
 var FormMixin = require('./FormMixin.react');
-var Fieldset = require('./Fieldset.react')
+var Fieldset = require('./Fieldset.react');
+
+var _ = require('lodash');
+Object.assign = _.extend;
+
 require('../utils');
 
 var form_state = {

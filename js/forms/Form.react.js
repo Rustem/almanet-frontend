@@ -8,6 +8,7 @@ var _ = require('lodash');
 var FormMixin = require('./FormMixin.react');
 var cloneWithProps    = React.addons.cloneWithProps;
 
+
 var Form = React.createClass({
     mixins: [FormMixin],
 
@@ -21,8 +22,8 @@ var Form = React.createClass({
         var className = cx({
 
         });
-        return this.transferPropsTo(
-          <component className={className}>
+        return (
+          <component {...this.props} className={className}>
             {React.Children.map(this.props.children, this.renderChild)}
           </component>
         );

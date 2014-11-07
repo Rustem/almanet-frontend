@@ -28,8 +28,8 @@ var Fieldset = React.createClass({
 
   render: function() {
     var component = this.props.component;
-    return this.transferPropsTo(
-      <component>
+    return (
+      <component {...this.props}>
         {React.Children.map(this.props.children, this.renderChild)}
       </component>
     );

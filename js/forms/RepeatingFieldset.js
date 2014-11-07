@@ -107,8 +107,8 @@ var EmailVCardComponentItem = React.createClass({
     render: function() {
         var value = this.props.value;
         var options = this.props.options;
-        return this.transferPropsTo(
-            <div className="inputLine inputLine--vcardRow">
+        return (
+            <div {...this.props} className="inputLine inputLine--vcardRow">
                 <div className="row">
                     <div className="row-icon">
                         <button type="button" onClick={this.onRemove.bind(null, this.props.index)}>
