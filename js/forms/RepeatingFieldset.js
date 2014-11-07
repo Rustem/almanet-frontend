@@ -117,7 +117,12 @@ var EmailVCardComponentItem = React.createClass({
                     </div>
                     <div className="row-body">
                         <div className="inputLine-negativeTrail row-body--aligned">
-                            <SimpleSelect options={options} value={value.type} component={React.DOM.div} onChange={this.props.onTypeChange.bind(null, this.props.index)} />
+                            <SimpleSelect
+                                name="type"
+                                options={options}
+                                value={value.type}
+                                component={React.DOM.div}
+                                onValueUpdate={this.props.onTypeChange.bind(null, this.props.index)} />
                             <div className="inputLine-div">
                                 <ContentEditableInput
                                     value={value.value}
@@ -170,6 +175,7 @@ var EmailVCardComponent = React.createClass({
 
     onChange: function(idx, changedValue) {
         var value = this.value();
+        console.log(value, idx, changedValue);
         value[idx] = React.addons.update(value[idx], {$merge: changedValue});
         console.log(this.prepValue(this.props.name, value));
         this.updateValue(this.prepValue(this.props.name, value));

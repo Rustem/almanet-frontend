@@ -55,6 +55,11 @@ var FormStateMixin = {
 
     _getFormState: function(updValue) {
         return updValue;
+    },
+
+    getValueFromEvent: function(e) {
+      return e && e.target && e.target.value !== undefined ?
+        e.target.value : e;
     }
 };
 

@@ -3,8 +3,11 @@
  */
 
 var React = require('react');
+var FormElementMixin = require('../FormElementMixin.react');
+
 
 var SimpleSelect = React.createClass({
+    mixins : [FormElementMixin],
 
     propTypes: {
         options: React.PropTypes.array,
@@ -22,9 +25,17 @@ var SimpleSelect = React.createClass({
         var component = this.props.component;
         return this.transferPropsTo(
             <component className="select">
-                <select value={this.props.value} onChange={this.props.onChange}>{children}</select>
+                <select value={this.props.value} onChange={this.onChange}>{children}</select>
             </component>
         );
+    },
+
+    onChange: function(e) {
+        if (e.stopPropagation) {
+          e.stopPropagation();
+        }
+        var value = this.getValueFromEvent(e);
+        this.updateValue(this.prepValue(this.props.name, value));
     },
 
 });

@@ -82,6 +82,11 @@ var FormElementMixin = {
     var rv = {};
     rv[name] = value;
     return rv;
+  },
+
+  getValueFromEvent: function(e) {
+      return e && e.target && e.target.value !== undefined ?
+        e.target.value : e;
   }
 };
 
