@@ -160,30 +160,19 @@ var EmailVCardComponent = React.createClass({
         var extraOptions = {
             'onFocus': self.onAddItem,
             'options': self.props.emailOptions,
-            'onTypeChange': self.onTypeSelected,
-            'onValueChange': self.onValueChange};
+            'onTypeChange': self.onChange,
+            'onValueChange': self.onChange};
         var fields = this.renderFields(extraOptions);
-        return this.transferPropsTo(
-            <div className="">{fields}</div>
+        return (
+            <div {...this.props} className="">{fields}</div>
         )
     },
 
-    onTypeSelected: function(idx, ev) {
+    onChange: function(idx, changedValue) {
         var value = this.value();
-        value[idx]['type'] = getValueFromEvent(ev);
-        var upd = {}
-        upd[this.name] = value;
-        this.context.onValueUpdate(upd);
-    },
-    onValueChange: function(idx, updValue) {
-        console.log(idx, updValue);
-        var value = this.value();
-        value[idx]['value'] = updValue;
-
-        var upd = {};
-        upd[this.props.name] = value;
-        console.log(upd);
-        this.updateValue(upd);
+        value[idx] = React.addons.update(value[idx], {$merge: changedValue});
+        console.log(this.prepValue(this.props.name, value));
+        this.updateValue(this.prepValue(this.props.name, value));
     }
 });
 

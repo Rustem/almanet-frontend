@@ -69,6 +69,19 @@ var FormElementMixin = {
    */
   onValueUpdate: function(value) {
     this.updateValue(value);
+  },
+
+  /**
+  * Called when new state must be created for some form element.
+
+  * @param {string} name
+  * @param {Any} value
+  */
+
+  prepValue: function(name, value) {
+    var rv = {};
+    rv[name] = value;
+    return rv;
   }
 };
 

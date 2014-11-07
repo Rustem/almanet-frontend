@@ -35,7 +35,7 @@ var ContentEditableInput = React.createClass({
           e.stopPropagation();
         }
         var value = getValueFromEvent(e);
-        this.updateValue(value);
+        this.updateValue(this.prepValue(this.props.name, value));
     },
 
     render: function() {
