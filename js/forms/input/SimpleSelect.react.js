@@ -8,11 +8,10 @@ var SimpleSelect = React.createClass({
 
     propTypes: {
         options: React.PropTypes.array,
-        component: React.PropTypes.component,
+        component: React.PropTypes.constructor,
     },
 
     renderOption: function(value) {
-        console.log('rus2')
         return (
             <option value={value[0]}>{value[1]}</option>
         )

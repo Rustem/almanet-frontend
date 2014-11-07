@@ -11,7 +11,7 @@ var ContentEditableInput = React.createClass({
     lastHtml : null,
     propTypes: {
         isStrong: React.PropTypes.bool,
-        component: React.PropTypes.component
+        component: React.PropTypes.constructor
     },
 
     getDefaultProps: function() {
@@ -35,14 +35,12 @@ var ContentEditableInput = React.createClass({
           e.stopPropagation();
         }
         var value = getValueFromEvent(e);
-        var upd = {};
-        upd[this.props.name] = value;
-        this.context.onValueUpdate(upd);
+        this.updateValue(value);
     },
 
     render: function() {
         var value = this.value();
-        console.log(value, "Rerender")
+        // console.log(value, "Rerender")
         var className = cx({
           'input-div': true,
           'input-div--strong': this.props.isStrong,

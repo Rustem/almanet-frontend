@@ -1,6 +1,6 @@
 var DropDownMixin = {
     onMenuToggle: function(evt) {
-        console.log(this.getDOMNode());
+        // console.log(this.getDOMNode());
     }
 };
 

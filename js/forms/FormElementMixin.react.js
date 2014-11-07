@@ -18,7 +18,9 @@ var FormMixin = require('./FormMixin.react');
 var FormElementMixin = {
 
   propTypes: {
-    value: React.PropTypes.object,
+    value: React.PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.number]),
     onValueUpdate: React.PropTypes.func,
     name: React.PropTypes.oneOfType([
       React.PropTypes.string,

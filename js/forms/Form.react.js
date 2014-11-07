@@ -38,9 +38,6 @@ var Form = React.createClass({
     valueUpdated: function(value) {
         // validation in future
         var isSuccess = true;
-        // console.log(this.state);
-        // this.props.value = this.state;
-        console.log('updated')
         if (this.props.onUpdate && isSuccess) {
           this.props.onUpdate(value);
         }

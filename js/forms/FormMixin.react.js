@@ -45,9 +45,10 @@ var FormStateMixin = {
     },
 
     onValueUpdate: function(value) {
+        console.log(value, 'valueTo');
         this.setState(this._getFormState(value), function() {
             if (typeof this.valueUpdated === 'function') {
-                this.valueUpdated(this.state.value)
+                this.valueUpdated(this.state)
             }
         });
     },

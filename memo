@@ -1,3 +1,8 @@
+content editable input has parent, that's why we must send him a onChange callback in order to update the whole form
+
+That's why it has incorrect data
+
+
 each input field must be created using FieldInputMixin
 http://bl.ocks.org/sb/11253438
 https://github.com/facebook/react/issues/1521

@@ -25,7 +25,7 @@ var RepeatingFieldsetMixin = {
     mixins: [FormElementMixin, FormContextMixin],
 
     propTypes: {
-        item: React.PropTypes.component,
+        item: React.PropTypes.constructor,
         getDefaultItemValue: React.PropTypes.func
     },
 
@@ -78,7 +78,6 @@ var RepeatingFieldsetMixin = {
        * Add new value to fieldset's value.
        */
     onAddItem: function(index) {
-        console.log(index, 'add');
         var value = this.value();
         if(value.length - 1 === index) {
             var itemValue = this.props.getDefaultItemValue();
@@ -101,7 +100,8 @@ var EmailVCardComponentItem = React.createClass({
         index: React.PropTypes.number,
         options: React.PropTypes.array,
         onFocus: React.PropTypes.func,
-        onTypeChange: React.PropTypes.func
+        onTypeChange: React.PropTypes.func,
+        onValueChange: React.PropTypes.func
     },
 
     render: function() {
@@ -121,6 +121,8 @@ var EmailVCardComponentItem = React.createClass({
                             <div className="inputLine-div">
                                 <ContentEditableInput
                                     value={value.value}
+                                    name="value"
+                                    onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
                                     onFocus={this.props.onFocus.bind(null, this.props.index)}
                                     className='input-div' data-placeholder="Телефон" />
                             </div>
@@ -135,7 +137,7 @@ var EmailVCardComponentItem = React.createClass({
 function getDefaultEmailValue() {
     return {
         type: 'home',
-        value: ''
+        value: 'vasya.pupkin@gmail.com'
     }
 };
 
@@ -158,7 +160,8 @@ var EmailVCardComponent = React.createClass({
         var extraOptions = {
             'onFocus': self.onAddItem,
             'options': self.props.emailOptions,
-            'onTypeChange': self.onTypeSelected};
+            'onTypeChange': self.onTypeSelected,
+            'onValueChange': self.onValueChange};
         var fields = this.renderFields(extraOptions);
         return this.transferPropsTo(
             <div className="">{fields}</div>
@@ -168,10 +171,19 @@ var EmailVCardComponent = React.createClass({
     onTypeSelected: function(idx, ev) {
         var value = this.value();
         value[idx]['type'] = getValueFromEvent(ev);
-
         var upd = {}
         upd[this.name] = value;
         this.context.onValueUpdate(upd);
+    },
+    onValueChange: function(idx, updValue) {
+        console.log(idx, updValue);
+        var value = this.value();
+        value[idx]['value'] = updValue;
+
+        var upd = {};
+        upd[this.props.name] = value;
+        console.log(upd);
+        this.updateValue(upd);
     }
 });
 

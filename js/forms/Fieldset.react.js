@@ -17,7 +17,7 @@ var Fieldset = React.createClass({
   mixins: [FieldsetMixin],
 
   propTypes: {
-    component: React.PropTypes.component
+    component: React.PropTypes.constructor
   },
 
   getDefaultProps: function() {
