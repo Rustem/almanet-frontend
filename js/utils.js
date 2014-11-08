@@ -50,13 +50,10 @@ function isString(o) {
   return toString.call(o) === '[object String]';
 }
 
-String.prototype.interpolate = function (o) {
-    return this.replace(/{([^{}]*)}/g,
-        function (a, b) {
-            var r = o[b];
-            return typeof r === 'string' || typeof r === 'number' ? r : a;
-        }
-    );
+String.prototype.interpolate = function(props) {
+    return this.replace(/\{(\w+)\}/g, function(match, expr) {
+        return (props || window)[expr];
+    });
 };
 
 module.exports = {

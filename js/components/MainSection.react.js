@@ -8,7 +8,7 @@ var MainSection = React.createClass({
 
     render: function() {
         return (
-            <div />
+            <div className="body-master">{this.props.children}</div>
         );
     }
 

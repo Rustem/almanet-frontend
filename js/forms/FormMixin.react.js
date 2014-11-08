@@ -40,6 +40,10 @@ var FormStateMixin = {
         return this.state;
     },
 
+    validate: function() {
+        return null;
+    },
+
     updateValue: function(value) {
         this.setState(this._getFormState(value));
     },

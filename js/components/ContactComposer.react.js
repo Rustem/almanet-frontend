@@ -68,7 +68,7 @@ var ContactComposer = React.createClass({
         classNames.push(stateClass);
         classNames = _.compact(classNames)
         return (
-          <div ref="contactComposer" className={classNames.join(' ')}  data-verticalfit=".body-master">
+          <div ref="contactComposer" className={classNames.join(' ')}  data-verticalfit="body-master">
             <ContactComposerButton
               ref="menuToggler"
               onClick={this.onMenuToggle}
@@ -86,6 +86,7 @@ var ContactComposer = React.createClass({
     onMenuToggle: function(evt) {
         this.setState({isOpen: !this.isOpen()}, function() {
             if(this.isOpen()) {
+              this.setDropDownHeight();
               this.refs.menuToggler.getDOMNode().focus();
             }
         });
@@ -96,6 +97,13 @@ var ContactComposer = React.createClass({
         this.setState({isOpen: false});
       }
     },
+
+    setDropDownHeight: function() {
+        var className = this.getDOMNode().getAttribute('data-verticalfit');
+        var height = document.getElementsByClassName(className)[0].clientHeight;
+        this.refs.contactForm.getDOMNode().style.height = height + 'px';
+    },
+
     isOpen: function() {
       return this.state.isOpen;
     }

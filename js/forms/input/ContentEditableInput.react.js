@@ -20,9 +20,18 @@ var ContentEditableInput = React.createClass({
         }
     },
 
+    getCurrentValue: function() {
+        try{
+            var val = this.getDOMNode().getElementsByTagName('span')[0].innerText;
+        } catch(e) {
+            var val = ''
+        }
+        return val;
+    },
+
     emitChange: function() {
         // sends a change to parent form
-        var val = this.getDOMNode().getElementsByTagName('span')[0].innerHTML;
+        var val = this.getCurrentValue();
         if(val !== this.lastHtml){
             this.onChange({
                 target: {value: val}
@@ -51,7 +60,7 @@ var ContentEditableInput = React.createClass({
                 onInput={this.emitChange}
                 onBlur={this.emitChange}
                 contentEditable={true}
-                className={cx(className, this.props.className)}>{value}<input type="hidden" value={value} />
+                className={cx(className, this.props.className)}><span contentEditable={true}>{value}</span><input type="hidden" value={value} />
             </component>
         );
     },

@@ -25,8 +25,8 @@ require('../utils');
 var form_state = {
   'fn': 'Камун Рустем Абдукадырович',
   'companyName': 'Mobiliuz',
-  'emails': [{'idx': 0, 'type': 'home', 'value': 'r.kamun@gmail.com'}],
-  'phones': [{'idx': 0, 'type': 'mobile', 'value': '+7 777 7777777'}],
+  'emails': [{'idx': 0, 'type': 'internet', 'value': 'r.kamun@gmail.com'}],
+  'phones': [{'idx': 0, 'type': 'work', 'value': '+7 777 7777777'}],
   'is_company': true,
   'urls': [{'idx': 0, 'type': 'website', 'value': 'http://alma.net'}],
   'adrs': [{'idx': 0, 'type': 'home', 'street_address': 'Zharokov, 167', 'region': 'Almaty', 'locality': 'Almaty', 'country_name': 'Kazakhstan', 'postal_code': '00012'}]
@@ -36,28 +36,44 @@ var ContactCreateForm = React.createClass({
 
   render: function() {
     return (
-      <Form value={form_state}>
+      <Form ref='contact_form' value={form_state} onSubmit={this.handleSubmit}>
         <Fieldset className="inputLine-negativeTrail">
           <ContentEditableInput isStrong={true} name='fn' />
-          <ContentEditableInput isStrong={true} name='family_name' />
         </Fieldset>
         <Fieldset className="inputLine-negativeTrail">
           <ContentEditableInput isStrong={false} className='text-secondary' name='companyName' />
         </Fieldset>
         <SVGCheckbox name="is_company" label="Company" />
-        <EmailVCardComponent name="emails" options={[['home', 'home'], ['work', 'work']]} />
+        <EmailVCardComponent name="emails" options={[['internet', 'адрес в формате интернета'], ['pref', 'предпочитаемый']]} />
         <div className="space-verticalBorder"></div>
 
-        <PhoneVCardComponent name="phones" options={[['home', 'home'], ['mobile', 'mobile']]} />
+        <PhoneVCardComponent name="phones" options={[['home', 'по месту проживания'], ['work', 'по месту работы']]} />
         <div className="space-verticalBorder"></div>
 
         <UrlVCardComponent name="urls" options={[['website', 'website'], ['github', 'github']]} />
         <div className="space-verticalBorder"></div>
 
         <AddressVCardComponent name="adrs" options={[['home', 'место проживания'], ['work', 'место работы']]} />
+
+        <div className="inputLine text-right">
+            <button className="btn btn--save" type="submit">Сохранить</button>
+        </div>
       </Form>
     )
   },
+
+  handleSubmit: function(e) {
+    e.preventDefault();
+    var form = this.refs.contact_form;
+    errors = form.validate();
+    if(!errors) {
+        console.log('Contact created', form.value());
+    } else{
+        alert(errors);
+    }
+
+    return;
+  }
 
 });
 
