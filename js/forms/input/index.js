@@ -5,4 +5,5 @@
 module.exports = {
   ContentEditableInput: require('./ContentEditableInput.react'),
   SimpleSelect: require('./SimpleSelect.react'),
+  SVGCheckbox: require('./SVGCheckbox.react'),
 };

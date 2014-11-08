@@ -37,7 +37,7 @@ var FormStateMixin = {
     */
 
     value: function() {
-        return this.props.value;
+        return this.state;
     },
 
     updateValue: function(value) {
@@ -45,7 +45,6 @@ var FormStateMixin = {
     },
 
     onValueUpdate: function(value) {
-        console.log(value, 'valueTo');
         this.setState(this._getFormState(value), function() {
             if (typeof this.valueUpdated === 'function') {
                 this.valueUpdated(this.state)
