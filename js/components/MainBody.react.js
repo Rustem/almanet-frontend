@@ -4,6 +4,8 @@
  */
 var React = require('react');
 var master_views = require('./master_views');
+
+
 var MainBody = React.createClass({
 
     render: function() {

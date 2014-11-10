@@ -46,7 +46,7 @@ var ContactComposerForm = React.createClass({
       <div className="dropdown-menu" style={{height: '310px'}}>
         <div className="addContact">
           <div className="addContact-edit">
-              <ContactCreateForm ref={FORM_REF} name={FORM_REF} onSubmit={this.handleSubmit} />
+              <ContactCreateForm ref={FORM_REF} onHandleSubmit={this.handleSubmit} />
           </div>
         </div>
       </div>
@@ -57,19 +57,9 @@ var ContactComposerForm = React.createClass({
     return this.refs[FORM_REF].refs[FORM_REF];
   },
 
-  handleSubmit: function(e) {
-    e.preventDefault();
-    var form = this.getForm();
-    console.log(this.refs);
-    errors = form.validate();
-
-    if(!errors) {
-        var contactObject = form.value();
-        ContactActionCreators.createContact(contactObject);
-    } else{
-        alert(errors);
-    }
-
+  handleSubmit: function(contactObject) {
+    console.log('form', contactObject);
+    ContactActionCreators.createContact(contactObject);
     return;
   }
 });

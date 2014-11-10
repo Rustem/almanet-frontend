@@ -35,13 +35,12 @@ var default_form_state = {
 var ContactCreateForm = React.createClass({
 
   propTypes: {
-    onSubmit: React.PropTypes.func,
-    name: React.PropTypes.string
+    onHandleSubmit: React.PropTypes.func,
   },
 
   render: function() {
     return (
-      <Form {...this.props} ref={this.props.name} value={default_form_state}>
+      <Form {...this.props} ref='contact_form' value={default_form_state} onSubmit={this.onHandleSubmit}>
         <Fieldset className="inputLine-negativeTrail">
           <ContentEditableInput isStrong={true} name='fn' />
         </Fieldset>
@@ -65,6 +64,18 @@ var ContactCreateForm = React.createClass({
         </div>
       </Form>
     )
+  },
+
+  onHandleSubmit: function(e) {
+    e.preventDefault();
+    var form = this.refs.contact_form;
+    var errors = form.validate();
+    if(!errors) {
+      this.props.onHandleSubmit(form.value());
+    } else{
+        alert(errors);
+    }
+    return false;
   }
 
 });
