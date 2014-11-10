@@ -8,6 +8,8 @@ var IconSvg = require('./common/IconSvg.react');
 var DropDownMixin = require('./mixins/DropDownMixin.react');
 var ContactCreateForm = require('../forms/ContactCreateForm.react');
 
+var ContactActionCreators = require('../actions/ContactActionCreators');
+
 var ESCAPE_KEY_CODE = 27;
 
 var ContactComposerButton = React.createClass({
@@ -35,18 +37,39 @@ var ContactComposerButton = React.createClass({
   }
 });
 
+FORM_REF = 'contact_form'
 
 var ContactComposerForm = React.createClass({
+
+
   render: function() {
     return (
       <div className="dropdown-menu" style={{height: '310px'}}>
         <div className="addContact">
           <div className="addContact-edit">
-              <ContactCreateForm />
+              <ContactCreateForm ref={FORM_REF} onSubmit={this.handleSubmit} />
           </div>
         </div>
       </div>
     )
+  },
+
+  getForm: function(){
+    return this.refs[FORM_REF].refs[FORM_REF];
+  },
+
+  handleSubmit: function(e) {
+    e.preventDefault();
+    var form = this.getForm();
+    errors = form.validate();
+    if(!errors) {
+        var contactObject = form.value();
+        ContactActionCreators.createContact(contactObject);
+    } else{
+        alert(errors);
+    }
+
+    return;
   }
 });
 
