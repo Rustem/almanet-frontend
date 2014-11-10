@@ -22,7 +22,7 @@ Object.assign = _.extend;
 
 require('../utils');
 
-var form_state = {
+var default_form_state = {
   'fn': 'Камун Рустем Абдукадырович',
   'companyName': 'Mobiliuz',
   'emails': [{'idx': 0, 'type': 'internet', 'value': 'r.kamun@gmail.com'}],
@@ -36,11 +36,12 @@ var ContactCreateForm = React.createClass({
 
   propTypes: {
     onSubmit: React.PropTypes.func,
+    name: React.PropTypes.string
   },
 
   render: function() {
     return (
-      <Form {...this.props} value={form_state}>
+      <Form {...this.props} ref={this.props.name} value={default_form_state}>
         <Fieldset className="inputLine-negativeTrail">
           <ContentEditableInput isStrong={true} name='fn' />
         </Fieldset>

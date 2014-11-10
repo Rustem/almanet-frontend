@@ -5,7 +5,6 @@
 var _ = require('lodash');
 var React = require('react');
 var IconSvg = require('./common/IconSvg.react');
-var DropDownMixin = require('./mixins/DropDownMixin.react');
 var ContactCreateForm = require('../forms/ContactCreateForm.react');
 
 var ContactActionCreators = require('../actions/ContactActionCreators');
@@ -47,7 +46,7 @@ var ContactComposerForm = React.createClass({
       <div className="dropdown-menu" style={{height: '310px'}}>
         <div className="addContact">
           <div className="addContact-edit">
-              <ContactCreateForm ref={FORM_REF} onSubmit={this.handleSubmit} />
+              <ContactCreateForm ref={FORM_REF} name={FORM_REF} onSubmit={this.handleSubmit} />
           </div>
         </div>
       </div>
@@ -61,7 +60,9 @@ var ContactComposerForm = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
     var form = this.getForm();
+    console.log(this.refs);
     errors = form.validate();
+
     if(!errors) {
         var contactObject = form.value();
         ContactActionCreators.createContact(contactObject);
@@ -77,7 +78,6 @@ var ContactComposerForm = React.createClass({
 // Main Component
 
 var ContactComposer = React.createClass({
-    // mixins: [DropDownMixin],
 
     getInitialState: function() {
         return {

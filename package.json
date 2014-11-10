@@ -6,9 +6,9 @@
   "main": "./js/app.js",
   "dependencies": {
     "flux": "^2.0.0",
-    "react": "~0.11",
-    "lodash": "^2.4.1",
-    "react-forms": "^0.6.3"
+    "react": "~0.12",
+    "react-router": "~0.10.2",
+    "lodash": "^2.4.1"
   },
   "devDependencies": {
     "browserify": "~4.2.2",

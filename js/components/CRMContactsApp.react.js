@@ -3,9 +3,9 @@
  */
 
 var React = require('react');
-var Header = require('./Header.react.js');
-var Footer = require('./Footer.react.js');
-var MainSection = require('./MainSection.react.js');
+var Header = require('./Header.react');
+var Footer = require('./Footer.react');
+var MainBody = require('./MainBody.react')
 
 var CRMContactsApp = React.createClass({
 
@@ -13,7 +13,7 @@ var CRMContactsApp = React.createClass({
         return (
           <div className="body-container">
             <Header />
-            <MainSection />
+            <MainBody {...this.props} />
             <Footer />
           </div>
         );
