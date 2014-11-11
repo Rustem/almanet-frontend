@@ -9,5 +9,11 @@ module.exports = {
         setTimeout(function() {
             ContactServerActionCreators.receiveCreatedContact(obj);
         }, 0);
+    },
+    createShare: function(shareObject) {
+        obj = _.extend({}, {id: 'share_' + Date.now()}, shareObject);
+        setTimeout(function() {
+            ContactServerActionCreators.receiveCreatedShare(obj);
+        }, 0);
     }
 }

@@ -28,4 +28,13 @@ module.exports = {
     ContactWebAPI.createContact(object);
   },
 
+  createShare: function(shareObject) {
+    CRMAppDispatcher.handleViewAction({
+      type: ActionTypes.CREATE_SHARE,
+      object: shareObject
+    });
+    // var message = ContactStore.getCreatedContact(shareObject);
+    ContactWebAPI.createContact(shareObject);
+  }
+
 };

@@ -11,6 +11,13 @@ module.exports = {
       type: ActionTypes.RECEIVE_CREATED_CONTACT,
       object: object
     });
+  },
+
+  receiveCreatedShare: function(object) {
+    CRMAppDispatcher.handleServerAction({
+        type: ActionTypes.RECEIVE_CREATED_SHARE,
+        object: object
+    });
   }
 
 };

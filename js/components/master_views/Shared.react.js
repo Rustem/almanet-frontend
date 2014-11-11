@@ -16,13 +16,15 @@ var SharedContactLink = React.createClass({
     mixins: [ActiveState],
     propTypes: {
         label: React.PropTypes.string,
+        isNew: React.PropTypes.bool   // when new contact created or somebody shared in realtime
     },
     render: function() {
         var className = cx({
             'row': true,
             'row-oneliner': true,
             'row--link': true,
-            'active': this.isCurrentlyActive()
+            'active': this.isCurrentlyActive(),
+            'new': this.props.isNew
         });
         return (
             <Link className={className} to='shared'>
