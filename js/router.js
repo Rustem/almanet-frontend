@@ -4,6 +4,7 @@
 var Router = require('react-router');
 var Route = Router.Route;
 var Routes = Router.Routes;
+var Redirect = Router.Redirect;
 var ContactViews = require('./constants/CRMConstants').ContactViews;
 
 var CRMContactsApp = require('./components/CRMContactsApp.react')
@@ -14,15 +15,16 @@ var shared_view = ContactViews.SHARED_CONTACT_VIEW;
 var coldbase_view = ContactViews.COLD_BASE_CONTACT_VIEW;
 
 var routes = (
-    <Route handler={CRMContactsApp}>
+    <Route name="contacts" path="/" handler={CRMContactsApp} alt="контакты">
+        <Redirect path='/' to='shared' />
         <Route
-            name={ContactViews.get(shared_view)}
-            path={shared_view}
-            handler={master_views.Shared.DetailView}/>
+            name='shared'
+            handler={master_views.Shared.DetailView}
+            alt="Входящие" />
         <Route
-            name={ContactViews.get(coldbase_view)}
-            params={coldbase_view}
-            handler={master_views.ColdBase.DetailView}/>
+            name='coldbase'
+            handler={master_views.ColdBase.DetailView}
+            alt="Холодная база"/>
     </Route>
 );
 

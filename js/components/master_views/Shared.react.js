@@ -4,21 +4,28 @@
  */
 
 var React = require('react');
-var Link = require('react-router').Link;
-
-var ContactViews = require('../../constants/CRMConstants').ContactViews;
+var cx        = React.addons.classSet;
+var Router = require('react-router');
+var ActiveState = Router.ActiveState;
+var Link = Router.Link;
 var IconSvg = require('../common/IconSvg.react');
-
-var current_view = ContactViews.SHARED_CONTACT_VIEW;
+var MasterDetailBreadCrumbs = require('../common/BreadCrumb.react').MasterDetailBreadCrumbs;
 
 
 var SharedContactLink = React.createClass({
+    mixins: [ActiveState],
     propTypes: {
         label: React.PropTypes.string,
     },
     render: function() {
+        var className = cx({
+            'row': true,
+            'row-oneliner': true,
+            'row--link': true,
+            'active': this.isCurrentlyActive()
+        });
         return (
-            <Link to={ContactViews.get(current_view)}>
+            <Link className={className} to='shared'>
                 <div className="row-icon">
                     <IconSvg iconKey="inbox" />
                 </div>
@@ -26,9 +33,18 @@ var SharedContactLink = React.createClass({
                     <div className="row-body-primary">
                         {this.props.label}
                     </div>
+                    <div className="row-body-secondary">
+                      4
+                    </div>
                 </div>
             </Link>
         )
+    },
+    isCurrentlyActive: function() {
+        var routes = this.getActiveRoutes();
+        var route = routes[routes.length - 1];
+        if(!route) { return false; }
+        return route.name === 'shared';
     }
 });
 
@@ -41,7 +57,7 @@ var SharedContactDetailView = React.createClass({
         return (
         <div className="page">
             <div className="page-header">
-
+                <MasterDetailBreadCrumbs isMaster={false} />
             </div>
             <div className="page-body">
 

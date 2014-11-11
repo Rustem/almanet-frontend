@@ -11,10 +11,6 @@ module.exports = {
         VIEW_ACTION: null
     }),
     ContactViews: {
-        SHARED_CONTACT_VIEW: 'shared',
-        COLD_BASE_CONTACT_VIEW: 'coldbase',
-        get: function(the_view) {
-            return the_view + '_view';
-        }
+
     }
 }
