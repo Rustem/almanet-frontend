@@ -122,7 +122,7 @@ var EmailVCardComponentItem = React.createClass({
                                 name="type"
                                 options={options}
                                 value={value.type}
-                                component={React.DOM.div}
+                                Component='div'
                                 onValueUpdate={this.props.onTypeChange.bind(null, this.props.index)} />
                             <div className="inputLine-div">
                                 <ContentEditableInput
@@ -206,7 +206,7 @@ var PhoneVCardComponentItem = React.createClass({
                                 name="type"
                                 options={options}
                                 value={value.type}
-                                component={React.DOM.div}
+                                Component='div'
                                 onValueUpdate={this.props.onTypeChange.bind(null, this.props.index)} />
                             <div className="inputLine-div">
                                 <ContentEditableInput
@@ -290,7 +290,7 @@ var UrlVCardComponentItem = React.createClass({
                                 name="type"
                                 options={options}
                                 value={value.type}
-                                component={React.DOM.div}
+                                Component='div'
                                 onValueUpdate={this.props.onTypeChange.bind(null, this.props.index)} />
                             <div className="inputLine-div">
                                 <ContentEditableInput
@@ -372,7 +372,7 @@ var AddressVCardComponentItem = React.createClass({
                                 name="type"
                                 options={options}
                                 value={value.type}
-                                component={React.DOM.div}
+                                Component='div'
                                 onValueUpdate={this.props.onTypeChange.bind(null, this.props.index)} />
                             <div className="inputLine-div">
                                 <ContentEditableInput

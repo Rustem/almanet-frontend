@@ -11,22 +11,23 @@ var SimpleSelect = React.createClass({
 
     propTypes: {
         options: React.PropTypes.array,
-        component: React.PropTypes.constructor,
+        Component: React.PropTypes.constructor,
     },
 
     renderOption: function(value) {
         return (
-            <option value={value[0]}>{value[1]}</option>
+            <option key={value[0]} value={value[0]}>{value[1]}</option>
         )
     },
 
     render: function() {
         var children = this.props.options.map(this.renderOption);
-        var component = this.props.component;
-        return this.transferPropsTo(
-            <component className="select">
+        var Component = this.props.Component;
+        console.log(Component, this.props);
+        return (
+            <Component {...this.props} className="select">
                 <select value={this.props.value} onChange={this.onChange}>{children}</select>
-            </component>
+            </Component>
         );
     },
 

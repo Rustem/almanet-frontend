@@ -10,13 +10,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+var _ = require('lodash');
 var CRMConstants = require('../constants/CRMConstants');
 var Dispatcher = require('flux').Dispatcher;
-var copyProperties = require('react/lib/copyProperties');
+// var copyProperties = require('react/lib/copyProperties');
 
 var PayloadSources = CRMConstants.PayloadSources;
 
-var CRMAppDispatcher = copyProperties(new Dispatcher(), {
+var CRMAppDispatcher = _.extend(new Dispatcher(), {
 
   /**
    * @param {object} action The details of the action, including the action's

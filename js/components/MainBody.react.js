@@ -7,8 +7,9 @@ var _ = require('lodash');
 var React = require('react');
 var master_views = require('./master_views');
 var BreadCrumb = require('./common/BreadCrumb.react');
-
+var AppContextMixin = require('../mixins/AppContextMixin');
 var MainBody = React.createClass({
+    mixins: [AppContextMixin],
 
     render: function() {
         return (

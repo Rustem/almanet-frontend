@@ -1,14 +1,15 @@
+var _ = require('lodash');
 var EventEmitter = require('events').EventEmitter;
 var CRMConstants = require('../constants/CRMConstants');
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
-var merge = require('react/lib/merge');
+
 
 var ActionTypes = CRMConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
 var _contacts = {};
 
-var ContactStore = merge(EventEmitter.prototype, {
+var ContactStore = _.extend(EventEmitter.prototype, {
     emitChange: function() {
         this.emit(CHANGE_EVENT);
     },

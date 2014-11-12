@@ -11,12 +11,12 @@ var ContentEditableInput = React.createClass({
     lastHtml : null,
     propTypes: {
         isStrong: React.PropTypes.bool,
-        component: React.PropTypes.constructor
+        Component: React.PropTypes.constructor
     },
 
     getDefaultProps: function() {
         return {
-            component: React.DOM.div
+            Component: 'div'
         }
     },
 
@@ -54,14 +54,15 @@ var ContentEditableInput = React.createClass({
           'input-div': true,
           'input-div--strong': this.props.isStrong,
         });
-        var component = this.props.component;
-        return this.transferPropsTo(
-            <component
+        var Component = this.props.Component;
+        return (
+            <Component
+                {...this.props}
                 onInput={this.emitChange}
                 onBlur={this.emitChange}
                 contentEditable={true}
                 className={cx(className, this.props.className)}><span contentEditable={true}>{value}</span><input type="hidden" value={value} />
-            </component>
+            </Component>
         );
     },
 });

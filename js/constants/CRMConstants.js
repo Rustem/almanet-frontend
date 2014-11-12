@@ -7,7 +7,8 @@ module.exports = {
         RECEIVE_CREATED_CONTACT: null,
         CREATE_SHARE: null,
         RECEIVE_CREATED_SHARE: null,
-
+        CURRENT_USER_LOADED: null,
+        LOGOUT: null
     }),
     PayloadSources: keyMirror({
         SERVER_ACTION: null,

@@ -37,12 +37,12 @@ var RepeatingFieldsetMixin = {
    */
     renderFields: function(extraOptions) {
         var value = this.value();
-        var itemComponent = this.props.item;
+        var ItemComponent = this.props.item;
         var self = this;
         var children = value.map(function(itemValue, idx){
             var unique_name = self.props.name + '--' + idx;
             return (
-                <itemComponent
+                <ItemComponent
                     {...extraOptions}
                     index={idx}
                     name={unique_name}

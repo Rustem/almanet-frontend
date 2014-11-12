@@ -11,10 +11,10 @@ var ActiveState = Router.ActiveState;
 var Link = Router.Link;
 var IconSvg = require('../common/IconSvg.react');
 var ShareStore = require('../../stores/ShareStore');
-
+var AppContextMixin = require('../../mixins/AppContextMixin');
 
 var SharedContactLink = React.createClass({
-    mixins: [ActiveState],
+    mixins: [AppContextMixin, ActiveState],
 
     statics: {
         getState: function() {
@@ -32,9 +32,8 @@ var SharedContactLink = React.createClass({
     getInitialState: function() {
         return SharedContactLink.getState();
     },
+    componentWillMount: function() {
 
-    componentDidMount: function() {
-        ShareStore.addChangeListener(this._onChange);
     },
     componentWillUnmount: function() {
         ContactStore.removeChangeListener(this._onChange);

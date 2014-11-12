@@ -6,9 +6,48 @@ var React = require('react');
 var Header = require('./Header.react');
 var Footer = require('./Footer.react');
 var MainBody = require('./MainBody.react')
+var SessionStore = require('../stores/SessionStore');
+var AuthWebApi = require('../api/AuthWebApi');
+
+
+
+function getAppState() {
+    return {
+        current_user: SessionStore.current_user(),
+        isAuth: SessionStore.loggedIn()
+    }
+}
 
 var CRMContactsApp = React.createClass({
 
+    getInitialState: function() {
+        return getAppState();
+    },
+
+    childContextTypes: {
+        user: React.PropTypes.object,
+        isAuth: React.PropTypes.bool
+    },
+
+    getChildContext: function() {
+        return {
+            user: this.state.current_user,
+            isAuth: this.state.isAuth
+        };
+    },
+
+    componentWillMount: function() {
+        AuthWebApi.loadCurrentUser();
+    },
+    componentDidMount: function() {
+        SessionStore.addChangeListener(this._onChange);
+    },
+    componentWillUnmount: function() {
+        SessionStore.removeChangeListener(this._onChange);
+    },
+    _onChange: function() {
+        this.setState(getAppState());
+    },
     render: function() {
         return (
           <div className="body-container">

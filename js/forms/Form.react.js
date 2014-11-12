@@ -13,19 +13,19 @@ var Form = React.createClass({
     mixins: [FormMixin],
 
     propTypes: {
-        component: React.PropTypes.constructor,
+        Component: React.PropTypes.constructor,
         onUpdate: React.PropTypes.func
     },
 
     render: function() {
-        var component = this.props.component;
+        var Component = this.props.Component;
         var className = cx({
 
         });
         return (
-          <component {...this.props} className={className}>
+          <Component {...this.props} className={className}>
             {React.Children.map(this.props.children, this.renderChild)}
-          </component>
+          </Component>
         );
     },
     renderChild: function(child) {
@@ -33,7 +33,7 @@ var Form = React.createClass({
     },
 
     getDefaultProps: function() {
-        return {component: React.DOM.form};
+        return {Component: 'form'};
     },
 
     valueUpdated: function(value) {

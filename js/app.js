@@ -11,9 +11,7 @@ var CRMContactsApp = require('./components/CRMContactsApp.react');
 
 
 // ChatExampleData.init(); // load example data into localstorage
-
-
-React.renderComponent(
+React.render(
   <Routes children={routes}/>,
   document.getElementById('js-crm-app')
 );

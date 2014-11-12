@@ -1,13 +1,14 @@
 /**
  * @jsx React.DOM
  */
+var React = require('react');
 var Router = require('react-router');
 var Route = Router.Route;
 var Routes = Router.Routes;
 var DefaultRoute = Router.DefaultRoute;
 var ContactViews = require('./constants/CRMConstants').ContactViews;
 
-var CRMContactsApp = require('./components/CRMContactsApp.react')
+var CRMContactsApp = React.createFactory(require('./components/CRMContactsApp.react'))
 var master_views = require('./components/master_views');
 
 

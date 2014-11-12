@@ -9,29 +9,29 @@ var cloneWithProps    = React.addons.cloneWithProps;
 var FieldsetMixin = require('./FieldsetMixin.react');
 
 /**
- * A component which renders a set of fields.
+ * A Component which renders a set of fields.
  *
- * It is used by <Form /> component at top level to render its fields.
+ * It is used by <Form /> Component at top level to render its fields.
  */
 var Fieldset = React.createClass({
   mixins: [FieldsetMixin],
 
   propTypes: {
-    component: React.PropTypes.constructor
+    Component: React.PropTypes.constructor
   },
 
   getDefaultProps: function() {
     return {
-      component: React.DOM.div
+      Component: 'div'
     }
   },
 
   render: function() {
-    var component = this.props.component;
+    var Component = this.props.Component;
     return (
-      <component {...this.props}>
+      <Component {...this.props}>
         {React.Children.map(this.props.children, this.renderChild)}
-      </component>
+      </Component>
     );
   },
   renderChild: function(child) {
