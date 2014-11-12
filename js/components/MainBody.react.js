@@ -4,7 +4,7 @@
  */
 var React = require('react');
 var master_views = require('./master_views');
-var MasterDetailBreadCrumbs = require('./common/BreadCrumb.react').MasterDetailBreadCrumbs;
+var BreadCrumb = require('./common/BreadCrumb.react');
 
 var MainBody = React.createClass({
 
@@ -14,7 +14,7 @@ var MainBody = React.createClass({
                 <div className="body-master">
                     <div className="page page--compact">
                         <div className="page-header">
-                            <MasterDetailBreadCrumbs isMaster={true} />
+                            <BreadCrumb slice={[0, -1]} />
                         </div>
                         <div className="page-body">
                             <master_views.Shared.Link label="Входящие" />

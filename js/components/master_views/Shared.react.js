@@ -9,8 +9,6 @@ var Router = require('react-router');
 var ActiveState = Router.ActiveState;
 var Link = Router.Link;
 var IconSvg = require('../common/IconSvg.react');
-var MasterDetailBreadCrumbs = require('../common/BreadCrumb.react').MasterDetailBreadCrumbs;
-
 
 var SharedContactLink = React.createClass({
     mixins: [ActiveState],
@@ -46,7 +44,7 @@ var SharedContactLink = React.createClass({
         var routes = this.getActiveRoutes();
         var route = routes[routes.length - 1];
         if(!route) { return false; }
-        return route.name === 'shared';
+        return route.name === 'shared' || (route.props.isDefault && route.props.path === '/');
     }
 });
 
@@ -56,10 +54,13 @@ var SharedContactDetailView = React.createClass({
     },
 
     render: function() {
+        console.log(this.props);
         return (
         <div className="page">
             <div className="page-header">
-                <MasterDetailBreadCrumbs isMaster={false} />
+                <ul className="page-breadcrumbs">
+                  <li><span class="page-breadcrumbs-link">{this.props.alt}</span></li>
+                </ul>
             </div>
             <div className="page-body">
 

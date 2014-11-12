@@ -8,7 +8,6 @@ var cx        = React.addons.classSet;
 var Router = require('react-router');
 var Link = Router.Link;
 var IconSvg = require('../common/IconSvg.react');
-var MasterDetailBreadCrumbs = require('../common/BreadCrumb.react').MasterDetailBreadCrumbs;
 
 var ColdBaseLink = React.createClass({
     mixins: [Router.ActiveState],
@@ -53,7 +52,9 @@ var ColdBaseDetailView = React.createClass({
         return (
         <div className="page">
             <div className="page-header">
-                <MasterDetailBreadCrumbs isMaster={false} />
+                <ul className="page-breadcrumbs">
+                  <li><span class="page-breadcrumbs-link">{this.props.alt}</span></li>
+                </ul>
             </div>
             <div className="page-body">
 
