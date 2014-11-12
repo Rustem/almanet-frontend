@@ -10,10 +10,18 @@ var ActiveState = Router.ActiveState;
 var Link = Router.Link;
 var IconSvg = require('../common/IconSvg.react');
 
+function getStateFromStores() {
+    return {
+        shares: ShareStore.getAllChrono()
+    }
+}
+
+
 var SharedContactLink = React.createClass({
     mixins: [ActiveState],
     propTypes: {
         label: React.PropTypes.string,
+        amount: React.PropTypes.number,
         isNew: React.PropTypes.bool   // when new contact created or somebody shared in realtime
     },
     render: function() {
@@ -34,7 +42,7 @@ var SharedContactLink = React.createClass({
                         {this.props.label}
                     </div>
                     <div className="row-body-secondary">
-                      4
+                      {this.props.amount}
                     </div>
                 </div>
             </Link>
@@ -53,8 +61,16 @@ var SharedContactDetailView = React.createClass({
         label: React.PropTypes.string
     },
 
+    getShares: function() {
+        return this.state.shares;
+    },
+
+    getSharesNumber: function() {
+        return this.getShares().length;
+    },
+
+
     render: function() {
-        console.log(this.props);
         return (
         <div className="page">
             <div className="page-header">

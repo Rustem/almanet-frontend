@@ -30,9 +30,7 @@ var BreadCrumb = React.createClass({
 
     render: function() {
         var crumbs = [];
-        var routes = this.getActiveRoutes().filter(function(r){
-            return !r.props.isDefault;  // because default are always active
-        });
+        var routes = this.getActiveRoutes();
         this.filter(routes).forEach(function(route, i, arr) {
             var name = route.props.alt ? route.props.alt : route.props.handler.displayName;
             var link = name;

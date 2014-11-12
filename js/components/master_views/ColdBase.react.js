@@ -3,17 +3,44 @@
  * @jsx React.DOM
  */
 
+var _ = require('lodash');
 var React = require('react');
 var cx        = React.addons.classSet;
 var Router = require('react-router');
 var Link = Router.Link;
 var IconSvg = require('../common/IconSvg.react');
 
+var ContactStore = require('../../stores/ContactStore');
+
+
+function get_coldbase_contacts() {
+    return _.size(ContactStore.getAll());
+}
+
+
 var ColdBaseLink = React.createClass({
     mixins: [Router.ActiveState],
     propTypes: {
         label: React.PropTypes.string,
+        amount: React.PropTypes.number
     },
+
+    getInitialState: function() {
+        return {'amount': get_coldbase_contacts()};
+    },
+
+    componentDidMount: function() {
+        ContactStore.addChangeListener(this._onChange);
+    },
+
+    componentWillUnmount: function() {
+        ContactStore.removeChangeListener(this._onChange);
+    },
+
+    _onChange: function() {
+        this.setState({'amount': get_coldbase_contacts()});
+    },
+
     render: function() {
         var className = cx({
             'row': true,
@@ -29,7 +56,7 @@ var ColdBaseLink = React.createClass({
                         {this.props.label}
                     </div>
                     <div className="row-body-secondary">
-                      xx
+                      {this.state.amount}
                     </div>
                 </div>
             </Link>

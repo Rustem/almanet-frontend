@@ -51,3 +51,5 @@ ShareStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     }
 
 });
+
+module.exports = ShareStore;

@@ -51,3 +51,5 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     }
 
 });
+
+module.exports = ContactStore;

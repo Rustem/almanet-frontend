@@ -40,13 +40,16 @@ FORM_REF = 'contact_form'
 
 var ContactComposerForm = React.createClass({
 
+  propTypes: {
+    handleSubmit: React.PropTypes.func
+  },
 
   render: function() {
     return (
       <div className="dropdown-menu" style={{height: '310px'}}>
         <div className="addContact">
           <div className="addContact-edit">
-              <ContactCreateForm ref={FORM_REF} onHandleSubmit={this.handleSubmit} />
+              <ContactCreateForm ref={FORM_REF} onHandleSubmit={this.props.handleSubmit} />
           </div>
         </div>
       </div>
@@ -56,12 +59,6 @@ var ContactComposerForm = React.createClass({
   getForm: function(){
     return this.refs[FORM_REF].refs[FORM_REF];
   },
-
-  handleSubmit: function(contactObject) {
-    console.log('form', contactObject);
-    ContactActionCreators.createContact(contactObject);
-    return;
-  }
 });
 
 
@@ -88,6 +85,7 @@ var ContactComposer = React.createClass({
               onKeyDown={this.onKeyDown} />
             <ContactComposerForm
               ref="contactForm"
+              handleSubmit={this.handleSubmit}
               isOpen={this.isOpen()} />
           </div>
         );
@@ -95,6 +93,10 @@ var ContactComposer = React.createClass({
     componentDidUpdate: function(prevProps, prevState) {
         if(this.isOpen()) {
         }
+    },
+    handleSubmit: function(contactObject) {
+      ContactActionCreators.createContact(contactObject);
+      return;
     },
     onMenuToggle: function(evt) {
         this.setState({isOpen: !this.isOpen()}, function() {

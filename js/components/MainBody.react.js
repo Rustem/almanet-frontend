@@ -2,6 +2,8 @@
  * @author xepa4ep
  * @jsx React.DOM
  */
+
+var _ = require('lodash');
 var React = require('react');
 var master_views = require('./master_views');
 var BreadCrumb = require('./common/BreadCrumb.react');
