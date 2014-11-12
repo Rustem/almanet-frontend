@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var EventEmitter = require('events').EventEmitter;
 var CRMConstants = require('../constants/CRMConstants');
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
@@ -23,6 +24,25 @@ var ShareStore = merge(EventEmitter.prototype, {
 
     getAll: function() {
         return _shares;
+    },
+
+    getAllNew: function() {
+        var shares = this.getAll();
+        return _.filter(shares, function(share) { return share.isNew });
+    },
+
+    getAllButNew: function() {
+        var shares = this.getAll();
+        return _.filter(shares, function(share) { return !share.isNew });
+    },
+
+    size: function() {
+        return _.size(this.getAll());
+    },
+
+    hasNew: function() {
+        var shares = this.getAll();
+        return _.any(shares, function(share){ return share.isNew });
     },
 
     getCreatedContact: function(obj) {

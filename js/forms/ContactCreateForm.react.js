@@ -15,7 +15,7 @@ var EmailVCardComponent = VCardWidgets.EmailVCardComponent;
 var PhoneVCardComponent = VCardWidgets.PhoneVCardComponent;
 var UrlVCardComponent = VCardWidgets.UrlVCardComponent;
 var AddressVCardComponent = VCardWidgets.AddressVCardComponent;
-
+var VCardRow = VCardWidgets.VCardRow;
 
 var _ = require('lodash');
 Object.assign = _.extend;
@@ -29,7 +29,8 @@ var default_form_state = {
   'phones': [{'idx': 0, 'type': 'work', 'value': '+7 777 7777777'}],
   'is_company': true,
   'urls': [{'idx': 0, 'type': 'website', 'value': 'http://alma.net'}],
-  'adrs': [{'idx': 0, 'type': 'home', 'street_address': 'Zharokov, 167', 'region': 'Almaty', 'locality': 'Almaty', 'country_name': 'Kazakhstan', 'postal_code': '00012'}]
+  'adrs': [{'idx': 0, 'type': 'home', 'street_address': 'Zharokov, 167', 'region': 'Almaty', 'locality': 'Almaty', 'country_name': 'Kazakhstan', 'postal_code': '00012'}],
+  'note': 'Нужно сюда съездить на встречу а то я не успеваю, подмени меня пожалуйста'
 };
 
 var ContactCreateForm = React.createClass({
@@ -58,7 +59,7 @@ var ContactCreateForm = React.createClass({
         <div className="space-verticalBorder"></div>
 
         <AddressVCardComponent name="adrs" options={[['home', 'место проживания'], ['work', 'место работы']]} />
-
+        <VCardRow name='note' label='Заметка' />
         <div className="inputLine text-right">
             <button className="btn btn--save" type="submit">Сохранить</button>
         </div>

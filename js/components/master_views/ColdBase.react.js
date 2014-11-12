@@ -9,7 +9,6 @@ var cx        = React.addons.classSet;
 var Router = require('react-router');
 var Link = Router.Link;
 var IconSvg = require('../common/IconSvg.react');
-
 var ContactStore = require('../../stores/ContactStore');
 
 

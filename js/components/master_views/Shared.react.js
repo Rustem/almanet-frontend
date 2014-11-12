@@ -3,34 +3,53 @@
  * @jsx React.DOM
  */
 
+var _ = require('lodash');
 var React = require('react');
 var cx        = React.addons.classSet;
 var Router = require('react-router');
 var ActiveState = Router.ActiveState;
 var Link = Router.Link;
 var IconSvg = require('../common/IconSvg.react');
-
-function getStateFromStores() {
-    return {
-        shares: ShareStore.getAllChrono()
-    }
-}
+var ShareStore = require('../../stores/ShareStore');
 
 
 var SharedContactLink = React.createClass({
     mixins: [ActiveState],
+
+    statics: {
+        getState: function() {
+            return {
+                'amount': ShareStore.size(),
+                'hasNewItems': ShareStore.hasNew()
+            }
+        }
+    },
+
     propTypes: {
         label: React.PropTypes.string,
-        amount: React.PropTypes.number,
-        isNew: React.PropTypes.bool   // when new contact created or somebody shared in realtime
     },
+
+    getInitialState: function() {
+        return SharedContactLink.getState();
+    },
+
+    componentDidMount: function() {
+        ShareStore.addChangeListener(this._onChange);
+    },
+    componentWillUnmount: function() {
+        ContactStore.removeChangeListener(this._onChange);
+    },
+    _onChange: function() {
+        this.setState(SharedContactLink.getState());
+    },
+
     render: function() {
         var className = cx({
             'row': true,
             'row-oneliner': true,
             'row--link': true,
             'active': this.isCurrentlyActive(),
-            'new': this.props.isNew
+            'new': this.state.hasNewItems
         });
         return (
             <Link className={className} to='shared'>
@@ -42,7 +61,7 @@ var SharedContactLink = React.createClass({
                         {this.props.label}
                     </div>
                     <div className="row-body-secondary">
-                      {this.props.amount}
+                      {this.state.amount}
                     </div>
                 </div>
             </Link>

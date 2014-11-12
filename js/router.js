@@ -16,7 +16,7 @@ var coldbase_view = ContactViews.COLD_BASE_CONTACT_VIEW;
 
 var routes = (
     <Route name="contacts" path="/" handler={CRMContactsApp} alt="контакты">
-        <DefaultRoute handler={master_views.Shared.DetailView} />
+        <DefaultRoute handler={master_views.Shared.DetailView} alt="Входящие" />
         <Route
             name='shared'
             handler={master_views.Shared.DetailView}
