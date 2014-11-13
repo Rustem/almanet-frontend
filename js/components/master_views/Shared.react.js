@@ -10,7 +10,9 @@ var Router = require('react-router');
 var ActiveState = Router.ActiveState;
 var Link = Router.Link;
 var IconSvg = require('../common/IconSvg.react');
+var ContactActionCreators = require('../../actions/ContactActionCreators');
 var ShareStore = require('../../stores/ShareStore');
+var ContactStore = require('../../stores/ContactStore');
 var AppContextMixin = require('../../mixins/AppContextMixin');
 
 var SharedContactLink = React.createClass({
@@ -32,11 +34,11 @@ var SharedContactLink = React.createClass({
     getInitialState: function() {
         return SharedContactLink.getState();
     },
-    componentWillMount: function() {
-
+    componentDidMount: function() {
+        ShareStore.addChangeListener(this._onChange);
     },
     componentWillUnmount: function() {
-        ContactStore.removeChangeListener(this._onChange);
+        ShareStore.removeChangeListener(this._onChange);
     },
     _onChange: function() {
         this.setState(SharedContactLink.getState());

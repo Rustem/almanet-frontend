@@ -23,7 +23,6 @@ var SimpleSelect = React.createClass({
     render: function() {
         var children = this.props.options.map(this.renderOption);
         var Component = this.props.Component;
-        console.log(Component, this.props);
         return (
             <Component {...this.props} className="select">
                 <select value={this.props.value} onChange={this.onChange}>{children}</select>

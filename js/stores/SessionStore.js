@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var assign = require('object-assign');
 var EventEmitter = require('events').EventEmitter;
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
 var CRMConstants = require('../constants/CRMConstants');
@@ -16,7 +17,7 @@ var _anonymous_user = {
 
 var _current_user = _.cloneDeep(_anonymous_user);
 
-var SessionStore = _.extend(EventEmitter.prototype, {
+var SessionStore = assign({}, EventEmitter.prototype, {
     emitChange: function() {
         this.emit(CHANGE_EVENT);
     },

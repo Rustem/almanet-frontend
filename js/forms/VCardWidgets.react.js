@@ -169,7 +169,6 @@ var EmailVCardComponent = React.createClass({
     },
 
     onChange: function(idx, changedValue) {
-        console.log('changed')
         var value = this.value();
         value[idx] = React.addons.update(value[idx], {$merge: changedValue});
         this.updateValue(this.prepValue(this.props.name, value));
@@ -254,9 +253,7 @@ var PhoneVCardComponent = React.createClass({
 
     onChange: function(idx, changedValue) {
         var value = this.value();
-        console.log(value, idx, changedValue);
         value[idx] = React.addons.update(value[idx], {$merge: changedValue});
-        console.log(this.prepValue(this.props.name, value));
         this.updateValue(this.prepValue(this.props.name, value));
     }
 });

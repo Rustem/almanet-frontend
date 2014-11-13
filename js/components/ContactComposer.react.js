@@ -8,6 +8,7 @@ var IconSvg = require('./common/IconSvg.react');
 var ContactCreateForm = require('../forms/ContactCreateForm.react');
 
 var ContactActionCreators = require('../actions/ContactActionCreators');
+var AppContextMixin = require('../mixins/AppContextMixin');
 
 var ESCAPE_KEY_CODE = 27;
 
@@ -66,6 +67,8 @@ var ContactComposerForm = React.createClass({
 
 var ContactComposer = React.createClass({
 
+    mixins: [AppContextMixin],
+
     getInitialState: function() {
         return {
           isOpen: false
@@ -95,6 +98,7 @@ var ContactComposer = React.createClass({
         }
     },
     handleSubmit: function(contactObject) {
+      contactObject.author_id = this.context.user.id;
       ContactActionCreators.createContact(contactObject);
       return;
     },

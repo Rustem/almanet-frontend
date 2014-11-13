@@ -1,14 +1,16 @@
 var _ = require('lodash');
+var assign = require('object-assign');
 var EventEmitter = require('events').EventEmitter;
 var CRMConstants = require('../constants/CRMConstants');
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
-
+var ContactActionCreators = require('../actions/ContactActionCreators');
+var ContactStore = require('./ContactStore');
 var ActionTypes = CRMConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
 var _shares = {};
 
-var ShareStore = _.extend(EventEmitter.prototype, {
+var ShareStore = assign({}, EventEmitter.prototype, {
     emitChange: function() {
         this.emit(CHANGE_EVENT);
     },
@@ -45,7 +47,6 @@ var ShareStore = _.extend(EventEmitter.prototype, {
     },
 
     getCreatedContact: function(obj) {
-        console.log(obj, "in store");
         return obj;
     }
 
@@ -56,6 +57,12 @@ ShareStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
 
     var action = payload.action;
     switch(action.type) {
+        case ActionTypes.RECEIVE_CREATED_CONTACT:
+            CRMAppDispatcher.waitFor([ContactStore.dispatchToken]);
+            var contact = action.object;
+            _shares[contact.share.id] = contact.share;
+            ShareStore.emitChange();
+            break;
         case ActionTypes.CREATE_SHARE:
             var contact = ShareStore.getCreatedContact(action.object);
             ShareStore.emitChange();

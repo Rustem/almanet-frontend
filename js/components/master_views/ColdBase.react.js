@@ -13,6 +13,7 @@ var ContactStore = require('../../stores/ContactStore');
 
 
 function get_coldbase_contacts() {
+    console.log(ContactStore, ContactStore.getAll(), ContactStore.get())
     return _.size(ContactStore.getAll());
 }
 
@@ -21,7 +22,6 @@ var ColdBaseLink = React.createClass({
     mixins: [Router.ActiveState],
     propTypes: {
         label: React.PropTypes.string,
-        amount: React.PropTypes.number
     },
 
     getInitialState: function() {
