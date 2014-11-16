@@ -14,9 +14,9 @@ var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
 var CRMConstants = require('../constants/CRMConstants');
 var ContactWebAPI = require('../api/ContactWebAPI');
 var ContactStore = require('../stores/ContactStore');
-
+var ShareStore = require('../stores/ShareStore');
 var ActionTypes = CRMConstants.ActionTypes;
-
+var utils = require('../utils');
 module.exports = {
 
   createContact: function(object) {
@@ -36,6 +36,11 @@ module.exports = {
     });
     // var message = ContactStore.getCreatedContact(shareObject);
     ContactWebAPI.createShare(object);
-  }
+  },
+
+  markAllSharesAsRead: function() {
+    var shares_ids = utils.extractIds(ShareStore.getAllNew());
+    ContactWebAPI.markSharesAsRead(shares_ids);
+  },
 
 };

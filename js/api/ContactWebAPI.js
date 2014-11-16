@@ -13,7 +13,8 @@ module.exports = {
             id: 'share_' + Date.now(),
             contact_id: obj.id,
             at: timeNow,
-            note: obj.note};
+            note: obj.note,
+            isNew: true};
         obj.share = share;
         // simulate success callback
         setTimeout(function() {
@@ -26,6 +27,11 @@ module.exports = {
             isNew: true}, shareObject);
         setTimeout(function() {
             ContactServerActionCreators.receiveCreatedShare(obj);
+        }, 0);
+    },
+    markSharesAsRead: function(share_ids) {
+        setTimeout(function() {
+            ContactServerActionCreators.receiveReadShares(share_ids)
         }, 0);
     }
 };

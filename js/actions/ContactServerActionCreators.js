@@ -18,6 +18,12 @@ module.exports = {
         type: ActionTypes.RECEIVE_CREATED_SHARE,
         object: object
     });
+  },
+  receiveReadShares: function(share_ids) {
+    CRMAppDispatcher.handleServerAction({
+        type: ActionTypes.RECEIVE_READ_SHARES,
+        object: share_ids
+    });
   }
 
 };

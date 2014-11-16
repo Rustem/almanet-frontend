@@ -3,6 +3,17 @@
  */
 'use strict';
 
+var _ = require('lodash');
+
+function extractIds(object_list) {
+
+    function __g(object) {
+        return object.id
+    }
+
+    return _.map(object_list, __g);
+};
+
 function mergeInto(dst, src) {
   if (src != null) {
     for (var k in src) {
@@ -57,6 +68,7 @@ String.prototype.interpolate = function(props) {
 };
 
 module.exports = {
+  extractIds: extractIds,
   mergeInto: mergeInto,
   merge: merge,
   invariant: invariant,

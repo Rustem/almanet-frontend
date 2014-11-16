@@ -59,7 +59,7 @@ var SharedContactLink = React.createClass({
             'new': this.state.hasNewItems
         });
         return (
-            <Link className={className} to='shared'>
+            <Link className={className} to='shared' onClick={this.onClick} >
                 <div className="row-icon">
                     <IconSvg iconKey="inbox" />
                 </div>
@@ -79,6 +79,13 @@ var SharedContactLink = React.createClass({
         var route = routes[routes.length - 1];
         if(!route) { return false; }
         return route.name === 'shared' || (route.props.isDefault && route.props.path === '/');
+    },
+    onClick: function(evt) {
+        // Do not prevent bubbling.
+        if(this.state.hasNewItems) {
+            ContactActionCreators.markAllSharesAsRead();
+        }
+
     }
 });
 
@@ -248,7 +255,7 @@ var SharedContactDetailView = React.createClass({
     },
 
     getInitialState: function() {
-        var shares = ShareStore.getAll();
+        var shares = ShareStore.sortedByDate(true);
         var contacts = [], contact_ids = [], selection_map = {};
         contact_ids = shares.map(function(share){ return share.contact_id });
         contacts = ContactStore.getByIds(contact_ids);

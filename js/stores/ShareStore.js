@@ -27,6 +27,24 @@ var ShareStore = assign({}, EventEmitter.prototype, {
         return _shares[id];
     },
 
+    // makeAllRead: function() {
+    //     var newShares = this.getAllNew();
+    //     var oldShares = _.map(newShares, function(share) {
+    //         share.isNew = false;
+    //     });
+    //     return oldShares;
+    // },
+
+    sortedByDate: function(reversed) {
+        var reversed = reversed && true || false;
+        var shares = this.getAll();
+        shares = _.sortBy(shares, function(share){ return share.at });
+        if(reversed) {
+            shares = shares.reverse();
+        }
+        return shares;
+    },
+
     getAll: function() {
         return _.map(_shares, function(share) {return share});
     },
@@ -52,6 +70,14 @@ var ShareStore = assign({}, EventEmitter.prototype, {
 
     getCreatedContact: function(obj) {
         return obj;
+    },
+
+    markSharesAsRead: function(share_ids) {
+        for(var i = 0; i < share_ids.length; i++) {
+            var share_id = share_ids[i];
+            _shares[share_id].isNew = false;
+        }
+        return true;
     }
 
 });
@@ -74,6 +100,10 @@ ShareStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
         case ActionTypes.RECEIVE_CREATED_SHARE:
             var share_object = ShareStore.getCreatedContact(action.object);
             _shares[share_object.id] = share_object;
+            ShareStore.emitChange();
+            break;
+        case ActionTypes.RECEIVE_READ_SHARES:
+            ShareStore.markSharesAsRead(action.object);
             ShareStore.emitChange();
             break;
         default:
