@@ -27,14 +27,6 @@ var ShareStore = assign({}, EventEmitter.prototype, {
         return _shares[id];
     },
 
-    // makeAllRead: function() {
-    //     var newShares = this.getAllNew();
-    //     var oldShares = _.map(newShares, function(share) {
-    //         share.isNew = false;
-    //     });
-    //     return oldShares;
-    // },
-
     sortedByDate: function(reversed) {
         var reversed = reversed && true || false;
         var shares = this.getAll();

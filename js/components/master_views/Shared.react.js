@@ -109,7 +109,7 @@ var FilterBar = React.createClass({
                                 <IconSvg iconKey='arrow-down' />
                             </Div>
                             <Div className="row-body-primary">
-                                <Input name="filterText" type="text" className="input-filter" placeholder="Фильтр" />
+                                <Input name="filter_text" type="text" className="input-filter" placeholder="Фильтр" />
                             </Div>
                         </Div>
                     </Div>
@@ -193,6 +193,7 @@ var ShareListItem = React.createClass({
 
 var SharesList = React.createClass({
     propTypes: {
+        filter_text: React.PropTypes.string,
         shares: React.PropTypes.array,
         contacts: React.PropTypes.array,
         selection_map: React.PropTypes.object,
@@ -226,9 +227,22 @@ var SharesList = React.createClass({
         return _.map(contact_ids, this.findContact);
     },
 
+    filterShares: function() {
+        // by all contacts and notes
+        var shares = this.props.shares,
+            filter_text = this.props.filter_text;
+        if(!filter_text) {
+            return shares;
+        }
+        return _.filter(shares, function(share) {
+            var note = share.note.toLowerCase();
+            return note.indexOf(filter_text.toLowerCase()) > - 1;
+        });
+    },
+
     render: function() {
         var self = this;
-        var shareListItems = this.props.shares.map(function(share) {
+        var shareListItems = this.filterShares().map(function(share) {
             var is_selected = self.props.selection_map[share.id];
             return(
                 <ShareListItem
@@ -267,10 +281,12 @@ var SharedContactDetailView = React.createClass({
             shares: shares,
             contacts: contacts,
             selection_map: selection_map,
-            search_bar: {all_selected: false, filterText: ''}
+            search_bar: {select_all: false, filter_text: ''}
         }
     },
-
+    getFilterText: function() {
+        return this.state.search_bar.filter_text;
+    },
     getShares: function() {
         return this.state.shares;
     },
@@ -290,7 +306,9 @@ var SharedContactDetailView = React.createClass({
         ShareStore.removeChangeListener(this._onChange);
     },
     onHandleUserInput: function(value) {
+        console.log(value);
         var is_selected = value.select_all;
+        console.log(value);
         var _map = {};
         for(var contact_id in this.state.selection_map) {
             _map[contact_id] = is_selected;
@@ -319,6 +337,7 @@ var SharedContactDetailView = React.createClass({
                 </div>
                 <SharesList
                     ref='share_list'
+                    filter_text={this.getFilterText()}
                     shares={this.getShares()}
                     contacts={this.getContacts()}
                     selection_map={this.getSelectMap()}
@@ -333,7 +352,7 @@ var SharedContactDetailView = React.createClass({
             console.log('Choose at least one contact');
             return
         }
-        console.log(selected_contacts);
+        console.log('You has chosen to edit', selected_contacts);
     },
     _onChange: function() {
         this.setState(this.getInitialState());
