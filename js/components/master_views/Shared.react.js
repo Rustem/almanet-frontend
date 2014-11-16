@@ -88,15 +88,9 @@ var FilterBar = React.createClass({
         value: React.PropTypes.object,
         onHandleUserInput: React.PropTypes.func
     },
-    getDefaultValue: function() {
-        return {
-            filter_text: 'dasdsa',
-            select_all: false
-        }
-    },
     render: function() {
         return (
-            <Form onUpdate={this.onHandleUpdate} value={this.getDefaultValue()} name='share:filter_contacts_form' ref='filter_contacts_form'>
+            <Form onUpdate={this.onHandleUpdate} value={this.props.value} name='share:filter_contacts_form' ref='filter_contacts_form'>
                 <Div className="page-header-filterContainer">
                     <Div className="page-header-filter row">
                         <Div className="row-icon">
@@ -107,7 +101,7 @@ var FilterBar = React.createClass({
                                 <IconSvg iconKey='arrow-down' />
                             </Div>
                             <Div className="row-body-primary">
-                                <Input name="filter_text" type="text" className="input-filter" placeholder="Фильтр" />
+                                <Input name="filterText" type="text" className="input-filter" placeholder="Фильтр" />
                             </Div>
                         </Div>
                     </Div>
@@ -138,20 +132,26 @@ var FilterBar = React.createClass({
 });
 
 var ShareListItem = React.createClass({
+    mixins: [AppContextMixin],
     propTypes: {
         share: React.PropTypes.object,
+        contact: React.PropTypes.object,
         is_selected: React.PropTypes.bool,
         onItemToggle: React.PropTypes.func
     },
 
     getContactName: function() {
-        return "Мегагаз"
+        return this.props.contact.fn;
     },
     getAuthorName: function() {
-        return 'Санжар'
+        // TODO: should get user from store
+        return this.context.user.first_name;
     },
     getTimeAt: function() {
-        return '11:07, 7 окт 14'
+        return this.props.share.at
+    },
+    getNote: function() {
+        return this.props.share.note
     },
     render: function() {
         var share = this.props.share;
@@ -173,6 +173,9 @@ var ShareListItem = React.createClass({
                       <div className="text-caption text-secondary">
                         <a href="#" className="text-secondary">{this.getAuthorName()}</a> в {this.getTimeAt()}
                       </div>
+                      <div className="row-body-message">
+                        {this.getNote()}
+                      </div>
                     </div>
                 </div>
             </div>
@@ -183,25 +186,31 @@ var ShareListItem = React.createClass({
 var SharesList = React.createClass({
     propTypes: {
         shares: React.PropTypes.array,
+        contacts: React.PropTypes.array,
+        selection_map: React.PropTypes.object,
+        onChangeState: React.PropTypes.func
     },
-    getInitialState: function() {
-        return {}
+
+    findContact: function(contact_id) {
+        return _.find(this.props.contacts, function(contact){
+            return contact.id === contact_id
+        });
     },
 
     onItemToggle: function(share_id, value) {
-        var val = null;
-        this.state[share_id] = value['share__' + share_id];
-        this.setState(this.state);
+        var val = value['share__' + share_id];
+        this.props.onChangeState(share_id, val)
     },
 
     render: function() {
         var self = this;
         var shareListItems = this.props.shares.map(function(share) {
-            var is_selected = self.state[share.id] || false;
+            var is_selected = self.props.selection_map[share.id];
             return(
                 <ShareListItem
                     key={'share__' + share.id}
                     share={share}
+                    contact={self.findContact(share.contact_id)}
                     is_selected={is_selected}
                     onItemToggle={self.onItemToggle} />
             )
@@ -214,21 +223,39 @@ var SharesList = React.createClass({
     }
 });
 
+
+
 var SharedContactDetailView = React.createClass({
     propTypes: {
         label: React.PropTypes.string
     },
 
     getInitialState: function() {
+        var shares = ShareStore.getAll();
+        var contacts = [], contact_ids = [], selection_map = {};
+        contact_ids = shares.map(function(share){ return share.contact_id });
+        contacts = ContactStore.getByIds(contact_ids);
+        for(var i = 0; i<shares.length; i++) {
+            selection_map[shares[i].id] = false;
+        }
+
         return {
-            shares: ShareStore.getAll()
+            shares: shares,
+            contacts: contacts,
+            selection_map: selection_map,
+            search_bar: {all_selected: false, filterText: ''}
         }
     },
 
     getShares: function() {
         return this.state.shares;
     },
-
+    getContacts: function() {
+        return this.state.contacts;
+    },
+    getSelectMap: function() {
+        return this.state.selection_map;
+    },
     getSharesNumber: function() {
         return this.getShares().length;
     },
@@ -239,24 +266,43 @@ var SharedContactDetailView = React.createClass({
         ShareStore.removeChangeListener(this._onChange);
     },
     onHandleUserInput: function(value) {
-        console.log('handle', value);
+        var is_selected = value.select_all;
+        var _map = {};
+        for(var contact_id in this.state.selection_map) {
+            _map[contact_id] = is_selected;
+        }
+        this.state.selection_map = _map;
+        this.state.search_bar = value;
+        this.setState(this.state);
+    },
+    onChangeState: function(share_id, is_selected) {
+        this.state.selection_map[share_id] = is_selected;
+        this.setState(this.state);
     },
 
     render: function() {
         return (
-        <div className="page">
-            <div className="page-header">
-                <ul className="page-breadcrumbs">
-                  <li><span class="page-breadcrumbs-link">{this.props.alt}</span></li>
-                </ul>
-                <FilterBar onHandleUserInput={this.onHandleUserInput} />
+            <div className="page">
+                <div className="page-header">
+                    <ul className="page-breadcrumbs">
+                      <li><span class="page-breadcrumbs-link">{this.props.alt}</span></li>
+                    </ul>
+                    <FilterBar
+                        ref='filter_bar'
+                        value={this.state.search_bar}
+                        onHandleUserInput={this.onHandleUserInput} />
+                </div>
+                <SharesList
+                    ref='share_list'
+                    shares={this.getShares()}
+                    contacts={this.getContacts()}
+                    selection_map={this.getSelectMap()}
+                    onChangeState={this.onChangeState} />
             </div>
-            <SharesList shares={this.getShares()} />
-        </div>
         )
     },
     _onChange: function() {
-        this.setState({shares: ShareStore.getAll()});
+        this.setState(this.getInitialState());
     }
 });
 

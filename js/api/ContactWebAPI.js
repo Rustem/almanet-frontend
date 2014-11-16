@@ -4,12 +4,15 @@ ContactServerActionCreators = require('../actions/ContactServerActionCreators')
 
 module.exports = {
     createContact: function(contactObject, callback) {
+        var timeNow = Date.now();
         var obj = _.extend({}, {
-            id: 'c_' + Date.now(),
+            id: 'c_' + timeNow,
+            at: timeNow,
             is_cold: true}, contactObject);
         var share = {
             id: 'share_' + Date.now(),
             contact_id: obj.id,
+            at: timeNow,
             note: obj.note};
         obj.share = share;
         // simulate success callback

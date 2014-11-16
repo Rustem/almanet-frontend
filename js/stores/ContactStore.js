@@ -27,7 +27,12 @@ var ContactStore = assign({}, EventEmitter.prototype, {
     },
 
     getAll: function() {
-        return _contacts
+        return _.map(_contacts, function(c) { return c });
+    },
+
+    getByIds: function(ids) {
+        var contacts = this.getAll();
+        return _.filter(contacts, function(c){ return _.indexOf(ids, c.id) !== -1 });
     },
 
     getCreatedContact: function(obj) {
