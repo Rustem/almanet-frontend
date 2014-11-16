@@ -86,6 +86,7 @@ var SharedContactLink = React.createClass({
 var FilterBar = React.createClass({
     propTypes: {
         value: React.PropTypes.object,
+        onUserAction: React.PropTypes.func,
         onHandleUserInput: React.PropTypes.func
     },
     render: function() {
@@ -111,7 +112,7 @@ var FilterBar = React.createClass({
                         <SVGCheckbox name="select_all" className="text-secondary" label="Выбрать все" />
                     </Div>
                     <div className="row-body-secondary">
-                        <a href="#" className="text-secondary">Редактировать список</a>
+                        <a onClick={this.props.onUserAction} href="#" className="text-secondary">Редактировать список</a>
                     </div>
                 </Div>
 
@@ -197,9 +198,25 @@ var SharesList = React.createClass({
         });
     },
 
+    findShare: function(share_id) {
+        return _.find(this.props.shares, function(share){
+            return share.id === share_id
+        });
+    },
+
     onItemToggle: function(share_id, value) {
         var val = value['share__' + share_id];
         this.props.onChangeState(share_id, val)
+    },
+
+    getSelectedContacts: function() {
+        var contact_ids = [];
+        for(var share_id in this.props.selection_map) {
+            var is_selected = this.props.selection_map[share_id];
+            if(!is_selected) continue;
+            contact_ids.push(this.findShare(share_id).contact_id);
+        }
+        return _.map(contact_ids, this.findContact);
     },
 
     render: function() {
@@ -227,7 +244,7 @@ var SharesList = React.createClass({
 
 var SharedContactDetailView = React.createClass({
     propTypes: {
-        label: React.PropTypes.string
+        label: React.PropTypes.string,
     },
 
     getInitialState: function() {
@@ -290,7 +307,8 @@ var SharedContactDetailView = React.createClass({
                     <FilterBar
                         ref='filter_bar'
                         value={this.state.search_bar}
-                        onHandleUserInput={this.onHandleUserInput} />
+                        onHandleUserInput={this.onHandleUserInput}
+                        onUserAction={this.onUserAction} />
                 </div>
                 <SharesList
                     ref='share_list'
@@ -300,6 +318,15 @@ var SharedContactDetailView = React.createClass({
                     onChangeState={this.onChangeState} />
             </div>
         )
+    },
+    onUserAction: function(evt) {
+        evt.preventDefault();
+        var selected_contacts = this.refs.share_list.getSelectedContacts();
+        if(_.size(selected_contacts) == 0) {
+            console.log('Choose at least one contact');
+            return
+        }
+        console.log(selected_contacts);
     },
     _onChange: function() {
         this.setState(this.getInitialState());
