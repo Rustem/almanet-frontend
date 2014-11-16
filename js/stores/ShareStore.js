@@ -19,12 +19,16 @@ var ShareStore = assign({}, EventEmitter.prototype, {
         this.on(CHANGE_EVENT, callback);
     },
 
+    removeChangeListener: function(callback) {
+        this.removeListener(CHANGE_EVENT, callback);
+    },
+
     get: function(id) {
         return _shares[id];
     },
 
     getAll: function() {
-        return _shares;
+        return _.map(_shares, function(share) {return share});
     },
 
     getAllNew: function() {

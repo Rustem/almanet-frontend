@@ -26,7 +26,7 @@ var SVGCheckbox = React.createClass({
     render: function() {
         var value = this.value();
         return (
-            <label {...this.props} className="row input-checkboxCompact">
+            <label {...this.props} className={this.props.className}>
                 <div className="row-icon">
                     <input onChange={this.onChange} type="checkbox" checked={value} value={value} />
                     <div className="checkbox-icon">

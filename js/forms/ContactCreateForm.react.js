@@ -48,7 +48,7 @@ var ContactCreateForm = React.createClass({
         <Fieldset className="inputLine-negativeTrail">
           <ContentEditableInput isStrong={false} className='text-secondary' name='companyName' />
         </Fieldset>
-        <SVGCheckbox name="is_company" label="Company" />
+        <SVGCheckbox name="is_company" label="Company" className="row input-checkboxCompact" />
         <EmailVCardComponent name="emails" options={[['internet', 'адрес в формате интернета'], ['pref', 'предпочитаемый']]} />
         <div className="space-verticalBorder"></div>
 

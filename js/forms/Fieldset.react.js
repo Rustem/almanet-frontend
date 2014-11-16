@@ -7,6 +7,7 @@ var React         = require('react/addons');
 var cx            = React.addons.classSet;
 var cloneWithProps    = React.addons.cloneWithProps;
 var FieldsetMixin = require('./FieldsetMixin.react');
+var FormMixin = require('./FormMixin.react');
 
 /**
  * A Component which renders a set of fields.
@@ -46,10 +47,22 @@ var Fieldset = React.createClass({
         className="rf-Fieldset__label"
         schema={schema}
         label={this.props.label}
-        hint={this.props.hint}
-        />
+        hint={this.props.hint} />
     );
   }
 });
 
+var Div = React.createClass({
+  contextTypes: FormMixin.ContextTypes,
+  render: function() {
+    return (<div {...this.props}>{this.renderChildren()}</div>)
+  },
+  renderChildren: function() {
+    return React.Children.map(this.props.children, function(child) {
+      return cloneWithProps(child, {});
+    });
+  }
+});
+
 module.exports = Fieldset;
+module.exports.Div = Div
