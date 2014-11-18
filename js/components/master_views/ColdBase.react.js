@@ -207,7 +207,12 @@ var ColdBaseList = React.createClass({
         if(!filter_text) {
             return contacts;
         }
-        return _.filter(contacts, filterContact);
+        var requiredContacts = _.filter(contacts, filterContact);
+        var notRequiredContacts = _.difference(contacts, requiredContacts);
+        _.forEach(notRequiredContacts, function(c) {
+            this.props.selection_map[c.id] = false;
+        }.bind(this));
+        return requiredContacts;
     },
 
     renderGroup: function(letter) {

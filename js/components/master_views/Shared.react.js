@@ -234,10 +234,15 @@ var SharesList = React.createClass({
         if(!filter_text) {
             return shares;
         }
-        return _.filter(shares, function(share) {
+        var requiredShares = _.filter(shares, function(share) {
             var note = share.note.toLowerCase();
             return note.indexOf(filter_text.toLowerCase()) > - 1;
         });
+        var notRequiredShares = _.difference(shares, requiredShares);
+        _.forEach(notRequiredShares, function(s) {
+            this.props.selection_map[s.id] = false;
+        }.bind(this));
+        return requiredShares;
     },
 
     render: function() {
