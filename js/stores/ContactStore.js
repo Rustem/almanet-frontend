@@ -35,6 +35,12 @@ var ContactStore = assign({}, EventEmitter.prototype, {
         return contacts;
     },
 
+    getColdByDate: function(reversed) {
+        return _.filter(this.getByDate(true), function(c){
+            return c.is_cold;
+        });
+    },
+
     getAll: function() {
         return _.map(_contacts, function(c) { return c });
     },

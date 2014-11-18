@@ -21,8 +21,7 @@ var Div = require('../../forms/Fieldset.react').Div;
 
 
 function get_coldbase_contacts() {
-    console.log(ContactStore, ContactStore.getAll(), ContactStore.get())
-    return _.size(ContactStore.getAll());
+    return _.size(ContactStore.getColdByDate());
 }
 
 
@@ -265,7 +264,7 @@ var ColdBaseDetailView = React.createClass({
     },
     getInitialState: function() {
         var selection_map = {};
-        contacts = ContactStore.getByDate(true);
+        contacts = ContactStore.getColdByDate(true);
         for(var i = 0; i < contacts.length; i++) {
             selection_map[contacts[i].id] = false;
         }
