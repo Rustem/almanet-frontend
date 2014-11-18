@@ -150,14 +150,12 @@ var ContactListItem = React.createClass({
     render: function() {
         var contact = this.props.contact;
         return (
-            <div className="stream-item new">
-                <SVGCheckbox
-                    name={'contact__' + contact.id}
-                    label={this.getContactName()}
-                    className='row row--oneliner'
-                    value={this.props.is_selected}
-                    onValueUpdate={this.props.onItemToggle.bind(null, contact.id)} />
-            </div>
+            <SVGCheckbox
+                name={'contact__' + contact.id}
+                label={this.getContactName()}
+                className='row row--oneliner'
+                value={this.props.is_selected}
+                onValueUpdate={this.props.onItemToggle.bind(null, contact.id)} />
         )
     }
 });
@@ -201,22 +199,49 @@ var ColdBaseList = React.createClass({
             return fn.indexOf(filter_text.toLowerCase()) > -1;
         }.bind(this);
 
+        var sortBy = function(contact) {
+            return contact.fn.toLowerCase();
+        }.bind(this);
+
+        contacts = _.sortBy(contacts, sortBy);
         if(!filter_text) {
             return contacts;
         }
+        return _.filter(contacts, filterContact);
+    },
 
-        return _.filter(contacts, filterContacts);
+    renderGroup: function(letter) {
+        return (
+            <div>
+                <div className="space-vertical"></div>
+                <div className="row row--oneliner row--letter">
+                    <div className="row-icon">
+                        {letter.toUpperCase()}
+                    </div>
+                </div>
+            </div>
+        )
     },
 
     render: function() {
+        var prevContact = null;
         var contactListItems = this.filterContacts().map(function(contact) {
+            var GroupContent = null;
+            if(prevContact == null || prevContact.fn[0] !== contact.fn[0] ) {
+                GroupContent = this.renderGroup(contact.fn[0]);
+            }
             var is_selected = this.props.selection_map[contact.id];
+            prevContact = contact;
+            console.log(GroupContent, "fksdjfklasjflasdf");
             return(
+                <div>
+                {GroupContent ? GroupContent : null}
                 <ContactListItem
                     key={'contact__' + contact.id}
                     contact={contact}
                     is_selected={is_selected}
                     onItemToggle={this.onItemToggle} />
+                </div>
             )
         }.bind(this));
 
