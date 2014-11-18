@@ -4,7 +4,7 @@
  */
 
 var _ = require('lodash');
-var React = require('react');
+var React = require('react/addons');
 var cx        = React.addons.classSet;
 var Router = require('react-router');
 var ActiveState = Router.ActiveState;
@@ -49,7 +49,6 @@ var SharedContactLink = React.createClass({
     _onChange: function() {
         this.setState(SharedContactLink.getState());
     },
-
     render: function() {
         var className = cx({
             'row': true,
@@ -148,6 +147,10 @@ var ShareListItem = React.createClass({
         onItemToggle: React.PropTypes.func
     },
 
+    isNew: function() {
+        return this.props.share.isNew;
+    },
+
     getContactName: function() {
         return this.props.contact.fn;
     },
@@ -163,8 +166,12 @@ var ShareListItem = React.createClass({
     },
     render: function() {
         var share = this.props.share;
+        var classNames = cx({
+            'stream-item': true,
+            'new': this.isNew()
+        });
         return (
-            <div className="stream-item new">
+            <div className={classNames}>
                 <SVGCheckbox
                     name={'share__' + share.id}
                     label={this.getContactName()}
