@@ -26,6 +26,15 @@ var ContactStore = assign({}, EventEmitter.prototype, {
         return _contacts[id];
     },
 
+    getByDate: function(reversed) {
+        var contacts = this.getAll();
+        contacts = _.sortBy(contacts, function(contact){ return contact.at });
+        if(reversed) {
+            contacts = contacts.reverse();
+        }
+        return contacts;
+    },
+
     getAll: function() {
         return _.map(_contacts, function(c) { return c });
     },

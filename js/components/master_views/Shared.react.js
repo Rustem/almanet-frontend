@@ -327,7 +327,7 @@ var SharedContactDetailView = React.createClass({
             <div className="page">
                 <div className="page-header">
                     <ul className="page-breadcrumbs">
-                      <li><span class="page-breadcrumbs-link">{this.props.alt}</span></li>
+                      <li><span className="page-breadcrumbs-link">{this.props.alt}</span></li>
                     </ul>
                     <FilterBar
                         ref='filter_bar'

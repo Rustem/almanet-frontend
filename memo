@@ -1,3 +1,14 @@
+Todo:
+1. Add cold base
+2. Use the following philosophy and modules to work with async data:
+https://github.com/visionmedia/superagent - for async requests
+http://www.code-experience.com/async-requests-with-react-js-and-flux-revisited/
+http://fluxxor.com/guides/async-data.html
+
+
+Watch:
+https://gist.github.com/sebmarkbage
+
 content editable input has parent, that's why we must send him a onChange callback in order to update the whole form
 
 That's why it has incorrect data
