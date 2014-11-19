@@ -3,6 +3,7 @@ var keyMirror = require('react/lib/keyMirror');
 
 module.exports = {
     ActionTypes: keyMirror({
+        APP_LOAD_SUCCESS: null,
         CREATE_CONTACT: null,
         CREATE_CONTACT_SUCCESS: null,
         CREATE_CONTACT_FAIL: null,

@@ -3,7 +3,7 @@ var assign = require('object-assign');
 var EventEmitter = require('events').EventEmitter;
 var CRMConstants = require('../constants/CRMConstants');
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
-
+var SessionStore = require('./SessionStore');
 
 var ActionTypes = CRMConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
@@ -61,6 +61,13 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
 
     var action = payload.action;
     switch(action.type) {
+        case ActionTypes.APP_LOAD_SUCCESS:
+            CRMAppDispatcher.waitFor([SessionStore.dispatchToken]);
+            _.forEach(action.object.contacts, function(contact){
+                _contacts[contact.id] = contact;
+            });
+            ContactStore.emitChange();
+            break;
         case ActionTypes.CREATE_CONTACT:
             var contact = ContactStore.getCreatedContact(action.object);
             ContactStore.emitChange();

@@ -5,6 +5,7 @@
   "repository": "https://github.com/Rustem/almanet-frontend",
   "main": "./js/app.js",
   "dependencies": {
+    "rsvp": "~3.0.14",
     "flux": "^2.0.0",
     "react": "~0.12",
     "react-router": "~0.10.2",

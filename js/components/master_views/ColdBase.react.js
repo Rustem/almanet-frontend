@@ -216,7 +216,7 @@ var ColdBaseList = React.createClass({
 
     renderGroup: function(letter) {
         return (
-            <div>
+            <div key={'group__' + letter}>
                 <div className="space-vertical"></div>
                 <div className="row row--oneliner row--letter">
                     <div className="row-icon">

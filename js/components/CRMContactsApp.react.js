@@ -36,9 +36,9 @@ var CRMContactsApp = React.createClass({
         };
     },
 
-    componentWillMount: function() {
-        UserActionCreators.loadCurrentUser();
-    },
+    // componentWillMount: function() {
+    //     UserActionCreators.loadCurrentUser();
+    // },
     componentDidMount: function() {
         SessionStore.addChangeListener(this._onChange);
     },
