@@ -3,7 +3,7 @@ var _ = require('lodash');
 ContactServerActionCreators = require('../actions/ContactServerActionCreators')
 
 module.exports = {
-    createContact: function(contactObject, callback) {
+    createContact: function(contactObject, success, failure) {
         var timeNow = Date.now();
         var obj = _.extend({}, {
             id: 'c_' + timeNow,
@@ -18,20 +18,20 @@ module.exports = {
         obj.share = share;
         // simulate success callback
         setTimeout(function() {
-            ContactServerActionCreators.receiveCreatedContact(obj);
+            success(obj);
         }, 0);
     },
-    createShare: function(shareObject) {
+    createShare: function(shareObject, success, failure) {
         var obj = _.extend({}, {
             id: 'share_' + Date.now(),
             isNew: true}, shareObject);
         setTimeout(function() {
-            ContactServerActionCreators.receiveCreatedShare(obj);
+            success(obj);
         }, 0);
     },
-    markSharesAsRead: function(share_ids) {
+    markSharesAsRead: function(share_ids, success, failure) {
         setTimeout(function() {
-            ContactServerActionCreators.receiveReadShares(share_ids)
+            success(share_ids);
         }, 0);
     }
 };

@@ -53,7 +53,7 @@ var SessionStore = assign({}, EventEmitter.prototype, {
 SessionStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.type) {
-        case ActionTypes.CURRENT_USER_LOADED:
+        case ActionTypes.LOAD_CURRENT_USER_SUCCESS:
             SessionStore.setCurrent(action.object);
             SessionStore.emitChange();
             break;

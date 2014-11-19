@@ -30,7 +30,7 @@ var SharedContactLink = React.createClass({
                 'amount': ShareStore.size(),
                 'hasNewItems': ShareStore.hasNew()
             }
-        }
+        },
     },
 
     propTypes: {
@@ -77,7 +77,7 @@ var SharedContactLink = React.createClass({
         var routes = this.getActiveRoutes();
         var route = routes[routes.length - 1];
         if(!route) { return false; }
-        return route.name === 'shared' || (route.props.isDefault && route.props.path === '/');
+        return route.props.name === 'shared' || (route.props.isDefault && route.props.path === '/');
     },
     onClick: function(evt) {
         // Do not prevent bubbling.
@@ -318,9 +318,7 @@ var SharedContactDetailView = React.createClass({
         ShareStore.removeChangeListener(this._onChange);
     },
     onHandleUserInput: function(value) {
-        console.log(value);
         var is_selected = value.select_all;
-        console.log(value);
         var _map = {};
         for(var contact_id in this.state.selection_map) {
             _map[contact_id] = is_selected;

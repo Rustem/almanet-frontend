@@ -79,7 +79,7 @@ ShareStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
 
     var action = payload.action;
     switch(action.type) {
-        case ActionTypes.RECEIVE_CREATED_CONTACT:
+        case ActionTypes.CREATE_CONTACT_SUCCESS:
             CRMAppDispatcher.waitFor([ContactStore.dispatchToken]);
             var contact = action.object;
             _shares[contact.share.id] = contact.share;
@@ -89,12 +89,12 @@ ShareStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             var contact = ShareStore.getCreatedContact(action.object);
             ShareStore.emitChange();
             break;
-        case ActionTypes.RECEIVE_CREATED_SHARE:
+        case ActionTypes.CREATE_SHARE_SUCCESS:
             var share_object = ShareStore.getCreatedContact(action.object);
             _shares[share_object.id] = share_object;
             ShareStore.emitChange();
             break;
-        case ActionTypes.RECEIVE_READ_SHARES:
+        case ActionTypes.MARK_SHARES_READ_SUCCESS:
             ShareStore.markSharesAsRead(action.object);
             ShareStore.emitChange();
             break;

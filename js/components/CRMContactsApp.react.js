@@ -7,7 +7,7 @@ var Header = require('./Header.react');
 var Footer = require('./Footer.react');
 var MainBody = require('./MainBody.react')
 var SessionStore = require('../stores/SessionStore');
-var AuthWebApi = require('../api/AuthWebApi');
+var UserActionCreators = require('../actions/UserActionCreators');
 
 
 
@@ -37,7 +37,7 @@ var CRMContactsApp = React.createClass({
     },
 
     componentWillMount: function() {
-        AuthWebApi.loadCurrentUser();
+        UserActionCreators.loadCurrentUser();
     },
     componentDidMount: function() {
         SessionStore.addChangeListener(this._onChange);

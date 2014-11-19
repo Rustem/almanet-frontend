@@ -4,11 +4,17 @@ var keyMirror = require('react/lib/keyMirror');
 module.exports = {
     ActionTypes: keyMirror({
         CREATE_CONTACT: null,
-        RECEIVE_CREATED_CONTACT: null,
-        RECEIVE_READ_SHARES: null,
+        CREATE_CONTACT_SUCCESS: null,
+        CREATE_CONTACT_FAIL: null,
         CREATE_SHARE: null,
-        RECEIVE_CREATED_SHARE: null,
-        CURRENT_USER_LOADED: null,
+        CREATE_SHARE_SUCCESS: null,
+        CREATE_SHARE_FAIL: null,
+        MARK_SHARES_READ: null,
+        MARK_SHARES_READ_SUCCESS: null,
+        MARK_SHARES_READ_FAIL: null,
+        LOAD_CURRENT_USER: null,
+        LOAD_CURRENT_USER_SUCCESS: null,
+        LOAD_CURRENT_USER_FAIL: null,
         LOGOUT: null,
 
     }),

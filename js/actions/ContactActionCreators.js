@@ -10,7 +10,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
+var dispatcher = require('../dispatcher/CRMAppDispatcher');
 var CRMConstants = require('../constants/CRMConstants');
 var ContactWebAPI = require('../api/ContactWebAPI');
 var ContactStore = require('../stores/ContactStore');
@@ -20,27 +20,60 @@ var utils = require('../utils');
 module.exports = {
 
   createContact: function(object) {
-    CRMAppDispatcher.handleViewAction({
+    dispatcher.handleViewAction({
       type: ActionTypes.CREATE_CONTACT,
       object: object
     });
-    // var message = ContactStore.getCreatedContact(object);
-    ContactWebAPI.createContact(object);
+    ContactWebAPI.createContact(object, function(contact){
+      dispatcher.handleServerAction({
+        type: ActionTypes.CREATE_CONTACT_SUCCESS,
+        object: contact
+      });
+    }.bind(this), function(error){
+      dispatcher.handleServerAction({
+        type: ActionTypes.CREATE_CONTACT_FAIL,
+        error: error
+      });
+    }.bind(this));
   },
 
   createShare: function(contact_id, note) {
     var object = {'contact_id': contact_id, 'note': note};
-    CRMAppDispatcher.handleViewAction({
+    dispatcher.handleViewAction({
       type: ActionTypes.CREATE_SHARE,
       object: object
     });
     // var message = ContactStore.getCreatedContact(shareObject);
-    ContactWebAPI.createShare(object);
+    ContactWebAPI.createShare(object, function(contact){
+      dispatcher.handleServerAction({
+        type: ActionTypes.CREATE_SHARE_SUCCESS,
+        object: contact
+      });
+    }.bind(this), function(error){
+      dispatcher.handleServerAction({
+        type: ActionTypes.CREATE_SHARE_FAIL,
+        error: error
+      })
+    }.bind(this));
   },
 
   markAllSharesAsRead: function() {
     var shares_ids = utils.extractIds(ShareStore.getAllNew());
-    ContactWebAPI.markSharesAsRead(shares_ids);
+    dispatcher.handleViewAction({
+      type: ActionTypes.MARK_SHARES_READ,
+      object: shares_ids
+    });
+    ContactWebAPI.markSharesAsRead(shares_ids, function(marked_share_ids){
+      dispatcher.handleServerAction({
+        type: ActionTypes.MARK_SHARES_READ_SUCCESS,
+        object: marked_share_ids
+      });
+    }.bind(this), function(error){
+      dispatcher.handleServerAction({
+        type: ActionTypes.MARK_SHARES_READ_FAIL,
+        error: error
+      });
+    }.bind(this));
   },
 
 };

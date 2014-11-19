@@ -1,9 +1,7 @@
 var _ = require('lodash');
 
-UserServerActionCreators = require('../actions/UserServerActionCreators')
-
 module.exports = {
-    loadCurrentUser: function() {
+    loadCurrentUser: function(success, failure) {
         user = {
             id: 1,
             email: 'r.kamun@gmail.com',
@@ -12,7 +10,7 @@ module.exports = {
         }
         // simulate success callback
         setTimeout(function() {
-            UserServerActionCreators.receiveCreatedContact(user);
+            success(user);
         }, 0);
     },
 }

@@ -236,7 +236,6 @@ var ColdBaseList = React.createClass({
             }
             var is_selected = this.props.selection_map[contact.id];
             prevContact = contact;
-            console.log(GroupContent, "fksdjfklasjflasdf");
             return(
                 <div>
                 {GroupContent ? GroupContent : null}
