@@ -173,6 +173,9 @@ var BreadcrumbStore = assign({}, EventEmitter.prototype, {
     get: function() {
         return this._state.getHydrated();
     },
+    getCurrent: function() {
+        return this._state.peek();
+    }
 });
 
 module.exports = BreadcrumbStore;

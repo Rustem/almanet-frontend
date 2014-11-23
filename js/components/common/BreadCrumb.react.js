@@ -72,4 +72,19 @@ var BreadCrumb = React.createClass({
     }
 });
 
+var Crumb = React.createClass({
+    current: function() {
+        return BreadCrumbStore.getCurrent()
+    },
+    render: function() {
+        var route = this.current();
+        return (
+            <ul className="page-breadcrumbs">
+                <li><span className="page-breadcrumbs-link">{route.alt}</span></li>
+            </ul>
+        );
+    }
+});
+
 module.exports = BreadCrumb;
+module.exports.Crumb = Crumb;

@@ -24,7 +24,7 @@ AuthWebAPI.loadCurrentUser(function(user){
                 shares: shares};
             AppActionCreators.load(appState);
             // breadcrumb store is mutable store but the logic remaining as flux
-            BreadcrumbStore.initialize(NODES, relationships)
+            BreadcrumbStore.initialize(NODES, relationships);
             // render app
             Router.run(routes, function(Handler, state){
                 BreadcrumbStore.update(state.routes, state.params, state.query);

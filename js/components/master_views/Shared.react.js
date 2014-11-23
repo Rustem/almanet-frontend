@@ -20,7 +20,7 @@ var inputs = require('../../forms/input');
 var SVGCheckbox = inputs.SVGCheckbox;
 var Input = inputs.Input;
 var Div = require('../../forms/Fieldset.react').Div;
-
+var Crumb = require('../common/BreadCrumb.react').Crumb;
 
 var SharedContactLink = React.createClass({
     mixins: [AppContextMixin, Router.State],
@@ -347,9 +347,7 @@ var SharedContactDetailView = React.createClass({
         return (
             <div className="page">
                 <div className="page-header">
-                    <ul className="page-breadcrumbs">
-                      <li><span className="page-breadcrumbs-link">{this.props.alt}</span></li>
-                    </ul>
+                    <Crumb />
                     <FilterBar
                         ref='filter_bar'
                         value={this.state.search_bar}
