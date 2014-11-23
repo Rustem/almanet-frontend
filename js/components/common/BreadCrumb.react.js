@@ -7,8 +7,9 @@ var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
 
+
 var BreadCrumb = React.createClass({
-    mixins: [Router.ActiveState],
+    mixins: [Router.State],
 
     propTypes: function() {
         slice: React.PropTypes.array
@@ -30,7 +31,7 @@ var BreadCrumb = React.createClass({
 
     render: function() {
         var crumbs = [];
-        var routes = this.getActiveRoutes();
+        var routes = this.getRoutes();
         this.filter(routes).forEach(function(route, i, arr) {
             var name = route.props.alt ? route.props.alt : route.props.handler.displayName;
             var link = name;
@@ -48,7 +49,5 @@ var BreadCrumb = React.createClass({
         return <ul className="page-breadcrumbs">{crumbs}</ul>;
     }
 });
-
-
 
 module.exports = BreadCrumb;

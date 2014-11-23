@@ -8,6 +8,7 @@ var React = require('react/addons');
 var cx        = React.addons.classSet;
 var Router = require('react-router');
 var ActiveState = Router.ActiveState;
+var Navigation = Router.Navigation;
 var Link = Router.Link;
 var IconSvg = require('../common/IconSvg.react');
 var ContactActionCreators = require('../../actions/ContactActionCreators');
@@ -22,7 +23,7 @@ var Div = require('../../forms/Fieldset.react').Div;
 
 
 var SharedContactLink = React.createClass({
-    mixins: [AppContextMixin, ActiveState],
+    mixins: [AppContextMixin, Router.State],
 
     statics: {
         getState: function() {
@@ -74,10 +75,10 @@ var SharedContactLink = React.createClass({
         )
     },
     isCurrentlyActive: function() {
-        var routes = this.getActiveRoutes();
+        var routes = this.getRoutes();
         var route = routes[routes.length - 1];
         if(!route) { return false; }
-        return route.props.name === 'shared' || (route.props.isDefault && route.props.path === '/');
+        return route.name === 'shared' || route.name === 'shared_default';
     },
     onClick: function(evt) {
         // Do not prevent bubbling.
@@ -276,6 +277,16 @@ var SharesList = React.createClass({
 
 
 var SharedContactDetailView = React.createClass({
+    mixins: [Navigation],
+    statics: {
+        // willTransitionFrom: function(transition, component) {
+        //     console.log(transition, component);
+        //     console.log(transition, component);
+        //     if (!confirm('You have unsaved information, are you sure you want to leave this page?')) {
+        //         transition.abort();
+        //     }
+        // }
+    },
     propTypes: {
         label: React.PropTypes.string,
     },
@@ -358,11 +369,13 @@ var SharedContactDetailView = React.createClass({
     onUserAction: function(evt) {
         evt.preventDefault();
         var selected_contacts = this.refs.share_list.getSelectedContacts();
-        if(_.size(selected_contacts) == 0) {
+        if(_.size(selected_contacts) <= 0) {
             console.log('Choose at least one contact');
             return
         }
-        console.log('You has chosen to edit', selected_contacts);
+        var contact_ids = _.map(selected_contacts, function(c){ return c.id});
+        this.transitionTo('contacts_selected', {'ids': contact_ids, 'good': 'bar'});
+
     },
     _onChange: function() {
         this.setState(this.getInitialState());

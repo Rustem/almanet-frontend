@@ -5,12 +5,12 @@
 // This file bootstraps the entire application.
 var RSVP = require('rsvp');
 var React = require('react');
-var routes = require('./router');
-var Routes = require('react-router').Routes;
+var routes = require('./router').routes;
+var Router = require('react-router');
 var AppActionCreators = require('./actions/AppActionCreators');
-var CRMContactsApp = require('./components/CRMContactsApp.react');
 var ContactWebApi = require('./api/ContactWebAPI');
 var AuthWebAPI = require('./api/AuthWebAPI');
+var BreadcrumbStore = require('./stores/BreadcrumbStore');
 
 // TODO: use promises
 // load initial data to services
@@ -24,10 +24,10 @@ AuthWebAPI.loadCurrentUser(function(user){
             console.log(appState);
             AppActionCreators.load(appState);
             // render app
-            React.render(
-              <Routes children={routes}/>,
-              document.getElementById('js-crm-app')
-            );
+            Router.run(routes, function(Handler, state){
+                BreadcrumbStore.update(state.routes, state.path);
+                React.render(<Handler />, document.getElementById('js-crm-app'));
+            });
         });
     });
 

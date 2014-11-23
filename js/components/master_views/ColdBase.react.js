@@ -4,7 +4,7 @@
  */
 
 var _ = require('lodash');
-var React = require('react');
+var React = require('react/addons');
 var cx        = React.addons.classSet;
 var Router = require('react-router');
 var ActiveState = Router.ActiveState;
@@ -26,7 +26,7 @@ function get_coldbase_contacts() {
 
 
 var ColdBaseLink = React.createClass({
-    mixins: [Router.ActiveState],
+    mixins: [Router.State],
     propTypes: {
         label: React.PropTypes.string,
     },
@@ -69,7 +69,7 @@ var ColdBaseLink = React.createClass({
         )
     },
     isCurrentlyActive: function() {
-        var routes = this.getActiveRoutes();
+        var routes = this.getRoutes();
         var route = routes[routes.length - 1];
         if(!route) { return false; }
         return route.name === 'coldbase';
