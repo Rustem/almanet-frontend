@@ -22,6 +22,10 @@ var BreadCrumb = React.createClass({
     },
 
     filter: function(routes, options) {
+        // corner case
+        if(routes.length <= 2) {
+            return routes.slice(0, 1);
+        }
         var ignore_defaults = false;
         var rv = [];
         if(options !== undefined) {

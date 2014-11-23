@@ -339,3 +339,5 @@ var ColdBaseDetailView = React.createClass({
 
 module.exports.DetailView = ColdBaseDetailView;
 module.exports.Link = ColdBaseLink;
+module.exports.FilterBar = FilterBar;
+module.exports.ColdBaseList = ColdBaseList;

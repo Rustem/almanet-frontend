@@ -20,17 +20,17 @@ var ShareContactSelected = React.createClass({
     getInitialState: function() {
         var selection_map = {};
         var contacts = ContactStore.getColdByDate(true);
-        var selected_ids = this.getParams().ids.split(',');
+        var selected_id = this.getParams().id;
         for(var i = 0; i<contacts.length; i++) {
             selection_map[contacts[i].id] = false;
-            if(selected_ids.indexOf(contacts[i].id) > -1) {
+            if(contacts[i].id === selected_id) {
                 selection_map[contacts[i].id] = true;
             }
         }
         return {
             contacts: contacts,
             selection_map: selection_map,
-            search_bar: {select_all: selected_ids.length === contacts.length, filter_text: ''}
+            search_bar: {select_all: false, filter_text: ''}
         }
     },
     getFilterText: function() {
@@ -49,18 +49,19 @@ var ShareContactSelected = React.createClass({
         ContactStore.removeChangeListener(this._onChange);
     },
     shouldComponentUpdate: function(nextProps, nextState) {
-        var id = null, n = 0;
+        var cids = [], n = 0;
         for(var contact_id in nextState.selection_map) {
             var is_selected = nextState.selection_map[contact_id];
             if(is_selected) {
-                id = contact_id;
+                cids.push(contact_id);
                 n += 1;
             }
         }
-        if(n === 1) {
-            this.transitionTo('share_contact_selected', {'id': id});
+        console.log(cids, "sfa;asdf;sad");
+        if(n > 1) {
+            this.transitionTo('share_contacts_selected', {'ids': cids});
         }
-        return n > 1 || n === 0;
+        return n <= 1;
     },
     onHandleUserInput: function(value) {
         var is_selected = value.select_all;
