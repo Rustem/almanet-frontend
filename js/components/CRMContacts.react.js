@@ -10,7 +10,7 @@ var Header = require('./Header.react');
 var Footer = require('./Footer.react');
 var SessionStore = require('../stores/SessionStore');
 var UserActionCreators = require('../actions/UserActionCreators');
-// var BreadCrumb = require('./common/BreadCrumb.react');
+var BreadCrumb = require('./common/BreadCrumb.react');
 
 
 function getAppState() {
@@ -54,6 +54,7 @@ var CRMContacts = React.createClass({
                 <div className="body-master">
                     <div className="page page--compact">
                         <div className="page-header">
+                            <BreadCrumb slice={[1]} />
                         </div>
                         <div className="page-body">
                             <master_views.Shared.Link label="Входящие" />

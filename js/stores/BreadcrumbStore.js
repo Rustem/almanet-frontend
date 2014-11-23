@@ -1,14 +1,14 @@
 var _ = require('lodash');
 var assign = require('object-assign');
 var EventEmitter = require('events').EventEmitter;
-var RELATIONSHIPS = require('../router').relationships;
-var NODES = require('../router').NODES;
 var _stack = [];
 
-function BreadcrumbDS() {
+function BreadcrumbDS(nodes, relationships) {
     this._locations = [];
     this._routes = [];
     this._map = {};
+    this.NODES = nodes;
+    this.RELATIONSHIPS = relationships;
 }
 
 BreadcrumbDS.prototype.size = function() {
@@ -19,8 +19,10 @@ BreadcrumbDS.prototype.isEmpty = function() {
     return this.size() === 0;
 };
 
-BreadcrumbDS.prototype.pushAll = function(routes) {
-    _.forEach(routes, function(route) { this.push(route) }.bind(this));
+BreadcrumbDS.prototype.pushAll = function(routes, params, query) {
+    _.forEach(routes, function(route) {
+        this.push(route, params, query)
+    }.bind(this));
 };
 
 BreadcrumbDS.prototype.clear = function() {
@@ -41,26 +43,39 @@ BreadcrumbDS.prototype.peek = function(idx) {
     } else {
         var routeName = this._routes[idx];
     }
-    var node = NODES[routeName];
+    var node = this.NODES[routeName];
     var state = this._map[routeName];
-    var state = _.extend({}, {'node': node}, state);
+    var state = _.extend({}, {'alt': node.getName()}, state);
     return state;
 };
 
-BreadcrumbDS.prototype.push = function(route) {
+BreadcrumbDS.prototype.push = function(route, params, query) {
     this._locations.push(route.path);
     this._routes.push(route.name);
-    this._map[route.name] = route;
+
+    var extractParams = function(paramNames) {
+        var _params = {};
+        _.forEach(route.paramNames, function(param) {
+            _params[param] = params[param];
+        });
+        return _params;
+    }.bind(this);
+    this._map[route.name] = {
+        name: route.name,
+        handler: route.handler,
+        params: extractParams(route.paramNames),
+        query: query || {}
+    };
 }
 
-BreadcrumbDS.prototype.update = function(routes, path) {
+BreadcrumbDS.prototype.update = function(routes, params, query) {
     // if no crumbs yet
     if(this.isEmpty()) {
-        this.pushAll(routes);
+        this.pushAll(routes, params, query);
         return true;
     }
-    // if path is already in data structure
-    var depth = this.find(path);
+    // if path is already in data structure then remove head
+    var depth = this.find(routes[routes.length - 1].name);
     var currentDepth = this.size();
     if(depth > -1) {
         while(currentDepth - depth - 1 > 0) {
@@ -69,11 +84,11 @@ BreadcrumbDS.prototype.update = function(routes, path) {
         }
         return true
     }
-    // has common tail with length one route less that current
+    // has common tail with length one route less that current then simply add head to tail
     if(routes.length - currentDepth === 1) {
         var route = routes[routes.length - 2];
-        if(this.find(route.path) + 1 === currentDepth) {
-            this.push(routes[routes.length - 1]);
+        if(this.find(route.name) + 1 === currentDepth) {
+            this.push(routes[routes.length - 1], params, query);
             return true
         }
     }
@@ -92,7 +107,7 @@ BreadcrumbDS.prototype.update = function(routes, path) {
     // if no logical relation
     if(relatedDepth === -1) {
         this.clear();
-        this.pushAll(routes);
+        this.pushAll(routes, params, query);
     } else {
         // pop until relatedDepth
         while(currentDepth - relatedDepth - 1 > 0) {
@@ -101,20 +116,20 @@ BreadcrumbDS.prototype.update = function(routes, path) {
         }
         // update
         for(var i = 0; i<routes.length; i++) {
-            if(this.find(routes[i].path) > -1) {
+            if(this.find(routes[i].name) > -1) {
                 continue;
             }
-            this.push(routes[i]);
+            this.push(routes[i], params, query);
         }
     }
     return true;
 };
 
-BreadcrumbDS.prototype.find = function(path) {
+BreadcrumbDS.prototype.find = function(targetRouteName) {
     var j = -1;
     for(var i = 0; i<this.size(); i++) {
-        var curPath = this._locations[this.size() - i - 1];
-        if(curPath === path) {
+        var routeName = this._routes[this.size() - i - 1];
+        if(routeName === targetRouteName) {
             j = this.size() - i - 1;
             break;
         }
@@ -123,10 +138,10 @@ BreadcrumbDS.prototype.find = function(path) {
 };
 
 BreadcrumbDS.prototype.hasRel = function(route) {
-    if(!(route.name in RELATIONSHIPS)) {
+    if(!(route.name in this.RELATIONSHIPS)) {
         return -1;
     }
-    var parentRoutes = RELATIONSHIPS[route.name];
+    var parentRoutes = this.RELATIONSHIPS[route.name];
     console.log(parentRoutes, this._routes);
     for(var i = 0; i < this.size(); i++) {
         var curRoute = this._routes[this.size() - i - 1];
@@ -145,17 +160,18 @@ BreadcrumbDS.prototype.getHydrated = function() {
     return crumbs;
 };
 
-var _state = new BreadcrumbDS();
 
 
 var BreadcrumbStore = assign({}, EventEmitter.prototype, {
-
+    initialize: function(nodes, relationships) {
+        this._state = new BreadcrumbDS(nodes, relationships);
+    },
     update: function(routes, path) {
-        _state.update(routes, path);
-        console.log(_state.getHydrated(), "hi");
+        this._state.update(routes, path);
+        console.log(this._state.getHydrated(), "hi");
     },
     get: function() {
-        _state.getHydrated();
+        return this._state.getHydrated();
     },
 });
 

@@ -34,12 +34,9 @@ var Node = function(name, alt) {
     this.alt = alt;
 }
 
-var contactsSelected = new Node('contacts_selected', "Выбранные контакты");
-var contacts = new Node('contacts', 'Контакты');
-var shared = new Node('shared', 'Входящие');
-var coldbase = new Node('coldbase', 'Холодная база');
-var shared_default = new Node('shared_default', 'Входящие');
-var main = new Node('main', 'главная');
+Node.prototype.getName = function() {
+    return this.alt;
+}
 
 module.exports.NODES = {
     'contacts_selected': new Node('contacts_selected', "Выбранные контакты"),

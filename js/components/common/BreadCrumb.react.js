@@ -3,45 +3,67 @@
  * @jsx React.DOM
  */
 
+var _ = require('lodash');
 var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
+var BreadCrumbStore = require('../../stores/BreadcrumbStore');
+
 
 
 var BreadCrumb = React.createClass({
-    mixins: [Router.State],
 
     propTypes: function() {
         slice: React.PropTypes.array
     },
 
-    filter: function(routes) {
+    getRoutes: function() {
+        return BreadCrumbStore.get()
+    },
+
+    filter: function(routes, options) {
+        var ignore_defaults = false;
+        var rv = [];
+        if(options !== undefined) {
+            ignore_defaults = options['ignore_defaults'];
+        }
         slice = this.props.slice || null;
         if(!slice) {
-            return routes;
+            rv = routes;
         }
-        if(slice.length == 2) {
-            return routes.slice(slice[0], slice[1]);
+        else if(slice.length == 2) {
+            rv = routes.slice(slice[0], slice[1]);
         }
-        if(slice.length == 1) {
-            return routes.slice(slice[0]);
+        else if(slice.length == 1) {
+            rv = routes.slice(slice[0]);
         }
+        if(ignore_defaults) {
+            return _.filter(rv, function(route) {
+                return route.name.indexOf('default') === -1;
+            })
+        }
+        return rv;
 
     },
 
     render: function() {
         var crumbs = [];
         var routes = this.getRoutes();
-        this.filter(routes).forEach(function(route, i, arr) {
-            var name = route.props.alt ? route.props.alt : route.props.handler.displayName;
+        this.filter(routes, {ignore_defaults: true}).forEach(function(route, i, arr) {
+            var name = route.alt ? route.alt : route.props.handler.displayName;
             var link = name;
-            if(i != arr.length - 1) {
-                link = <Link className="page-breadcrumbs-link" to={route.props.path}>{name}</Link>;
+            var link_props = {
+                to: route.name,
+                params: route.params,
+                query: route.query
+            }
+            if(i !== arr.length - 1) {
+                link = <Link {...link_props} className="page-breadcrumbs-link">{name}</Link>;
             } else {
-                link = <Link className="page-breadcrumbs-link active" to={route.props.path}>{name}</Link>;
+                link = <Link {...link_props} className="page-breadcrumbs-link active">{name}</Link>;
             }
             crumbs.push(
-                <li key={route.props.path + '' + crumbs.length}>
+                <li key={route.path + '' + crumbs.length}>
                     {link}
                 </li>
             );
