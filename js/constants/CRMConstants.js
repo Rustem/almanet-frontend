@@ -7,6 +7,9 @@ module.exports = {
         CREATE_CONTACT: null,
         CREATE_CONTACT_SUCCESS: null,
         CREATE_CONTACT_FAIL: null,
+        EDIT_CONTACT: null,
+        EDIT_CONTACT_SUCCESS: null,
+        EDIT_CONTACT_FAIL: null,
         CREATE_SHARE: null,
         CREATE_SHARE_SUCCESS: null,
         CREATE_SHARE_FAIL: null,
@@ -23,7 +26,8 @@ module.exports = {
         SERVER_ACTION: null,
         VIEW_ACTION: null
     }),
-    ContactViews: {
-
-    }
+    CONTACT_VIEW_MODE: keyMirror({
+        EDIT: null,
+        READ: null
+    })
 }

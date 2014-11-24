@@ -7,22 +7,24 @@ var Route = Router.Route;
 var Routes = Router.Routes;
 var DefaultRoute = Router.DefaultRoute;
 var Redirect = Router.Redirect;
-var ContactViews = require('./constants/CRMConstants').ContactViews;
 
 var CRMApp = React.createFactory(require('./components/CRMApp.react'));
 var Contacts = React.createFactory(require('./components/CRMContacts.react'));
 var ShareContactsSelected = React.createFactory(require('./components/ContactsSelected.react'));
-var ShareContactSelected = React.createFactory(require('./components/ContactSelected.react'));
+var ContactSelectedView = require('./components/ContactSelected.react');
 var master_views = require('./components/master_views');
 
+
 var routes = (
-    <Route name="main" path="/" handler={CRMApp} alt="noname">
-        <Route name="contacts" path="/contacts" handler={Contacts} alt="контакты">
-            <DefaultRoute name='shared_default' handler={master_views.Shared.DetailView} alt="Входящие" />
-            <Route name='shared' handler={master_views.Shared.DetailView} alt="Входящие" />
-            <Route name='coldbase' handler={master_views.ColdBase.DetailView} alt="Холодная база"/>
+    <Route name="main" path="/" handler={CRMApp}>
+        <Route name="contacts" path="/contacts" handler={Contacts}>
+            <DefaultRoute name='shared_default' handler={master_views.Shared.DetailView} />
+            <Route name='shared' handler={master_views.Shared.DetailView} />
+            <Route name='coldbase' handler={master_views.ColdBase.DetailView} />
         </Route>
-        <Route name="share_contact_selected" path="/contact/:id" handler={ShareContactSelected} />
+        <Route name="share_contact_selected" path="/contact/:id" handler={ContactSelectedView}>
+
+        </Route>
         <Route name="share_contacts_selected" path="/contacts/:ids" handler={ShareContactsSelected} />
         <Redirect from="/" to="contacts" />
     </Route>

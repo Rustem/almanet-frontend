@@ -77,6 +77,11 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             _contacts[contact_with_id.id] = contact_with_id;
             ContactStore.emitChange();
             break;
+        case ActionTypes.EDIT_CONTACT_SUCCESS:
+            var contact_id = action.object['contact_id'],
+                contact = action.object['contact'];
+            _contacts[contact_id] = contact;
+            ContactStore.emitChange();
         default:
             // do nothing
     }

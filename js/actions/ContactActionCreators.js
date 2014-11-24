@@ -37,6 +37,25 @@ module.exports = {
     }.bind(this));
   },
 
+  editContact: function(contact_id, contact) {
+    var details = {contact_id: contact_id, contact: contact};
+    dispatcher.handleViewAction({
+      type: ActionTypes.EDIT_CONTACT,
+      object: details
+    });
+    ContactWebAPI.editContact(details, function(object){
+      dispatcher.handleServerAction({
+        type: ActionTypes.EDIT_CONTACT_SUCCESS,
+        object: object
+      });
+    }.bind(this), function(error){
+      dispatcher.handleServerAction({
+        type: ActionTypes.EDIT_CONTACT_FAIL,
+        error: error
+      });
+    }.bind(this));
+  },
+
   createShare: function(contact_id, note) {
     var object = {'contact_id': contact_id, 'note': note};
     dispatcher.handleViewAction({

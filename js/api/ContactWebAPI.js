@@ -36,6 +36,19 @@ module.exports = {
             success(obj);
         }, 0);
     },
+    editContact: function(edit_details, success, failure) {
+        var rawContacts = JSON.parse(localStorage.getItem('contacts')) || [];
+        for(var i = 0; i<rawContacts.length; i++) {
+            var cur = rawContacts[i];
+            if(cur.id === edit_details.contact_id) {
+                rawContacts[i] = edit_details.contact;
+            }
+        }
+        localStorage.setItem('contacts', JSON.stringify(rawContacts));
+        setTimeout(function() {
+            success(edit_details);
+        }, 0);
+    },
     getAllShares: function(success, failure) {
         var rawShares = JSON.parse(localStorage.getItem('shares'));
         setTimeout(function(){
