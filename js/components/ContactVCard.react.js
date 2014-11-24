@@ -126,7 +126,6 @@ var ContactVCard = React.createClass({
 
     render: function() {
         var mode = this.props.mode;
-        console.log(mode, this.props.contact);
         return mode === VIEW_MODES_MAP.EDIT && this.render_edit() || this.render_read();
     },
 
