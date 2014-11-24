@@ -4,6 +4,7 @@
 
 var _ = require('lodash');
 var React = require('react');
+var keyMirror = require('react/lib/keyMirror');
 var Router = require('react-router');
 var RouteHandler = Router.RouteHandler;
 var master_views = require('./master_views');
@@ -11,16 +12,94 @@ var Header = require('./Header.react');
 var Footer = require('./Footer.react');
 var ShareStore = require('../stores/ShareStore');
 var ContactStore = require('../stores/ContactStore');
+var ContactActionCreators = require('../actions/ContactActionCreators');
 var UserActionCreators = require('../actions/UserActionCreators');
+var ContactVCard = require('./ContactVCard.react');
 var BreadCrumb = require('./common/BreadCrumb.react');
+var Crumb = require('./common/BreadCrumb.react').Crumb;
+var IconSvg = require('./common/IconSvg.react');
 var ColdBase = require('./master_views').ColdBase;
+var VIEW_MODE = require('../constants/CRMConstants').CONTACT_VIEW_MODE;
 
-var ShareContactSelected = React.createClass({
+var ACTIONS = keyMirror({
+    ADD_EVENT: null,
+    SHARE: null
+})
+
+var ControlBar = React.createClass({
+    propTypes: {
+        onUserAction: React.PropTypes.func
+    },
+    render: function() {
+        return (
+        <div class='js-contact-actions'>
+        <a onClick={this.props.onUserAction.bind(null, ACTIONS.ADD_EVENT)} className="row row--oneliner row--link">
+            <div className="row-icon text-good">
+                <IconSvg iconKey='add' />
+            </div>
+            <div className="row-body">
+              Добавить событие
+            </div>
+        </a>
+        <a onClick={this.props.onUserAction.bind(null, ACTIONS.SHARE)} className="row row--oneliner row--link">
+            <div className="row-icon">
+                <IconSvg iconKey='share' />
+            </div>
+            <div className="row-body">
+              Поделиться
+            </div>
+        </a>
+        </div>
+        )
+    }
+
+});
+
+var ContactsSelectedDetailView = React.createClass({
+    propTypes: {
+        contact_ids: React.PropTypes.array,
+        onHandleEditContact: React.PropTypes.func
+    },
+    getInitialState: function() {
+        return {
+            mode: VIEW_MODE.READ
+        }
+    },
+
+    getContacts: function() {
+        return _.map(this.props.contact_ids, ContactStore.get)
+    },
+    onUserAction: function(actionType, evt) {
+        console.log(actionType);
+    },
+    render: function() {
+        console.log(this.props.contact_ids);
+        return (
+            <div className="page page--compact">
+                <div className="page-header">
+                    <Crumb />
+                </div>
+                <div className="page-body">
+                    <ControlBar onUserAction={this.onUserAction} />
+                    <div className="space-vertical"></div>
+                    <div className="inputLine">
+                        <strong>{this.props.contact_ids.length} контакта</strong>
+                    </div>
+                </div>
+            </div>
+        )
+    },
+
+});
+
+
+var ShareContactsSelectedView = React.createClass({
     mixins : [Router.Navigation, Router.State],
+
     getInitialState: function() {
         var selection_map = {};
         var contacts = ContactStore.getColdByDate(true);
-        var selected_ids = this.getParams().ids.split(',');
+        var selected_ids = this.getParams().ids;
         for(var i = 0; i<contacts.length; i++) {
             selection_map[contacts[i].id] = false;
             if(selected_ids.indexOf(contacts[i].id) > -1) {
@@ -30,24 +109,30 @@ var ShareContactSelected = React.createClass({
         return {
             contacts: contacts,
             selection_map: selection_map,
-            search_bar: {select_all: selected_ids.length === contacts.length, filter_text: ''}
+            search_bar: {select_all: false, filter_text: ''}
         }
     },
+
     getFilterText: function() {
         return this.state.search_bar.filter_text;
     },
+
     getContacts: function() {
         return this.state.contacts;
     },
+
     getSelectMap: function() {
         return this.state.selection_map;
     },
+
     componentDidMount: function() {
         ContactStore.addChangeListener(this._onChange);
     },
+
     componentWillUnmount: function(nextProps, nextState) {
         ContactStore.removeChangeListener(this._onChange);
     },
+
     shouldComponentUpdate: function(nextProps, nextState) {
         var id = null, n = 0;
         for(var contact_id in nextState.selection_map) {
@@ -58,10 +143,11 @@ var ShareContactSelected = React.createClass({
             }
         }
         if(n === 1) {
-            this.transitionTo('share_contact_selected', {'id': id});
+            this.transitionTo('contact_selected', {'id': id});
         }
         return n > 1 || n === 0;
     },
+
     onHandleUserInput: function(value) {
         var is_selected = value.select_all;
         var _map = {};
@@ -72,12 +158,33 @@ var ShareContactSelected = React.createClass({
         this.state.search_bar = value;
         this.setState(this.state);
     },
+
     onChangeState: function(contact_id, is_selected) {
         this.state.selection_map[contact_id] = is_selected;
         this.setState(this.state);
     },
 
+    onUserAction: function(actionType, evt) {
+        evt.preventDefault();
+        var selected_contacts = this.refs.coldbase_list.getSelectedContacts();
+        if(_.size(selected_contacts) == 0) {
+            console.log('Choose at least one contact');
+            return
+        }
+        console.log('You has chosen to ' + actionType, selected_contacts);
+    },
+
     render: function() {
+        var contact_ids = [];
+        var select_map = this.getSelectMap();
+        for(var i = 0; i<this.state.contacts.length; i++) {
+            var c = this.state.contacts[i];
+            if(select_map[c.id] === true) {
+                contact_ids.push(c.id);
+                console.log('hi');
+            }
+        }
+        console.log(contact_ids, 'hi');
         return (
           <div>
             <Header />
@@ -101,22 +208,12 @@ var ShareContactSelected = React.createClass({
                     </div>
                 </div>
                 <div className="body-detail">
-                    <RouteHandler />
+                    <ContactsSelectedDetailView contact_ids={contact_ids} />
                 </div>
             </div>
             <Footer />
           </div>
         );
-    },
-
-    onUserAction: function(actionType, evt) {
-        evt.preventDefault();
-        var selected_contacts = this.refs.coldbase_list.getSelectedContacts();
-        if(_.size(selected_contacts) == 0) {
-            console.log('Choose at least one contact');
-            return
-        }
-        console.log('You has chosen to ' + actionType, selected_contacts);
     },
     _onChange: function() {
         this.setState(this.getInitialState());
@@ -124,4 +221,5 @@ var ShareContactSelected = React.createClass({
 
 });
 
-module.exports = ShareContactSelected;
+
+module.exports = ShareContactsSelectedView;

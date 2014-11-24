@@ -10,7 +10,7 @@ var Redirect = Router.Redirect;
 
 var CRMApp = React.createFactory(require('./components/CRMApp.react'));
 var Contacts = React.createFactory(require('./components/CRMContacts.react'));
-var ShareContactsSelected = React.createFactory(require('./components/ContactsSelected.react'));
+var ContactsSelectedView = require('./components/ContactsSelected.react');
 var ContactSelectedView = require('./components/ContactSelected.react');
 var master_views = require('./components/master_views');
 
@@ -22,10 +22,10 @@ var routes = (
             <Route name='shared' handler={master_views.Shared.DetailView} />
             <Route name='coldbase' handler={master_views.ColdBase.DetailView} />
         </Route>
-        <Route name="share_contact_selected" path="/contact/:id" handler={ContactSelectedView}>
+        <Route name="contact_selected" path="/contact/:id" handler={ContactSelectedView}>
 
         </Route>
-        <Route name="share_contacts_selected" path="/contacts/:ids" handler={ShareContactsSelected} />
+        <Route name="contacts_selected" path="/contacts/:ids" handler={ContactsSelectedView} />
         <Redirect from="/" to="contacts" />
     </Route>
 );
@@ -40,8 +40,8 @@ Node.prototype.getName = function() {
 }
 
 module.exports.NODES = {
-    'share_contact_selected': new Node('share_contacts_selected', "Выбранные контакты"),
-    'share_contacts_selected': new Node('share_contacts_selected', "Выбранные контакты"),
+    'contact_selected': new Node('contact_selected', "Выбранные контакты"),
+    'contacts_selected': new Node('contacts_selected', "Выбранные контакты"),
     'contacts': new Node('contacts', 'Контакты'),
     'shared': new Node('shared', 'Входящие'),
     'coldbase': new Node('coldbase', 'Холодная база'),
@@ -50,8 +50,8 @@ module.exports.NODES = {
 }
 
 module.exports.relationships = {
-    'share_contacts_selected': ['contacts', 'shared', 'shared_default'],
-    'share_contact_selected': ['contacts', 'shared', 'shared_default']
+    'contacts_selected': ['contacts', 'shared', 'shared_default'],
+    'contact_selected': ['contacts', 'shared', 'shared_default']
 }
 module.exports.routes = routes
 

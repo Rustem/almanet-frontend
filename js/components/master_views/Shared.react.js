@@ -277,7 +277,7 @@ var SharesList = React.createClass({
 
 
 var SharedContactDetailView = React.createClass({
-    mixins: [Navigation],
+    mixins: [Router.Navigation],
     statics: {
         // willTransitionFrom: function(transition, component) {
         //     console.log(transition, component);
@@ -373,9 +373,9 @@ var SharedContactDetailView = React.createClass({
         }
         var contact_ids = _.map(selected_contacts, function(c){ return c.id});
         if(contact_ids.length === 1) {
-            this.transitionTo('share_contact_selected', {'id': contact_ids[0]});
+            this.transitionTo('contact_selected', {'id': contact_ids[0]});
         } else{
-            this.transitionTo('share_contacts_selected', {'ids': contact_ids});
+            this.transitionTo('contacts_selected', {'ids': contact_ids});
         }
     },
     _onChange: function() {

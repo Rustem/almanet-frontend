@@ -172,7 +172,7 @@ var ShareContactSelectedView = React.createClass({
             }
         }
         if(n > 1) {
-            this.transitionTo('share_contacts_selected', {'ids': cids});
+            this.transitionTo('contacts_selected', {'ids': cids});
         }
         return n <= 1;
     },

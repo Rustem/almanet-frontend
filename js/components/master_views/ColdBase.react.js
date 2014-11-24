@@ -258,6 +258,7 @@ var ColdBaseList = React.createClass({
 
 
 var ColdBaseDetailView = React.createClass({
+    mixins: [Router.Navigation],
     propTypes: {
         label: React.PropTypes.string
     },
@@ -326,9 +327,15 @@ var ColdBaseDetailView = React.createClass({
     onUserAction: function(actionType, evt) {
         evt.preventDefault();
         var selected_contacts = this.refs.coldbase_list.getSelectedContacts();
+        var contact_ids = _.map(selected_contacts, function(c){ return c.id});
         if(_.size(selected_contacts) == 0) {
             console.log('Choose at least one contact');
             return
+        }
+        if(contact_ids.length === 1) {
+            this.transitionTo('contact_selected', {'id': contact_ids[0]});
+        } else{
+            this.transitionTo('contacts_selected', {'ids': contact_ids});
         }
         console.log('You has chosen to ' + actionType, selected_contacts);
     },
