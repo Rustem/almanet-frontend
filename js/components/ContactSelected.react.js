@@ -18,10 +18,12 @@ var ContactVCard = require('./ContactVCard.react');
 var BreadCrumb = require('./common/BreadCrumb.react');
 var Crumb = require('./common/BreadCrumb.react').Crumb;
 var IconSvg = require('./common/IconSvg.react');
+var Modal = require('./common/Modal.react');
 var ColdBase = require('./master_views').ColdBase;
 var VIEW_MODE = require('../constants/CRMConstants').CONTACT_VIEW_MODE;
 
 var ACTIONS = keyMirror({
+    NO_ACTION: null,
     ADD_EVENT: null,
     SHARE: null,
     EDIT: null,
@@ -80,26 +82,38 @@ var ContactSelectedDetailView = React.createClass({
     },
     getInitialState: function() {
         return {
-            mode: VIEW_MODE.READ
+            action: ACTIONS.NO_ACTION,
         }
     },
-    // componentDidMount: function() {
-    //     ContactStore.addChangeListener(this._onChange);
-    // },
-    // componentWillUnmount: function() {
-    //     ContactStore.removeChangeListener(this._onChange);
-    // },
+
+    getVCardMode: function() {
+        return VIEW_MODE.EDIT ? this.state.action === ACTIONS.EDIT : VIEW_MODE.READ;
+    },
+    getAddEventModalState: function() {
+        return this.state.action === ACTIONS.ADD_EVENT;
+    },
+    componentDidMount: function() {
+        ContactStore.addChangeListener(this.resetState);
+    },
+    componentWillUnmount: function() {
+        ContactStore.removeChangeListener(this.resetState);
+    },
     getContact: function() {
         return ContactStore.get(this.props.contact_id);
     },
     onUserAction: function(actionType, evt) {
-        if(actionType === ACTIONS.EDIT) {
-            this.setState({mode: VIEW_MODE.EDIT});
-        }
+        this.setState({action: actionType});
     },
-    onSubmit: function() {
-        this.setState({mode: VIEW_MODE.READ});
+    onContactUpdate: function() {
+        // this.setState({mode: VIEW_MODE.READ});
         this.props.onHandleEditContact.apply(this, arguments)
+    },
+    onAddEvent: function() {
+        // this.setState({mode: VIEW_MODE.READ});
+        console.log("ADd event", arguments);
+    },
+    resetState: function() {
+        this.setState({action: ACTIONS.NO_ACTION});
     },
     render: function() {
         return (
@@ -110,11 +124,16 @@ var ContactSelectedDetailView = React.createClass({
                 <div className="page-body">
                     <ControlBar onUserAction={this.onUserAction} />
                     <div className="space-vertical"></div>
-                    <ContactVCard onHandleSubmit={this.onSubmit}
+                    <ContactVCard onHandleSubmit={this.onContactUpdate}
                                   contact={this.getContact()}
-                                  mode={this.state.mode} />
+                                  mode={this.getVCardMode()} />
 
                 </div>
+                <Modal isOpen={this.getAddEventModalState()}
+                       onRequestClose={this.resetState}
+                       modalTitle='ДОБАВЛЕНИЕ СОБЫТИЯ'>
+                    <p>Hi this is my first modal in react</p>
+                </Modal>
             </div>
         )
     },
