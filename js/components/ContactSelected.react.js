@@ -87,7 +87,7 @@ var ContactSelectedDetailView = React.createClass({
     },
 
     getVCardMode: function() {
-        return VIEW_MODE.EDIT ? this.state.action === ACTIONS.EDIT : VIEW_MODE.READ;
+        return this.state.action === ACTIONS.EDIT ? VIEW_MODE.EDIT : VIEW_MODE.READ;
     },
     getAddEventModalState: function() {
         return this.state.action === ACTIONS.ADD_EVENT;

@@ -1,6 +1,6 @@
 var React = require('react/addons');
 var cx        = React.addons.classSet;
-var ModalPortal = require('./ModalPortal.react');
+var ModalPortal = React.createFactory(require('./ModalPortal.react'));
 
 
 /**
