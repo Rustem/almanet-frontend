@@ -20,6 +20,7 @@ var Crumb = require('./common/BreadCrumb.react').Crumb;
 var IconSvg = require('./common/IconSvg.react');
 var Modal = require('./common/Modal.react');
 var ColdBase = require('./master_views').ColdBase;
+var AddActivityForm = require('../forms/AddActivityForm.react');
 var VIEW_MODE = require('../constants/CRMConstants').CONTACT_VIEW_MODE;
 
 var ACTIONS = keyMirror({
@@ -147,7 +148,7 @@ var ContactSelectedDetailView = React.createClass({
                 <Modal isOpen={this.getAddEventModalState()}
                        onRequestClose={this.resetState}
                        modalTitle='ДОБАВЛЕНИЕ СОБЫТИЯ'>
-                    <p>Hi this is my first modal in react</p>
+                    <AddActivityForm />
                 </Modal>
             </div>
         )

@@ -60,6 +60,7 @@ var ContentEditableInput = React.createClass({
                 {...this.props}
                 onInput={this.emitChange}
                 onBlur={this.emitChange}
+                onFocus={this.emitChange}
                 contentEditable={true}
                 className={cx(className, this.props.className)}><span contentEditable={true}>{value}</span><input type="hidden" value={value} />
             </Component>
