@@ -115,20 +115,35 @@ var ContactSelectedDetailView = React.createClass({
     resetState: function() {
         this.setState({action: ACTIONS.NO_ACTION});
     },
+
+    render_body: function() {
+        return (
+            <div className="page-body">
+            <ControlBar onUserAction={this.onUserAction} />
+            <div className="space-vertical"></div>
+            <ContactVCard onHandleSubmit={this.onContactUpdate}
+                          contact={this.getContact()}
+                          mode={this.getVCardMode()} />
+            </div>
+        )
+    },
+
+    render_empty_body: function() {
+        return (
+            <div className="page-body">
+                <p>Пожалуйста выберите хотя бы одного контакта для дальнейшей
+                работы</p>
+            </div>
+        )
+    },
     render: function() {
+        var contact = this.getContact();
         return (
             <div className="page page--compact">
                 <div className="page-header">
                     <Crumb />
                 </div>
-                <div className="page-body">
-                    <ControlBar onUserAction={this.onUserAction} />
-                    <div className="space-vertical"></div>
-                    <ContactVCard onHandleSubmit={this.onContactUpdate}
-                                  contact={this.getContact()}
-                                  mode={this.getVCardMode()} />
-
-                </div>
+                {contact && this.render_body() || this.render_empty_body()}
                 <Modal isOpen={this.getAddEventModalState()}
                        onRequestClose={this.resetState}
                        modalTitle='ДОБАВЛЕНИЕ СОБЫТИЯ'>
@@ -225,7 +240,13 @@ var ShareContactSelectedView = React.createClass({
         ContactActionCreators.editContact(contact_id, updContact);
     },
     render: function() {
-        var contact_id = this.getParams().id;
+        var contact_id = null;
+        for(var cid in this.state.selection_map) {
+            if(this.state.selection_map[cid] === true) {
+                contact_id = cid;
+                break;
+            }
+        }
         return (
           <div>
             <Header />

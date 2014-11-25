@@ -1,9 +1,6 @@
 Todo:
-1. Use the following philosophy and modules to work with async data:
-https://github.com/visionmedia/superagent - for async requests
-http://www.code-experience.com/async-requests-with-react-js-and-flux-revisited/
-http://fluxxor.com/guides/async-data.html
 
+1. When on single selected contact click "Select all" => bad behaviour
 
 Watch:
 https://gist.github.com/sebmarkbage

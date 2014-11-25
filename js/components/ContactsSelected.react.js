@@ -100,16 +100,19 @@ var ShareContactsSelectedView = React.createClass({
         var selection_map = {};
         var contacts = ContactStore.getColdByDate(true);
         var selected_ids = this.getParams().ids;
+        var cnt = 0;
         for(var i = 0; i<contacts.length; i++) {
             selection_map[contacts[i].id] = false;
             if(selected_ids.indexOf(contacts[i].id) > -1) {
                 selection_map[contacts[i].id] = true;
+                cnt += 1
             }
         }
+
         return {
             contacts: contacts,
             selection_map: selection_map,
-            search_bar: {select_all: false, filter_text: ''}
+            search_bar: {select_all: cnt === contacts.length, filter_text: ''}
         }
     },
 
@@ -184,7 +187,7 @@ var ShareContactsSelectedView = React.createClass({
                 console.log('hi');
             }
         }
-        console.log(contact_ids, 'hi');
+        console.log(this.state.search_bar, 'hi');
         return (
           <div>
             <Header />
