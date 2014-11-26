@@ -148,7 +148,7 @@ var ContactSelectedDetailView = React.createClass({
                 <Modal isOpen={this.getAddEventModalState()}
                        onRequestClose={this.resetState}
                        modalTitle='ДОБАВЛЕНИЕ СОБЫТИЯ'>
-                    <AddActivityForm />
+                    <AddActivityForm contact_ids={[this.props.contact_id]} />
                 </Modal>
             </div>
         )

@@ -42,9 +42,15 @@ var FormElementMixin = {
     }
     var value = this.context.value;
     if(this.props.name !== undefined) {
-      value = value[this.props.name];
+      if(this.props.name in value){
+        return value[this.props.name];
+      }
+      else {
+        return null;
+      }
+    } else {
+      return null;
     }
-    return value;
   },
 
   /**
