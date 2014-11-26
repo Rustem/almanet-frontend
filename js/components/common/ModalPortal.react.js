@@ -70,16 +70,19 @@ var ModalPortal = React.createClass({
             'open': this.props.isOpen
         });
         return this.haveTobeClosed() ? div() :  (
-            <div className={className}>
-                <div className="modal-header">
-                    <button onClick={this.handleCloseClick} type="button" className="modal-close">
-                        <IconSvg iconKey='close' />
-                    </button>
-                    {this.props.modalTitle}
+            <div>
+                <div className={className}>
+                    <div className="modal-header">
+                        <button onClick={this.handleCloseClick} type="button" className="modal-close">
+                            <IconSvg iconKey='close' />
+                        </button>
+                        {this.props.modalTitle}
+                    </div>
+                    <div ref='content' className="modal-body">
+                        {this.props.children}
+                    </div>
                 </div>
-                <div ref='content' className="modal-body">
-                    {this.props.children}
-                </div>
+                <div className="modal-backdrop"></div>
             </div>
         );
     }

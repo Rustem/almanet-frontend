@@ -19,6 +19,7 @@ var BreadCrumb = require('./common/BreadCrumb.react');
 var Crumb = require('./common/BreadCrumb.react').Crumb;
 var IconSvg = require('./common/IconSvg.react');
 var Modal = require('./common/Modal.react');
+var AppContextMixin = require('../mixins/AppContextMixin');
 var ColdBase = require('./master_views').ColdBase;
 var AddActivityForm = require('../forms/AddActivityForm.react');
 var VIEW_MODE = require('../constants/CRMConstants').CONTACT_VIEW_MODE;
@@ -77,6 +78,7 @@ var ControlBar = React.createClass({
 });
 
 var ContactSelectedDetailView = React.createClass({
+    mixins: [AppContextMixin],
     propTypes: {
         contact_id: React.PropTypes.string,
         onHandleEditContact: React.PropTypes.func
@@ -148,7 +150,9 @@ var ContactSelectedDetailView = React.createClass({
                 <Modal isOpen={this.getAddEventModalState()}
                        onRequestClose={this.resetState}
                        modalTitle='ДОБАВЛЕНИЕ СОБЫТИЯ'>
-                    <AddActivityForm contact_ids={[this.props.contact_id]} />
+                    <AddActivityForm
+                        contact_ids={[this.props.contact_id]}
+                        current_user={this.context.user} />
                 </Modal>
             </div>
         )

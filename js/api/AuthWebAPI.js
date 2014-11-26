@@ -3,10 +3,11 @@ var _ = require('lodash');
 module.exports = {
     loadCurrentUser: function(success, failure) {
         user = {
-            id: 1,
-            email: 'r.kamun@gmail.com',
-            first_name: 'Rustem',
-            last_name: 'Kamun'
+            id: 'u_1',
+            email: 'sanzhar@altayev.kz ',
+            first_name: 'Санжар',
+            last_name: 'Алтаев',
+            userpic: 'sanzhar.png'
         }
         // simulate success callback
         setTimeout(function() {

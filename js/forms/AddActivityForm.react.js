@@ -8,7 +8,10 @@ var inputs = require('./input');
 var ContentEditableInput = inputs.ContentEditableInput;
 var DropDownBehaviour = require('./mixins').DropDownBehaviour;
 var IconSvg = require('../components/common/IconSvg.react');
+var Fieldset = require('./Fieldset.react');
 var ContactStore = require('../stores/ContactStore');
+var UserStore = require('../stores/UserStore');
+
 
 var NOTE_TEMPLATES = [
     ['Написал клиенту по почте', 'Пример 1: Написал клиенту по почте'],
@@ -20,7 +23,9 @@ var DEFAULT_ACTIVITY = {
     'description': "Напишите комментарий",
     'feedback': 'waiting',
     'contacts': [],
-    'salescycle': null
+    'participants': [],
+    'salescycle': null,
+    'duration': 'ЧЧ:MM'
 };
 var ESCAPE_KEY_CODE = 27;
 
@@ -221,7 +226,8 @@ var FilterableDropDownWidget = React.createClass({
 
     propTypes: {
         choices: React.PropTypes.array.isRequired,
-        onChange: React.PropTypes.func.isRequired
+        onChange: React.PropTypes.func.isRequired,
+        filter_placeholder: React.PropTypes.string.isRequired
     },
 
     renderChoice: function(choice, idx) {
@@ -254,7 +260,7 @@ var FilterableDropDownWidget = React.createClass({
                             </div>
                         </div>
                         <div className="row-body-primary row-body-primary--nopad row-body-primary--extraOffset">
-                            <div className="input-div input-div--block" contenteditable>{n > 0 ? "Добавьте контакт" : "Нет контактов. Создайте"}</div>
+                            <div className="input-div input-div--block" contenteditable>{this.props.filter_placeholder}</div>
                         </div>
                     </div>
                 </div>
@@ -329,12 +335,14 @@ var RemoveableDropDownListWidget = React.createClass({
 
     propTypes: {
         title: React.PropTypes.string.isRequired,
+        filter_placeholder: React.PropTypes.string.isRequired,
         object_list: React.PropTypes.array.isRequired,
         selected_object_keys: React.PropTypes.array.isRequired,
         object_key: React.PropTypes.string.isRequired,
         object_val: React.PropTypes.func.isRequired,
         onAdd: React.PropTypes.func.isRequired,
-        onRemove: React.PropTypes.func.isRequired
+        onRemove: React.PropTypes.func.isRequired,
+        renderSelectedItem: React.PropTypes.func.isRequired
     },
 
     buildChoices: function() {
@@ -362,9 +370,7 @@ var RemoveableDropDownListWidget = React.createClass({
                         <IconSvg iconKey="remove" />
                     </button>
                 </div>
-                <div className="row-body">
-                  {this.props.object_val(object)}
-                </div>
+                {this.props.renderSelectedItem(object)}
               </div>
         )
     },
@@ -386,7 +392,8 @@ var RemoveableDropDownListWidget = React.createClass({
                     {this.props.selected_object_keys.map(this.renderSelectedItem)}
                 </div>
                 <div className="modal-inputLine">
-                    <FilterableDropDownWidget choices={this.buildChoices()}
+                    <FilterableDropDownWidget filter_placeholder={this.props.filter_placeholder}
+                                              choices={this.buildChoices()}
                                               onChange={this.onItemAdd} />
                 </div>
             </section>
@@ -408,8 +415,17 @@ var ContactRemoveableDropDownList = React.createClass({
             object_list: ContactStore.getByDate(),
             object_key: 'id',
             selected_object_keys: this.value() || [],
-            object_val: this.renderContact
+            object_val: this.renderContact,
+            renderSelectedItem: this.renderSelectedItem
         }
+    },
+
+    renderSelectedItem: function(object){
+        return (
+            <div className="row-body">
+                {object.fn}
+            </div>
+        )
     },
 
     findByKey: function(key) {
@@ -435,6 +451,60 @@ var ContactRemoveableDropDownList = React.createClass({
                     onAdd={this.onAdd} onRemove={this.onRemove} />
     }
 
+});
+
+var ParticipantRemoveableDropDownList = React.createClass({
+    mixins : [FormElementMixin],
+
+    renderUser: function(u) {
+        return u.first_name + " " + u.last_name;
+    },
+
+    buildProps: function() {
+        return {
+            object_list: UserStore.getAll(),
+            object_key: 'id',
+            selected_object_keys: this.value() || [],
+            object_val: this.renderUser,
+            renderSelectedItem: this.renderSelectedItem
+        }
+    },
+
+    renderSelectedItem: function(object) {
+        return (
+            <div className="row-body">
+                <div className="row-icon">
+                    <figure className="icon-userpic">
+                        <img src={"img/userpics/" + object.userpic} />
+                    </figure>
+                </div>
+                <div className="row-body">{object.first_name + " " + object.last_name}</div>
+            </div>
+        )
+    },
+
+    findByKey: function(key) {
+        return UserStore.get(key);
+    },
+
+    onAdd: function(user_id) {
+        var selected_users = this.value();
+        selected_users.push(user_id);
+        var updValue = this.prepValue(this.props.name, _.unique(selected_users));
+        return this.updateValue(updValue);
+    },
+
+    onRemove: function(user_id) {
+        var selected_users = this.value();
+        _.pull(selected_users, user_id);
+        return this.updateValue(selected_users);
+    },
+
+    render: function() {
+        var props = _.extend({}, this.buildProps(), this.props);
+        return <RemoveableDropDownListWidget {...props}
+                    onAdd={this.onAdd} onRemove={this.onRemove} />
+    }
 });
 
 var SalesCycleDropDownList = React.createClass({
@@ -466,12 +536,14 @@ var AddActivityForm = React.createClass({
     propTypes: {
         onHandleSubmit: React.PropTypes.func,
         onCancel: React.PropTypes.func,
-        contact_ids: React.PropTypes.array
+        contact_ids: React.PropTypes.array,
+        current_user: React.PropTypes.object
     },
 
     render: function() {
         var form_value = _.extend({}, DEFAULT_ACTIVITY, {
-            'contacts': this.props.contact_ids});
+            'contacts': this.props.contact_ids,
+            'participants': [this.props.current_user.id]});
         return (
             <Form {...this.props} value={form_value}
                                   ref="add_event_form"
@@ -479,11 +551,22 @@ var AddActivityForm = React.createClass({
                 <InputWithDropdown name="description" choices={NOTE_TEMPLATES} />
                 <FeedbackDropDown name="feedback" choices={FEEDBACK_STATUSES} />
                 <hr className="text-neutral" />
-                <ContactRemoveableDropDownList name="contacts" title="Контакты" />
+                <ContactRemoveableDropDownList
+                    name="contacts"
+                    title="Контакты"
+                    filter_placeholder="Добавить контакт" />
                 <hr className="text-neutral" />
                 <SalesCycleDropDownList name="salescycle" />
                 <hr className="text-neutral" />
-
+                <ParticipantRemoveableDropDownList
+                    name="participants"
+                    title="Участники"
+                    filter_placeholder="Добавить участника" />
+                <hr className="text-neutral" />
+                <Fieldset className="modal-inputLine">
+                  <strong>Длительность</strong>
+                  <ContentEditableInput {...this.props} name="duration" />
+                </Fieldset>
                 <div className="modal-inputLine text-center">
                   <button type="submit" className="text-good">СОХРАНИТЬ</button>
                   <div className="space-horizontal"></div>
