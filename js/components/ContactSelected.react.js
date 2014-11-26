@@ -111,9 +111,10 @@ var ContactSelectedDetailView = React.createClass({
         // this.setState({mode: VIEW_MODE.READ});
         this.props.onHandleEditContact.apply(this, arguments)
     },
-    onAddEvent: function() {
+    onAddEvent: function(newEvent) {
         // this.setState({mode: VIEW_MODE.READ});
-        console.log("ADd event", arguments);
+        console.log("ADd event", newEvent);
+        this.resetState();
     },
     resetState: function() {
         this.setState({action: ACTIONS.NO_ACTION});
@@ -152,7 +153,8 @@ var ContactSelectedDetailView = React.createClass({
                        modalTitle='ДОБАВЛЕНИЕ СОБЫТИЯ'>
                     <AddActivityForm
                         contact_ids={[this.props.contact_id]}
-                        current_user={this.context.user} />
+                        current_user={this.context.user}
+                        onHandleSubmit={this.onAddEvent} />
                 </Modal>
             </div>
         )

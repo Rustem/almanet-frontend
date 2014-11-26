@@ -457,8 +457,7 @@ var AddActivityForm = React.createClass({
         var form = this.refs.add_event_form;
         var errors = form.validate();
         if(!errors) {
-            console.log(form.value());
-          // this.props.onHandleSubmit(form.value());
+          this.props.onHandleSubmit(form.value());
         } else{
             alert(errors);
         }
