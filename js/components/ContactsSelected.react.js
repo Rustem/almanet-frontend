@@ -19,6 +19,9 @@ var BreadCrumb = require('./common/BreadCrumb.react');
 var Crumb = require('./common/BreadCrumb.react').Crumb;
 var IconSvg = require('./common/IconSvg.react');
 var ColdBase = require('./master_views').ColdBase;
+var AppContextMixin = require('../mixins/AppContextMixin');
+var Modal = require('./common/Modal.react');
+var AddActivityForm = require('../forms/AddActivityForm.react');
 var VIEW_MODE = require('../constants/CRMConstants').CONTACT_VIEW_MODE;
 
 var ACTIONS = keyMirror({
@@ -56,21 +59,47 @@ var ControlBar = React.createClass({
 });
 
 var ContactsSelectedDetailView = React.createClass({
+    mixins: [AppContextMixin],
+
     propTypes: {
         contact_ids: React.PropTypes.array,
         onHandleEditContact: React.PropTypes.func
     },
+
     getInitialState: function() {
         return {
-            mode: VIEW_MODE.READ
+            action: ACTIONS.NO_ACTION,
         }
     },
 
     getContacts: function() {
         return _.map(this.props.contact_ids, ContactStore.get)
     },
+
+    getAddEventModalState: function() {
+        return this.state.action === ACTIONS.ADD_EVENT;
+    },
+
+    componentDidMount: function() {
+        ContactStore.addChangeListener(this.resetState);
+    },
+
+    componentWillUnmount: function() {
+        ContactStore.removeChangeListener(this.resetState);
+    },
+
+    onAddEvent: function(newEvent) {
+        // this.setState({mode: VIEW_MODE.READ});
+        console.log("ADd event", newEvent);
+        this.resetState();
+    },
+
+    resetState: function() {
+        this.setState({action: ACTIONS.NO_ACTION});
+    },
+
     onUserAction: function(actionType, evt) {
-        console.log(actionType);
+        this.setState({action: actionType});
     },
     render: function() {
         console.log(this.props.contact_ids);
@@ -86,6 +115,14 @@ var ContactsSelectedDetailView = React.createClass({
                         <strong>{this.props.contact_ids.length} контакта</strong>
                     </div>
                 </div>
+                <Modal isOpen={this.getAddEventModalState()}
+                       onRequestClose={this.resetState}
+                       modalTitle='ДОБАВЛЕНИЕ СОБЫТИЯ'>
+                    <AddActivityForm
+                        contact_ids={this.props.contact_ids}
+                        current_user={this.context.user}
+                        onHandleSubmit={this.onAddEvent} />
+                </Modal>
             </div>
         )
     },
