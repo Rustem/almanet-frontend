@@ -5,6 +5,14 @@
 
 var _ = require('lodash');
 
+function capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
+_.mixin({'capitalize': capitalize});
+
+
+
 function extractIds(object_list) {
 
     function __g(object) {
@@ -73,4 +81,5 @@ module.exports = {
   merge: merge,
   invariant: invariant,
   emptyFunction: emptyFunction,
-  isString: isString};
+  isString: isString,
+  capitalize: capitalize};

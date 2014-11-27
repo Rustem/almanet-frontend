@@ -133,7 +133,7 @@ var ContactProfileView = React.createClass({
                 <div className="body-master">
                     <div className="page page--compact">
                         <div className="page-header">
-                            <BreadCrumb slice={[0]} />
+                            <BreadCrumb slice={[1]} />
                         </div>
                         <div className="page-body">
                             <DropdownControlBar actionSelected={this.onActionSelected} />

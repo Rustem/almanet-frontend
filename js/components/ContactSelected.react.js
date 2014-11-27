@@ -23,6 +23,7 @@ var Modal = require('./common/Modal.react');
 var AppContextMixin = require('../mixins/AppContextMixin');
 var ColdBase = require('./master_views').ColdBase;
 var AddActivityForm = require('../forms/AddActivityForm.react');
+var ContactShareForm = require('../forms/ContactShareForm.react');
 var VIEW_MODE = require('../constants/CRMConstants').CONTACT_VIEW_MODE;
 
 var ACTIONS = keyMirror({
@@ -97,10 +98,15 @@ var ContactSelectedDetailView = React.createClass({
     getAddEventModalState: function() {
         return this.state.action === ACTIONS.ADD_EVENT;
     },
+    isShareFormActive: function() {
+        return this.state.action === ACTIONS.SHARE;
+    },
     componentDidMount: function() {
+        ShareStore.addChangeListener(this.resetState);
         ContactStore.addChangeListener(this.resetState);
     },
     componentWillUnmount: function() {
+        ShareStore.removeChangeListener(this.resetState);
         ContactStore.removeChangeListener(this.resetState);
     },
     getContact: function() {
@@ -119,6 +125,11 @@ var ContactSelectedDetailView = React.createClass({
         console.log("ADd event", newEvent);
         this.resetState();
     },
+
+    onShareSubmit: function(shares){
+        ContactActionCreators.createShares(shares);
+    },
+
     resetState: function() {
         this.setState({action: ACTIONS.NO_ACTION});
     },
@@ -158,6 +169,14 @@ var ContactSelectedDetailView = React.createClass({
                         contact_ids={[this.props.contact_id]}
                         current_user={this.context.user}
                         onHandleSubmit={this.onAddEvent} />
+                </Modal>
+                <Modal isOpen={this.isShareFormActive()}
+                   modalTitle='ПОДЕЛИТЬСЯ СПИСКОМ'
+                   onRequestClose={this.resetState} >
+                    <ContactShareForm
+                        contact_ids={[this.props.contact_id]}
+                        current_user={this.context.user}
+                        onHandleSubmit={this.onShareSubmit} />
                 </Modal>
             </div>
         )

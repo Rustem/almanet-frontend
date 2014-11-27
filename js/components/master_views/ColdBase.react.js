@@ -7,12 +7,16 @@ var _ = require('lodash');
 var React = require('react/addons');
 var cx        = React.addons.classSet;
 var Router = require('react-router');
+var capitalize = require('../../utils').capitalize;
 var ActiveState = Router.ActiveState;
 var Link = Router.Link;
 var IconSvg = require('../common/IconSvg.react');
+var Modal = require('../common/Modal.react');
 var ContactActionCreators = require('../../actions/ContactActionCreators');
 var ContactStore = require('../../stores/ContactStore');
+var ShareStore = require('../../stores/ShareStore');
 var AppContextMixin = require('../../mixins/AppContextMixin');
+var ContactShareForm = require('../../forms/ContactShareForm.react');
 var Form = require('../../forms/Form.react');
 var inputs = require('../../forms/input');
 var SVGCheckbox = inputs.SVGCheckbox;
@@ -114,7 +118,7 @@ var FilterBar = React.createClass({
                         </a>
                     </Div>
                     <div className="row-body-secondary">
-                        <a onClick={this.props.onUserAction.bind(null, 'edit')} href="" className="text-secondary">Редактировать список</a>
+                        <a onClick={this.props.onUserAction.bind(null, 'edit')} href="" className="text-secondary">Работать над списком</a>
                     </div>
                 </Div>
 
@@ -271,24 +275,49 @@ var ColdBaseDetailView = React.createClass({
         return {
             contacts: contacts,
             selection_map: selection_map,
-            search_bar: {select_all: false, filter_text: ''}
+            search_bar: {select_all: false, filter_text: ''},
+            action: null
         }
     },
+
     getFilterText: function() {
         return this.state.search_bar.filter_text;
     },
+
     getContacts: function() {
         return this.state.contacts;
     },
+
     getSelectMap: function() {
         return this.state.selection_map;
     },
+
+    getSelectedContacts: function() {
+        var select_map = this.getSelectMap(),
+            rv = [];
+        for(var cid in select_map) {
+            var is_sel = select_map[cid];
+            if(is_sel) {
+                rv.push(cid);
+            }
+        }
+        return rv;
+    },
+
     componentDidMount: function() {
+        ShareStore.addChangeListener(this._onChange);
         ContactStore.addChangeListener(this._onChange);
     },
+
     componentWillUnmount: function(nextProps, nextState) {
+        ShareStore.removeChangeListener(this._onChange);
         ContactStore.removeChangeListener(this._onChange);
     },
+
+    isShareFormActive: function() {
+        return this.state.action === 'share'
+    },
+
     onHandleUserInput: function(value) {
         var is_selected = value.select_all;
         var _map = {};
@@ -303,8 +332,15 @@ var ColdBaseDetailView = React.createClass({
         this.state.selection_map[contact_id] = is_selected;
         this.setState(this.state);
     },
+
+    resetActions: function() {
+        this.state.action = null;
+        this.setState(this.state);
+    },
+
     render: function() {
-        console.log(this.props, "props");
+        var cids = this.getSelectedContacts();
+
         return (
         <div className="page">
             <div className="page-header">
@@ -321,14 +357,41 @@ var ColdBaseDetailView = React.createClass({
                 contacts={this.getContacts()}
                 selection_map={this.getSelectMap()}
                 onChangeState={this.onChangeState} />
+            <Modal isOpen={this.isShareFormActive()}
+                   modalTitle='ПОДЕЛИТЬСЯ СПИСКОМ'
+                   onRequestClose={this.resetActions} >
+                <ContactShareForm
+                    contact_ids={cids}
+                    current_user={this.context.user}
+                    onHandleSubmit={this.onShareSubmit} />
+            </Modal>
         </div>
         )
     },
     onUserAction: function(actionType, evt) {
         evt.preventDefault();
-        var selected_contacts = this.refs.coldbase_list.getSelectedContacts();
-        var contact_ids = _.map(selected_contacts, function(c){ return c.id});
-        if(_.size(selected_contacts) == 0) {
+        var actionHandler = 'on' + _.capitalize(actionType);
+        if(!(actionHandler in this) || !_.isFunction(this[actionHandler])){
+            console.log('handler is not registered for this event')
+            return;
+        }
+        this[actionHandler].call(this)
+    },
+
+    onShare: function() {
+        this.setState({action: 'share'});
+    },
+
+    onShareSubmit: function(shares) {
+        ContactActionCreators.createShares(shares);
+        // action creator for share
+    },
+
+
+
+    onEdit: function() {
+        var contact_ids = this.getSelectedContacts();
+        if(_.size(contact_ids) == 0) {
             console.log('Choose at least one contact');
             return
         }
@@ -337,8 +400,8 @@ var ColdBaseDetailView = React.createClass({
         } else{
             this.transitionTo('contacts_selected', {'ids': contact_ids});
         }
-        console.log('You has chosen to ' + actionType, selected_contacts);
     },
+
     _onChange: function() {
         this.setState(this.getInitialState());
     }

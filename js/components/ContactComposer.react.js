@@ -47,7 +47,7 @@ var ContactComposerForm = React.createClass({
 
   render: function() {
     return (
-      <div className="dropdown-menu" style={{height: '310px'}}>
+      <div className="dropdown-menu dropdown-menu--verticalfit" style={{height: '310px'}}>
         <div className="addContact">
           <div className="addContact-edit">
               <ContactCreateForm ref={FORM_REF} onHandleSubmit={this.props.handleSubmit} />

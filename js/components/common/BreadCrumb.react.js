@@ -54,6 +54,7 @@ var BreadCrumb = React.createClass({
     render: function() {
         var crumbs = [];
         var routes = this.getRoutes();
+        console.log('ROUTES', routes);
         this.filter(routes, {ignore_defaults: true}).forEach(function(route, i, arr) {
             var name = route.alt ? route.alt : route.props.handler.displayName;
             var link = name;

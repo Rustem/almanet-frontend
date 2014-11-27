@@ -56,17 +56,16 @@ module.exports = {
     }.bind(this));
   },
 
-  createShare: function(contact_id, note) {
-    var object = {'contact_id': contact_id, 'note': note};
+  createShare: function(shareObj) {
     dispatcher.handleViewAction({
       type: ActionTypes.CREATE_SHARE,
-      object: object
+      object: shareObj
     });
     // var message = ContactStore.getCreatedContact(shareObject);
-    ContactWebAPI.createShare(object, function(contact){
+    ContactWebAPI.createShare(shareObj, function(share){
       dispatcher.handleServerAction({
         type: ActionTypes.CREATE_SHARE_SUCCESS,
-        object: contact
+        object: share
       });
     }.bind(this), function(error){
       dispatcher.handleServerAction({
@@ -74,6 +73,12 @@ module.exports = {
         error: error
       })
     }.bind(this));
+  },
+
+  createShares: function(shares) {
+    for(var i = 0; i<shares.length; i++) {
+      this.createShare(shares[i]);
+    }
   },
 
   markAllSharesAsRead: function() {

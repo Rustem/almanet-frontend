@@ -57,8 +57,8 @@ module.exports.NODES = {
 }
 
 module.exports.relationships = {
-    'contacts_selected': ['contacts', 'shared', 'shared_default'],
-    'contact_selected': ['contacts', 'shared', 'shared_default'],
+    'contacts_selected': ['contacts', 'shared', 'shared_default', 'coldbase'],
+    'contact_selected': ['contacts', 'shared', 'shared_default', 'coldbase'],
     'contact_profile': ['contact_selected', 'contacts_selected', 'coldbase']
 }
 module.exports.routes = routes

@@ -119,7 +119,7 @@ var FilterBar = React.createClass({
                         <SVGCheckbox name="select_all" className="text-secondary" label="Выбрать все" />
                     </Div>
                     <div className="row-body-secondary">
-                        <a onClick={this.props.onUserAction} href="#" className="text-secondary">Редактировать список</a>
+                        <a onClick={this.props.onUserAction.bind(null, 'edit')} href="#" className="text-secondary">Работать над списком</a>
                     </div>
                 </Div>
 
@@ -210,6 +210,7 @@ var SharesList = React.createClass({
 
     findContact: function(contact_id) {
         return _.find(this.props.contacts, function(contact){
+            // console.log(contact.id, contact_id, contact);
             return contact.id === contact_id
         });
     },
@@ -257,6 +258,7 @@ var SharesList = React.createClass({
         var self = this;
         var shareListItems = this.filterShares().map(function(share) {
             var is_selected = self.props.selection_map[share.id];
+            console.log(self.findContact(share.contact_id), share.contact_id, "hfsldfjlsd");
             return(
                 <ShareListItem
                     key={'share__' + share.id}
@@ -344,6 +346,7 @@ var SharedContactDetailView = React.createClass({
     },
 
     render: function() {
+        console.log(this.state);
         return (
             <div className="page">
                 <div className="page-header">
@@ -364,7 +367,7 @@ var SharedContactDetailView = React.createClass({
             </div>
         )
     },
-    onUserAction: function(evt) {
+    onUserAction: function(actionType, evt) {
         evt.preventDefault();
         var selected_contacts = this.refs.share_list.getSelectedContacts();
         if(_.size(selected_contacts) <= 0) {

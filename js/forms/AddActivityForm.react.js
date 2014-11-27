@@ -21,8 +21,8 @@ var NOTE_TEMPLATES = [
 ];
 
 var DEFAULT_ACTIVITY = {
-    'description': "Напишите комментарий",
-    'feedback': 'waiting',
+    'description': "Краткое описание",
+    'feedback': null,
     'contacts': [],
     'participants': [],
     'salescycle': null,
@@ -175,7 +175,7 @@ var FeedbackDropDownWidget = React.createClass({
                     <IconSvg iconKey="event-type" />
                 </div>
                 <div className="row-body">
-                    Кликните, чтобы выбрать тип события
+                    Выбрать статус
                 </div>
             </div>
         )
@@ -402,6 +402,9 @@ var SalesCycleDropDownList = React.createClass({
                     value={this.value()}
                     choices={this.buildChoices()}
                     onChange={this.onChange} />
+                <div class="inputLine-caption">
+                Если не изменять значение, событие попадет в основной поток
+                </div>
             </div>
         )
     }
@@ -429,15 +432,15 @@ var AddActivityForm = React.createClass({
                 <hr className="text-neutral" />
                 <ContactRemoveableDropDownList
                     name="contacts"
-                    title="Контакты"
-                    filter_placeholder="Добавить контакт" />
+                    title="Клиенты"
+                    filter_placeholder="Добавить клиента" />
                 <hr className="text-neutral" />
                 <SalesCycleDropDownList name="salescycle" />
                 <hr className="text-neutral" />
                 <ParticipantRemoveableDropDownList
                     name="participants"
-                    title="Участники"
-                    filter_placeholder="Добавить участника" />
+                    title="Коллеги"
+                    filter_placeholder="Добавить коллегу" />
                 <hr className="text-neutral" />
                 <Fieldset className="modal-inputLine">
                   <strong>Длительность</strong>

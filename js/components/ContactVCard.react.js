@@ -32,7 +32,6 @@ var ContactVCard = React.createClass({
         )
     },
     renderEmail: function(email, idx) {
-        console.log(email, "hi");
         return (
         <div key={'email--' + idx} className="inputLine inputLine--vcardRow">
           <div className="row">
