@@ -6,6 +6,7 @@ var _ = require('lodash');
 var React = require('react');
 var keyMirror = require('react/lib/keyMirror');
 var Router = require('react-router');
+var Link = Router.Link;
 var RouteHandler = Router.RouteHandler;
 var master_views = require('./master_views');
 var Header = require('./Header.react');
@@ -33,13 +34,14 @@ var ACTIONS = keyMirror({
 })
 
 var ControlBar = React.createClass({
+    mixins : [Router.State],
     propTypes: {
         onUserAction: React.PropTypes.func
     },
     render: function() {
         return (
         <div class='js-contact-actions'>
-        <a onClick={this.props.onUserAction.bind(null, ACTIONS.ADD_EVENT)} className="row row--oneliner row--link">
+        <a onClick={this.props.onUserAction.bind(null, ACTIONS.ADD_EVENT)} className="row row--oneliner row--link" href="#">
             <div className="row-icon text-good">
                 <IconSvg iconKey='add' />
             </div>
@@ -47,7 +49,7 @@ var ControlBar = React.createClass({
               Добавить событие
             </div>
         </a>
-        <a onClick={this.props.onUserAction.bind(null, ACTIONS.SHARE)} className="row row--oneliner row--link">
+        <a onClick={this.props.onUserAction.bind(null, ACTIONS.SHARE)} className="row row--oneliner row--link" href="#">
             <div className="row-icon">
                 <IconSvg iconKey='share' />
             </div>
@@ -55,7 +57,7 @@ var ControlBar = React.createClass({
               Поделиться
             </div>
         </a>
-        <a onClick={this.props.onUserAction.bind(null, ACTIONS.EDIT)} className="row row--oneliner row--link">
+        <a onClick={this.props.onUserAction.bind(null, ACTIONS.EDIT)} className="row row--oneliner row--link" href="#">
             <div className="row-icon">
                 <IconSvg iconKey='edit' />
             </div>
@@ -63,14 +65,14 @@ var ControlBar = React.createClass({
               Редактировать
             </div>
         </a>
-        <a onClick={this.props.onUserAction.bind(null, ACTIONS.VIEW_PROFILE)} className="row row--oneliner row--link">
+        <Link to='contact_profile' params={this.getParams()} className="row row--oneliner row--link" href="#">
             <div className="row-icon">
                 <IconSvg iconKey='profile' />
             </div>
             <div className="row-body">
               Профиль
             </div>
-        </a>
+        </Link>
         </div>
         )
     }
@@ -105,6 +107,7 @@ var ContactSelectedDetailView = React.createClass({
         return ContactStore.get(this.props.contact_id);
     },
     onUserAction: function(actionType, evt) {
+        evt.preventDefault();
         this.setState({action: actionType});
     },
     onContactUpdate: function() {

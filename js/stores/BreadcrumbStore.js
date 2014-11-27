@@ -45,7 +45,7 @@ BreadcrumbDS.prototype.peek = function(idx) {
     }
     var node = this.NODES[routeName];
     var state = this._map[routeName];
-    var state = _.extend({}, {'alt': node.getName()}, state);
+    var state = _.extend({}, {'alt': node.getName(state.params)}, state);
     return state;
 };
 

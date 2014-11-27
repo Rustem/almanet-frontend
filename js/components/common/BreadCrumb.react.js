@@ -4,7 +4,8 @@
  */
 
 var _ = require('lodash');
-var React = require('react');
+var React = require('react/addons');
+var cx            = React.addons.classSet;
 var Router = require('react-router');
 var Link = Router.Link;
 var BreadCrumbStore = require('../../stores/BreadcrumbStore');
@@ -24,7 +25,7 @@ var BreadCrumb = React.createClass({
     filter: function(routes, options) {
         // corner case
         if(routes.length <= 2) {
-            return routes.slice(0, 1);
+            return routes;
         }
         var ignore_defaults = false;
         var rv = [];
@@ -56,19 +57,18 @@ var BreadCrumb = React.createClass({
         this.filter(routes, {ignore_defaults: true}).forEach(function(route, i, arr) {
             var name = route.alt ? route.alt : route.props.handler.displayName;
             var link = name;
-            var link_props = {
+            var link_props = _.extend({}, {
                 to: route.name,
                 params: route.params,
                 query: route.query
-            }
-            if(i !== arr.length - 1) {
-                link = <Link {...link_props} className="page-breadcrumbs-link">{name}</Link>;
-            } else {
-                link = <Link {...link_props} className="page-breadcrumbs-link active">{name}</Link>;
-            }
+            });
+            var className = cx({
+                'page-breadcrumbs-link': true,
+                'active': i === arr.length - 1
+            });
             crumbs.push(
                 <li key={route.path + '' + crumbs.length}>
-                    {link}
+                    <Link {...link_props} className={className} activeClassName="react-router-active">{name}</Link>
                 </li>
             );
         });

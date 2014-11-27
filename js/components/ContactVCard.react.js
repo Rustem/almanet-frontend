@@ -11,9 +11,9 @@ var ContactVCard = React.createClass({
         mode: React.PropTypes.oneOf(VIEW_MODES),
         onHandleSubmit: React.PropTypes.func
     },
-    renderPhone: function(phone) {
+    renderPhone: function(phone, idx) {
         return (
-        <div key={'phone--' + phone.idx} className="inputLine inputLine--vcardRow">
+        <div key={'phone--' + idx} className="inputLine inputLine--vcardRow">
           <div className="row">
             <div className="row-icon">
             </div>
@@ -31,9 +31,10 @@ var ContactVCard = React.createClass({
         </div>
         )
     },
-    renderEmail: function(email) {
+    renderEmail: function(email, idx) {
+        console.log(email, "hi");
         return (
-        <div key={'email--' + email.idx} className="inputLine inputLine--vcardRow">
+        <div key={'email--' + idx} className="inputLine inputLine--vcardRow">
           <div className="row">
             <div className="row-icon">
             </div>
@@ -51,9 +52,9 @@ var ContactVCard = React.createClass({
         </div>)
     },
 
-    renderUrl: function(url) {
+    renderUrl: function(url, idx) {
         return (
-        <div key={'email--' + url.idx} className="inputLine inputLine--vcardRow">
+        <div key={'email--' + idx} className="inputLine inputLine--vcardRow">
           <div className="row">
             <div className="row-icon">
             </div>
@@ -89,10 +90,10 @@ var ContactVCard = React.createClass({
                 </div>
                 <div className="space-vertical space-vertical--compact"></div>
 
-                {contact.phones.map(this.renderPhone)}
+                {contact.emails.map(this.renderEmail)}
                 <div className="space-verticalBorder"></div>
 
-                {contact.emails.map(this.renderEmail)}
+                {contact.phones.map(this.renderPhone)}
                 <div className="space-verticalBorder"></div>
 
                 {contact.urls.map(this.renderUrl)}
@@ -118,7 +119,7 @@ var ContactVCard = React.createClass({
     render_edit: function() {
         return  (
             <div className="contact">
-                <ContactEditForm value={this.props.contact}
+                <ContactEditForm ref="contact_edit_form" value={this.props.contact}
                                  onHandleSubmit={this.props.onHandleSubmit} />
             </div>
         )
@@ -128,6 +129,11 @@ var ContactVCard = React.createClass({
         var mode = this.props.mode;
         return mode === VIEW_MODES_MAP.EDIT && this.render_edit() || this.render_read();
     },
+
+    triggerSubmit: function() {
+      if(!(this.props.mode === VIEW_MODES_MAP.EDIT)) return;
+      this.refs.contact_edit_form.triggerSubmit();
+    }
 
 });
 

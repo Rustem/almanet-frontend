@@ -57,6 +57,7 @@ var ContactEditForm = React.createClass({
 
   onHandleSubmit: function(e) {
     e.preventDefault();
+    console.log("Rustem");
     var form = this.refs.contact_form;
     var errors = form.validate();
     if(!errors) {
@@ -65,6 +66,12 @@ var ContactEditForm = React.createClass({
         alert(errors);
     }
     return false;
+  },
+
+  triggerSubmit: function() {
+    this.onHandleSubmit({
+      preventDefault: function() {}
+    });
   }
 
 });
