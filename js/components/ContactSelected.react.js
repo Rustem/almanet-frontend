@@ -13,7 +13,9 @@ var Header = require('./Header.react');
 var Footer = require('./Footer.react');
 var ShareStore = require('../stores/ShareStore');
 var ContactStore = require('../stores/ContactStore');
+var ActivityStore = require('../stores/ActivityStore');
 var ContactActionCreators = require('../actions/ContactActionCreators');
+var ActivityActionCreators = require('../actions/ActivityActionCreators');
 var UserActionCreators = require('../actions/UserActionCreators');
 var ContactVCard = require('./ContactVCard.react');
 var BreadCrumb = require('./common/BreadCrumb.react');
@@ -102,10 +104,12 @@ var ContactSelectedDetailView = React.createClass({
         return this.state.action === ACTIONS.SHARE;
     },
     componentDidMount: function() {
+        ActivityStore.addChangeListener(this.resetState);
         ShareStore.addChangeListener(this.resetState);
         ContactStore.addChangeListener(this.resetState);
     },
     componentWillUnmount: function() {
+        ActivityStore.removeChangeListener(this.resetState);
         ShareStore.removeChangeListener(this.resetState);
         ContactStore.removeChangeListener(this.resetState);
     },
@@ -121,9 +125,7 @@ var ContactSelectedDetailView = React.createClass({
         this.props.onHandleEditContact.apply(this, arguments)
     },
     onAddEvent: function(newEvent) {
-        // this.setState({mode: VIEW_MODE.READ});
-        console.log("ADd event", newEvent);
-        this.resetState();
+        ActivityActionCreators.createActivity(newEvent);
     },
 
     onShareSubmit: function(shares){

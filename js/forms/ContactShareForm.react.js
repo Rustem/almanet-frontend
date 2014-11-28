@@ -87,7 +87,6 @@ var ContactShareForm = React.createClass({
             'participants': [],
             'note': 'причина'
         });
-        console.log(form_value, "rerendered");
         return (
             <Form ref="contact_share_form"
                   value={form_value}

@@ -12,7 +12,8 @@ var IconSvg = require('../components/common/IconSvg.react');
 var Fieldset = require('./Fieldset.react');
 var ContactStore = require('../stores/ContactStore');
 var UserStore = require('../stores/UserStore');
-
+var SalesCycleStore = require('../stores/SalesCycleStore');
+var utils = require('../utils');
 
 var NOTE_TEMPLATES = [
     ['Написал клиенту по почте', 'Пример 1: Написал клиенту по почте'],
@@ -391,8 +392,11 @@ var SalesCycleDropDownList = React.createClass({
     },
 
     buildChoices: function() {
-        return [[1, 'Sales Cycle 1'],
-                [2, 'Sales Cycle 2']];
+        var rv = [], cycles = SalesCycleStore.getAll();
+        for(var i = 0; i<cycles.length; i++) {
+            rv.push([cycles[i].id, cycles[i].title]);
+        }
+        return rv;
     },
 
     render: function() {
@@ -416,7 +420,7 @@ var AddActivityForm = React.createClass({
         onHandleSubmit: React.PropTypes.func,
         onCancel: React.PropTypes.func,
         contact_ids: React.PropTypes.array,
-        current_user: React.PropTypes.object
+        current_user: React.PropTypes.object,
     },
 
     render: function() {
@@ -460,7 +464,16 @@ var AddActivityForm = React.createClass({
         var form = this.refs.add_event_form;
         var errors = form.validate();
         if(!errors) {
-          this.props.onHandleSubmit(form.value());
+            var object = {}, formValue = form.value();
+            console.log(formValue, "formform");
+            object.description = formValue.description;
+            object.feedback = formValue.feedback;
+            object.contact_ids = formValue.contacts;
+            object.participant_ids = formValue.participants;
+            object.salescycle_id = formValue.salescycle;
+            duration = utils.timeToSeconds(formValue.duration);
+            object.duration = duration
+          this.props.onHandleSubmit(object);
         } else{
             alert(errors);
         }

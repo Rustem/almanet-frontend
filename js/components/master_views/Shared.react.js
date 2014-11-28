@@ -14,6 +14,7 @@ var IconSvg = require('../common/IconSvg.react');
 var ContactActionCreators = require('../../actions/ContactActionCreators');
 var ShareStore = require('../../stores/ShareStore');
 var ContactStore = require('../../stores/ContactStore');
+var UserStore = require('../../stores/UserStore');
 var AppContextMixin = require('../../mixins/AppContextMixin');
 var Form = require('../../forms/Form.react');
 var inputs = require('../../forms/input');
@@ -152,6 +153,10 @@ var ShareListItem = React.createClass({
         return this.props.share.isNew;
     },
 
+    getAuthor: function(user_id) {
+        return UserStore.get(user_id);
+    },
+
     getContactName: function() {
         return this.props.contact.fn;
     },
@@ -166,7 +171,9 @@ var ShareListItem = React.createClass({
         return this.props.share.note
     },
     render: function() {
-        var share = this.props.share;
+        var share = this.props.share,
+            author = this.getAuthor(share.user_id);
+
         var classNames = cx({
             'stream-item': true,
             'new': this.isNew()
@@ -182,12 +189,12 @@ var ShareListItem = React.createClass({
                 <div className="stream-item-extra row">
                     <a href="#" className="row-icon">
                       <figure className="icon-userpic">
-                        <img src="assets/img/userpics/sanzhar.png" alt="" />
+                        <img src={"img/userpics/" + author.userpic} />
                       </figure>
                     </a>
                     <div className="row-body">
                       <div className="text-caption text-secondary">
-                        <a href="#" className="text-secondary">{this.getAuthorName()}</a> в {this.getTimeAt()}
+                        <a href="#" className="text-secondary">{author.first_name}</a>
                       </div>
                       <div className="row-body-message">
                         {this.getNote()}
@@ -258,7 +265,6 @@ var SharesList = React.createClass({
         var self = this;
         var shareListItems = this.filterShares().map(function(share) {
             var is_selected = self.props.selection_map[share.id];
-            console.log(self.findContact(share.contact_id), share.contact_id, "hfsldfjlsd");
             return(
                 <ShareListItem
                     key={'share__' + share.id}

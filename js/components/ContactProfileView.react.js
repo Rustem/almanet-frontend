@@ -3,13 +3,18 @@ var keyMirror = require('react/lib/keyMirror');
 var cx            = React.addons.classSet;
 var Router = require('react-router');
 var ContactStore = require('../stores/ContactStore');
+var ShareStore = require('../stores/ShareStore');
 var ContactActionCreators = require('../actions/ContactActionCreators');
 var BreadCrumb = require('./common/BreadCrumb.react');
 var IconSvg = require('./common/IconSvg.react');
 var ContactVCard = require('./ContactVCard.react');
 var Header = require('./Header.react');
 var Footer = require('./Footer.react');
+var Modal = require('./common/Modal.react');
 var DropDownBehaviour = require('../forms/behaviours/DropDownBehaviour');
+var ContactShareForm = require('../forms/ContactShareForm.react');
+var AppContextMixin = require('../mixins/AppContextMixin');
+
 var VIEW_MODE = require('../constants/CRMConstants').CONTACT_VIEW_MODE;
 
 
@@ -79,18 +84,24 @@ var DropdownControlBar = React.createClass({
 
 
 var ContactProfileView = React.createClass({
-    mixins: [Router.State],
+    mixins: [AppContextMixin, Router.State],
 
     getInitialState: function() {
         return {action: ACTIONS.NO_ACTION};
     },
 
     componentDidMount: function() {
+        ShareStore.addChangeListener(this.resetState);
         ContactStore.addChangeListener(this.resetState);
     },
 
     componentWillUnmount: function() {
+        ShareStore.removeChangeListener(this.resetState);
         ContactStore.removeChangeListener(this.resetState);
+    },
+
+    isShareFormActive: function() {
+        return this.state.action === ACTIONS.SHARE;
     },
 
     getContact: function() {
@@ -110,6 +121,10 @@ var ContactProfileView = React.createClass({
     onContactUpdate: function(updContact) {
         var contact_id = this.getParams().id;
         ContactActionCreators.editContact(contact_id, updContact);
+    },
+
+    onShareSubmit: function(shares){
+        ContactActionCreators.createShares(shares);
     },
 
     resetState: function() {
@@ -147,6 +162,14 @@ var ContactProfileView = React.createClass({
                         </div>
 
                     </div>
+                    <Modal isOpen={this.isShareFormActive()}
+                            modalTitle='ПОДЕЛИТЬСЯ СПИСКОМ'
+                            onRequestClose={this.resetState} >
+                        <ContactShareForm
+                            contact_ids={[this.getParams().id]}
+                            current_user={this.context.user}
+                            onHandleSubmit={this.onShareSubmit} />
+                    </Modal>
                 </div>
                 <div className="body-detail">
 

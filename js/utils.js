@@ -12,6 +12,10 @@ function capitalize(string) {
 _.mixin({'capitalize': capitalize});
 
 
+function timeToSeconds(time) {
+  var parts = time.split(':');
+  return (+parts[0]) * 3600 + (+parts[1]) * 60;
+}
 
 function extractIds(object_list) {
 
@@ -82,4 +86,5 @@ module.exports = {
   invariant: invariant,
   emptyFunction: emptyFunction,
   isString: isString,
-  capitalize: capitalize};
+  capitalize: capitalize,
+  timeToSeconds: timeToSeconds};

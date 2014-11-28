@@ -10,6 +10,8 @@ var AppActionCreators = require('./actions/AppActionCreators');
 var ContactWebAPI = require('./api/ContactWebAPI');
 var AuthWebAPI = require('./api/AuthWebAPI');
 var UserWebAPI = require('./api/UserWebAPI');
+var ActivityWebAPI = require("./api/ActivityWebAPI");
+var SalesCycleWebAPI = require("./api/SalesCycleWebAPI");
 var BreadcrumbStore = require('./stores/BreadcrumbStore');
 var routes = require('./router').routes;
 var NODES = require('./router').NODES;
@@ -23,20 +25,26 @@ AuthWebAPI.loadCurrentUser(function(user){
     ContactWebAPI.getAllContacts(function(contacts){
         ContactWebAPI.getAllShares(function(shares){
             UserWebAPI.getAll(function(users){
-                var appState = {
-                    user: user,
-                    contacts: contacts,
-                    shares: shares,
-                    users: users
-                };
-                AppActionCreators.load(appState);
-                // breadcrumb store is mutable store but the logic remaining as flux
-                BreadcrumbStore.initialize(NODES, relationships);
-                // render app
-                Router.run(routes, function(Handler, state){
-                    BreadcrumbStore.update(state.routes, state.params, state.query);
-                    React.render(<Handler />, document.getElementById('js-crm-app'));
-                })
+                ActivityWebAPI.getAll(function(activities){
+                    SalesCycleWebAPI.getAll(function(salescycles){
+                        var appState = {
+                            user: user,
+                            contacts: contacts,
+                            shares: shares,
+                            users: users,
+                            activities: activities,
+                            salescycles: salescycles
+                        };
+                        AppActionCreators.load(appState);
+                        // breadcrumb store is mutable store but the logic remaining as flux
+                        BreadcrumbStore.initialize(NODES, relationships);
+                        // render app
+                        Router.run(routes, function(Handler, state){
+                            BreadcrumbStore.update(state.routes, state.params, state.query);
+                            React.render(<Handler />, document.getElementById('js-crm-app'));
+                        })
+                    });
+                });
             });
         });
     });
