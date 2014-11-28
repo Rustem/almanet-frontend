@@ -78,6 +78,81 @@ var SalesCycleDropDownList = React.createClass({
 
 });
 
+var SalesCycleByAllSummary = React.createClass({
+     render: function() {
+        return (
+        <div className="stream-closeItem">
+            <table className="table-summary">
+              <tr>
+                <td>Длительность цикла</td>
+                <td>...</td>
+              </tr>
+              <tr>
+                <td>Всего событий</td>
+                <td>...</td>
+              </tr>
+              <tr>
+                <td>Среднее время ожидания</td>
+                <td>...</td>
+              </tr>
+              <tr>
+                <td>Участники</td>
+                <td>...</td>
+              </tr>
+            </table>
+            <div className="space-vertical--compact"></div>
+          </div>
+        )
+    },
+});
+
+var SalesCycleSummary = React.createClass({
+
+    propTypes: {
+        cycle_id: React.PropTypes.string.isRequired,
+    },
+
+    getCycle: function() {
+        return SalesCycleStore.get(this.props.cycle_id);
+    },
+
+    getActivitiesCnt: function() {
+        return this.getCycle().activities.length;
+    },
+
+    getParticipants: function() {
+        var user_ids = this.getCycle().user_ids;
+        return user_ids.join(', ')
+    },
+
+    render: function() {
+        return (
+        <div className="stream-closeItem">
+            <table className="table-summary">
+              <tr>
+                <td>Длительность цикла</td>
+                <td>...</td>
+              </tr>
+              <tr>
+                <td>Всего событий</td>
+                <td>{this.getActivitiesCnt()}</td>
+              </tr>
+              <tr>
+                <td>Среднее время ожидания</td>
+                <td>...</td>
+              </tr>
+              <tr>
+                <td>Участники</td>
+                <td>{this.getParticipants()}</td>
+              </tr>
+            </table>
+            <div className="space-vertical--compact"></div>
+          </div>
+        )
+    },
+
+});
+
 var ActivityListView = React.createClass({
     mixins : [AppContextMixin, Router.State, Router.Navigation],
 
@@ -134,6 +209,7 @@ var ActivityListView = React.createClass({
 
     render: function() {
         var cycle_id = ('salescycle_id' in this.getParams()) && this.getParams()['salescycle_id'] || 'sales_0';
+
         return (
             <div className="page">
                 <div className="page-header">
@@ -151,6 +227,10 @@ var ActivityListView = React.createClass({
                           </div>
                         </a>
                       </div>
+                </div>
+
+                <div className="page-body">
+                    {cycle_id === 'sales_0' && (<SalesCycleByAllSummary />) || (<SalesCycleSummary cycle_id={cycle_id} />)}
                 </div>
 
                 <Modal isOpen={this.getAddEventModalState()}

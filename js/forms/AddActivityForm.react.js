@@ -421,12 +421,14 @@ var AddActivityForm = React.createClass({
         onCancel: React.PropTypes.func,
         contact_ids: React.PropTypes.array,
         current_user: React.PropTypes.object,
+        salescycle: React.PropTypes.string
     },
 
     render: function() {
         var form_value = _.extend({}, DEFAULT_ACTIVITY, {
             'contacts': this.props.contact_ids,
-            'participants': [this.props.current_user.id]});
+            'participants': [this.props.current_user.id],
+            'salescycle': this.props.salescycle});
         return (
             <Form {...this.props} value={form_value}
                                   ref="add_event_form"

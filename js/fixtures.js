@@ -50,19 +50,19 @@ module.exports = {
         id: 'sales_1',
         title: 'Продажа 1С ТОО "Матрикс"',
         activities: [],
-        contact_ids: ['u_1'],
+        user_ids: ['u_1'],
       },
       {
         id: 'sales_2',
         title: 'Облачные сервисы для ИП "МассивДинамик"',
         activities: [],
-        contact_ids: ['u_2', 'u_1'],
+        user_ids: ['u_2', 'u_1'],
       },
       {
         id: 'sales_3',
         title: 'Арта Synergy для АО "КБТУ"',
         activities: [],
-        contact_ids: ['u_2', 'u_1', 'u_3', 'u_4'],
+        user_ids: ['u_2', 'u_1', 'u_3', 'u_4'],
       },
     ]));
   }
