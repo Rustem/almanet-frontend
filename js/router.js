@@ -14,6 +14,7 @@ var Contacts = React.createFactory(require('./components/CRMContacts.react'));
 var ContactsSelectedView = require('./components/ContactsSelected.react');
 var ContactSelectedView = require('./components/ContactSelected.react');
 var ContactProfileView = require('./components/ContactProfileView.react');
+var ActivityListView = require('./components/ActivityListView.react');
 var master_views = require('./components/master_views');
 
 
@@ -26,7 +27,10 @@ var routes = (
         </Route>
         <Route name="contact_selected" path="/contact/:id" handler={ContactSelectedView} />
         <Route name="contacts_selected" path="/contacts/:ids" handler={ContactsSelectedView} />
-        <Route name="contact_profile" path="/contact/:id/detail" handler={ContactProfileView} />
+        <Route name="contact_profile" path="/contact/:id/detail" handler={ContactProfileView}>
+            <DefaultRoute name="activities_by_default" handler={ActivityListView} />
+            <Route name="activities_by" path="actvs/by/:salescycle_id?" handler={ActivityListView} />
+        </Route>
         <Redirect from="/" to="contacts" />
     </Route>
 );
@@ -49,6 +53,8 @@ module.exports.NODES = {
     'contact_profile': new Node('contact_profile', function(params){
         return this.get(params.id).fn
     }.bind(require('./stores/ContactStore'))),
+    'activities_by': new Node('activities_by', 'события'),
+    'activities_by_default': new Node('activities_by_default', 'события'),
     'contacts': new Node('contacts', 'Контакты'),
     'shared': new Node('shared', 'Входящие'),
     'coldbase': new Node('coldbase', 'Холодная база'),
@@ -59,7 +65,8 @@ module.exports.NODES = {
 module.exports.relationships = {
     'contacts_selected': ['contacts', 'shared', 'shared_default', 'coldbase'],
     'contact_selected': ['contacts', 'shared', 'shared_default', 'coldbase'],
-    'contact_profile': ['contact_selected', 'contacts_selected', 'coldbase']
+    'contact_profile': ['contact_selected', 'contacts_selected', 'coldbase'],
+    'activities_by': ['contact_selected', 'contacts_selected', 'coldbase']
 }
 module.exports.routes = routes
 

@@ -2,6 +2,7 @@ var React = require('react');
 var keyMirror = require('react/lib/keyMirror');
 var cx            = React.addons.classSet;
 var Router = require('react-router');
+var RouteHandler = Router.RouteHandler;
 var ContactStore = require('../stores/ContactStore');
 var ShareStore = require('../stores/ShareStore');
 var ContactActionCreators = require('../actions/ContactActionCreators');
@@ -172,7 +173,7 @@ var ContactProfileView = React.createClass({
                     </Modal>
                 </div>
                 <div className="body-detail">
-
+                    <RouteHandler />
                 </div>
             </div>
             <Footer />
