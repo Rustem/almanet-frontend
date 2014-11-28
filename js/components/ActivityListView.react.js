@@ -116,8 +116,26 @@ var SalesCycleSummary = React.createClass({
         return SalesCycleStore.get(this.props.cycle_id);
     },
 
+    getActivities: function() {
+        return _.map(this.getCycle().activities || [], function(act_id) {
+            return ActivityStore.get(act_id)
+        });
+    },
+
     getActivitiesCnt: function() {
-        return this.getCycle().activities.length;
+        return this.getActivities().length;
+    },
+
+    getCycleDuration: function() {
+        return _.reduce(this.getActivities(), function(acc, act) {
+            return acc + act.duration;
+        }.bind(this), 0);
+    },
+
+    getAvgDuration: function() {
+        var n = this.getActivitiesCnt();
+        if(n === 0) return 0;
+        return this.getCycleDuration() * 1. / n;
     },
 
     getParticipants: function() {
@@ -126,12 +144,13 @@ var SalesCycleSummary = React.createClass({
     },
 
     render: function() {
+        console.log(this.getCycleDuration(), 'hi');
         return (
         <div className="stream-closeItem">
             <table className="table-summary">
               <tr>
                 <td>Длительность цикла</td>
-                <td>...</td>
+                <td>{(this.getCycleDuration() / 3600.).toFixed(1)} часов</td>
               </tr>
               <tr>
                 <td>Всего событий</td>
@@ -139,7 +158,7 @@ var SalesCycleSummary = React.createClass({
               </tr>
               <tr>
                 <td>Среднее время ожидания</td>
-                <td>...</td>
+                <td>{(this.getAvgDuration() / 60.).toFixed(0)} минут</td>
               </tr>
               <tr>
                 <td>Участники</td>
