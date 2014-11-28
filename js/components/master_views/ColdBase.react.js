@@ -105,6 +105,7 @@ var FilterBar = React.createClass({
                         </Div>
                     </Div>
                 </Div>
+
                 <Div className="page-header-controls row">
                     <Div className="row-body-primary">
                         <SVGCheckbox name="select_all" className="text-secondary" label="Выбрать все" />

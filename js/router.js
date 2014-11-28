@@ -66,7 +66,8 @@ module.exports.relationships = {
     'contacts_selected': ['contacts', 'shared', 'shared_default', 'coldbase'],
     'contact_selected': ['contacts', 'shared', 'shared_default', 'coldbase'],
     'contact_profile': ['contact_selected', 'contacts_selected', 'coldbase'],
-    'activities_by': ['contact_selected', 'contacts_selected', 'coldbase']
+    'activities_by': ['contact_selected', 'contacts_selected', 'coldbase'],
+    'activities_by_default': ['contact_selected', 'contacts_selected', 'coldbase'],
 }
 module.exports.routes = routes
 
