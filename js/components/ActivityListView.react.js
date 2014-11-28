@@ -79,25 +79,59 @@ var SalesCycleDropDownList = React.createClass({
 });
 
 var SalesCycleByAllSummary = React.createClass({
-     render: function() {
+
+    getCycles: function() {
+        return SalesCycleStore.getAll();
+    },
+
+    getActivities: function() {
+        var list_of_lists = _.map(this.getCycles(), function(cycle){
+            return _.map(cycle.activities || [], ActivityStore.get)
+        });
+        return _.reduce(list_of_lists, function(acc, list) { return acc.concat(list); }, []);
+    },
+
+    getActivitiesCnt: function() {
+        return this.getActivities().length;
+    },
+
+    getTotalDuration: function() {
+        return _.reduce(this.getActivities(), function(acc, act) {
+            return acc + act.duration;
+        }.bind(this), 0);
+    },
+
+    getAvgDuration: function() {
+        var n = this.getActivitiesCnt();
+        if(n === 0) return 0;
+        return this.getTotalDuration() * 1. / n;
+    },
+
+    getParticipants: function() {
+        var list_of_lists = _.map(this.getCycles(), function(cycle){ return cycle.user_ids });
+        user_ids = _.reduce(list_of_lists, function(acc, _user_ids){ return _.union(acc, _user_ids) }, []);
+        return user_ids.join(', ');
+    },
+
+    render: function() {
         return (
         <div className="stream-closeItem">
             <table className="table-summary">
               <tr>
-                <td>Длительность цикла</td>
-                <td>...</td>
+                <td>Суммарная длительность циклов</td>
+                <td>{(this.getTotalDuration() / 3600.).toFixed(1)} часов</td>
               </tr>
               <tr>
                 <td>Всего событий</td>
-                <td>...</td>
+                <td>{this.getActivitiesCnt()}</td>
               </tr>
               <tr>
                 <td>Среднее время ожидания</td>
-                <td>...</td>
+                <td>{(this.getAvgDuration() / 60.).toFixed(0)} минут</td>
               </tr>
               <tr>
                 <td>Участники</td>
-                <td>...</td>
+                <td>{this.getParticipants()}</td>
               </tr>
             </table>
             <div className="space-vertical--compact"></div>
