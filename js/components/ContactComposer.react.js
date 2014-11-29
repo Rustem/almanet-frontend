@@ -38,9 +38,7 @@ var ContactComposerButton = React.createClass({
 });
 
 FORM_REF = 'contact_form'
-
 var ContactComposerForm = React.createClass({
-
   propTypes: {
     handleSubmit: React.PropTypes.func
   },

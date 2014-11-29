@@ -17,6 +17,7 @@ module.exports = {
             is_cold: true}, contactObject);
         var share = {
             id: 'share_' + Date.now(),
+            user_id: contactObject.author_id,
             contact_id: obj.id,
             at: timeNow,
             note: obj.note,

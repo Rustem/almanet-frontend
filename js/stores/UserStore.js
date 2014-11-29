@@ -47,22 +47,21 @@ UserStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
-            CRMAppDispatcher.waitFor([SessionStore.dispatchToken]);
             _.forEach(action.object.users, function(user){
                 _users[user.id] = user;
             });
             UserStore.emitChange();
             break;
-        case ActionTypes.CREATE_user:
+        case ActionTypes.CREATE_USER:
             var user = UserStore.getCreateduser(action.object);
             UserStore.emitChange();
             break;
-        case ActionTypes.CREATE_user_SUCCESS:
+        case ActionTypes.CREATE_USER_SUCCESS:
             var user_with_id = UserStore.getCreateduser(action.object);
             _users[user_with_id.id] = user_with_id;
             UserStore.emitChange();
             break;
-        case ActionTypes.EDIT_user_SUCCESS:
+        case ActionTypes.EDIT_USER_SUCCESS:
             var user_id = action.object['user_id'],
                 user = action.object['user'];
             _users[user_id] = user;

@@ -8,6 +8,7 @@ var ActivityStore = require('./ActivityStore');
 
 var ActionTypes = CRMConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
+
 var _salescycles = {};
 
 var SalesCycleStore = assign({}, EventEmitter.prototype, {
@@ -54,13 +55,13 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
-            CRMAppDispatcher.waitFor([SessionStore.dispatchToken]);
             _.forEach(action.object.salescycles, function(salescycle){
                 _salescycles[salescycle.id] = salescycle;
                 _salescycles[salescycle.id].activities = [];
             });
             _.forEach(action.object.activities, function(actv){
-                _salescycles[actv.salescycle_id].activities.push(actv.id);
+                if(actv.salescycle_id in _salescycles)
+                    _salescycles[actv.salescycle_id].activities.push(actv.id);
             });
             SalesCycleStore.emitChange();
             break;

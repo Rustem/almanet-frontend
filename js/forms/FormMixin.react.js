@@ -53,7 +53,7 @@ var FormStateMixin = {
             if (typeof this.valueUpdated === 'function') {
                 this.valueUpdated(this.state)
             }
-        });
+        }.bind(this));
     },
 
     _getFormState: function(updValue) {

@@ -1,7 +1,7 @@
 /**
  * @jsx React.DOM
  */
-
+var _ = require('lodash');
 var React = require('react');
 var FormElementMixin = require('../FormElementMixin.react');
 var cx        = React.addons.classSet;
@@ -22,7 +22,7 @@ var ContentEditableInput = React.createClass({
 
     getCurrentValue: function() {
         try{
-            var val = this.getDOMNode().getElementsByTagName('span')[0].innerText;
+            var val = this.getDOMNode().innerText;
         } catch(e) {
             var val = ''
         }
@@ -44,26 +44,25 @@ var ContentEditableInput = React.createClass({
           e.stopPropagation();
         }
         var value = getValueFromEvent(e);
+        console.log(value, "hi", "extract");
         this.updateValue(this.prepValue(this.props.name, value));
     },
 
     render: function() {
         var value = this.value();
-        // console.log(value, "Rerender")
         var className = cx({
           'input-div': true,
           'input-div--strong': this.props.isStrong,
         });
-        var Component = this.props.Component;
-        return (
-            <Component
-                {...this.props}
-                onInput={this.emitChange}
-                onBlur={this.emitChange}
-                contentEditable={true}
-                className={cx(className, this.props.className)}><span contentEditable={true}>{value}</span><input type="hidden" value={value} />
-            </Component>
-        );
+        var Component = React.createFactory(this.props.Component);
+        var props = _.extend({}, this.props, {
+            onInput: this.emitChange,
+            onBlur: this.emitChange,
+            contentEditable: true,
+            className: className
+        });
+        return Component(props, value);
+
     },
 });
 

@@ -80,7 +80,6 @@ ShareStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
-            CRMAppDispatcher.waitFor([ContactStore.dispatchToken]);
             _.forEach(action.object.shares, function(share){
                 _shares[share.id] = share;
             });

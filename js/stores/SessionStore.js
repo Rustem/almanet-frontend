@@ -12,7 +12,8 @@ var _anonymous_user = {
     id: -1,
     email: '',
     first_name: '',
-    last_name: ''
+    last_name: '',
+    userpic: 'sanzhar.png'
 };
 
 var _current_user = _.cloneDeep(_anonymous_user);

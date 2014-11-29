@@ -11,6 +11,8 @@ var AppContextMixin = require('../mixins/AppContextMixin');
 var AddActivityForm = require('../forms/AddActivityForm.react');
 var ActivityActionCreators = require('../actions/ActivityActionCreators');
 var ActivityStore = require('../stores/ActivityStore');
+var UserStore = require('../stores/UserStore');
+var ContactStore = require('../stores/ContactStore');
 var SalesCycleStore = require('../stores/SalesCycleStore');
 var Modal = require('./common/Modal.react');
 
@@ -200,7 +202,7 @@ var SalesCycleSummary = React.createClass({
               </tr>
             </table>
             <div className="space-vertical--compact"></div>
-          </div>
+        </div>
         )
     },
 
@@ -228,12 +230,59 @@ var ActivityListView = React.createClass({
         SalesCycleStore.removeChangeListener(this.resetState);
     },
 
-    onCycleSelected: function(idx, cycle_choice) {
-        var cycle_id = cycle_choice[0];
-        var params = this.getParams();
-        params.salescycle_id = cycle_id;
-        this.transitionTo('activities_by', params);
-        return false;
+    getAuthor: function(user_id) {
+        return UserStore.get(user_id);
+    },
+
+    getContacts: function(contact_ids) {
+        return _.map(contact_ids, ContactStore.get)
+    },
+
+    renderActivity: function(act, idx) {
+        var author = this.getAuthor(act.author_id),
+            contacts = this.getContacts(act.contact_ids);
+        return (
+            <div key={'activity__' + idx} className="stream-item">
+            <div className="row">
+              <div className="row-icon">
+                [i]
+              </div>
+              <div className="row-body row-body--no-trailer">
+                <div className="row">
+                  <a href="#" className="row-icon">
+                    <figure className="icon-userpic">
+                          <img src={"img/userpics/" + author.userpic} />
+                    </figure>
+                  </a>
+                  <div className="row-body">
+                    <div className="row">
+                      <div className="row-body-primary text-caption text-secondary">
+                        <a href="#" className="text-secondary">{author.first_name}</a> в {act.at}
+                      </div>
+                      <div className="row-body-secondary">
+                        <a href="#" className="link-inline">
+                          [c]
+                        </a>
+                      </div>
+                    </div>
+                    <div className="row-body-message">
+                      {act.description}
+                    </div>
+                    <ul className="stream-breadcrumbs">
+                        {contacts.map(function(c) {
+                            return (
+                                <li>
+                                    <a href="#" className="stream-breadcrumbs">{c.fn}</a>
+                                </li>
+                            )
+                        }.bind(this))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
     },
 
     buildChoices: function(){
@@ -256,12 +305,25 @@ var ActivityListView = React.createClass({
         ActivityActionCreators.createActivity(newEvent);
     },
 
+    onCycleSelected: function(idx, cycle_choice) {
+        var cycle_id = cycle_choice[0];
+        var params = this.getParams();
+        params.salescycle_id = cycle_id === 'sales_0' ? null : cycle_id;
+        this.transitionTo('activities_by', params);
+        return false;
+    },
+
     resetState: function() {
         this.setState({action: ACTIONS.NO_ACTION});
     },
 
     render: function() {
         var cycle_id = ('salescycle_id' in this.getParams()) && this.getParams()['salescycle_id'] || 'sales_0';
+        if(cycle_id === 'sales_0') {
+            var activities = ActivityStore.getByDate();
+        } else{
+            var activities = ActivityStore.bySalesCycle(cycle_id);
+        }
 
         return (
             <div className="page">
@@ -284,13 +346,14 @@ var ActivityListView = React.createClass({
 
                 <div className="page-body">
                     {cycle_id === 'sales_0' && (<SalesCycleByAllSummary />) || (<SalesCycleSummary cycle_id={cycle_id} />)}
+                    {activities.map(this.renderActivity)}
                 </div>
 
                 <Modal isOpen={this.getAddEventModalState()}
                        onRequestClose={this.resetState}
                        modalTitle='ДОБАВЛЕНИЕ СОБЫТИЯ'>
                     <AddActivityForm
-                        salescycle={this.getParams().salescycle_id}
+                        salescycle={this.getParams().salescycle_id || null}
                         current_user={this.context.user}
                         onHandleSubmit={this.onAddEvent}
                         onCancel={this.resetState} />

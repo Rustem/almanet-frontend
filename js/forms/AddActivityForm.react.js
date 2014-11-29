@@ -474,6 +474,7 @@ var AddActivityForm = React.createClass({
         if(!errors) {
             var object = {}, formValue = form.value();
             console.log(formValue, "formform");
+            object.author_id = this.props.current_user.id;
             object.description = formValue.description;
             object.feedback = formValue.feedback;
             object.contact_ids = formValue.contacts;
