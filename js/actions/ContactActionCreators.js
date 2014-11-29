@@ -13,7 +13,7 @@
 var dispatcher = require('../dispatcher/CRMAppDispatcher');
 var CRMConstants = require('../constants/CRMConstants');
 var ContactWebAPI = require('../api/ContactWebAPI');
-var ShareStore = require('../stores/ShareStore');
+// var ShareStore = require('../stores/ShareStore');
 var ActionTypes = CRMConstants.ActionTypes;
 var utils = require('../utils');
 module.exports = {
@@ -78,7 +78,6 @@ module.exports = {
       type: ActionTypes.CREATE_SHARE,
       object: shareObj
     });
-    // var message = ContactStore.getCreatedContact(shareObject);
     ContactWebAPI.createShare(shareObj, function(share){
       dispatcher.handleServerAction({
         type: ActionTypes.CREATE_SHARE_SUCCESS,
@@ -98,8 +97,8 @@ module.exports = {
     }
   },
 
-  markAllSharesAsRead: function() {
-    var shares_ids = utils.extractIds(ShareStore.getAllNew());
+  markAllSharesAsRead: function(shares) {
+    var shares_ids = utils.extractIds(shares);
     dispatcher.handleViewAction({
       type: ActionTypes.MARK_SHARES_READ,
       object: shares_ids

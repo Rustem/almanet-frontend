@@ -84,7 +84,7 @@ var SharedContactLink = React.createClass({
     onClick: function(evt) {
         // Do not prevent bubbling.
         if(this.state.hasNewItems) {
-            ContactActionCreators.markAllSharesAsRead();
+            ContactActionCreators.markAllSharesAsRead(ShareStore.getAllNew());
         }
 
     }
