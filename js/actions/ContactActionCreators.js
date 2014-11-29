@@ -13,7 +13,6 @@
 var dispatcher = require('../dispatcher/CRMAppDispatcher');
 var CRMConstants = require('../constants/CRMConstants');
 var ContactWebAPI = require('../api/ContactWebAPI');
-var ContactStore = require('../stores/ContactStore');
 var ShareStore = require('../stores/ShareStore');
 var ActionTypes = CRMConstants.ActionTypes;
 var utils = require('../utils');
@@ -53,6 +52,24 @@ module.exports = {
         type: ActionTypes.EDIT_CONTACT_FAIL,
         error: error
       });
+    }.bind(this));
+  },
+
+  setLeads: function(contact_ids){
+    dispatcher.handleViewAction({
+      type: ActionTypes.MARK_CONTACTS_AS_LEAD,
+      object: contact_ids
+    });
+    ContactWebAPI.setLeads(contact_ids, function(result){
+      dispatcher.handleServerAction({
+        type: ActionTypes.MARK_CONTACTS_AS_LEAD_SUCCESS,
+        object: result
+      });
+    }.bind(this), function(error){
+      dispatcher.handleServerAction({
+        type: ActionTypes.MARK_CONTACTS_AS_LEAD_FAIL,
+        error: error
+      })
     }.bind(this));
   },
 

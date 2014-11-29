@@ -1,10 +1,13 @@
 var _ = require('lodash');
 var assign = require('object-assign');
 var EventEmitter = require('events').EventEmitter;
+var ContactWebAPI = require('../api/ContactWebAPI');
+
+
 var CRMConstants = require('../constants/CRMConstants');
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
 var SessionStore = require('./SessionStore');
-
+var ActivityStore = require('./ActivityStore');
 var ActionTypes = CRMConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 var _contacts = {};
@@ -81,6 +84,18 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
                 contact = action.object['contact'];
             _contacts[contact_id] = contact;
             ContactStore.emitChange();
+        case ActionTypes.CREATE_ACTIVITY_SUCCESS:
+            CRMAppDispatcher.waitFor([ActivityStore.dispatchToken]);
+            var contact_ids = action.object.contact_ids;
+            contact_ids = _.filter(contact_ids, function(cid){
+                return _contacts[cid].is_cold;
+            });
+            ContactWebAPI.setLeads(contact_ids, function(result){
+                _.forEach(result, function(cid){
+                    _contacts[cid].is_cold = false;
+                });
+                ContactStore.emitChange();
+            });
         default:
             // do nothing
     }

@@ -192,7 +192,7 @@ var ShareContactSelectedView = React.createClass({
 
     getInitialState: function() {
         var selection_map = {};
-        var contacts = ContactStore.getColdByDate(true);
+        var contacts = ContactStore.getByDate(true);
         var selected_id = this.getParams().id;
         for(var i = 0; i<contacts.length; i++) {
             selection_map[contacts[i].id] = false;

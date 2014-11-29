@@ -1,7 +1,5 @@
 var _ = require('lodash');
 
-ContactServerActionCreators = require('../actions/ContactServerActionCreators')
-
 module.exports = {
     getAllContacts: function(success, failure) {
         var rawContacts = JSON.parse(localStorage.getItem('contacts'));
@@ -48,6 +46,20 @@ module.exports = {
         localStorage.setItem('contacts', JSON.stringify(rawContacts));
         setTimeout(function() {
             success(edit_details);
+        }, 0);
+    },
+    setLeads: function(contact_ids, success, failure) {
+        var rawContacts = JSON.parse(localStorage.getItem('contacts')) || [];
+        for(var i = 0; i<rawContacts.length; i++) {
+            var cur = rawContacts[i];
+            if(contact_ids.indexOf(cur.id) > -1) {
+                cur.is_cold = false;
+            }
+        }
+
+        localStorage.setItem('contacts', JSON.stringify(rawContacts));
+        setTimeout(function(){
+            success(contact_ids);
         }, 0);
     },
     getAllShares: function(success, failure) {
