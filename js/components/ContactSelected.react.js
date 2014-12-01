@@ -13,6 +13,7 @@ var Header = require('./Header.react');
 var Footer = require('./Footer.react');
 var ShareStore = require('../stores/ShareStore');
 var ContactStore = require('../stores/ContactStore');
+var BreadcrumbStore = require('../stores/BreadcrumbStore');
 var ActivityStore = require('../stores/ActivityStore');
 var ContactActionCreators = require('../actions/ContactActionCreators');
 var ActivityActionCreators = require('../actions/ActivityActionCreators');
@@ -227,35 +228,44 @@ var ShareContactSelectedView = React.createClass({
         ContactStore.removeChangeListener(this._onChange);
     },
 
-    shouldComponentUpdate: function(nextProps, nextState) {
+    componentDidUpdate: function(prevProps, prevState) {
         var cids = [], n = 0;
-        for(var contact_id in nextState.selection_map) {
-            var is_selected = nextState.selection_map[contact_id];
+        for(var contact_id in this.state.selection_map) {
+            var is_selected = this.state.selection_map[contact_id];
             if(is_selected) {
                 cids.push(contact_id);
                 n += 1;
             }
         }
-        if(n > 1) {
+        if(n === 0) {
+            var route = BreadcrumbStore.prev();
+            this.transitionTo(route.name, route.params, route.query);
+        } else if(n > 1) {
             this.transitionTo('contacts_selected', {'ids': cids});
         }
-        return n <= 1;
+        return n === 1;
     },
 
-    onHandleUserInput: function(value) {
+    onFilterBarUpdate: function(value) {
         var is_selected = value.select_all;
         var _map = {};
         for(var contact_id in this.state.selection_map) {
             _map[contact_id] = is_selected;
         }
-        this.state.selection_map = _map;
-        this.state.search_bar = value;
-        this.setState(this.state);
+        var newState = React.addons.update(this.state, {
+            selection_map: {$set: _map},
+            search_bar: {$set: value}
+        });
+        this.setState(newState);
     },
 
-    onChangeState: function(contact_id, is_selected) {
-        this.state.selection_map[contact_id] = is_selected;
-        this.setState(this.state);
+    onToggleListItem: function(contact_id, is_selected) {
+        var updItem = {};
+        updItem[contact_id] = is_selected;
+        var newState = React.addons.update(this.state, {
+            selection_map: {$merge: updItem}
+        });
+        this.setState(newState);
     },
 
     onUserAction: function(actionType, evt) {
@@ -289,7 +299,7 @@ var ShareContactSelectedView = React.createClass({
                             <ColdBase.FilterBar
                                 ref='filter_bar'
                                 value={this.state.search_bar}
-                                onHandleUserInput={this.onHandleUserInput}
+                                onHandleUserInput={this.onFilterBarUpdate}
                                 onUserAction={this.onUserAction} />
                         </div>
                         <ColdBase.ColdBaseList
@@ -297,7 +307,7 @@ var ShareContactSelectedView = React.createClass({
                             filter_text={this.getFilterText()}
                             contacts={this.getContacts()}
                             selection_map={this.getSelectMap()}
-                            onChangeState={this.onChangeState} />
+                            onChangeState={this.onToggleListItem} />
                     </div>
                 </div>
                 <div className="body-detail">

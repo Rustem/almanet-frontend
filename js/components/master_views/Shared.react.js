@@ -120,7 +120,7 @@ var FilterBar = React.createClass({
                         <SVGCheckbox name="select_all" className="text-secondary" label="Выбрать все" />
                     </Div>
                     <div className="row-body-secondary">
-                        <a onClick={this.props.onUserAction.bind(null, 'edit')} href="#" className="text-secondary">Работать над списком</a>
+                        <a onClick={this.props.onUserAction.bind(null, 'edit')} href="#" className="text-secondary">Редактировать</a>
                     </div>
                 </Div>
 
@@ -321,9 +321,20 @@ var SharedContactDetailView = React.createClass({
     getShares: function() {
         return this.state.shares;
     },
+
     getContacts: function() {
         return this.state.contacts;
     },
+
+    getContactId: function(share_id) {
+        for(var i = 0; i<this.state.shares.length; i++) {
+            var share = this.state.shares[i];
+            if(share.id === share_id)
+                return share.contact_id;
+        }
+        return null;
+    },
+
     getSelectMap: function() {
         return this.state.selection_map;
     },
@@ -336,19 +347,66 @@ var SharedContactDetailView = React.createClass({
     componentWillUnmount: function(nextProps, nextState) {
         ShareStore.removeChangeListener(this._onChange);
     },
-    onHandleUserInput: function(value) {
+
+    componentDidUpdate: function(prevProps, prevState) {
+        var cur_map = prevState.selection_map,
+            next_map = this.state.selection_map;
+
+        function getSelectedList(map) {
+            var rv = [];
+            for(var share_id in map) {
+                if(map[share_id] === true) {
+
+                    rv.push(this.getContactId(share_id));
+                }
+            }
+            return rv;
+        }
+
+        var cur_ids = getSelectedList.call(this, cur_map),
+            next_ids = getSelectedList.call(this, next_map);
+
+        if(_.isEmpty(next_ids)) {
+            return;
+        }
+        if(_.difference(cur_ids, next_ids).length === 0) {
+            if(_.difference(next_ids, cur_ids).length === 0) {
+                return;
+            }
+        }
+
+        if(next_ids.length === 1) {
+            setTimeout(function() {
+                this.transitionTo('contact_selected', {'id': next_ids[0]});
+            }.bind(this), 0);
+
+        } else {
+            setTimeout(function() {
+                this.transitionTo('contacts_selected', {'ids': next_ids});
+            }.bind(this), 0);
+        }
+
+    },
+
+    onFilterBarUpdate: function(value) {
         var is_selected = value.select_all;
         var _map = {};
         for(var contact_id in this.state.selection_map) {
             _map[contact_id] = is_selected;
         }
-        this.state.selection_map = _map;
-        this.state.search_bar = value;
-        this.setState(this.state);
+        var newState = React.addons.update(this.state, {
+            selection_map: {$set: _map},
+            search_bar: {$set: value}
+        });
+        this.setState(newState);
     },
-    onChangeState: function(share_id, is_selected) {
-        this.state.selection_map[share_id] = is_selected;
-        this.setState(this.state);
+    onToggleListItem: function(share_id, is_selected) {
+        var updItem = {};
+        updItem[share_id] = is_selected;
+        var newState = React.addons.update(this.state, {
+            selection_map: {$merge: updItem}
+        });
+        this.setState(newState);
     },
 
     render: function() {
@@ -360,7 +418,7 @@ var SharedContactDetailView = React.createClass({
                     <FilterBar
                         ref='filter_bar'
                         value={this.state.search_bar}
-                        onHandleUserInput={this.onHandleUserInput}
+                        onHandleUserInput={this.onFilterBarUpdate}
                         onUserAction={this.onUserAction} />
                 </div>
                 <SharesList
@@ -369,7 +427,7 @@ var SharedContactDetailView = React.createClass({
                     shares={this.getShares()}
                     contacts={this.getContacts()}
                     selection_map={this.getSelectMap()}
-                    onChangeState={this.onChangeState} />
+                    onChangeState={this.onToggleListItem} />
             </div>
         )
     },

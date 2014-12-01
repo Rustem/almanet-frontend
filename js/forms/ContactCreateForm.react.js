@@ -23,14 +23,14 @@ Object.assign = _.extend;
 require('../utils');
 
 var default_form_state = {
-  'fn': 'Камун Рустем Абдукадырович',
-  'companyName': 'Mobiliuz',
-  'emails': [{'idx': 0, 'type': 'internet', 'value': 'r.kamun@gmail.com'}],
+  'fn': 'Аман Куратов',
+  'companyName': 'ТОО "Массив Динамик"',
+  'emails': [{'idx': 0, 'type': 'internet', 'value': 'amangeldy@gmail.com'}],
   'phones': [{'idx': 0, 'type': 'work', 'value': '+7 777 7777777'}],
   'is_company': true,
-  'urls': [{'idx': 0, 'type': 'website', 'value': 'http://alma.net'}],
-  'adrs': [{'idx': 0, 'type': 'home', 'street_address': 'Zharokov, 167', 'region': 'Almaty', 'locality': 'Almaty', 'country_name': 'Kazakhstan', 'postal_code': '00012'}],
-  'note': 'Нужно сюда съездить на встречу а то я не успеваю, подмени меня пожалуйста'
+  'urls': [{'idx': 0, 'type': 'website', 'value': 'http://massive-dyn.com'}],
+  'adrs': [{'idx': 0, 'type': 'home', 'street_address': 'Zharokov, 11', 'region': 'Almaty', 'locality': 'Almaty', 'country_name': 'Kazakhstan', 'postal_code': '00012'}],
+  'note': 'Нужно сюда съездить на встречу а то я не успеваю, подмени меня пожалуйста.'
 };
 
 var ContactCreateForm = React.createClass({

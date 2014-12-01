@@ -12,6 +12,7 @@ var Header = require('./Header.react');
 var Footer = require('./Footer.react');
 var ShareStore = require('../stores/ShareStore');
 var ContactStore = require('../stores/ContactStore');
+var BreadcrumbStore = require('../stores/BreadcrumbStore');
 var ContactActionCreators = require('../actions/ContactActionCreators');
 var UserActionCreators = require('../actions/UserActionCreators');
 var ContactVCard = require('./ContactVCard.react');
@@ -115,7 +116,6 @@ var ContactsSelectedDetailView = React.createClass({
     },
 
     render: function() {
-        console.log(this.props.contact_ids);
         return (
             <div className="page page--compact">
                 <div className="page-header">
@@ -156,7 +156,7 @@ var ShareContactsSelectedView = React.createClass({
 
     getInitialState: function() {
         var selection_map = {};
-        var contacts = ContactStore.getColdByDate(true);
+        var contacts = ContactStore.getByDate(true);
         var selected_ids = this.getParams().ids;
         var cnt = 0;
         for(var i = 0; i<contacts.length; i++) {
@@ -194,19 +194,24 @@ var ShareContactsSelectedView = React.createClass({
         ContactStore.removeChangeListener(this._onChange);
     },
 
-    shouldComponentUpdate: function(nextProps, nextState) {
-        var id = null, n = 0;
-        for(var contact_id in nextState.selection_map) {
-            var is_selected = nextState.selection_map[contact_id];
+    componentDidUpdate: function(prevProps, prevState) {
+        var ids = [], n = 0;
+        for(var contact_id in this.state.selection_map) {
+            var is_selected = this.state.selection_map[contact_id];
             if(is_selected) {
-                id = contact_id;
+                ids.push(contact_id);
                 n += 1;
             }
         }
-        if(n === 1) {
-            this.transitionTo('contact_selected', {'id': id});
+        if(n === 0) {
+            var route = BreadcrumbStore.prev();
+            this.transitionTo(route.name, route.params, route.query);
+        } else if(n === 1) {
+            this.transitionTo('contact_selected', {'id': ids[0]});
+        } else {
+            this.transitionTo('contacts_selected', {'ids': ids});
         }
-        return n > 1 || n === 0;
+        return n > 1;
     },
 
     onHandleUserInput: function(value) {
@@ -215,14 +220,20 @@ var ShareContactsSelectedView = React.createClass({
         for(var contact_id in this.state.selection_map) {
             _map[contact_id] = is_selected;
         }
-        this.state.selection_map = _map;
-        this.state.search_bar = value;
-        this.setState(this.state);
+        var newState = React.addons.update(this.state, {
+            selection_map: {$set: _map},
+            search_bar: {$set: value}
+        });
+        this.setState(newState);
     },
 
-    onChangeState: function(contact_id, is_selected) {
-        this.state.selection_map[contact_id] = is_selected;
-        this.setState(this.state);
+    onToggleListItem: function(contact_id, is_selected) {
+        var updItem = {};
+        updItem[contact_id] = is_selected;
+        var newState = React.addons.update(this.state, {
+            selection_map: {$merge: updItem}
+        });
+        this.setState(newState);
     },
 
     onUserAction: function(actionType, evt) {
@@ -242,10 +253,8 @@ var ShareContactsSelectedView = React.createClass({
             var c = this.state.contacts[i];
             if(select_map[c.id] === true) {
                 contact_ids.push(c.id);
-                console.log('hi');
             }
         }
-        console.log(this.state.search_bar, 'hi');
         return (
           <div>
             <Header />
@@ -265,7 +274,7 @@ var ShareContactsSelectedView = React.createClass({
                             filter_text={this.getFilterText()}
                             contacts={this.getContacts()}
                             selection_map={this.getSelectMap()}
-                            onChangeState={this.onChangeState} />
+                            onChangeState={this.onToggleListItem} />
                     </div>
                 </div>
                 <div className="body-detail">

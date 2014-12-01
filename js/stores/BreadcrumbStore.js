@@ -170,6 +170,10 @@ var BreadcrumbStore = assign({}, EventEmitter.prototype, {
         this._state.update(routes, path);
         console.log(this._state.getHydrated(), "hi");
     },
+    prev: function() {
+        this._state.pop();
+        return this._state.peek();
+    },
     get: function() {
         return this._state.getHydrated();
     },

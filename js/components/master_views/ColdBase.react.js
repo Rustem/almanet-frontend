@@ -119,7 +119,7 @@ var FilterBar = React.createClass({
                         </a>
                     </Div>
                     <div className="row-body-secondary">
-                        <a onClick={this.props.onUserAction.bind(null, 'edit')} href="" className="text-secondary">Работать над списком</a>
+                        <a onClick={this.props.onUserAction.bind(null, 'edit')} href="" className="text-secondary">Редактировать</a>
                     </div>
                 </Div>
 
@@ -315,23 +315,68 @@ var ColdBaseDetailView = React.createClass({
         ContactStore.removeChangeListener(this._onChange);
     },
 
+    componentDidUpdate: function(prevProps, prevState) {
+        var cur_map = prevState.selection_map,
+            next_map = this.state.selection_map;
+        console.log(next_map);
+
+        function getSelectedList(map) {
+            var rv = [];
+            for(var _id in map) {
+                if(map[_id] === true) {
+                    rv.push(_id);
+                }
+            }
+            return rv;
+        }
+
+        var cur_ids = getSelectedList(cur_map),
+            next_ids = getSelectedList(next_map);
+
+        if(_.isEmpty(next_ids)) {
+            return;
+        }
+        if(_.difference(cur_ids, next_ids).length === 0) {
+            if(_.difference(next_ids, cur_ids).length === 0) {
+                return;
+            }
+        }
+        if(next_ids.length === 1) {
+            setTimeout(function() {
+                this.transitionTo('contact_selected', {'id': next_ids[0]});
+            }.bind(this), 0);
+
+        } else {
+            setTimeout(function() {
+                this.transitionTo('contacts_selected', {'ids': next_ids});
+            }.bind(this), 0);
+        }
+
+    },
+
     isShareFormActive: function() {
         return this.state.action === 'share'
     },
 
-    onHandleUserInput: function(value) {
+    onFilterBarUpdate: function(value) {
         var is_selected = value.select_all;
-        var _map = {};
+        var _map = {}, selected_items = 0;
         for(var contact_id in this.state.selection_map) {
             _map[contact_id] = is_selected;
         }
-        this.state.selection_map = _map;
-        this.state.search_bar = value;
-        this.setState(this.state);
+        var newState = React.addons.update(this.state, {
+            selection_map: {$set: _map},
+            search_bar: {$set: value}
+        });
+        this.setState(newState);
     },
-    onChangeState: function(contact_id, is_selected) {
-        this.state.selection_map[contact_id] = is_selected;
-        this.setState(this.state);
+    onToggleListItem: function(contact_id, is_selected) {
+        var updItem = {};
+        updItem[contact_id] = is_selected;
+        var newState = React.addons.update(this.state, {
+            selection_map: {$merge: updItem}
+        });
+        this.setState(newState);
     },
 
     resetActions: function() {
@@ -349,7 +394,7 @@ var ColdBaseDetailView = React.createClass({
                 <FilterBar
                     ref="filter_bar"
                     value={this.state.search_bar}
-                    onHandleUserInput={this.onHandleUserInput}
+                    onHandleUserInput={this.onFilterBarUpdate}
                     onUserAction={this.onUserAction} />
             </div>
             <ColdBaseList
@@ -357,7 +402,7 @@ var ColdBaseDetailView = React.createClass({
                 filter_text={this.getFilterText()}
                 contacts={this.getContacts()}
                 selection_map={this.getSelectMap()}
-                onChangeState={this.onChangeState} />
+                onChangeState={this.onToggleListItem} />
             <Modal isOpen={this.isShareFormActive()}
                    modalTitle='ПОДЕЛИТЬСЯ СПИСКОМ'
                    onRequestClose={this.resetActions} >
