@@ -438,12 +438,7 @@ var SharedContactDetailView = React.createClass({
             console.log('Choose at least one contact');
             return
         }
-        var contact_ids = _.map(selected_contacts, function(c){ return c.id});
-        if(contact_ids.length === 1) {
-            this.transitionTo('contact_selected', {'id': contact_ids[0]});
-        } else{
-            this.transitionTo('contacts_selected', {'ids': contact_ids});
-        }
+        console.log('edit');
     },
     _onChange: function() {
         this.setState(this.getInitialState());

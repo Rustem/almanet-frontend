@@ -437,15 +437,7 @@ var ColdBaseDetailView = React.createClass({
 
     onEdit: function() {
         var contact_ids = this.getSelectedContacts();
-        if(_.size(contact_ids) == 0) {
-            console.log('Choose at least one contact');
-            return
-        }
-        if(contact_ids.length === 1) {
-            this.transitionTo('contact_selected', {'id': contact_ids[0]});
-        } else{
-            this.transitionTo('contacts_selected', {'ids': contact_ids});
-        }
+        console.log("EDIT");
     },
 
     _onChange: function() {
