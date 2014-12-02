@@ -44,6 +44,23 @@ var ContactStore = assign({}, EventEmitter.prototype, {
         });
     },
 
+    getLeads: function(reversed) {
+        return _.filter(this.getByDate(true), function(c){
+            return !c.is_cold;
+        });
+    },
+
+    getRecent: function() {
+        var recent_acts = ActivityStore.getByDate(true)
+        return _.chain(recent_acts)
+                .map(function(act){ return act.contact_ids; })
+                .reduce(function(acc, contact_ids){
+                    return _.union(acc, contact_ids);
+                }, [])
+                .map(this.get).reverse().value();
+
+    },
+
     getAll: function() {
         return _.map(_contacts, function(c) { return c });
     },
