@@ -25,7 +25,9 @@ var CRMContacts = React.createClass({
                         </div>
                         <div className="page-body">
                             <master_views.Shared.Link label="Входящие" />
+                            <master_views.AllBase.Link label="Все" />
                             <master_views.ColdBase.Link label="Холодная база" />
+
                         </div>
                     </div>
                 </div>

@@ -23,6 +23,7 @@ var routes = (
         <Route name="contacts" path="/contacts" handler={Contacts}>
             <DefaultRoute name='shared_default' handler={master_views.Shared.DetailView} />
             <Route name='shared' handler={master_views.Shared.DetailView} />
+            <Route name='allbase' handler={master_views.AllBase.DetailView} />
             <Route name='coldbase' handler={master_views.ColdBase.DetailView} />
         </Route>
         <Route name="contact_selected" path="/contact/:id" handler={ContactSelectedView} />
@@ -57,17 +58,18 @@ module.exports.NODES = {
     'activities_by_default': new Node('activities_by_default', 'события'),
     'contacts': new Node('contacts', 'Контакты'),
     'shared': new Node('shared', 'Входящие'),
+    'allbase': new Node('allbase', 'Все'),
     'coldbase': new Node('coldbase', 'Холодная база'),
     'shared_default': new Node('shared_default', 'Входящие'),
     'main': new Node('main', 'главная')
 }
 
 module.exports.relationships = {
-    'contacts_selected': ['contacts', 'shared', 'shared_default', 'coldbase'],
-    'contact_selected': ['contacts', 'shared', 'shared_default', 'coldbase'],
-    'contact_profile': ['contact_selected', 'contacts_selected', 'coldbase'],
-    'activities_by': ['contact_selected', 'contacts_selected', 'coldbase'],
-    'activities_by_default': ['contact_selected', 'contacts_selected', 'coldbase'],
+    'contacts_selected': ['contacts', 'shared', 'shared_default', 'coldbase', 'allbase'],
+    'contact_selected': ['contacts', 'shared', 'shared_default', 'coldbase', 'allbase'],
+    'contact_profile': ['contact_selected', 'contacts_selected'],
+    'activities_by': ['contact_selected', 'contacts_selected'],
+    'activities_by_default': ['contact_selected', 'contacts_selected'],
 }
 module.exports.routes = routes
 
