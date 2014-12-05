@@ -4,6 +4,7 @@
  */
 
 var _ = require('lodash');
+var Fuse = require('../../libs/fuse');
 var React = require('react/addons');
 var cx        = React.addons.classSet;
 var Router = require('react-router');
@@ -166,7 +167,6 @@ var ContactListItem = React.createClass({
 
 var AllBaseList = React.createClass({
     propTypes: {
-        filter_text: React.PropTypes.string,
         contacts: React.PropTypes.array,
         selection_map: React.PropTypes.object,
         onChangeState: React.PropTypes.func
@@ -234,7 +234,7 @@ var AllBaseList = React.createClass({
 
     render: function() {
         var prevContact = null;
-        var contactListItems = this.filterContacts().map(function(contact) {
+        var contactListItems = this.props.contacts.map(function(contact) {
             var GroupContent = null;
             if(prevContact == null || prevContact.fn[0] !== contact.fn[0] ) {
                 GroupContent = this.renderGroup(contact.fn[0]);
@@ -358,15 +358,26 @@ var AllBaseDetailView = React.createClass({
         return this.state.action === 'share'
     },
 
+    search: function(search_str, collection) {
+        var options = {
+            keys: ['fn'],
+        }
+        var f = new Fuse(collection, options);
+        return f.search(search_str)
+    },
+
     onFilterBarUpdate: function(value) {
         var is_selected = value.select_all;
         var _map = {}, selected_items = 0;
+        contacts = this.search(value.filter_text, ContactStore.getByDate(true));
         for(var contact_id in this.state.selection_map) {
             _map[contact_id] = is_selected;
         }
+
         var newState = React.addons.update(this.state, {
+            contacts: {$set: contacts},
             selection_map: {$set: _map},
-            search_bar: {$set: value}
+            search_bar: {$set: value},
         });
         this.setState(newState);
     },
@@ -399,7 +410,6 @@ var AllBaseDetailView = React.createClass({
             </div>
             <AllBaseList
                 ref="allbase_list"
-                filter_text={this.getFilterText()}
                 contacts={this.getContacts()}
                 selection_map={this.getSelectMap()}
                 onChangeState={this.onToggleListItem} />

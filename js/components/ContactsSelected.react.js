@@ -3,6 +3,7 @@
  */
 
 var _ = require('lodash');
+var Fuse = require('../libs/fuse');
 var React = require('react');
 var keyMirror = require('react/lib/keyMirror');
 var Router = require('react-router');
@@ -19,7 +20,7 @@ var ContactVCard = require('./ContactVCard.react');
 var BreadCrumb = require('./common/BreadCrumb.react');
 var Crumb = require('./common/BreadCrumb.react').Crumb;
 var IconSvg = require('./common/IconSvg.react');
-var ColdBase = require('./master_views').ColdBase;
+var AllBase = require('./master_views').AllBase;
 var AppContextMixin = require('../mixins/AppContextMixin');
 var Modal = require('./common/Modal.react');
 var AddActivityForm = require('../forms/AddActivityForm.react');
@@ -214,15 +215,33 @@ var ShareContactsSelectedView = React.createClass({
         return n > 1;
     },
 
-    onHandleUserInput: function(value) {
-        var is_selected = value.select_all;
-        var _map = {};
-        for(var contact_id in this.state.selection_map) {
-            _map[contact_id] = is_selected;
+    search: function(search_str, collection) {
+        var options = {
+            keys: ['fn'],
         }
+        var f = new Fuse(collection, options);
+        return f.search(search_str)
+    },
+
+    onFilterBarUpdate: function(value) {
+        var _map = {}, changed = value.select_all ^ this.state.search_bar.select_all;
+        var contacts = ContactStore.getByDate(true);
+        if(value.filter_text) {
+            contacts = this.search(value.filter_text, contacts);
+        }
+        console.log(changed, "hi", value.select_all, this.state.search_bar.select_all);
+        for(var contact_id in this.state.selection_map) {
+            if(changed === 1) {
+                _map[contact_id] = value.select_all;
+            } else {
+                _map[contact_id] = this.state.selection_map[contact_id];
+            }
+        }
+        console.log(_map);
         var newState = React.addons.update(this.state, {
+            contacts: {$set: contacts},
             selection_map: {$set: _map},
-            search_bar: {$set: value}
+            search_bar: {$set: value},
         });
         this.setState(newState);
     },
@@ -238,7 +257,7 @@ var ShareContactsSelectedView = React.createClass({
 
     onUserAction: function(actionType, evt) {
         evt.preventDefault();
-        var selected_contacts = this.refs.coldbase_list.getSelectedContacts();
+        var selected_contacts = this.refs.allbase_list.getSelectedContacts();
         if(_.size(selected_contacts) == 0) {
             console.log('Choose at least one contact');
             return
@@ -263,15 +282,14 @@ var ShareContactsSelectedView = React.createClass({
                     <div className="page">
                         <div className="page-header">
                             <BreadCrumb slice={[1, -1]} />
-                            <ColdBase.FilterBar
+                            <AllBase.FilterBar
                                 ref='filter_bar'
                                 value={this.state.search_bar}
-                                onHandleUserInput={this.onHandleUserInput}
+                                onHandleUserInput={this.onFilterBarUpdate}
                                 onUserAction={this.onUserAction} />
                         </div>
-                        <ColdBase.ColdBaseList
-                            ref="coldbase_list"
-                            filter_text={this.getFilterText()}
+                        <AllBase.AllBaseList
+                            ref="allbase_list"
                             contacts={this.getContacts()}
                             selection_map={this.getSelectMap()}
                             onChangeState={this.onToggleListItem} />
