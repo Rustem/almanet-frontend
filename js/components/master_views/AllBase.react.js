@@ -318,7 +318,6 @@ var AllBaseDetailView = React.createClass({
     componentDidUpdate: function(prevProps, prevState) {
         var cur_map = prevState.selection_map,
             next_map = this.state.selection_map;
-        console.log(next_map);
 
         function getSelectedList(map) {
             var rv = [];
@@ -342,7 +341,7 @@ var AllBaseDetailView = React.createClass({
             }
         }
         setTimeout(function() {
-            this.transitionTo('contacts_selected', {'ids': next_ids});
+            this.transitionTo('contacts_selected', {}, {'ids': next_ids});
         }.bind(this), 0);
 
     },
@@ -351,20 +350,26 @@ var AllBaseDetailView = React.createClass({
         return this.state.action === 'share'
     },
 
-    search: function(search_str, collection) {
-        var options = {
-            keys: ['fn'],
-        }
-        var f = new Fuse(collection, options);
-        return f.search(search_str)
-    },
-
     onFilterBarUpdate: function(value) {
-        var is_selected = value.select_all;
-        var _map = {}, selected_items = 0;
-        contacts = this.search(value.filter_text, ContactStore.getByDate(true));
+        var _map = {}, changed = value.select_all ^ this.state.search_bar.select_all,
+            contacts = null;
+        if(value.filter_text) {
+            contacts = ContactStore.fuzzySearch(value.filter_text, {'asc': false});
+        } else {
+            contacts = ContactStore.getByDate(true);
+        }
         for(var contact_id in this.state.selection_map) {
-            _map[contact_id] = is_selected;
+            _map[contact_id] = false;
+        }
+        for(var i = 0; i<contacts.length; i++) {
+            contact_id = contacts[i].id;
+            if(changed) {
+                _map[contact_id] = value.select_all;
+            } else if(value.select_all) {
+                _map[contact_id] = true;
+            } else {
+                _map[contact_id] = this.state.selection_map[contact_id];
+            }
         }
 
         var newState = React.addons.update(this.state, {

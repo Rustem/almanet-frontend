@@ -28,14 +28,16 @@ var EmptySelectedDetailView = React.createClass({
 
 var ContactsSelectedView = React.createClass({
 
+    mixins: [Router.State],
+
     getInitialState: function() {
         var selection_map = {};
         var contacts = ContactStore.getByDate(true);
-        var selected_ids = _selected_contacts;
+        _selected_contacts = this.getQuery()['ids'] || [];
         var cnt = 0;
         for(var i = 0; i<contacts.length; i++) {
             selection_map[contacts[i].id] = false;
-            if(selected_ids.indexOf(contacts[i].id) > -1) {
+            if(_selected_contacts.indexOf(contacts[i].id) > -1) {
                 selection_map[contacts[i].id] = true;
                 cnt += 1
             }
@@ -69,7 +71,7 @@ var ContactsSelectedView = React.createClass({
     },
 
     shouldComponentUpdate: function(nextProps, nextState) {
-        var prev_ids = [], cur_ids = [], n = 0;
+        var cur_ids = [], n = 0;
 
         function getSelectedIds(_map) {
             var cids = [];
@@ -83,15 +85,7 @@ var ContactsSelectedView = React.createClass({
             return cids;
         }
 
-        prev_ids = getSelectedIds(this.state.selection_map);
         cur_ids = getSelectedIds(nextState.selection_map);
-        if(prev_ids.length > 0 && cur_ids.length > 0) {
-            if(_.difference(prev_ids, cur_ids).length === 0) {
-                if(_.difference(cur_ids, prev_ids).length === 0) {
-                    return false;
-                }
-            }
-        }
         _selected_contacts = cur_ids;
         return true;
     },

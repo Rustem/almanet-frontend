@@ -318,7 +318,6 @@ var ColdBaseDetailView = React.createClass({
     componentDidUpdate: function(prevProps, prevState) {
         var cur_map = prevState.selection_map,
             next_map = this.state.selection_map;
-        console.log(next_map);
 
         function getSelectedList(map) {
             var rv = [];
@@ -343,7 +342,7 @@ var ColdBaseDetailView = React.createClass({
         }
 
         setTimeout(function() {
-            this.transitionTo('contacts_selected', {'ids': next_ids});
+            this.transitionTo('contacts_selected', {}, {'ids': next_ids});
         }.bind(this), 0);
     },
 
@@ -352,17 +351,36 @@ var ColdBaseDetailView = React.createClass({
     },
 
     onFilterBarUpdate: function(value) {
-        var is_selected = value.select_all;
-        var _map = {}, selected_items = 0;
-        for(var contact_id in this.state.selection_map) {
-            _map[contact_id] = is_selected;
+        var _map = {}, changed = value.select_all ^ this.state.search_bar.select_all,
+            contacts = null;
+        if(value.filter_text) {
+            contacts = ContactStore.fuzzySearch(value.filter_text, {'asc': false});
+            contacts = _.filter(contacts, function(c){ return c.is_cold });
+        } else {
+            contacts = ContactStore.getColdByDate(true);
         }
+        for(var contact_id in this.state.selection_map) {
+            _map[contact_id] = false;
+        }
+        for(var i = 0; i<contacts.length; i++) {
+            contact_id = contacts[i].id;
+            if(changed) {
+                _map[contact_id] = value.select_all;
+            } else if(value.select_all) {
+                _map[contact_id] = true;
+            } else {
+                _map[contact_id] = this.state.selection_map[contact_id];
+            }
+        }
+
         var newState = React.addons.update(this.state, {
+            contacts: {$set: contacts},
             selection_map: {$set: _map},
-            search_bar: {$set: value}
+            search_bar: {$set: value},
         });
         this.setState(newState);
     },
+
     onToggleListItem: function(contact_id, is_selected) {
         var updItem = {};
         updItem[contact_id] = is_selected;
