@@ -12,7 +12,6 @@ var Redirect = Router.Redirect;
 var CRMApp = React.createFactory(require('./components/CRMApp.react'));
 var Contacts = React.createFactory(require('./components/CRMContacts.react'));
 var ContactsSelectedView = require('./components/ContactsSelected.react');
-var ContactSelectedView = require('./components/ContactSelected.react');
 var ContactProfileView = require('./components/ContactProfileView.react');
 var ActivityListView = require('./components/ActivityListView.react');
 var master_views = require('./components/master_views');
@@ -28,8 +27,7 @@ var routes = (
             <Route name='coldbase' handler={master_views.ColdBase.DetailView} />
             <Route name='leadbase' handler={master_views.LeadBase.DetailView} />
         </Route>
-        <Route name="contact_selected" path="/contact/:id" handler={ContactSelectedView} />
-        <Route name="contacts_selected" path="/contacts/:ids" handler={ContactsSelectedView} />
+        <Route name="contacts_selected" path="/contacts/selected/" handler={ContactsSelectedView} />
         <Route name="contact_profile" path="/contact/:id/detail" handler={ContactProfileView}>
             <DefaultRoute name="activities_by_default" handler={ActivityListView} />
             <Route name="activities_by" path="actvs/by/:salescycle_id?" handler={ActivityListView} />
@@ -51,7 +49,6 @@ Node.prototype.getName = function() {
 }
 
 module.exports.NODES = {
-    'contact_selected': new Node('contact_selected', "Выбранные контакты"),
     'contacts_selected': new Node('contacts_selected', "Выбранные контакты"),
     'contact_profile': new Node('contact_profile', function(params){
         return this.get(params.id).fn
@@ -70,7 +67,6 @@ module.exports.NODES = {
 
 module.exports.relationships = {
     'contacts_selected': ['contacts', 'shared', 'shared_default', 'coldbase', 'allbase', 'leadbase', 'recent'],
-    'contact_selected': ['contacts', 'shared', 'shared_default', 'coldbase', 'allbase', 'leadbase', 'recent'],
     'contact_profile': ['contact_selected', 'contacts_selected'],
     'activities_by': ['contact_selected', 'contacts_selected'],
     'activities_by_default': ['contact_selected', 'contacts_selected'],

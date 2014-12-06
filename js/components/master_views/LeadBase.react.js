@@ -341,16 +341,10 @@ var LeadBaseDetailView = React.createClass({
                 return;
             }
         }
-        if(next_ids.length === 1) {
-            setTimeout(function() {
-                this.transitionTo('contact_selected', {'id': next_ids[0]});
-            }.bind(this), 0);
 
-        } else {
-            setTimeout(function() {
-                this.transitionTo('contacts_selected', {'ids': next_ids});
-            }.bind(this), 0);
-        }
+        setTimeout(function() {
+            this.transitionTo('contacts_selected', {'ids': next_ids});
+        }.bind(this), 0);
 
     },
 

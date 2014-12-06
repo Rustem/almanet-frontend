@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var Fuse = require('../libs/fuse');
 var assign = require('object-assign');
 var EventEmitter = require('events').EventEmitter;
 var ContactWebAPI = require('../api/ContactWebAPI');
@@ -63,6 +64,28 @@ var ContactStore = assign({}, EventEmitter.prototype, {
 
     getAll: function() {
         return _.map(_contacts, function(c) { return c });
+    },
+
+    fuzzySearch: function(search_str, options) {
+        if(options === undefined) {
+            options = {};
+        }
+        options = _.extend({}, {
+            'order_by': 'at',
+            'asc': true
+        }, options);
+        var searchOptions = {
+            keys: ['fn']
+        }, contacts = this.getAll();
+
+        var f = new Fuse(contacts, searchOptions);
+        contacts = f.search(search_str);
+        contacts = _(contacts)
+            .sortBy(function(contact){ return contact[options['order_by']] });
+        if (!options['asc']) {
+            return contacts.reverse().value();
+        }
+        return contacts.value();
     },
 
     getByIds: function(ids) {
