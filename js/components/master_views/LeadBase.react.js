@@ -8,6 +8,7 @@ var React = require('react/addons');
 var cx        = React.addons.classSet;
 var Router = require('react-router');
 var capitalize = require('../../utils').capitalize;
+var fuzzySearch = require('../../utils').fuzzySearch;
 var ActiveState = Router.ActiveState;
 var Link = Router.Link;
 var IconSvg = require('../common/IconSvg.react');
@@ -355,8 +356,9 @@ var LeadBaseDetailView = React.createClass({
         var _map = {}, changed = value.select_all ^ this.state.search_bar.select_all,
             contacts = null;
         if(value.filter_text) {
-            contacts = ContactStore.fuzzySearch(value.filter_text, {'asc': false});
-            contacts = _.filter(contacts, function(c) { return !c.is_cold });
+            contacts = fuzzySearch(
+                this.state.contacts, value.filter_text, {
+                    'asc': false, 'keys': ['fn', 'emails.value']});
         } else {
             contacts = ContactStore.getLeads(true);
         }
