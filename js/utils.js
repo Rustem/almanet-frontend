@@ -85,8 +85,6 @@ function fuzzySearch(collection, search_str, options) {
       options = {};
   }
   options = _.extend({}, {
-      'order_by': 'at',
-      'asc': true,
       'keys': []
   }, options);
   var searchOptions = {
@@ -95,12 +93,7 @@ function fuzzySearch(collection, search_str, options) {
 
   var f = new Fuse(collection, searchOptions);
   collection = f.search(search_str);
-  collection = _(collection)
-      .sortBy(function(contact){ return contact[options['order_by']] });
-  if (!options['asc']) {
-      return collection.reverse().value();
-  }
-  return collection.value();
+  return collection;
 }
 
 module.exports = {

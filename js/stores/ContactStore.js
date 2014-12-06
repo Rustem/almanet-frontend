@@ -58,7 +58,7 @@ var ContactStore = assign({}, EventEmitter.prototype, {
                 .reduce(function(acc, contact_ids){
                     return _.union(acc, contact_ids);
                 }, [])
-                .map(this.get).reverse().value();
+                .map(this.get).value();
 
     },
 

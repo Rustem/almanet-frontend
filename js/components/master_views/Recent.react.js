@@ -352,7 +352,7 @@ var RecentDetailView = React.createClass({
         if(value.filter_text) {
             contacts = fuzzySearch(
                 this.state.contacts, value.filter_text, {
-                    'asc': false, 'keys': ['fn', 'emails.value']});
+                    'keys': ['fn', 'emails.value']});
         } else {
             contacts = ContactStore.getRecent();
         }
