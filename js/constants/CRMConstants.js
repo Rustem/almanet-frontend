@@ -25,6 +25,9 @@ module.exports = {
         LOAD_CURRENT_USER: null,
         LOAD_CURRENT_USER_SUCCESS: null,
         LOAD_CURRENT_USER_FAIL: null,
+        CLOSE_SALES_CYCLE: null,
+        CLOSE_SALES_CYCLE_SUCCESS: null,
+        CLOSE_SALES_CYCLE_FAIL: null,
         LOGOUT: null,
 
     }),

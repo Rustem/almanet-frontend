@@ -49,18 +49,21 @@ module.exports = {
       {
         id: 'sales_1',
         title: 'Продажа 1С ТОО "Матрикс"',
+        status: false,
         activities: [],
         user_ids: ['u_1'],
       },
       {
         id: 'sales_2',
         title: 'Облачные сервисы для ИП "МассивДинамик"',
+        status: false,
         activities: [],
         user_ids: ['u_2', 'u_1'],
       },
       {
         id: 'sales_3',
         title: 'Арта Synergy для АО "КБТУ"',
+        status: false,
         activities: [],
         user_ids: ['u_2', 'u_1', 'u_3', 'u_4'],
       },

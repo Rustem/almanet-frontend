@@ -15,6 +15,7 @@ var UserStore = require('../stores/UserStore');
 var ContactStore = require('../stores/ContactStore');
 var SalesCycleStore = require('../stores/SalesCycleStore');
 var Modal = require('./common/Modal.react');
+var SalesCycleCloser = require('./SalesCycleCloser.react')
 
 var ACTIONS = keyMirror({
     NO_ACTION: null,
@@ -32,7 +33,7 @@ var SalesCycleDropDownList = React.createClass({
         return (
             <li>
                 <a key={'choice__' + idx} onClick={this.onChoice.bind(null, idx)} className="dropdown-menu-link">
-                   {choice[1]}
+                   {choice[1] + " - "} {choice[2] ? "Закрыт" : "Открыт"}
                 </a>
             </li>
         )
@@ -289,10 +290,11 @@ var ActivityListView = React.createClass({
         var cycles = SalesCycleStore.getAll();
         cycles.push({
             'id': 'sales_0',
-            'title': 'Все события'
+            'title': 'Все события',
+            'status': false
         });
         return _.map(cycles, function(c){
-            return [c.id, c.title];
+            return [c.id, c.title, c.status];
         });
     },
 
@@ -309,6 +311,11 @@ var ActivityListView = React.createClass({
         var cycle_id = cycle_choice[0];
         var params = this.getParams();
         params.salescycle_id = cycle_id === 'sales_0' ? null : cycle_id;
+        this.refs.sales_cycle_closer.setState({
+          'isShown': false,
+          'salesCycleCloseValue': 0,
+          'salesCycleID': params.salescycle_id
+        })
         this.transitionTo('activities_by', params);
         return false;
     },
@@ -346,6 +353,7 @@ var ActivityListView = React.createClass({
 
                 <div className="page-body">
                     {cycle_id === 'sales_0' && (<SalesCycleByAllSummary />) || (<SalesCycleSummary cycle_id={cycle_id} />)}
+                    <SalesCycleCloser ref="sales_cycle_closer"/>
                     {activities.map(this.renderActivity)}
                 </div>
 
