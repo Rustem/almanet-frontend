@@ -10,19 +10,14 @@ module.exports = {
     close: function(salesCycleObject, success, failure) {
         // set salesCycle to local storage
         var rawSalesCycles = JSON.parse(localStorage.getItem('salescycles')) || [];
-        _.forEach(rawSalesCycles, function(sc){
-            if(sc.id == salesCycleObject.sales_cycle_id) {
-                console.log(sc);
-                sc.status = true;
-                sc.value = salesCycleObject.sales_cycle_close_value;
-            }
-        });
-        console.log(rawSalesCycles);
+        var curCycle = _.find(rawSalesCycles, function(sc){ return sc.id === salesCycleObject.id });
+        curCycle.status = true;
+        curCycle.real_value = salesCycleObject.real_value;
         localStorage.setItem('salescycles', JSON.stringify(rawSalesCycles));
 
         // simulate success callback
         setTimeout(function() {
-            success(salesCycleObject);
+            success(curCycle);
         }, 0);
     },
     create: function(salesCycleObject, success, failure) {

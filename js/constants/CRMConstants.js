@@ -40,5 +40,10 @@ module.exports = {
     CONTACT_VIEW_MODE: keyMirror({
         EDIT: null,
         READ: null
+    }),
+    SALES_CYCLE_STATUS: keyMirror({
+        NEW: null,
+        PENDING: null,
+        FINISHED: null
     })
 }

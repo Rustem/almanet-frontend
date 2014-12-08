@@ -371,7 +371,7 @@ var ActivityListView = React.createClass({
 
                 <div className="page-body">
                     {cycle_id === 'sales_0' && (<SalesCycleByAllSummary />) || (<SalesCycleSummary cycle_id={cycle_id} />)}
-                    <SalesCycleCloser ref="sales_cycle_closer"/>
+                    <SalesCycleCloser ref="sales_cycle_closer" salesCycleID={cycle_id} />
                     {activities.map(this.renderActivity)}
                 </div>
 

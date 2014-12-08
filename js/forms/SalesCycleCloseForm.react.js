@@ -20,14 +20,7 @@ var SalesCycleCloseForm = React.createClass({
 
   propTypes: {
     onHandleSubmit: React.PropTypes.func,
-  },
-
-  componentDidMount: function() {
-    // this.refs.sales_cycle_close_form.getDOMNode().getElementsByName('sales_cycle_close_value');
-    this.setState({
-      sales_cycle_close_value: this.props.salesCycleCloseValue,
-      sales_cycle_id: this.props.salesCycleID
-    });
+    value: React.PropTypes.object.isRequired,
   },
 
   getFormAsHtml: function() {
@@ -36,8 +29,11 @@ var SalesCycleCloseForm = React.createClass({
 
   render: function() {
     return (
-      <Form {...this.props} ref='sales_cycle_close_form' value={this.state} onSubmit={this.onHandleSubmit} onKeyDown={this.props.onKeyDown}>
-        <ContentEditableInput className='input-div input-div--closeCycle' name='sales_cycle_close_value' placeholder='Enter monetary value'/>
+      <Form {...this.props}
+            ref='sales_cycle_close_form'
+            onSubmit={this.onHandleSubmit}
+            onKeyDown={this.props.onKeyDown}>
+        <ContentEditableInput className='input-div input-div--closeCycle' name='real_value' placeholder='Enter monetary value'/>
         <div className='space-horizontal'></div>
         <button className='btn btn--save' type='submit'>Закрыть</button>
       </Form>

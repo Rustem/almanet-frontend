@@ -8,6 +8,7 @@ var cx            = React.addons.classSet;
 var IconSvg = require('./common/IconSvg.react');
 var SalesCycleCloseForm = require('../forms/SalesCycleCloseForm.react');
 
+var SalesCycleStore = require('../stores/SalesCycleStore');
 var SalesCycleActions = require('../actions/SalesCycleActions');
 var AppContextMixin = require('../mixins/AppContextMixin');
 
@@ -53,11 +54,17 @@ var SalesCycleCloser = React.createClass({
 
     mixins: [AppContextMixin],
 
-    getInitialState: function() {
-        return {
-          salesCycleCloseValue: 0,
-          salesCycleID: null
-        }
+    componentDidMount: function() {
+      SalesCycleStore.addChangeListener(this.resetState)
+    },
+
+    resetState: function() {
+      this.isClosing = false;
+      this.forceUpdate();
+    },
+
+    getCurrentCycle: function() {
+        return SalesCycleStore.get(this.props.salesCycleID);
     },
 
     render: function() {
@@ -68,10 +75,9 @@ var SalesCycleCloser = React.createClass({
 
         if (this.isClosing) {
           StateComponent = <SalesCycleCloseForm
+                  value={this.getCurrentCycle()}
                   handleSubmit={this.handleSubmit}
-                  onKeyDown={this.onFormKeyDown}
-                  salesCycleID={this.getSalesCycleID()}
-                  salesCycleCloseValue={this.getSalesCycleCloseValue()} />;
+                  onKeyDown={this.onFormKeyDown} />;
         } else {
           StateComponent = <SalesCycleCloserButton onClick={this.onFormToggle} />;
         }
@@ -83,6 +89,7 @@ var SalesCycleCloser = React.createClass({
     },
 
     handleSubmit: function(salesCycleObject) {
+      // TODO. @askhat, author should be set on creation time
       salesCycleObject.author_id = this.context.user.id;
       SalesCycleActions.close(salesCycleObject);
       return;
@@ -95,20 +102,13 @@ var SalesCycleCloser = React.createClass({
         this.isClosing = !this.isClosing;
         this.forceUpdate();
     },
+
     onFormKeyDown: function(evt) {
       if(evt.keyCode == ESCAPE_KEY_CODE) {
         evt.preventDefault();
         this.isClosing = false;
         this.forceUpdate();
       }
-    },
-
-    getSalesCycleID: function() {
-      return this.state.salesCycleID;
-    },
-
-    getSalesCycleCloseValue: function() {
-      return this.state.salesCycleCloseValue;
     }
 });
 

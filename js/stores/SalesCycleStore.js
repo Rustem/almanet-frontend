@@ -77,8 +77,7 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             break;
         case ActionTypes.CLOSE_SALES_CYCLE_SUCCESS:
             var salesCycles_with_id = SalesCycleStore.getCreatedSalesCycle(action.object);
-            _salescycles[action.object.sales_cycle_id].status = true;
-            _salescycles[action.object.sales_cycle_id].value = action.object.sales_cycle_close_value;
+            _salescycles[action.object.id] = action.object;
             SalesCycleStore.emitChange();
             break;
         case ActionTypes.CREATE_SALES_CYCLE:
