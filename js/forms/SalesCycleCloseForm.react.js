@@ -33,7 +33,7 @@ var SalesCycleCloseForm = React.createClass({
   render: function() {
     return (
       <Form {...this.props} ref='sales_cycle_close_form' value={this.state} onSubmit={this.onHandleSubmit} onKeyDown={this.props.onKeyDown}>
-        <ContentEditableInput isStrong={false} className='input-div input-div--closeCycle' name='sales_cycle_close_value' placeholder='Enter monetary value'/>
+        <ContentEditableInput className='input-div input-div--closeCycle' name='sales_cycle_close_value' placeholder='Enter monetary value'/>
         <input type='hidden' name='sales_cycle_id' />
         <div className='space-horizontal'></div>
         <button className='btn btn--save' type='submit'>Close cycle</button>

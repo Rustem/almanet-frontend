@@ -43,10 +43,10 @@ var ContactCreateForm = React.createClass({
     return (
       <Form {...this.props} ref='contact_form' value={default_form_state} onSubmit={this.onHandleSubmit}>
         <Fieldset className="inputLine-negativeTrail">
-          <ContentEditableInput isStrong={true} name='fn' />
+          <ContentEditableInput className="input-div input-div--strong" name='fn' />
         </Fieldset>
         <Fieldset className="inputLine-negativeTrail">
-          <ContentEditableInput isStrong={false} className='text-secondary' name='companyName' />
+          <ContentEditableInput className='input-div text-secondary' name='companyName' />
         </Fieldset>
         <SVGCheckbox name="is_company" label="Company" className="row input-checkboxCompact" />
         <EmailVCardComponent name="emails" options={[['internet', 'адрес в формате интернета'], ['pref', 'предпочитаемый']]} />
