@@ -49,11 +49,16 @@ var ContentEditableInput = React.createClass({
     },
 
     render: function() {
+        var raw_classNames = this.props.className ? this.props.className.split(" ") : [];
+        var classNames = {}
+        _.forEach(raw_classNames, function(cn){
+            classNames[cn] = true;
+        });
         var value = this.value();
-        var className = cx({
+        var className = cx(_.merge({
           'input-div': true,
           'input-div--strong': this.props.isStrong,
-        });
+        },classNames));
         var Component = React.createFactory(this.props.Component);
         var props = _.extend({}, this.props, {
             onInput: this.emitChange,
