@@ -25,4 +25,22 @@ module.exports = {
             success(salesCycleObject);
         }, 0);
     },
+    create: function(salesCycleObject, success, failure) {
+        var timeNow = Date.now();
+        var obj = _.extend({}, {
+            id: 'sales_' + timeNow,
+            at: timeNow,
+            status: false,
+            activities:[],
+            user_ids:[]}, salesCycleObject);
+        // set contact to local storage
+        var rawSalesCycles = JSON.parse(localStorage.getItem('salescycles')) || [];
+        rawSalesCycles.push(obj);
+        localStorage.setItem('salescycles', JSON.stringify(rawSalesCycles));
+
+        // simulate success callback
+        setTimeout(function() {
+            success(obj);
+        }, 0);
+    },
 };

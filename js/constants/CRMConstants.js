@@ -28,6 +28,8 @@ module.exports = {
         CLOSE_SALES_CYCLE: null,
         CLOSE_SALES_CYCLE_SUCCESS: null,
         CLOSE_SALES_CYCLE_FAIL: null,
+        CREATE_SALES_CYCLE: null,
+        CREATE_SALES_CYCLE_SUCCESS: null,
         LOGOUT: null,
 
     }),

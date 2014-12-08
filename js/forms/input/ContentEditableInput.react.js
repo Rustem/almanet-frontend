@@ -44,28 +44,25 @@ var ContentEditableInput = React.createClass({
           e.stopPropagation();
         }
         var value = getValueFromEvent(e);
-        console.log(value, "hi", "extract");
+        // console.log(value, "hi", "extract");
         this.updateValue(this.prepValue(this.props.name, value));
     },
 
     render: function() {
+        var Component = React.createFactory(this.props.Component);
         var raw_classNames = this.props.className ? this.props.className.split(" ") : [];
         var classNames = {}
         _.forEach(raw_classNames, function(cn){
             classNames[cn] = true;
         });
-        var value = this.value();
-        var className = cx(_.merge({
-          'input-div': true,
-          'input-div--strong': this.props.isStrong,
-        },classNames));
-        var Component = React.createFactory(this.props.Component);
+        var className = cx(classNames);
         var props = _.extend({}, this.props, {
             onInput: this.emitChange,
             onBlur: this.emitChange,
             contentEditable: true,
             className: className
         });
+        var value = this.value();
         return Component(props, value);
 
     },

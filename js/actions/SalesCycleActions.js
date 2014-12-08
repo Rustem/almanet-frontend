@@ -36,6 +36,24 @@ module.exports = {
     }.bind(this));
   },
 
+  create: function(object) {
+    dispatcher.handleViewAction({
+      type: ActionTypes.CREATE_SALES_CYCLE,
+      object: object
+    });
+    SalesCycleWebAPI.create(object, function(salesCycle){
+      dispatcher.handleServerAction({
+        type: ActionTypes.CREATE_SALES_CYCLE_SUCCESS,
+        object: salesCycle
+      });
+    }.bind(this), function(error){
+      dispatcher.handleServerAction({
+        type: ActionTypes.CREATE_SALES_CYCLE_FAIL,
+        error: error
+      });
+    }.bind(this));
+  },
+
   
 
 };
