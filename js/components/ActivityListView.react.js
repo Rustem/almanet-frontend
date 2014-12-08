@@ -318,6 +318,7 @@ var ActivityListView = React.createClass({
     },
 
     onCycleCreated: function(salesCycleObject) {
+        salesCycleObject.contact_id = this.getParams().id;
         SalesCycleActions.create(salesCycleObject);
         // assume that last element is just created
         sc = _.last(SalesCycleStore.getAll());
