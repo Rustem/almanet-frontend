@@ -15,6 +15,7 @@ Object.assign = _.extend;
 
 require('../utils');
 
+
 var SalesCycleCloseForm = React.createClass({
 
   propTypes: {
@@ -26,16 +27,19 @@ var SalesCycleCloseForm = React.createClass({
     this.setState({
       sales_cycle_close_value: this.props.salesCycleCloseValue,
       sales_cycle_id: this.props.salesCycleID
-    })
+    });
+  },
+
+  getFormAsHtml: function() {
+    return this.refs.sales_cycle_close_form.getDOMNode();
   },
 
   render: function() {
     return (
       <Form {...this.props} ref='sales_cycle_close_form' value={this.state} onSubmit={this.onHandleSubmit} onKeyDown={this.props.onKeyDown}>
         <ContentEditableInput className='input-div input-div--closeCycle' name='sales_cycle_close_value' placeholder='Enter monetary value'/>
-        <input type='hidden' name='sales_cycle_id' />
         <div className='space-horizontal'></div>
-        <button className='btn btn--save' type='submit'>Close cycle</button>
+        <button className='btn btn--save' type='submit'>Закрыть</button>
       </Form>
     )
   },

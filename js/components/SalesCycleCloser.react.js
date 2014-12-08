@@ -3,7 +3,8 @@
  */
 
 var _ = require('lodash');
-var React = require('react');
+var React = require('react/addons');
+var cx            = React.addons.classSet;
 var IconSvg = require('./common/IconSvg.react');
 var SalesCycleCloseForm = require('../forms/SalesCycleCloseForm.react');
 
@@ -23,7 +24,7 @@ var SalesCycleCloserButton = React.createClass({
 
   render: function() {
       return (
-        <button className="btn btn--save" type="button" onClick={this.props.onClick}>Add value</button>
+        <button className="btn btn--save" type="button" onClick={this.props.onClick}>Закрыть цикл ?</button>
       );
   }
 });
@@ -54,58 +55,52 @@ var SalesCycleCloser = React.createClass({
 
     getInitialState: function() {
         return {
-          isShown: false,
           salesCycleCloseValue: 0,
           salesCycleID: null
         }
-    },    
+    },
 
     render: function() {
-        var stateClass = this.state['isShown'] && 'open' || undefined;
-        var classNames = ['text-center'];
-        classNames.push(stateClass);
-        classNames = _.compact(classNames)
-        var component;
-        if (this.isShown()) {
-          component = <SalesCycleCloseForm
+        var classNames = cx({
+          'text-center': true,
+          'open': this.isClosing,
+        }), StateComponent = null;
+
+        if (this.isClosing) {
+          StateComponent = <SalesCycleCloseForm
                   handleSubmit={this.handleSubmit}
-                  onKeyDown={this.onKeyDown}
-                  isShown={this.isShown()}
+                  onKeyDown={this.onFormKeyDown}
                   salesCycleID={this.getSalesCycleID()}
                   salesCycleCloseValue={this.getSalesCycleCloseValue()} />;
         } else {
-          component = <SalesCycleCloserButton
-                  ref="menuToggler"
-                  onClick={this.onFormToggle}
-                  isShown={!this.isShown()} />;
+          StateComponent = <SalesCycleCloserButton onClick={this.onFormToggle} />;
         }
         return (
-          <div ref="salesCycleCloser" className={classNames.join(' ')}>
-            {component}    
+          <div ref="salesCycleCloser" className={classNames}>
+            {StateComponent}
           </div>
         );
     },
+
     handleSubmit: function(salesCycleObject) {
       salesCycleObject.author_id = this.context.user.id;
       SalesCycleActions.close(salesCycleObject);
       return;
     },
+
     onFormToggle: function(evt) {
-        this.setState({
-          isShown: !this.isShown(),
-          salesCycleID: this.getSalesCycleID(),
-          salesCycleCloseValue: this.getSalesCycleCloseValue()
-        });
+        if(!'isClosing' in this) {
+          this.isClosing = false;
+        }
+        this.isClosing = !this.isClosing;
+        this.forceUpdate();
     },
-    onKeyDown: function(evt) {
+    onFormKeyDown: function(evt) {
       if(evt.keyCode == ESCAPE_KEY_CODE) {
         evt.preventDefault();
-        this.setState({isShown: false});
+        this.isClosing = false;
+        this.forceUpdate();
       }
-    },
-
-    isShown: function() {
-      return this.state.isShown;
     },
 
     getSalesCycleID: function() {
