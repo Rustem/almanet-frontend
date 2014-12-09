@@ -18,13 +18,47 @@ var SalesCycleStore = require('../stores/SalesCycleStore');
 var Modal = require('./common/Modal.react');
 var SalesCycleCloser = require('./SalesCycleCloser.react');
 var SalesCycleCreateForm = require('../forms/SalesCycleCreateForm.react');
+var CRMConstants = require('../constants/CRMConstants');
 
 // probably not required
 var ProductStore = require('../stores/ProductStore');
+var SALES_CYCLE_STATUS = CRMConstants.SALES_CYCLE_STATUS;
 
 var ACTIONS = keyMirror({
     NO_ACTION: null,
     ADD_EVENT: null,
+});
+
+var AddActivityButton = React.createClass({
+    getCycleStatus: function() {
+        return SalesCycleStore.get(this.props.current_cycle_id).status;
+    },
+
+    shouldRender: function() {
+        // TODO: make something with 'sales_0'
+        if(this.props.salesCycleID == null || this.props.salesCycleID == undefined || this.props.salesCycleID == 'sales_0')
+          return false;
+        return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED);
+    },
+
+    render: function(){
+        var Component = null;
+        if(this.shouldRender())
+            Component = (
+                <div className="page-header-controls">
+                    <a onClick={this.props.onClick} href="#" className="row row--oneliner row--link">
+                      <div className="row-icon text-good">
+                        <IconSvg iconKey="add" />
+                      </div>
+                      <div className="row-body">
+                        Добавить событие
+                      </div>
+                    </a>
+                </div>
+            );
+        return Component;
+    }
+
 });
 
 var SalesCycleDropDownList = React.createClass({
@@ -404,16 +438,7 @@ var ActivityListView = React.createClass({
                                             onCycleCreated={this.onCycleCreated}
                                             current_cycle_id={cycle_id}
                                             choices={this.buildChoices()} />
-                    <div className="page-header-controls">
-                        <a onClick={this.onAddAction} href="#" className="row row--oneliner row--link">
-                          <div className="row-icon text-good">
-                            <IconSvg iconKey="add" />
-                          </div>
-                          <div className="row-body">
-                            Добавить событие
-                          </div>
-                        </a>
-                      </div>
+                    <AddActivityButton onClick={this.onAddAction} current_cycle_id={cycle_id} />
                 </div>
 
                 <div className="page-body">
