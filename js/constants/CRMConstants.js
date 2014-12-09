@@ -30,6 +30,9 @@ module.exports = {
         CLOSE_SALES_CYCLE_FAIL: null,
         CREATE_SALES_CYCLE: null,
         CREATE_SALES_CYCLE_SUCCESS: null,
+        ADD_PRODUCT_TO_SALES_CYCLE: null,
+        ADD_PRODUCT_TO_SALES_CYCLE_SUCCESS: null,
+        ADD_PRODUCT_TO_SALES_CYCLE_FAIL: null,
         LOGOUT: null,
 
     }),

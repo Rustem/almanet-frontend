@@ -45,29 +45,42 @@ module.exports = {
 
     ]));
 
-    // localStorage.setItem('salescycles', JSON.stringify([
-    //   {
-    //     id: 'sales_1',
-    //     title: 'Продажа 1С ТОО "Матрикс"',
-    //     status: false,
-    //     activities: [],
-    //     user_ids: ['u_1'],
-    //   },
-    //   {
-    //     id: 'sales_2',
-    //     title: 'Облачные сервисы для ИП "МассивДинамик"',
-    //     status: false,
-    //     activities: [],
-    //     user_ids: ['u_2', 'u_1'],
-    //   },
-    //   {
-    //     id: 'sales_3',
-    //     title: 'Арта Synergy для АО "КБТУ"',
-    //     status: false,
-    //     activities: [],
-    //     user_ids: ['u_2', 'u_1', 'u_3', 'u_4'],
-    //   },
-    // ]));
+    localStorage.setItem('salescycles', JSON.stringify([
+      {
+        id: 'sales_1',
+        title: 'Продажа 1С ТОО "Матрикс"',
+        status: false,
+        activities: [],
+        user_ids: ['u_1'],
+        products: [],
+      },
+      {
+        id: 'sales_2',
+        title: 'Облачные сервисы для ИП "МассивДинамик"',
+        status: false,
+        activities: [],
+        user_ids: ['u_2', 'u_1'],
+        products: [],
+      },
+      {
+        id: 'sales_3',
+        title: 'Арта Synergy для АО "КБТУ"',
+        status: false,
+        activities: [],
+        user_ids: ['u_2', 'u_1', 'u_3', 'u_4'],
+        products: [],
+      },
+    ]));
+
+    localStorage.setItem('products', JSON.stringify([
+      {
+        id: 'prod_1',
+        name: '1C Online',
+        description: '1C Online accounting system By AlmaCloud',
+        price: '3000',
+        currency: 'KZT',
+      },
+    ]));
   }
 
 };

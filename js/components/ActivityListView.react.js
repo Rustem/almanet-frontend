@@ -19,6 +19,9 @@ var Modal = require('./common/Modal.react');
 var SalesCycleCloser = require('./SalesCycleCloser.react');
 var SalesCycleCreateForm = require('../forms/SalesCycleCreateForm.react');
 
+// probably not required
+var ProductStore = require('../stores/ProductStore');
+
 var ACTIONS = keyMirror({
     NO_ACTION: null,
     ADD_EVENT: null,
@@ -185,6 +188,11 @@ var SalesCycleSummary = React.createClass({
         return user_ids.join(', ')
     },
 
+    getProducts: function() {
+        var product_ids = this.getCycle().products;
+        return product_ids.join(', ')
+    },
+
     render: function() {
         console.log(this.getCycleDuration(), 'hi');
         return (
@@ -205,6 +213,10 @@ var SalesCycleSummary = React.createClass({
               <tr>
                 <td>Участники</td>
                 <td>{this.getParticipants()}</td>
+              </tr>
+              <tr>
+                <td>Продукты</td>
+                <td>{this.getProducts()}</td>
               </tr>
             </table>
             <div className="space-vertical--compact"></div>
@@ -328,6 +340,12 @@ var ActivityListView = React.createClass({
         // to resolve this I used setTimeout with 0 value to make sure that these statements will be executed after callback
         setTimeout(function() {
             sc = _.last(SalesCycleStore.getAll());
+
+            // fake method, just to check add_product() method
+            // TODO: replace this method to appropriate place according to interface
+            sc.product_id = ProductStore.fakeGet().id
+            SalesCycleActions.add_product(sc);
+        
             this.navigateToSalesCycle(sc.id);
         }.bind(this), 0);
         

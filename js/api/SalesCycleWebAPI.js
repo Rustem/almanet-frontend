@@ -27,6 +27,7 @@ module.exports = {
             at: timeNow,
             status: false,
             activities:[],
+            products:[],
             user_ids:[]}, salesCycleObject);
         // set contact to local storage
         var rawSalesCycles = JSON.parse(localStorage.getItem('salescycles')) || [];
@@ -36,6 +37,17 @@ module.exports = {
         // simulate success callback
         setTimeout(function() {
             success(obj);
+        }, 0);
+    },
+    add_product: function(salesCycleObject, success, failure) {
+        var rawSalesCycles = JSON.parse(localStorage.getItem('salescycles')) || [];
+        var curCycle = _.find(rawSalesCycles, function(sc){ return sc.id === salesCycleObject.id });
+        curCycle.products.push(salesCycleObject.product_id);
+        localStorage.setItem('salescycles', JSON.stringify(rawSalesCycles));
+
+        // simulate success callback
+        setTimeout(function() {
+            success(salesCycleObject);
         }, 0);
     },
 };
