@@ -26,7 +26,7 @@ var SalesCycleCreateForm = React.createClass({
   render: function() {
     return (
       <div className="inputLine inputLine--newCycle">
-        <ContentEditableInput ref='sales_cycle_name' name="sales_cycle_name" className='input-div input-div--newCycle' onKeyDown={this.onKeyDown} />
+        <ContentEditableInput ref='sales_cycle_name' onFocus={this.onFocus} name="sales_cycle_name" className='input-div input-div--newCycle' onKeyDown={this.onKeyDown} />
         <div className="inputLine-caption">
           Type a name for cycle and press enter.
         </div>

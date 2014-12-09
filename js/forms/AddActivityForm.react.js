@@ -236,7 +236,7 @@ var InputWithDropdown = React.createClass({
     },
 
     onUpdate: function(val) {
-        console.log('value', val);
+        this.updateValue(this.prepValue(this.props.name, val));
     },
 
     render: function() {
