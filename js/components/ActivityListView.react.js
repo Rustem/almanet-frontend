@@ -322,8 +322,15 @@ var ActivityListView = React.createClass({
         salesCycleObject.author_id = this.context.user.id;
         SalesCycleActions.create(salesCycleObject);
         // assume that last element is just created
-        sc = _.last(SalesCycleStore.getAll());
-        this.navigateToSalesCycle(sc.id);
+
+        // NOTE: object is added to SalesCycleStore on callback function of SalesCycleActions.create
+        // it means that at this point SalesCycleStore.getAll() doesn't have just created object
+        // to resolve this I used setTimeout with 0 value to make sure that these statements will be executed after callback
+        setTimeout(function() {
+            sc = _.last(SalesCycleStore.getAll());
+            this.navigateToSalesCycle(sc.id);
+        }.bind(this), 0);
+        
     },
 
     onCycleClosed: function(salesCycleObject) {
