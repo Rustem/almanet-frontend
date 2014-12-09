@@ -1,4 +1,7 @@
 var _ = require('lodash');
+var CRMConstants = require('../constants/CRMConstants');
+
+var SALES_CYCLE_STATUS = CRMConstants.SALES_CYCLE_STATUS;
 
 module.exports = {
     getAll: function(success, failure) {
@@ -11,7 +14,7 @@ module.exports = {
         // set salesCycle to local storage
         var rawSalesCycles = JSON.parse(localStorage.getItem('salescycles')) || [];
         var curCycle = _.find(rawSalesCycles, function(sc){ return sc.id === salesCycleObject.id });
-        curCycle.status = true;
+        curCycle.status = SALES_CYCLE_STATUS.FINISHED;
         curCycle.real_value = salesCycleObject.real_value;
         localStorage.setItem('salescycles', JSON.stringify(rawSalesCycles));
 
@@ -25,7 +28,7 @@ module.exports = {
         var obj = _.extend({}, {
             id: 'sales_' + timeNow,
             at: timeNow,
-            status: false,
+            status: SALES_CYCLE_STATUS.NEW,
             activities:[],
             products:[],
             user_ids:[]}, salesCycleObject);

@@ -38,7 +38,7 @@ var SalesCycleDropDownList = React.createClass({
         return (
             <li>
                 <a key={'choice__' + idx} onClick={this.onChoice.bind(null, idx)} className="dropdown-menu-link">
-                   {choice[1] + " - "} {choice[2] ? "Закрыт" : "Открыт"}
+                   {choice[1] + " - "} {choice[2]}
                 </a>
             </li>
         )
@@ -237,7 +237,7 @@ var ActivityListView = React.createClass({
     getInitialState: function() {
         return {
             action: ACTIONS.NO_ACTION,
-            sc_cnt: SalesCycleStore.getAll().length  // number of sales cycles for current contact
+            sc_cnt: this.getCyclesForCurrentContact().length  // DONE: number of sales cycles for current contact
         }
     },
 
@@ -309,9 +309,13 @@ var ActivityListView = React.createClass({
         )
     },
 
-    buildChoices: function(){
+    getCyclesForCurrentContact: function() {
         var contact_id = this.getParams().id;
-        var cycles = SalesCycleStore.byContact(contact_id);
+        return SalesCycleStore.byContact(contact_id);
+    },
+
+    buildChoices: function(){
+        var cycles = this.getCyclesForCurrentContact();
         cycles.push({
             'id': 'sales_0',
             'title': 'Все события',
