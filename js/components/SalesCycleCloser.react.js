@@ -89,9 +89,7 @@ var SalesCycleCloser = React.createClass({
     },
 
     handleSubmit: function(salesCycleObject) {
-      // TODO. @askhat, author should be set on creation time
-      salesCycleObject.author_id = this.context.user.id;
-      SalesCycleActions.close(salesCycleObject);
+      this.props.onCycleClosed(salesCycleObject);
       return;
     },
 

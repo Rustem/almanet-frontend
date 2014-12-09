@@ -325,6 +325,19 @@ var ActivityListView = React.createClass({
         this.navigateToSalesCycle(sc.id);
     },
 
+    onCycleClosed: function(salesCycleObject) {
+        var close_activity = {
+            author_id: this.context.user.id,
+            description: "Цикл закрыт. Сумма: " + salesCycleObject.real_value,
+            feedback: 'outcome',
+            participant_ids: [this.context.user.id],
+            salescycle_id: salesCycleObject.id,
+            duration: null
+        }
+        ActivityActionCreators.createActivity(close_activity);
+        SalesCycleActions.close(salesCycleObject);
+    },
+
     navigateToSalesCycle: function(cycle_id) {
         var params = this.getParams();
         params.salescycle_id = cycle_id === 'sales_0' ? null : cycle_id;
@@ -371,7 +384,7 @@ var ActivityListView = React.createClass({
 
                 <div className="page-body">
                     {cycle_id === 'sales_0' && (<SalesCycleByAllSummary />) || (<SalesCycleSummary cycle_id={cycle_id} />)}
-                    <SalesCycleCloser ref="sales_cycle_closer" salesCycleID={cycle_id} />
+                    <SalesCycleCloser ref="sales_cycle_closer" salesCycleID={cycle_id} onCycleClosed={this.onCycleClosed} />
                     {activities.map(this.renderActivity)}
                 </div>
 
