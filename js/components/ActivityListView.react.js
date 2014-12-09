@@ -77,7 +77,12 @@ var SalesCycleDropDownList = React.createClass({
                 <div className="dropdown-menu-body">
                     <ul className="dropdown-menu-list">
                         <li>
-                            <SalesCycleCreateForm onCycleCreated={this.props.onCycleCreated} />
+                            <div className="inputLine inputLine--newCycle">
+                                <SalesCycleCreateForm onCycleCreated={this.props.onCycleCreated} />
+                                <div className="inputLine-caption">
+                                  Type a name for cycle and press enter.
+                                </div>
+                            </div>
                         </li>
                         {this.props.choices.map(this.renderChoice)}
                     </ul>

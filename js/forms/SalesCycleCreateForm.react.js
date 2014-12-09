@@ -6,6 +6,7 @@ var React = require('react');
 var inputs = require('./input');
 var Input = inputs.Input;
 var ContentEditableInput = inputs.ContentEditableInput;
+var Form = require('./Form.react');
 var FormMixin = require('./FormMixin.react');
 var SalesCycleStore = require('../stores/SalesCycleStore');
 
@@ -14,41 +15,59 @@ var keyMirror = require('react/lib/keyMirror');
 Object.assign = _.extend;
 
 var ENTER_KEY_CODE = 13;
-var ACTIONS = keyMirror({
-    NO_ACTION: null,
-});
+var CYCLE_NAME_PLACEHOLDER = 'Создать новый цикл';
 
 require('../utils');
+
+var default_form_state = {
+  'sales_cycle_name': CYCLE_NAME_PLACEHOLDER
+};
 
 var SalesCycleCreateForm = React.createClass({
   mixins: [FormMixin],
 
   render: function() {
     return (
-      <div className="inputLine inputLine--newCycle">
-        <ContentEditableInput ref='sales_cycle_name' onFocus={this.onFocus} name="sales_cycle_name" className='input-div input-div--newCycle' onKeyDown={this.onKeyDown} />
-        <div className="inputLine-caption">
-          Type a name for cycle and press enter.
-        </div>
-      </div>
+      <Form {...this.props}
+            ref='sales_cycle_create_form'
+            onSubmit={this.handleSubmit}
+            onBlur={this.onBlur}
+            onKeyDown={this.onKeyDown}
+            value={default_form_state} >
+          <ContentEditableInput ref='sales_cycle_name' 
+                                name='sales_cycle_name' 
+                                className='input-div input-div--newCycle' 
+                                onFocus={this.onFocus} />
+          
+      </Form>
     )
   },
 
   prepare_object: function() {
-    var title = this.refs.sales_cycle_name.value();
+    var title = this.refs.sales_cycle_create_form.value().sales_cycle_name;
     return {'title': title};
   },
 
   onKeyDown: function(evt) {
     if(evt.keyCode == ENTER_KEY_CODE) {
       evt.preventDefault();
-      salesCycleObject = this.prepare_object();
-      this.handleSubmit(salesCycleObject);
+      this.handleSubmit();
     }
     return;
   },
 
-  handleSubmit: function(salesCycleObject) {
+  onFocus: function(evt) {
+    if(this.refs.sales_cycle_create_form.value().sales_cycle_name == CYCLE_NAME_PLACEHOLDER)
+      this.refs.sales_cycle_create_form.updateValue({'sales_cycle_name': ''});
+  },
+
+  onBlur: function(evt) {
+    if(this.refs.sales_cycle_create_form.value().sales_cycle_name == '')
+      this.refs.sales_cycle_create_form.updateValue({'sales_cycle_name': CYCLE_NAME_PLACEHOLDER});
+  },
+
+  handleSubmit: function() {
+    var salesCycleObject = this.prepare_object();
     this.props.onCycleCreated(salesCycleObject);
     return;
   },
