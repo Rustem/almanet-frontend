@@ -28,6 +28,14 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
         return _salescycles[id];
     },
 
+    getLatestOne: function() {
+        var scycles = _.sortBy(this.getAll(), function(sc) {
+            sc.at
+        }.bind(this)).reverse();
+        if(!scycles) return null;
+        return scycles[0];
+    },
+
     byContact: function(contact_id) {
         return _.filter(this.getAll(), function(sc){
             return sc.contact_ids.indexOf(contact_id) > -1;

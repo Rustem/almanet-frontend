@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var React = require('react');
+var React = require('react/addons');
 var Router = require('react-router');
 var keyMirror = require('react/lib/keyMirror');
 var cx            = React.addons.classSet;
@@ -220,6 +220,7 @@ var ActivityListView = React.createClass({
     getInitialState: function() {
         return {
             action: ACTIONS.NO_ACTION,
+            sc_cnt: SalesCycleStore.getAll().length  // number of sales cycles for current contact
         }
     },
 
@@ -305,7 +306,8 @@ var ActivityListView = React.createClass({
 
     onAddAction: function(evt) {
         evt.preventDefault();
-        this.setState({action: ACTIONS.ADD_EVENT})
+        this.setState(React.addons.update(
+            this.state, {action: {$set: ACTIONS.ADD_EVENT}}));
     },
 
     onAddEvent: function(newEvent) {
@@ -321,16 +323,7 @@ var ActivityListView = React.createClass({
         salesCycleObject.contact_id = this.getParams().id;
         salesCycleObject.author_id = this.context.user.id;
         SalesCycleActions.create(salesCycleObject);
-        // assume that last element is just created
 
-        // NOTE: object is added to SalesCycleStore on callback function of SalesCycleActions.create
-        // it means that at this point SalesCycleStore.getAll() doesn't have just created object
-        // to resolve this I used setTimeout with 0 value to make sure that these statements will be executed after callback
-        setTimeout(function() {
-            sc = _.last(SalesCycleStore.getAll());
-            this.navigateToSalesCycle(sc.id);
-        }.bind(this), 0);
-        
     },
 
     onCycleClosed: function(salesCycleObject) {
@@ -359,7 +352,13 @@ var ActivityListView = React.createClass({
       },
 
     resetState: function() {
-        this.setState({action: ACTIONS.NO_ACTION});
+        this.setState(this.getInitialState(), function(prev_state) {
+            // new cycles created
+            if(prev_state.sc_cnt < this.state.sc_cnt) {
+                var sc = SalesCycleStore.getLatestOne();
+                this.navigateToSalesCycle(sc.id);
+            }
+        }.bind(this, this.state));
     },
 
     render: function() {
