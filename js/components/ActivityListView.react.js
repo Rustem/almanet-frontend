@@ -304,7 +304,8 @@ var ActivityListView = React.createClass({
     },
 
     buildChoices: function(){
-        var cycles = SalesCycleStore.getAll();
+        var contact_id = this.getParams().id;
+        var cycles = SalesCycleStore.byContact(contact_id);
         cycles.push({
             'id': 'sales_0',
             'title': 'Все события',

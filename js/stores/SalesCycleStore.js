@@ -30,7 +30,7 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
 
     byContact: function(contact_id) {
         return _.filter(this.getAll(), function(sc){
-            return sc.contact_ids.indexOf(contact_id) > -1;
+            return sc.contact_id == contact_id;
         });
     },
 
