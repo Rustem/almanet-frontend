@@ -10,7 +10,7 @@ var DropDownBehaviour = require('../forms/behaviours/DropDownBehaviour');
 var AppContextMixin = require('../mixins/AppContextMixin');
 var AddActivityForm = require('../forms/AddActivityForm.react');
 var ActivityActionCreators = require('../actions/ActivityActionCreators');
-var SalesCycleActions = require('../actions/SalesCycleActions');
+var SalesCycleActionCreators = require('../actions/SalesCycleActionCreators');
 var ActivityStore = require('../stores/ActivityStore');
 var UserStore = require('../stores/UserStore');
 var ContactStore = require('../stores/ContactStore');
@@ -378,7 +378,7 @@ var ActivityListView = React.createClass({
     onCycleCreated: function(salesCycleObject) {
         salesCycleObject.contact_id = this.getParams().id;
         salesCycleObject.author_id = this.context.user.id;
-        SalesCycleActions.create(salesCycleObject);
+        SalesCycleActionCreators.create(salesCycleObject);
     },
 
     onCycleClosed: function(salesCycleObject) {
@@ -391,7 +391,7 @@ var ActivityListView = React.createClass({
             duration: null
         }
         ActivityActionCreators.createActivity(close_activity);
-        SalesCycleActions.close(salesCycleObject);
+        SalesCycleActionCreators.close(salesCycleObject);
     },
 
     navigateToSalesCycle: function(cycle_id) {
@@ -415,7 +415,7 @@ var ActivityListView = React.createClass({
                 // // fake method, just to check add_product() method
                 // // TODO: replace this method to appropriate place according to interface
                 // sc.product_id = ProductStore.fakeGet().id
-                // SalesCycleActions.add_product(sc);
+                // SalesCycleActionCreators.add_product(sc);
                 
                 this.navigateToSalesCycle(sc.id);
             }

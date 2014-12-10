@@ -9,7 +9,6 @@ var IconSvg = require('./common/IconSvg.react');
 var CRMConstants = require('../constants/CRMConstants');
 var SalesCycleCloseForm = require('../forms/SalesCycleCloseForm.react');
 var SalesCycleStore = require('../stores/SalesCycleStore');
-var SalesCycleActions = require('../actions/SalesCycleActions');
 
 var AppContextMixin = require('../mixins/AppContextMixin');
 
