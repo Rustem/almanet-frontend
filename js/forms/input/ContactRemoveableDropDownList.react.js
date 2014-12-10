@@ -1,0 +1,64 @@
+var _ = require('lodash');
+
+var React = require('react/addons');
+var inputs = require('../input');
+console.log(inputs);
+var RemoveableDropDownListWidget = inputs.RemoveableDropDownListWidget;
+console.log(RemoveableDropDownListWidget);
+
+var FormElementMixin = require('../FormElementMixin.react');
+var ContactStore = require('../../stores/ContactStore');
+
+
+var ContactRemoveableDropDownList = React.createClass({
+
+    mixins : [FormElementMixin],
+
+    renderContact: function(c) {
+        return c.fn;
+    },
+
+    buildProps: function() {
+        return {
+            object_list: ContactStore.getByDate(),
+            object_key: 'id',
+            selected_object_keys: this.value() || [],
+            object_val: this.renderContact,
+            renderSelectedItem: this.renderSelectedItem
+        }
+    },
+
+    renderSelectedItem: function(object){
+        return (
+            <div className="row-body">
+                {object.fn}
+            </div>
+        )
+    },
+
+    findByKey: function(key) {
+        return ContactStore.get(key);
+    },
+
+    onAdd: function(contact_id) {
+        var selected_contacts = this.value() || [];
+        selected_contacts.push(contact_id);
+        var updValue = this.prepValue(this.props.name, _.unique(selected_contacts));
+        return this.updateValue(updValue);
+    },
+
+    onRemove: function(contact_id) {
+        var selected_contacts = this.value();
+        _.pull(selected_contacts, contact_id);
+        return this.updateValue(selected_contacts);
+    },
+
+    render: function() {
+        var props = _.extend({}, this.buildProps(), this.props);
+        return <RemoveableDropDownListWidget {...props}
+                    onAdd={this.onAdd} onRemove={this.onRemove} />
+    }
+
+});
+
+module.exports = ContactRemoveableDropDownList;
