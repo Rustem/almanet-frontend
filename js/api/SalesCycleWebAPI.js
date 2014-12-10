@@ -1,9 +1,11 @@
 var _ = require('lodash');
 var CRMConstants = require('../constants/CRMConstants');
-
+var SignalManager = require('./utils');
 var SALES_CYCLE_STATUS = CRMConstants.SALES_CYCLE_STATUS;
+var CRMConstants = require('../constants/CRMConstants');
+var ActionTypes = CRMConstants.ActionTypes;
 
-module.exports = {
+module.exports = api = {
     getAll: function(success, failure) {
         var salescycles = JSON.parse(localStorage.getItem('salescycles'));
         setTimeout(function(){
@@ -52,18 +54,17 @@ module.exports = {
         setTimeout(function() {
             success(salesCycleObject);
         }, 0);
-    },
-    set_pending: function(activityObject, success, failure) {
-        var rawSalesCycles = JSON.parse(localStorage.getItem('salescycles')) || [];
-        var curCycle = _.find(rawSalesCycles, function(sc){ return sc.id === activityObject.salescycle_id });
-        if (curCycle.status != SALES_CYCLE_STATUS.PENDING) {
-            curCycle.status = SALES_CYCLE_STATUS.PENDING;
-            localStorage.setItem('salescycles', JSON.stringify(rawSalesCycles));    
-        }
-
-        // simulate success callback
-        setTimeout(function() {
-            success(curCycle);
-        }, 0);
     }
 };
+
+function update_state(activity) {
+    var rawSalesCycles = JSON.parse(localStorage.getItem('salescycles')) || [],
+        current_cycle_id = activity.salescycle_id;
+    var current_cycle = _.find(rawSalesCycles, function(sc){
+        return sc.id === current_cycle_id });
+    if(current_cycle.status == SALES_CYCLE_STATUS.NEW) {
+        current_cycle.status = SALES_CYCLE_STATUS.PENDING;
+        localStorage.setItem('salescycles', JSON.stringify(rawSalesCycles));
+    }
+}
+SignalManager.connect(ActionTypes.CREATE_ACTIVITY_SUCCESS, update_state);

@@ -416,7 +416,7 @@ var ActivityListView = React.createClass({
                 // // TODO: replace this method to appropriate place according to interface
                 // sc.product_id = ProductStore.fakeGet().id
                 // SalesCycleActionCreators.add_product(sc);
-                
+
                 this.navigateToSalesCycle(sc.id);
             }
         }.bind(this, this.state));
@@ -443,7 +443,9 @@ var ActivityListView = React.createClass({
 
                 <div className="page-body">
                     {cycle_id === 'sales_0' && (<SalesCycleByAllSummary />) || (<SalesCycleSummary cycle_id={cycle_id} />)}
-                    <SalesCycleCloser ref="sales_cycle_closer" salesCycleID={cycle_id} onCycleClosed={this.onCycleClosed} />
+                    <SalesCycleCloser ref="sales_cycle_closer"
+                                      salesCycleID={cycle_id}
+                                      onCycleClosed={this.onCycleClosed} />
                     {activities.map(this.renderActivity)}
                 </div>
 
