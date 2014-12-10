@@ -104,6 +104,15 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             _salescycles[action.object.id].products.push(action.object.product_id);
             SalesCycleStore.emitChange();
             break;
+        case ActionTypes.SALES_CYCLE_SET_PENDING:
+            var salesCycle = SalesCycleStore.getCreatedSalesCycle(action.object);
+            SalesCycleStore.emitChange();
+            break;
+        case ActionTypes.SALES_CYCLE_SET_PENDING_SUCCESS:
+            var salesCycle_with_id = action.object;
+            _salescycles[salesCycle_with_id.id] = salesCycle_with_id;
+            SalesCycleStore.emitChange();
+            break;
         default:
             // do nothing
     }

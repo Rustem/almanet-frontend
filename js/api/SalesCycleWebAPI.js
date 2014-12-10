@@ -53,4 +53,17 @@ module.exports = {
             success(salesCycleObject);
         }, 0);
     },
+    set_pending: function(activityObject, success, failure) {
+        var rawSalesCycles = JSON.parse(localStorage.getItem('salescycles')) || [];
+        var curCycle = _.find(rawSalesCycles, function(sc){ return sc.id === activityObject.salescycle_id });
+        if (curCycle.status != SALES_CYCLE_STATUS.PENDING) {
+            curCycle.status = SALES_CYCLE_STATUS.PENDING;
+            localStorage.setItem('salescycles', JSON.stringify(rawSalesCycles));    
+        }
+
+        // simulate success callback
+        setTimeout(function() {
+            success(curCycle);
+        }, 0);
+    }
 };
