@@ -36,7 +36,7 @@ var AddActivityButton = React.createClass({
 
     shouldRender: function() {
         // TODO: make something with 'sales_0'
-        if(this.props.salesCycleID == null || this.props.salesCycleID == undefined || this.props.salesCycleID == 'sales_0')
+        if(this.props.current_cycle_id == null || this.props.current_cycle_id == undefined || this.props.current_cycle_id == 'sales_0')
           return false;
         return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED);
     },
