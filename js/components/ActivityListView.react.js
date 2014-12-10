@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var React = require('react');
+var React = require('react/addons');
 var Router = require('react-router');
 var keyMirror = require('react/lib/keyMirror');
 var cx            = React.addons.classSet;
@@ -10,11 +10,14 @@ var DropDownBehaviour = require('../forms/behaviours/DropDownBehaviour');
 var AppContextMixin = require('../mixins/AppContextMixin');
 var AddActivityForm = require('../forms/AddActivityForm.react');
 var ActivityActionCreators = require('../actions/ActivityActionCreators');
+var SalesCycleActions = require('../actions/SalesCycleActions');
 var ActivityStore = require('../stores/ActivityStore');
 var UserStore = require('../stores/UserStore');
 var ContactStore = require('../stores/ContactStore');
 var SalesCycleStore = require('../stores/SalesCycleStore');
 var Modal = require('./common/Modal.react');
+var SalesCycleCloser = require('./SalesCycleCloser.react');
+var SalesCycleCreateForm = require('../forms/SalesCycleCreateForm.react');
 
 var ACTIONS = keyMirror({
     NO_ACTION: null,
@@ -32,7 +35,7 @@ var SalesCycleDropDownList = React.createClass({
         return (
             <li>
                 <a key={'choice__' + idx} onClick={this.onChoice.bind(null, idx)} className="dropdown-menu-link">
-                   {choice[1]}
+                   {choice[1] + " - "} {choice[2] ? "Закрыт" : "Открыт"}
                 </a>
             </li>
         )
@@ -70,6 +73,9 @@ var SalesCycleDropDownList = React.createClass({
             <div className="dropdown-menu">
                 <div className="dropdown-menu-body">
                     <ul className="dropdown-menu-list">
+                        <li>
+                            <SalesCycleCreateForm onCycleCreated={this.props.onCycleCreated} />
+                        </li>
                         {this.props.choices.map(this.renderChoice)}
                     </ul>
                 </div>
@@ -214,6 +220,7 @@ var ActivityListView = React.createClass({
     getInitialState: function() {
         return {
             action: ACTIONS.NO_ACTION,
+            sc_cnt: SalesCycleStore.getAll().length  // number of sales cycles for current contact
         }
     },
 
@@ -289,16 +296,18 @@ var ActivityListView = React.createClass({
         var cycles = SalesCycleStore.getAll();
         cycles.push({
             'id': 'sales_0',
-            'title': 'Все события'
+            'title': 'Все события',
+            'status': false
         });
         return _.map(cycles, function(c){
-            return [c.id, c.title];
+            return [c.id, c.title, c.status];
         });
     },
 
     onAddAction: function(evt) {
         evt.preventDefault();
-        this.setState({action: ACTIONS.ADD_EVENT})
+        this.setState(React.addons.update(
+            this.state, {action: {$set: ACTIONS.ADD_EVENT}}));
     },
 
     onAddEvent: function(newEvent) {
@@ -307,14 +316,49 @@ var ActivityListView = React.createClass({
 
     onCycleSelected: function(idx, cycle_choice) {
         var cycle_id = cycle_choice[0];
-        var params = this.getParams();
-        params.salescycle_id = cycle_id === 'sales_0' ? null : cycle_id;
-        this.transitionTo('activities_by', params);
-        return false;
+        this.navigateToSalesCycle(cycle_id);
     },
 
+    onCycleCreated: function(salesCycleObject) {
+        salesCycleObject.contact_id = this.getParams().id;
+        salesCycleObject.author_id = this.context.user.id;
+        SalesCycleActions.create(salesCycleObject);
+
+    },
+
+    onCycleClosed: function(salesCycleObject) {
+        var close_activity = {
+            author_id: this.context.user.id,
+            description: "Цикл закрыт. Сумма: " + salesCycleObject.real_value,
+            feedback: 'outcome',
+            participant_ids: [this.context.user.id],
+            salescycle_id: salesCycleObject.id,
+            duration: null
+        }
+        ActivityActionCreators.createActivity(close_activity);
+        SalesCycleActions.close(salesCycleObject);
+    },
+
+    navigateToSalesCycle: function(cycle_id) {
+        var params = this.getParams();
+        params.salescycle_id = cycle_id === 'sales_0' ? null : cycle_id;
+        this.refs.sales_cycle_closer.setState({
+          'isShown': false,
+          'salesCycleCloseValue': 0,
+          'salesCycleID': params.salescycle_id
+        })
+        this.transitionTo('activities_by', params);
+        return false;
+      },
+
     resetState: function() {
-        this.setState({action: ACTIONS.NO_ACTION});
+        this.setState(this.getInitialState(), function(prev_state) {
+            // new cycles created
+            if(prev_state.sc_cnt < this.state.sc_cnt) {
+                var sc = SalesCycleStore.getLatestOne();
+                this.navigateToSalesCycle(sc.id);
+            }
+        }.bind(this, this.state));
     },
 
     render: function() {
@@ -330,6 +374,7 @@ var ActivityListView = React.createClass({
                 <div className="page-header">
                     <Crumb />
                     <SalesCycleDropDownList onChange={this.onCycleSelected}
+                                            onCycleCreated={this.onCycleCreated}
                                             current_cycle_id={cycle_id}
                                             choices={this.buildChoices()} />
                     <div className="page-header-controls">
@@ -346,6 +391,7 @@ var ActivityListView = React.createClass({
 
                 <div className="page-body">
                     {cycle_id === 'sales_0' && (<SalesCycleByAllSummary />) || (<SalesCycleSummary cycle_id={cycle_id} />)}
+                    <SalesCycleCloser ref="sales_cycle_closer" salesCycleID={cycle_id} onCycleClosed={this.onCycleClosed} />
                     {activities.map(this.renderActivity)}
                 </div>
 

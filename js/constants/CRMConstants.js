@@ -25,6 +25,11 @@ module.exports = {
         LOAD_CURRENT_USER: null,
         LOAD_CURRENT_USER_SUCCESS: null,
         LOAD_CURRENT_USER_FAIL: null,
+        CLOSE_SALES_CYCLE: null,
+        CLOSE_SALES_CYCLE_SUCCESS: null,
+        CLOSE_SALES_CYCLE_FAIL: null,
+        CREATE_SALES_CYCLE: null,
+        CREATE_SALES_CYCLE_SUCCESS: null,
         LOGOUT: null,
 
     }),
@@ -35,5 +40,10 @@ module.exports = {
     CONTACT_VIEW_MODE: keyMirror({
         EDIT: null,
         READ: null
+    }),
+    SALES_CYCLE_STATUS: keyMirror({
+        NEW: null,
+        PENDING: null,
+        FINISHED: null
     })
 }

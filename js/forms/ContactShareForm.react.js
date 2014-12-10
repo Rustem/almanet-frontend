@@ -94,7 +94,7 @@ var ContactShareForm = React.createClass({
                 <Fieldset className="input-addComment">
                     <ContentEditableInput
                         name='note'
-                        className="input-div--addComment" />
+                        className="input-div input-div--addComment" />
                 </Fieldset>
                 <ColleaguesRemoveableDropDownList
                     name="participants"

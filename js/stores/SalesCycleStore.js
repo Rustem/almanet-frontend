@@ -28,6 +28,14 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
         return _salescycles[id];
     },
 
+    getLatestOne: function() {
+        var scycles = _.sortBy(this.getAll(), function(sc) {
+            sc.at
+        }.bind(this)).reverse();
+        if(!scycles) return null;
+        return scycles[0];
+    },
+
     byContact: function(contact_id) {
         return _.filter(this.getAll(), function(sc){
             return sc.contact_ids.indexOf(contact_id) > -1;
@@ -71,11 +79,24 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             console.log(_salescycles, "cycles", action.object);
             _salescycles[salescycle_id].activities.push(action.object.id);
             SalesCycleStore.emitChange();
-        // case ActionTypes.CREATE_SALESCYCLE_SUCCESS:
-        //     var a = SalesCycleStore.getCreatedSalesCycle(action.object);
-        //     _salescycles[a.id] = a;
-        //     SalesCycleStore.emitChange();
-        //     break;
+        case ActionTypes.CLOSE_SALES_CYCLE:
+            var salesCycle = SalesCycleStore.getCreatedSalesCycle(action.object);
+            SalesCycleStore.emitChange();
+            break;
+        case ActionTypes.CLOSE_SALES_CYCLE_SUCCESS:
+            var salesCycles_with_id = SalesCycleStore.getCreatedSalesCycle(action.object);
+            _salescycles[action.object.id] = action.object;
+            SalesCycleStore.emitChange();
+            break;
+        case ActionTypes.CREATE_SALES_CYCLE:
+            var salesCycle = SalesCycleStore.getCreatedSalesCycle(action.object);
+            SalesCycleStore.emitChange();
+            break;
+        case ActionTypes.CREATE_SALES_CYCLE_SUCCESS:
+            var salesCycle_with_id = SalesCycleStore.getCreatedSalesCycle(action.object);
+            _salescycles[salesCycle_with_id.id] = salesCycle_with_id;
+            SalesCycleStore.emitChange();
+            break;
         default:
             // do nothing
     }
