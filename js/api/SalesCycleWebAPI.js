@@ -1,6 +1,11 @@
 var _ = require('lodash');
+var CRMConstants = require('../constants/CRMConstants');
+var SignalManager = require('./utils');
+var SALES_CYCLE_STATUS = CRMConstants.SALES_CYCLE_STATUS;
+var CRMConstants = require('../constants/CRMConstants');
+var ActionTypes = CRMConstants.ActionTypes;
 
-module.exports = {
+module.exports = api = {
     getAll: function(success, failure) {
         var salescycles = JSON.parse(localStorage.getItem('salescycles'));
         setTimeout(function(){
@@ -11,7 +16,7 @@ module.exports = {
         // set salesCycle to local storage
         var rawSalesCycles = JSON.parse(localStorage.getItem('salescycles')) || [];
         var curCycle = _.find(rawSalesCycles, function(sc){ return sc.id === salesCycleObject.id });
-        curCycle.status = true;
+        curCycle.status = SALES_CYCLE_STATUS.FINISHED;
         curCycle.real_value = salesCycleObject.real_value;
         localStorage.setItem('salescycles', JSON.stringify(rawSalesCycles));
 
@@ -25,8 +30,9 @@ module.exports = {
         var obj = _.extend({}, {
             id: 'sales_' + timeNow,
             at: timeNow,
-            status: false,
+            status: SALES_CYCLE_STATUS.NEW,
             activities:[],
+            products:[],
             user_ids:[]}, salesCycleObject);
         // set contact to local storage
         var rawSalesCycles = JSON.parse(localStorage.getItem('salescycles')) || [];
@@ -38,4 +44,27 @@ module.exports = {
             success(obj);
         }, 0);
     },
+    add_product: function(salesCycleObject, success, failure) {
+        var rawSalesCycles = JSON.parse(localStorage.getItem('salescycles')) || [];
+        var curCycle = _.find(rawSalesCycles, function(sc){ return sc.id === salesCycleObject.id });
+        curCycle.products.push(salesCycleObject.product_id);
+        localStorage.setItem('salescycles', JSON.stringify(rawSalesCycles));
+
+        // simulate success callback
+        setTimeout(function() {
+            success(salesCycleObject);
+        }, 0);
+    }
 };
+
+function update_state(activity) {
+    var rawSalesCycles = JSON.parse(localStorage.getItem('salescycles')) || [],
+        current_cycle_id = activity.salescycle_id;
+    var current_cycle = _.find(rawSalesCycles, function(sc){
+        return sc.id === current_cycle_id });
+    if(current_cycle.status == SALES_CYCLE_STATUS.NEW) {
+        current_cycle.status = SALES_CYCLE_STATUS.PENDING;
+        localStorage.setItem('salescycles', JSON.stringify(rawSalesCycles));
+    }
+}
+SignalManager.connect(ActionTypes.CREATE_ACTIVITY_SUCCESS, update_state);

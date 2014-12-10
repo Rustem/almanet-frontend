@@ -6,13 +6,14 @@ var _ = require('lodash');
 var React = require('react/addons');
 var cx            = React.addons.classSet;
 var IconSvg = require('./common/IconSvg.react');
+var CRMConstants = require('../constants/CRMConstants');
 var SalesCycleCloseForm = require('../forms/SalesCycleCloseForm.react');
-
 var SalesCycleStore = require('../stores/SalesCycleStore');
-var SalesCycleActions = require('../actions/SalesCycleActions');
+
 var AppContextMixin = require('../mixins/AppContextMixin');
 
 var ESCAPE_KEY_CODE = 27;
+var SALES_CYCLE_STATUS = CRMConstants.SALES_CYCLE_STATUS;
 
 var SalesCycleCloserButton = React.createClass({
 
@@ -67,12 +68,10 @@ var SalesCycleCloser = React.createClass({
         return SalesCycleStore.get(this.props.salesCycleID);
     },
 
-    shouldRender: function() {
-        // render only if cycle selected (id is not null) and cycle is not closed
-        // TODO: make something with 'sales_0'
-        if(this.props.salesCycleID == null || this.props.salesCycleID == undefined || this.props.salesCycleID == 'sales_0')
+    canRenderActionBar: function() {
+        if([null, undefined, 'sales_0'].indexOf(this.props.salesCycleID) > -1)
           return false;
-        return !this.getCurrentCycle().status;
+        return !(this.getCurrentCycle().status == SALES_CYCLE_STATUS.FINISHED);
     },
 
     render: function() {
@@ -81,7 +80,7 @@ var SalesCycleCloser = React.createClass({
           'open': this.isClosing,
         }), StateComponent = null;
 
-        if(this.shouldRender()) {
+        if(this.canRenderActionBar()) {
           if (this.isClosing) {
             StateComponent = <SalesCycleCloseForm
                     value={this.getCurrentCycle()}

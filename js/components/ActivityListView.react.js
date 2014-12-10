@@ -10,7 +10,7 @@ var DropDownBehaviour = require('../forms/behaviours/DropDownBehaviour');
 var AppContextMixin = require('../mixins/AppContextMixin');
 var AddActivityForm = require('../forms/AddActivityForm.react');
 var ActivityActionCreators = require('../actions/ActivityActionCreators');
-var SalesCycleActions = require('../actions/SalesCycleActions');
+var SalesCycleActionCreators = require('../actions/SalesCycleActionCreators');
 var ActivityStore = require('../stores/ActivityStore');
 var UserStore = require('../stores/UserStore');
 var ContactStore = require('../stores/ContactStore');
@@ -18,10 +18,47 @@ var SalesCycleStore = require('../stores/SalesCycleStore');
 var Modal = require('./common/Modal.react');
 var SalesCycleCloser = require('./SalesCycleCloser.react');
 var SalesCycleCreateForm = require('../forms/SalesCycleCreateForm.react');
+var CRMConstants = require('../constants/CRMConstants');
+
+// probably not required
+var ProductStore = require('../stores/ProductStore');
+var SALES_CYCLE_STATUS = CRMConstants.SALES_CYCLE_STATUS;
 
 var ACTIONS = keyMirror({
     NO_ACTION: null,
     ADD_EVENT: null,
+});
+
+var AddActivityButton = React.createClass({
+    getCycleStatus: function() {
+        return SalesCycleStore.get(this.props.current_cycle_id).status;
+    },
+
+    shouldRender: function() {
+        // TODO: make something with 'sales_0'
+        if(this.props.current_cycle_id == null || this.props.current_cycle_id == undefined || this.props.current_cycle_id == 'sales_0')
+          return false;
+        return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED);
+    },
+
+    render: function(){
+        var Component = null;
+        if(this.shouldRender())
+            Component = (
+                <div className="page-header-controls">
+                    <a onClick={this.props.onClick} href="#" className="row row--oneliner row--link">
+                      <div className="row-icon text-good">
+                        <IconSvg iconKey="add" />
+                      </div>
+                      <div className="row-body">
+                        Добавить событие
+                      </div>
+                    </a>
+                </div>
+            );
+        return Component;
+    }
+
 });
 
 var SalesCycleDropDownList = React.createClass({
@@ -35,7 +72,7 @@ var SalesCycleDropDownList = React.createClass({
         return (
             <li>
                 <a key={'choice__' + idx} onClick={this.onChoice.bind(null, idx)} className="dropdown-menu-link">
-                   {choice[1] + " - "} {choice[2] ? "Закрыт" : "Открыт"}
+                   {choice[1] + " - "} {choice[2]}
                 </a>
             </li>
         )
@@ -74,7 +111,12 @@ var SalesCycleDropDownList = React.createClass({
                 <div className="dropdown-menu-body">
                     <ul className="dropdown-menu-list">
                         <li>
-                            <SalesCycleCreateForm onCycleCreated={this.props.onCycleCreated} />
+                            <div className="inputLine inputLine--newCycle">
+                                <SalesCycleCreateForm onCycleCreated={this.props.onCycleCreated} />
+                                <div className="inputLine-caption">
+                                  Type a name for cycle and press enter.
+                                </div>
+                            </div>
                         </li>
                         {this.props.choices.map(this.renderChoice)}
                     </ul>
@@ -185,6 +227,11 @@ var SalesCycleSummary = React.createClass({
         return user_ids.join(', ')
     },
 
+    getProducts: function() {
+        var product_ids = this.getCycle().products;
+        return product_ids.join(', ')
+    },
+
     render: function() {
         console.log(this.getCycleDuration(), 'hi');
         return (
@@ -206,6 +253,10 @@ var SalesCycleSummary = React.createClass({
                 <td>Участники</td>
                 <td>{this.getParticipants()}</td>
               </tr>
+              <tr>
+                <td>Продукты</td>
+                <td>{this.getProducts()}</td>
+              </tr>
             </table>
             <div className="space-vertical--compact"></div>
         </div>
@@ -220,7 +271,7 @@ var ActivityListView = React.createClass({
     getInitialState: function() {
         return {
             action: ACTIONS.NO_ACTION,
-            sc_cnt: SalesCycleStore.getAll().length  // number of sales cycles for current contact
+            sc_cnt: this.getCyclesForCurrentContact().length  // DONE: number of sales cycles for current contact
         }
     },
 
@@ -292,8 +343,13 @@ var ActivityListView = React.createClass({
         )
     },
 
+    getCyclesForCurrentContact: function() {
+        var contact_id = this.getParams().id;
+        return SalesCycleStore.byContact(contact_id);
+    },
+
     buildChoices: function(){
-        var cycles = SalesCycleStore.getAll();
+        var cycles = this.getCyclesForCurrentContact();
         cycles.push({
             'id': 'sales_0',
             'title': 'Все события',
@@ -322,8 +378,7 @@ var ActivityListView = React.createClass({
     onCycleCreated: function(salesCycleObject) {
         salesCycleObject.contact_id = this.getParams().id;
         salesCycleObject.author_id = this.context.user.id;
-        SalesCycleActions.create(salesCycleObject);
-
+        SalesCycleActionCreators.create(salesCycleObject);
     },
 
     onCycleClosed: function(salesCycleObject) {
@@ -336,7 +391,7 @@ var ActivityListView = React.createClass({
             duration: null
         }
         ActivityActionCreators.createActivity(close_activity);
-        SalesCycleActions.close(salesCycleObject);
+        SalesCycleActionCreators.close(salesCycleObject);
     },
 
     navigateToSalesCycle: function(cycle_id) {
@@ -356,6 +411,12 @@ var ActivityListView = React.createClass({
             // new cycles created
             if(prev_state.sc_cnt < this.state.sc_cnt) {
                 var sc = SalesCycleStore.getLatestOne();
+
+                // // fake method, just to check add_product() method
+                // // TODO: replace this method to appropriate place according to interface
+                // sc.product_id = ProductStore.fakeGet().id
+                // SalesCycleActionCreators.add_product(sc);
+
                 this.navigateToSalesCycle(sc.id);
             }
         }.bind(this, this.state));
@@ -377,21 +438,14 @@ var ActivityListView = React.createClass({
                                             onCycleCreated={this.onCycleCreated}
                                             current_cycle_id={cycle_id}
                                             choices={this.buildChoices()} />
-                    <div className="page-header-controls">
-                        <a onClick={this.onAddAction} href="#" className="row row--oneliner row--link">
-                          <div className="row-icon text-good">
-                            <IconSvg iconKey="add" />
-                          </div>
-                          <div className="row-body">
-                            Добавить событие
-                          </div>
-                        </a>
-                      </div>
+                    <AddActivityButton onClick={this.onAddAction} current_cycle_id={cycle_id} />
                 </div>
 
                 <div className="page-body">
                     {cycle_id === 'sales_0' && (<SalesCycleByAllSummary />) || (<SalesCycleSummary cycle_id={cycle_id} />)}
-                    <SalesCycleCloser ref="sales_cycle_closer" salesCycleID={cycle_id} onCycleClosed={this.onCycleClosed} />
+                    <SalesCycleCloser ref="sales_cycle_closer"
+                                      salesCycleID={cycle_id}
+                                      onCycleClosed={this.onCycleClosed} />
                     {activities.map(this.renderActivity)}
                 </div>
 

@@ -245,7 +245,7 @@ var SharesList = React.createClass({
 
     filterShares: function() {
         // by all contacts and notes
-        var shares = this.props.shares,
+        var shares = _.sortBy(this.props.shares, 'at').reverse(),
             filter_text = this.props.filter_text;
         if(!filter_text) {
             return shares;

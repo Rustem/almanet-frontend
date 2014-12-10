@@ -9,6 +9,8 @@ var SVGCheckbox = inputs.SVGCheckbox;
 var Form = require('./Form.react');
 var FormMixin = require('./FormMixin.react');
 var Fieldset = require('./Fieldset.react');
+var elements = require('./elements');
+var ContactRemoveableDropDownList = elements.ContactRemoveableDropDownList;
 
 var VCardWidgets = require('./VCardWidgets.react');
 var EmailVCardComponent = VCardWidgets.EmailVCardComponent;
@@ -29,6 +31,14 @@ var ContactEditForm = React.createClass({
   },
 
   render: function() {
+    var CRDDL = null ;
+    if (this.props.value.is_company) {
+      CRDDL = <ContactRemoveableDropDownList
+                    excludeCompanies={true}
+                    name="contacts"
+                    title="Работники в этой компании"
+                    filter_placeholder="Добавьте контакт" />;
+    }
     return (
       <Form {...this.props} ref='contact_form' onSubmit={this.onHandleSubmit}>
         <Fieldset className="inputLine-negativeTrail">
@@ -48,8 +58,10 @@ var ContactEditForm = React.createClass({
         <div className="space-verticalBorder"></div>
 
         <AddressVCardComponent name="adrs" options={[['home', 'место проживания'], ['work', 'место работы']]} />
+        {CRDDL ? CRDDL : <div className="space-verticalBorder"></div>}
+
         <div className="inputLine text-right">
-            <button className="btn btn--save" type="submit">Сохранить</button>
+            <button className="btn btn--save" type="submit">Сохddранить</button>
         </div>
       </Form>
     )

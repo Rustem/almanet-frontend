@@ -52,6 +52,7 @@ module.exports = {
     //     status: false,
     //     activities: [],
     //     user_ids: ['u_1'],
+    //     products: [],
     //   },
     //   {
     //     id: 'sales_2',
@@ -59,6 +60,7 @@ module.exports = {
     //     status: false,
     //     activities: [],
     //     user_ids: ['u_2', 'u_1'],
+    //     products: [],
     //   },
     //   {
     //     id: 'sales_3',
@@ -66,8 +68,19 @@ module.exports = {
     //     status: false,
     //     activities: [],
     //     user_ids: ['u_2', 'u_1', 'u_3', 'u_4'],
+    //     products: [],
     //   },
     // ]));
+
+    localStorage.setItem('products', JSON.stringify([
+      {
+        id: 'prod_1',
+        name: '1C Online',
+        description: '1C Online accounting system By AlmaCloud',
+        price: '3000',
+        currency: 'KZT',
+      },
+    ]));
   }
 
 };
