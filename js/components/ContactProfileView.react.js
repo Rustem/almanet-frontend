@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 var React = require('react');
 var keyMirror = require('react/lib/keyMirror');
 var cx            = React.addons.classSet;
@@ -5,6 +7,8 @@ var Router = require('react-router');
 var RouteHandler = Router.RouteHandler;
 var ContactStore = require('../stores/ContactStore');
 var ShareStore = require('../stores/ShareStore');
+var SalesCycleStore = require('../stores/SalesCycleStore');
+var ProductStore = require('../stores/ProductStore');
 var ContactActionCreators = require('../actions/ContactActionCreators');
 var BreadCrumb = require('./common/BreadCrumb.react');
 var IconSvg = require('./common/IconSvg.react');
@@ -113,6 +117,14 @@ var ContactProfileView = React.createClass({
         return this.state.action === ACTIONS.EDIT ? VIEW_MODE.EDIT : VIEW_MODE.READ;
     },
 
+    getProducts: function() {
+        var id = this.getParams().id;
+        return _.uniq(_.reduce(SalesCycleStore.getCyclesForCurrentContact(id), function(rv, sc) {
+                    rv.push(sc.products);
+                    return _.flatten(rv);
+                }, []));
+    },
+
     onActionSelected: function(action_type, evt) {
         evt.preventDefault();
         this.setState({action: action_type});
@@ -132,6 +144,11 @@ var ContactProfileView = React.createClass({
         this.setState({action: ACTIONS.NO_ACTION});
     },
 
+    renderProduct: function(p_id) {
+        console.log(p_id);
+        return (<span>{ProductStore.get(p_id).name}</span>)
+    },
+
     render: function() {
         var asideLink = (<a onClick={this.onActionSelected.bind(null, ACTIONS.EDIT)} href="#" className="text-secondary">Редактировать</a>);
         if(this.state.action === ACTIONS.EDIT) {
@@ -141,7 +158,8 @@ var ContactProfileView = React.createClass({
                 return false;
             }.bind(this)} href="#" className="text-good text-padLeft">Сохранить</a>)
         }
-        console.log(this.getContact());
+        var products = this.getProducts();
+        console.log(products);
         return (
             <div>
             <Header />
@@ -160,6 +178,9 @@ var ContactProfileView = React.createClass({
                             <div className="contact-aside">
                                 {asideLink}
                             </div>
+                            <div className="space-verticalBorder"></div>
+                            <div className="text-strong text-large">Продукты</div>
+                            {products.map(this.renderProduct)}
                         </div>
 
                     </div>

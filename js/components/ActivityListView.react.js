@@ -587,7 +587,6 @@ var ActivityListView = React.createClass({
         } else{
             var activities = ActivityStore.bySalesCycle(cycle_id);
         }
-        console.log(activities);
         return (
             <div className="page">
                 <div className="page-header">
