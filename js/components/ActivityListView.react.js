@@ -18,6 +18,7 @@ var SalesCycleStore = require('../stores/SalesCycleStore');
 // var Modal = require('./common/Modal.react');
 var SalesCycleCloser = require('./SalesCycleCloser.react');
 var SalesCycleCreateForm = require('../forms/SalesCycleCreateForm.react');
+var SalesCycleCloseForm = require('../forms/SalesCycleCloseForm.react');
 var AddActivityMiniForm = require('../forms/AddActivityMiniForm.react');
 var AddProductMiniForm = require('../forms/AddProductMiniForm.react');
 var CRMConstants = require('../constants/CRMConstants');
@@ -167,9 +168,46 @@ var AddProductWidget = React.createClass({
     },
 });
 
-// var CloseCycleWidget = React.creactClass({
-    
-// });
+var CloseCycleWidget = React.createClass({
+    propTypes: {
+        action_type: React.PropTypes.string.isRequired,
+        current_cycle_id: React.PropTypes.string.isRequired,
+    },
+
+    get_current_action: function() {
+        return this.props.action_type;
+    },
+
+    getSalesCycle: function() {
+        return SalesCycleStore.get(this.props.current_cycle_id);
+    },
+
+    getCycleStatus: function() {
+        return this.getSalesCycle().status;
+    },
+
+    shouldRenderComponent: function() {
+        // TODO: make something with 'sales_0'
+        if(_.contains([null, undefined, 'sales_0'], this.props.current_cycle_id))
+          return false;
+        return this.get_current_action() == ACTIONS.CLOSE_SC;
+    },
+
+    render: function(){
+        var Component = null;
+        if(this.shouldRenderComponent())
+            Component = (
+                <div>
+                    {this.props.current_cycle_id === 'sales_0' && (<SalesCycleByAllSummary />) || (<SalesCycleSummary cycle_id={this.props.current_cycle_id} />)}
+                    <SalesCycleCloseForm
+                    value={this.getSalesCycle()}
+                    handleSubmit={this.props.onCycleClosed}
+                    onKeyDown={this.onFormKeyDown} />
+                </div>
+            )
+        return Component
+    },
+});
 
 var SalesCycleDropDownList = React.createClass({
     mixins: [DropDownBehaviour],
@@ -572,9 +610,8 @@ var ActivityListView = React.createClass({
                                        current_cycle_id={cycle_id} />
                     <AddProductWidget action_type={this.state.action}
                                       current_cycle_id={cycle_id} />
-                    {cycle_id === 'sales_0' && (<SalesCycleByAllSummary />) || (<SalesCycleSummary cycle_id={cycle_id} />)}
-                    <SalesCycleCloser ref="sales_cycle_closer"
-                                      salesCycleID={cycle_id}
+                    <CloseCycleWidget action_type={this.state.action}
+                                      current_cycle_id={cycle_id} 
                                       onCycleClosed={this.onCycleClosed} />
                     {activities.map(this.renderActivity)}
                 </div> 
