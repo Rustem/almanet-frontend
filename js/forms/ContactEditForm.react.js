@@ -61,7 +61,7 @@ var ContactEditForm = React.createClass({
         {CRDDL ? CRDDL : <div className="space-verticalBorder"></div>}
 
         <div className="inputLine text-right">
-            <button className="btn btn--save" type="submit">Сохddранить</button>
+            <button className="btn btn--save" type="submit">Сохранить</button>
         </div>
       </Form>
     )
@@ -69,7 +69,6 @@ var ContactEditForm = React.createClass({
 
   onHandleSubmit: function(e) {
     e.preventDefault();
-    console.log("Rustem");
     var form = this.refs.contact_form;
     var errors = form.validate();
     if(!errors) {

@@ -5,6 +5,8 @@ var VIEW_MODES_MAP = require('../constants/CRMConstants').CONTACT_VIEW_MODE;
 var VIEW_MODES = _.values(VIEW_MODES_MAP);
 var keyMirror = require('react/lib/keyMirror');
 
+var ContactStore = require('../stores/ContactStore');
+
 var ContactVCard = React.createClass({
     propTypes: {
         contact: React.PropTypes.object,
@@ -70,6 +72,31 @@ var ContactVCard = React.createClass({
           </div>
         </div>)
     },
+
+    renderContacts: function(contact) {
+      if(contact.contacts == undefined)
+        return null;
+      return (
+        <div className="inputLine inputLine--vcardRow">
+          <div className="row">
+            <div className="row-icon">
+            </div>
+            <div className="row-body">
+              <div className="inputLine-negativeTrail">
+                <div className="text-caption text-secondary">
+                  Работники в этой компании
+                </div>
+              </div>
+              {contact.contacts.map(function(c_id){
+                var c = ContactStore.get(c_id);
+                return <div className="inputLine-div">{c.fn}</div>
+              })}
+            </div>
+          </div>
+        </div>
+      )
+    },
+
     render_read: function() {
         var contact = this.props.contact;
         return (
@@ -112,6 +139,10 @@ var ContactVCard = React.createClass({
                     </div>
                   </div>
                 </div>
+                <div className="space-verticalBorder"></div>
+
+                {this.renderContacts(contact)}
+
             </div>
         );
     },
