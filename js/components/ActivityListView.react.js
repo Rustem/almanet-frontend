@@ -8,16 +8,17 @@ var Crumb = require('./common/BreadCrumb.react').Crumb;
 var DropDownBehaviour = require('../forms/behaviours/DropDownBehaviour');
 
 var AppContextMixin = require('../mixins/AppContextMixin');
-var AddActivityForm = require('../forms/AddActivityForm.react');
+// var AddActivityForm = require('../forms/AddActivityForm.react');
 var ActivityActionCreators = require('../actions/ActivityActionCreators');
 var SalesCycleActionCreators = require('../actions/SalesCycleActionCreators');
 var ActivityStore = require('../stores/ActivityStore');
 var UserStore = require('../stores/UserStore');
 var ContactStore = require('../stores/ContactStore');
 var SalesCycleStore = require('../stores/SalesCycleStore');
-var Modal = require('./common/Modal.react');
+// var Modal = require('./common/Modal.react');
 var SalesCycleCloser = require('./SalesCycleCloser.react');
 var SalesCycleCreateForm = require('../forms/SalesCycleCreateForm.react');
+var AddActivityMiniForm = require('../forms/AddActivityMiniForm.react');
 var CRMConstants = require('../constants/CRMConstants');
 
 // probably not required
@@ -25,41 +26,100 @@ var ProductStore = require('../stores/ProductStore');
 var SALES_CYCLE_STATUS = CRMConstants.SALES_CYCLE_STATUS;
 
 var ACTIONS = keyMirror({
-    NO_ACTION: null,
-    ADD_EVENT: null,
+    ADD_ACTIVITY: null,
+    ADD_PRODUCT: null,
+    CLOSE_SC: null,
 });
 
-var AddActivityButton = React.createClass({
-    getCycleStatus: function() {
-        return SalesCycleStore.get(this.props.current_cycle_id).status;
+var SalesCycleControlBar = React.createClass({
+    propTypes: {
+        action_type: React.PropTypes.string.isRequired,
+        current_cycle_id: React.PropTypes.string.isRequired,
     },
 
-    shouldRender: function() {
+    get_current_action: function() {
+        return this.props.action_type;
+    },
+
+    is_active_action: function(action_type) {
+        return this.get_current_action() == action_type;
+    },
+
+    getSalesCycle: function() {
+        return SalesCycleStore.get(this.props.current_cycle_id);
+    },
+
+    getCycleStatus: function() {
+        return this.getSalesCycle().status;
+    },
+
+    shouldRenderControlBar: function() {
         // TODO: make something with 'sales_0'
-        if(this.props.current_cycle_id == null || this.props.current_cycle_id == undefined || this.props.current_cycle_id == 'sales_0')
+        if(_.contains([null, undefined, 'sales_0'], this.props.current_cycle_id))
           return false;
         return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED);
     },
 
     render: function(){
         var Component = null;
-        if(this.shouldRender())
-            Component = (
-                <div className="page-header-controls">
-                    <a onClick={this.props.onClick} href="#" className="row row--oneliner row--link">
-                      <div className="row-icon text-good">
-                        <IconSvg iconKey="add" />
-                      </div>
-                      <div className="row-body">
-                        Добавить событие
-                      </div>
-                    </a>
-                </div>
-            );
+        var cn1 = cx({
+            'stream-toolbar-btn': true,
+            'active': this.is_active_action(ACTIONS.ADD_ACTIVITY),
+        });
+        var cn2 = cx({
+            'stream-toolbar-btn': true,
+            'active': this.is_active_action(ACTIONS.ADD_PRODUCT),
+        });
+        var cn3 = cx({
+            'stream-toolbar-btn': true,
+            'active': this.is_active_action(ACTIONS.CLOSE_SC),
+        });
+        if(this.shouldRenderControlBar())
+            Component = (<div className="stream-toolbar">
+                    <button onClick={this.props.onActionActivity} className={cn1} type="button">
+                        <span className="text-colorize">
+                            <IconSvg iconKey="add" />
+                        </span>
+                        Записать взаимодействие
+                    </button>
+                    <button onClick={this.props.onActionProduct} className={cn2} type="button">
+                        <span className="text-colorize">
+                            <IconSvg iconKey="add" />
+                        </span>
+                        Добавить продукт
+                    </button>
+                    <button onClick={this.props.onActionCycle} className={cn3} type="button">
+                        <span className="text-colorize">
+                            <IconSvg iconKey="archive" />
+                        </span>
+                        Завершить цикл
+                    </button>
+                </div>);
         return Component;
     }
 
 });
+
+var AddActivityWidget = React.createClass({
+    propTypes: {
+        // action_type: React.PropTypes.string.isRequired,
+        // current_cycle_id: React.PropTypes.string.isRequired,
+    },
+
+    render: function(){
+        return (
+            <AddActivityMiniForm />
+        )
+    },
+});
+
+// var AddProductWidget = React.creactClass({
+    
+// });
+
+// var CloseCycleWidget = React.creactClass({
+    
+// });
 
 var SalesCycleDropDownList = React.createClass({
     mixins: [DropDownBehaviour],
@@ -87,7 +147,7 @@ var SalesCycleDropDownList = React.createClass({
     render: function(){
         var className = cx({
             'dropdown': true,
-            'dropdown--filterContainer': true,
+            'page-header-filterContainer': true,
             'open': this.state.isOpen
         });
         var cur_choice = this.getCurrentChoice();
@@ -270,14 +330,14 @@ var ActivityListView = React.createClass({
 
     getInitialState: function() {
         return {
-            action: ACTIONS.NO_ACTION,
+            action: ACTIONS.ADD_ACTIVITY,
             sc_cnt: this.getCyclesForCurrentContact().length  // DONE: number of sales cycles for current contact
         }
     },
 
-    getAddEventModalState: function() {
-        return this.state.action === ACTIONS.ADD_EVENT;
-    },
+    // getAddEventModalState: function() {
+    //     return this.state.action === ACTIONS.ADD_ACTIVITY;
+    // },
 
     componentDidMount: function() {
         ActivityStore.addChangeListener(this.resetState);
@@ -360,10 +420,25 @@ var ActivityListView = React.createClass({
         });
     },
 
-    onAddAction: function(evt) {
+    onActionActivity: function(evt) {
+        console.log('a');
         evt.preventDefault();
         this.setState(React.addons.update(
-            this.state, {action: {$set: ACTIONS.ADD_EVENT}}));
+            this.state, {action: {$set: ACTIONS.ADD_ACTIVITY}}));
+    },
+
+    onActionProduct: function(evt) {
+        console.log('p');
+        evt.preventDefault();
+        this.setState(React.addons.update(
+            this.state, {action: {$set: ACTIONS.ADD_PRODUCT}}));
+    },
+
+    onActionCycle: function(evt) {
+        console.log('c');
+        evt.preventDefault();
+        this.setState(React.addons.update(
+            this.state, {action: {$set: ACTIONS.CLOSE_SC}}));
     },
 
     onAddEvent: function(newEvent) {
@@ -438,29 +513,35 @@ var ActivityListView = React.createClass({
                                             onCycleCreated={this.onCycleCreated}
                                             current_cycle_id={cycle_id}
                                             choices={this.buildChoices()} />
-                    <AddActivityButton onClick={this.onAddAction} current_cycle_id={cycle_id} />
+                    <SalesCycleControlBar onActionActivity={this.onActionActivity} 
+                                          onActionProduct={this.onActionProduct}
+                                          onActionCycle={this.onActionCycle}
+                                          action_type={this.state.action}
+                                          current_cycle_id={cycle_id} />
                 </div>
 
                 <div className="page-body">
+                    <AddActivityWidget />
                     {cycle_id === 'sales_0' && (<SalesCycleByAllSummary />) || (<SalesCycleSummary cycle_id={cycle_id} />)}
                     <SalesCycleCloser ref="sales_cycle_closer"
                                       salesCycleID={cycle_id}
                                       onCycleClosed={this.onCycleClosed} />
                     {activities.map(this.renderActivity)}
-                </div>
-
-                <Modal isOpen={this.getAddEventModalState()}
-                       onRequestClose={this.resetState}
-                       modalTitle='ДОБАВЛЕНИЕ СОБЫТИЯ'>
-                    <AddActivityForm
-                        salescycle={this.getParams().salescycle_id || null}
-                        current_user={this.context.user}
-                        onHandleSubmit={this.onAddEvent}
-                        onCancel={this.resetState} />
-                </Modal>
+                </div> 
+                
             </div>
         );
+//                 <Modal isOpen={this.getAddEventModalState}
+//                        onRequestClose={this.resetState}
+//                        modalTitle='ДОБАВЛЕНИЕ СОБЫТИЯ'>
+//                     <AddActivityForm
+//                         salescycle={this.getParams().salescycle_id || null}
+//                         current_user={this.context.user}
+//                         onHandleSubmit={this.onAddEvent}
+//                         onCancel={this.resetState} />
+//                 </Modal>
     }
+    
 
 });
 
