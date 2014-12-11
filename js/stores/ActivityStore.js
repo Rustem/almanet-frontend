@@ -41,6 +41,13 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
         })
     },
 
+    bySalesCycles: function(ids) {
+        rv = _.map(ids, function(id){
+            return this.bySalesCycle(id);
+        }.bind(this));
+        return _.sortBy(_.flatten(rv), 'at');
+    },
+
     getAll: function() {
         return _.map(_activities, function(c) { return c });
     },

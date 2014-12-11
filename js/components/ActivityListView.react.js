@@ -580,11 +580,14 @@ var ActivityListView = React.createClass({
     render: function() {
         var cycle_id = ('salescycle_id' in this.getParams()) && this.getParams()['salescycle_id'] || 'sales_0';
         if(cycle_id === 'sales_0') {
-            var activities = ActivityStore.getByDate();
+            var activities = ActivityStore.bySalesCycles(
+                _.map(this.getCyclesForCurrentContact(),function(sc){
+                    return sc.id
+                }));
         } else{
             var activities = ActivityStore.bySalesCycle(cycle_id);
         }
-
+        console.log(activities);
         return (
             <div className="page">
                 <div className="page-header">
