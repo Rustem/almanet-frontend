@@ -62,35 +62,30 @@ var SalesCycleControlBar = React.createClass({
         return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED);
     },
 
+    getClassNames: function(action) {
+        return cx({
+            'stream-toolbar-btn': true,
+            'active': this.is_active_action(action),
+        });
+    },
+
     render: function(){
         var Component = null;
-        var cn1 = cx({
-            'stream-toolbar-btn': true,
-            'active': this.is_active_action(ACTIONS.ADD_ACTIVITY),
-        });
-        var cn2 = cx({
-            'stream-toolbar-btn': true,
-            'active': this.is_active_action(ACTIONS.ADD_PRODUCT),
-        });
-        var cn3 = cx({
-            'stream-toolbar-btn': true,
-            'active': this.is_active_action(ACTIONS.CLOSE_SC),
-        });
         if(this.shouldRenderControlBar())
             Component = (<div className="stream-toolbar">
-                    <button onClick={this.props.onActionActivity} className={cn1} type="button">
+                    <button onClick={this.props.onActionActivity} className={this.getClassNames(ACTIONS.ADD_ACTIVITY)} type="button">
                         <span className="text-colorize">
                             <IconSvg iconKey="add" />
                         </span>
                         Записать взаимодействие
                     </button>
-                    <button onClick={this.props.onActionProduct} className={cn2} type="button">
+                    <button onClick={this.props.onActionProduct} className={this.getClassNames(ACTIONS.ADD_PRODUCT)} type="button">
                         <span className="text-colorize">
                             <IconSvg iconKey="add" />
                         </span>
                         Добавить продукт
                     </button>
-                    <button onClick={this.props.onActionCycle} className={cn3} type="button">
+                    <button onClick={this.props.onActionCycle} className={this.getClassNames(ACTIONS.CLOSE_SC)} type="button">
                         <span className="text-colorize">
                             <IconSvg iconKey="archive" />
                         </span>
