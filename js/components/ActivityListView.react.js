@@ -124,7 +124,8 @@ var AddActivityWidget = React.createClass({
         // TODO: make something with 'sales_0'
         if(_.contains([null, undefined, 'sales_0'], this.props.current_cycle_id))
           return false;
-        return this.get_current_action() == ACTIONS.ADD_ACTIVITY;
+        return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED) && 
+               this.get_current_action() == ACTIONS.ADD_ACTIVITY;
     },
 
     render: function(){
@@ -159,7 +160,8 @@ var AddProductWidget = React.createClass({
         // TODO: make something with 'sales_0'
         if(_.contains([null, undefined, 'sales_0'], this.props.current_cycle_id))
           return false;
-        return this.get_current_action() == ACTIONS.ADD_PRODUCT;
+        return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED) && 
+               this.get_current_action() == ACTIONS.ADD_PRODUCT;
     },
 
     render: function(){
@@ -194,7 +196,8 @@ var CloseCycleWidget = React.createClass({
         // TODO: make something with 'sales_0'
         if(_.contains([null, undefined, 'sales_0'], this.props.current_cycle_id))
           return false;
-        return this.get_current_action() == ACTIONS.CLOSE_SC;
+        return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED) && 
+               this.get_current_action() == ACTIONS.CLOSE_SC;
     },
 
     render: function(){
@@ -565,11 +568,6 @@ var ActivityListView = React.createClass({
     navigateToSalesCycle: function(cycle_id) {
         var params = this.getParams();
         params.salescycle_id = cycle_id === 'sales_0' ? null : cycle_id;
-        this.refs.sales_cycle_closer.setState({
-          'isShown': false,
-          'salesCycleCloseValue': 0,
-          'salesCycleID': params.salescycle_id
-        })
         this.transitionTo('activities_by', params);
         return false;
       },
