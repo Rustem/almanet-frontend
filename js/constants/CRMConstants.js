@@ -33,10 +33,7 @@ module.exports = {
         ADD_PRODUCT_TO_SALES_CYCLE: null,
         ADD_PRODUCT_TO_SALES_CYCLE_SUCCESS: null,
         ADD_PRODUCT_TO_SALES_CYCLE_FAIL: null,
-        SALES_CYCLE_SET_PENDING: null, 
-        SALES_CYCLE_SET_PENDING_SUCCESS: null,
         LOGOUT: null,
-
     }),
     PayloadSources: keyMirror({
         SERVER_ACTION: null,
