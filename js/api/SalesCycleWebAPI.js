@@ -44,15 +44,15 @@ module.exports = api = {
             success(obj);
         }, 0);
     },
-    add_product: function(salesCycleObject, success, failure) {
+    add_products: function(salesCycleObject, success, failure) {
         var rawSalesCycles = JSON.parse(localStorage.getItem('salescycles')) || [];
-        var curCycle = _.find(rawSalesCycles, function(sc){ return sc.id === salesCycleObject.id });
-        curCycle.products.push(salesCycleObject.product_id);
+        var curCycle = _.find(rawSalesCycles, function(sc){ return sc.id === salesCycleObject.salescycle_id });
+        curCycle.products = salesCycleObject.products;
         localStorage.setItem('salescycles', JSON.stringify(rawSalesCycles));
 
         // simulate success callback
         setTimeout(function() {
-            success(salesCycleObject);
+            success(curCycle);
         }, 0);
     }
 };

@@ -54,12 +54,12 @@ module.exports = {
     }.bind(this));
   },
 
-  add_product: function(object) {
+  add_products: function(object) {
     dispatcher.handleViewAction({
       type: ActionTypes.ADD_PRODUCT_TO_SALES_CYCLE,
       object: object
     });
-    SalesCycleWebAPI.add_product(object, function(salesCycle){
+    SalesCycleWebAPI.add_products(object, function(salesCycle){
       dispatcher.handleServerAction({
         type: ActionTypes.ADD_PRODUCT_TO_SALES_CYCLE_SUCCESS,
         object: salesCycle

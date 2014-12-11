@@ -5,30 +5,26 @@ var FormMixin = require('./FormMixin.react');
 var elements = require('./elements');
 var ProductRemoveableDropDownList = elements.ProductRemoveableDropDownList;
 
-var DEFAULT_PRODUCT = {
-    'feedback': null,
-};
-
 var AddProductMiniForm = React.createClass({
     mixins: [FormMixin],
-    // propTypes: {
-    //     onHandleSubmit: React.PropTypes.func,
-    //     onCancel: React.PropTypes.func,
-    //     current_user: React.PropTypes.object,
-    //     salescycle: React.PropTypes.string
-    // },
+    propTypes: {
+        onHandleSubmit: React.PropTypes.func,
+        onCancel: React.PropTypes.func,
+        salescycle_id: React.PropTypes.string,
+        // products: React.PropTypes.list,
+    },
 
     render: function() {
+        var form_value = _.extend({}, {
+            'products': this.props.products
+        });
         return (
-            <Form ref="add_product_form" value={DEFAULT_PRODUCT}
+            <Form ref="add_product_form" value={form_value}
                                   onSubmit={this.onHandleSubmit}>
-                <div className="inputLine">
-                    <ProductRemoveableDropDownList
-                        name="products"
-                        title=""
-                        filter_placeholder="Добавитьте продукт" />
-
-                </div>
+                <ProductRemoveableDropDownList
+                    name="products"
+                    title=""
+                    filter_placeholder="Добавьте продукт" />
                 <div className="space-vertical--compact"></div>
                 <div className="inputLine">
                     <button type="submit" className="btn btn--save">Сохранить</button>
@@ -43,9 +39,8 @@ var AddProductMiniForm = React.createClass({
         var errors = form.validate();
         if(!errors) {
             var object = {}, formValue = form.value();
-            object.author_id = this.props.current_user.id;
-            object.description = formValue.description;
-            object.feedback = formValue.feedback;
+            object.salescycle_id = this.props.salescycle_id;
+            object.products = formValue.products;
           this.props.onHandleSubmit(object);
         } else{
             alert(errors);

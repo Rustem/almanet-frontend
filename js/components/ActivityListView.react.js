@@ -131,8 +131,8 @@ var AddActivityWidget = React.createClass({
         var Component = null;
         if(this.shouldRenderComponent())
             Component = <AddActivityMiniForm current_user={this.props.current_user}
-                                             salescycle_id={this.props.salescycle_id}
-                                             onHandleSubmit={this.props.onHandleSubmit}/>
+                                             salescycle_id={this.props.current_cycle_id}
+                                             onHandleSubmit={this.props.onHandleSubmit} />
         return Component
     },
 });
@@ -165,7 +165,9 @@ var AddProductWidget = React.createClass({
     render: function(){
         var Component = null;
         if(this.shouldRenderComponent())
-            Component = <AddProductMiniForm />
+            Component = <AddProductMiniForm salescycle_id={this.props.current_cycle_id}
+                                            onHandleSubmit={this.props.onHandleSubmit}
+                                            products={this.getSalesCycle().products}/>
         return Component
     },
 });
@@ -528,8 +530,12 @@ var ActivityListView = React.createClass({
             this.state, {action: {$set: ACTIONS.CLOSE_SC}}));
     },
 
-    onAddEvent: function(newEvent) {
-        ActivityActionCreators.createActivity(newEvent);
+    onAddActivity: function(newActivity) {
+        ActivityActionCreators.createActivity(newActivity);
+    },
+
+    onAddProduct: function(object) {
+        SalesCycleActionCreators.add_products(object);
     },
 
     onCycleSelected: function(idx, cycle_choice) {
@@ -573,12 +579,6 @@ var ActivityListView = React.createClass({
             // new cycles created
             if(prev_state.sc_cnt < this.state.sc_cnt) {
                 var sc = SalesCycleStore.getLatestOne();
-
-                // // fake method, just to check add_product() method
-                // // TODO: replace this method to appropriate place according to interface
-                // sc.product_id = ProductStore.fakeGet().id
-                // SalesCycleActionCreators.add_product(sc);
-
                 this.navigateToSalesCycle(sc.id);
             }
         }.bind(this, this.state));
@@ -611,17 +611,14 @@ var ActivityListView = React.createClass({
                     <AddActivityWidget action_type={this.state.action}
                                        current_cycle_id={cycle_id} 
                                        current_user={this.context.user}
-                                       salescycle_id={this.getParams().salescycle_id || null} 
-                                       onHandleSubmit={this.onAddEvent} />
+                                       onHandleSubmit={this.onAddActivity} />
                     <AddProductWidget action_type={this.state.action}
                                       current_cycle_id={cycle_id} 
-                                      current_user={this.context.user}
-                                      salescycle_id={this.getParams().salescycle_id || null} />
+                                      onHandleSubmit={this.onAddProduct} />
                     <CloseCycleWidget action_type={this.state.action}
                                       current_cycle_id={cycle_id} 
                                       onCycleClosed={this.onCycleClosed} 
-                                      current_user={this.context.user}
-                                      salescycle_id={this.getParams().salescycle_id || null} />
+                                      current_user={this.context.user} />
                     {activities.map(this.renderActivity)}
                 </div> 
                 
