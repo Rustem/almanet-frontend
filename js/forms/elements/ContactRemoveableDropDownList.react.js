@@ -7,9 +7,7 @@ var RemoveableDropDownListWidget = inputs.RemoveableDropDownListWidget;
 var FormElementMixin = require('../FormElementMixin.react');
 var ContactStore = require('../../stores/ContactStore');
 
-
 var ContactRemoveableDropDownList = React.createClass({
-
     mixins : [FormElementMixin],
 
     renderContact: function(c) {

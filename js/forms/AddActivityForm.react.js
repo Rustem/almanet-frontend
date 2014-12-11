@@ -6,7 +6,6 @@ var Form = require('./Form.react');
 var FormElementMixin = require('./FormElementMixin.react');
 var inputs = require('./input');
 var ContentEditableInput = inputs.ContentEditableInput;
-var RemoveableDropDownListWidget = inputs.RemoveableDropDownListWidget;
 var elements = require('./elements');
 var ContactRemoveableDropDownList = elements.ContactRemoveableDropDownList;
 var ParticipantRemoveableDropDownList = elements.ParticipantRemoveableDropDownList;

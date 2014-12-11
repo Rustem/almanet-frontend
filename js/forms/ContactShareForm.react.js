@@ -67,7 +67,7 @@ var ColleaguesRemoveableDropDownList = React.createClass({
     render: function() {
         var props = _.extend({}, this.buildProps(), this.props);
         return <RemoveableDropDownListWidget {...props}
-                    onAdd={this.onAdd} onRemove={this.onRemove} />
+                    onAdd={this.onAdd} onRemove={this.onRemove} modal={true}/>
     }
 });
 

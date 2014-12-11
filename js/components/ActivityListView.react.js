@@ -19,6 +19,7 @@ var SalesCycleStore = require('../stores/SalesCycleStore');
 var SalesCycleCloser = require('./SalesCycleCloser.react');
 var SalesCycleCreateForm = require('../forms/SalesCycleCreateForm.react');
 var AddActivityMiniForm = require('../forms/AddActivityMiniForm.react');
+var AddProductMiniForm = require('../forms/AddProductMiniForm.react');
 var CRMConstants = require('../constants/CRMConstants');
 
 // probably not required
@@ -102,20 +103,69 @@ var SalesCycleControlBar = React.createClass({
 
 var AddActivityWidget = React.createClass({
     propTypes: {
-        // action_type: React.PropTypes.string.isRequired,
-        // current_cycle_id: React.PropTypes.string.isRequired,
+        action_type: React.PropTypes.string.isRequired,
+        current_cycle_id: React.PropTypes.string.isRequired,
+    },
+
+    get_current_action: function() {
+        return this.props.action_type;
+    },
+
+    getSalesCycle: function() {
+        return SalesCycleStore.get(this.props.current_cycle_id);
+    },
+
+    getCycleStatus: function() {
+        return this.getSalesCycle().status;
+    },
+
+    shouldRenderComponent: function() {
+        // TODO: make something with 'sales_0'
+        if(_.contains([null, undefined, 'sales_0'], this.props.current_cycle_id))
+          return false;
+        return this.get_current_action() == ACTIONS.ADD_ACTIVITY;
     },
 
     render: function(){
-        return (
-            <AddActivityMiniForm />
-        )
+        var Component = null;
+        if(this.shouldRenderComponent())
+            Component = <AddActivityMiniForm />
+        return Component
     },
 });
 
-// var AddProductWidget = React.creactClass({
-    
-// });
+var AddProductWidget = React.createClass({
+    propTypes: {
+        action_type: React.PropTypes.string.isRequired,
+        current_cycle_id: React.PropTypes.string.isRequired,
+    },
+
+    get_current_action: function() {
+        return this.props.action_type;
+    },
+
+    getSalesCycle: function() {
+        return SalesCycleStore.get(this.props.current_cycle_id);
+    },
+
+    getCycleStatus: function() {
+        return this.getSalesCycle().status;
+    },
+
+    shouldRenderComponent: function() {
+        // TODO: make something with 'sales_0'
+        if(_.contains([null, undefined, 'sales_0'], this.props.current_cycle_id))
+          return false;
+        return this.get_current_action() == ACTIONS.ADD_PRODUCT;
+    },
+
+    render: function(){
+        var Component = null;
+        if(this.shouldRenderComponent())
+            Component = <AddProductMiniForm />
+        return Component
+    },
+});
 
 // var CloseCycleWidget = React.creactClass({
     
@@ -421,21 +471,18 @@ var ActivityListView = React.createClass({
     },
 
     onActionActivity: function(evt) {
-        console.log('a');
         evt.preventDefault();
         this.setState(React.addons.update(
             this.state, {action: {$set: ACTIONS.ADD_ACTIVITY}}));
     },
 
     onActionProduct: function(evt) {
-        console.log('p');
         evt.preventDefault();
         this.setState(React.addons.update(
             this.state, {action: {$set: ACTIONS.ADD_PRODUCT}}));
     },
 
     onActionCycle: function(evt) {
-        console.log('c');
         evt.preventDefault();
         this.setState(React.addons.update(
             this.state, {action: {$set: ACTIONS.CLOSE_SC}}));
@@ -521,7 +568,10 @@ var ActivityListView = React.createClass({
                 </div>
 
                 <div className="page-body">
-                    <AddActivityWidget />
+                    <AddActivityWidget action_type={this.state.action}
+                                       current_cycle_id={cycle_id} />
+                    <AddProductWidget action_type={this.state.action}
+                                      current_cycle_id={cycle_id} />
                     {cycle_id === 'sales_0' && (<SalesCycleByAllSummary />) || (<SalesCycleSummary cycle_id={cycle_id} />)}
                     <SalesCycleCloser ref="sales_cycle_closer"
                                       salesCycleID={cycle_id}

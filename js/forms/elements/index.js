@@ -3,4 +3,5 @@ module.exports = {
   ParticipantRemoveableDropDownList: require('./ParticipantRemoveableDropDownList.react'),
   InputWithDropDown: require('./InputWithDropDown.react'),
   FeedbackDropDown: require('./FeedbackDropDown.react'),
+  ProductRemoveableDropDownList: require('./ProductRemoveableDropDownList.react'),
 };

@@ -114,13 +114,14 @@ var RemoveableDropDownListWidget = React.createClass({
     },
 
     render: function() {
+        var is_modal_class_name = this.props.modal ? "modal-inputLine" : "";
         return (
             <section className="hi">
-                <div className="modal-inputLine">
+                <div className={is_modal_class_name}>
                     <strong>{this.props.title}</strong>
                     {this.props.selected_object_keys.map(this.renderSelectedItem)}
                 </div>
-                <div className="modal-inputLine">
+                <div className={is_modal_class_name}>
                     <FilterableDropDownWidget filter_placeholder={this.props.filter_placeholder}
                                               choices={this.buildChoices()}
                                               onChange={this.onItemAdd} />

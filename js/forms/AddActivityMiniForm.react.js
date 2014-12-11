@@ -5,7 +5,6 @@ var FormMixin = require('./FormMixin.react');
 var elements = require('./elements');
 var InputWithDropDown = elements.InputWithDropDown;
 var FeedbackDropDown = elements.FeedbackDropDown;
-var DropDownBehaviour = require('./behaviours').DropDownBehaviour;
 
 // TODO: probably replace it to constants or get remotely (repeat in forms/AddActivityForm)
 var NOTE_TEMPLATES = [
