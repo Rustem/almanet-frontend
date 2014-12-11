@@ -495,7 +495,7 @@ var ActivityListView = React.createClass({
 
     getCyclesForCurrentContact: function() {
         var contact_id = this.getParams().id;
-        return SalesCycleStore.byContact(contact_id);
+        return SalesCycleStore.getCyclesForCurrentContact(contact_id);
     },
 
     buildChoices: function(){

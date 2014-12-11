@@ -5,6 +5,7 @@ var CRMConstants = require('../constants/CRMConstants');
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
 var SessionStore = require('./SessionStore');
 var ActivityStore = require('./ActivityStore');
+var ContactStore = require('./ContactStore');
 
 var SALES_CYCLE_STATUS = CRMConstants.SALES_CYCLE_STATUS;
 var ActionTypes = CRMConstants.ActionTypes;
@@ -50,6 +51,17 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
     getByIds: function(ids) {
         var salescycles = this.getAll();
         return _.filter(salescycles, function(c){ return _.indexOf(ids, c.id) !== -1 });
+    },
+
+    getCyclesForCurrentContact: function(contact_id) {
+        var contact = ContactStore.get(contact_id);
+        var rv = this.byContact(contact_id)
+        if (!contact.is_company)
+            return rv;
+        _.forEach(contact.contacts, function(c_id){
+            rv.push(this.byContact(c_id));
+        }.bind(this));
+        return _.flatten(rv);
     },
 
     getCreatedSalesCycle: function(obj) {
