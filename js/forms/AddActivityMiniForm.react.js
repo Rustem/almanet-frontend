@@ -29,12 +29,11 @@ var FEEDBACK_STATUSES = [
 
 var AddActivityMiniForm = React.createClass({
     mixins: [FormMixin],
-    // propTypes: {
-    //     onHandleSubmit: React.PropTypes.func,
-    //     onCancel: React.PropTypes.func,
-    //     current_user: React.PropTypes.object,
-    //     salescycle: React.PropTypes.string
-    // },
+    propTypes: {
+        onHandleSubmit: React.PropTypes.func,
+        current_user: React.PropTypes.object,
+        salescycle_id: React.PropTypes.string
+    },
 
     render: function() {
         return (
@@ -58,6 +57,7 @@ var AddActivityMiniForm = React.createClass({
         if(!errors) {
             var object = {}, formValue = form.value();
             object.author_id = this.props.current_user.id;
+            object.salescycle_id = this.props.salescycle_id;
             object.description = formValue.description;
             object.feedback = formValue.feedback;
           this.props.onHandleSubmit(object);

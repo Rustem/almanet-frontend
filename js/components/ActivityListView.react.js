@@ -130,7 +130,9 @@ var AddActivityWidget = React.createClass({
     render: function(){
         var Component = null;
         if(this.shouldRenderComponent())
-            Component = <AddActivityMiniForm />
+            Component = <AddActivityMiniForm current_user={this.props.current_user}
+                                             salescycle_id={this.props.salescycle_id}
+                                             onHandleSubmit={this.props.onHandleSubmit}/>
         return Component
     },
 });
@@ -607,12 +609,19 @@ var ActivityListView = React.createClass({
 
                 <div className="page-body">
                     <AddActivityWidget action_type={this.state.action}
-                                       current_cycle_id={cycle_id} />
+                                       current_cycle_id={cycle_id} 
+                                       current_user={this.context.user}
+                                       salescycle_id={this.getParams().salescycle_id || null} 
+                                       onHandleSubmit={this.onAddEvent} />
                     <AddProductWidget action_type={this.state.action}
-                                      current_cycle_id={cycle_id} />
+                                      current_cycle_id={cycle_id} 
+                                      current_user={this.context.user}
+                                      salescycle_id={this.getParams().salescycle_id || null} />
                     <CloseCycleWidget action_type={this.state.action}
                                       current_cycle_id={cycle_id} 
-                                      onCycleClosed={this.onCycleClosed} />
+                                      onCycleClosed={this.onCycleClosed} 
+                                      current_user={this.context.user}
+                                      salescycle_id={this.getParams().salescycle_id || null} />
                     {activities.map(this.renderActivity)}
                 </div> 
                 
