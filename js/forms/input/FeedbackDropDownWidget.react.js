@@ -2,7 +2,7 @@ var _ = require('lodash');
 
 var React = require('react/addons');
 var cx = React.addons.classSet;
-var DropDownBehaviour = require('../mixins/DropDownBehaviour');
+var DropDownBehaviour = require('../behaviours/DropDownBehaviour');
 var IconSvg = require('../../components/common/IconSvg.react');
 
 var FeedbackDropDownWidget = React.createClass({

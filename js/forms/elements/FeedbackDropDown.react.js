@@ -10,6 +10,10 @@ var FormElementMixin = require('../FormElementMixin.react');
 var FeedbackDropDown = React.createClass({
     mixins: [FormElementMixin],
 
+    propTypes: {
+        simple: React.PropTypes.bool
+    },
+
     onChange: function(choice_idx, choice) {
         this.updateValue(this.prepValue(this.props.name, choice[0]));
     },

@@ -119,7 +119,7 @@ var AddActivityWidget = React.createClass({
         // TODO: make something with 'sales_0'
         if(_.contains([null, undefined, 'sales_0'], this.props.current_cycle_id))
           return false;
-        return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED) && 
+        return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED) &&
                this.get_current_action() == ACTIONS.ADD_ACTIVITY;
     },
 
@@ -155,7 +155,7 @@ var AddProductWidget = React.createClass({
         // TODO: make something with 'sales_0'
         if(_.contains([null, undefined, 'sales_0'], this.props.current_cycle_id))
           return false;
-        return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED) && 
+        return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED) &&
                this.get_current_action() == ACTIONS.ADD_PRODUCT;
     },
 
@@ -191,7 +191,7 @@ var CloseCycleWidget = React.createClass({
         // TODO: make something with 'sales_0'
         if(_.contains([null, undefined, 'sales_0'], this.props.current_cycle_id))
           return false;
-        return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED) && 
+        return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED) &&
                this.get_current_action() == ACTIONS.CLOSE_SC;
     },
 
@@ -595,7 +595,7 @@ var ActivityListView = React.createClass({
                                             onCycleCreated={this.onCycleCreated}
                                             current_cycle_id={cycle_id}
                                             choices={this.buildChoices()} />
-                    <SalesCycleControlBar onActionActivity={this.onActionActivity} 
+                    <SalesCycleControlBar onActionActivity={this.onActionActivity}
                                           onActionProduct={this.onActionProduct}
                                           onActionCycle={this.onActionCycle}
                                           action_type={this.state.action}
@@ -604,19 +604,19 @@ var ActivityListView = React.createClass({
 
                 <div className="page-body">
                     <AddActivityWidget action_type={this.state.action}
-                                       current_cycle_id={cycle_id} 
+                                       current_cycle_id={cycle_id}
                                        current_user={this.context.user}
                                        onHandleSubmit={this.onAddActivity} />
                     <AddProductWidget action_type={this.state.action}
-                                      current_cycle_id={cycle_id} 
+                                      current_cycle_id={cycle_id}
                                       onHandleSubmit={this.onAddProduct} />
                     <CloseCycleWidget action_type={this.state.action}
-                                      current_cycle_id={cycle_id} 
-                                      onCycleClosed={this.onCycleClosed} 
+                                      current_cycle_id={cycle_id}
+                                      onCycleClosed={this.onCycleClosed}
                                       current_user={this.context.user} />
                     {activities.map(this.renderActivity)}
-                </div> 
-                
+                </div>
+
             </div>
         );
 //                 <Modal isOpen={this.getAddEventModalState}
@@ -629,7 +629,7 @@ var ActivityListView = React.createClass({
 //                         onCancel={this.resetState} />
 //                 </Modal>
     }
-    
+
 
 });
 

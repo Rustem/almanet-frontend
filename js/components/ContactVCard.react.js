@@ -75,7 +75,7 @@ var ContactVCard = React.createClass({
 
     renderContacts: function(contact) {
       if(contact.contacts == undefined)
-        return null;
+          return null;
       return (
         <div className="inputLine inputLine--vcardRow">
           <div className="row">
@@ -99,6 +99,7 @@ var ContactVCard = React.createClass({
 
     render_read: function() {
         var contact = this.props.contact;
+        var RelatedContactsWidget = this.renderContacts(contact);
         return (
             <div className="contact">
                 <div className="inputLine">
@@ -139,9 +140,9 @@ var ContactVCard = React.createClass({
                     </div>
                   </div>
                 </div>
-                <div className="space-verticalBorder"></div>
+                {RelatedContactsWidget ? <div className="space-verticalBorder"></div> : null}
+                {RelatedContactsWidget}
 
-                {this.renderContacts(contact)}
 
             </div>
         );

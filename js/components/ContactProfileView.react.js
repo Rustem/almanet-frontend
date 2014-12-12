@@ -98,11 +98,13 @@ var ContactProfileView = React.createClass({
     componentDidMount: function() {
         ShareStore.addChangeListener(this.resetState);
         ContactStore.addChangeListener(this.resetState);
+        SalesCycleStore.addChangeListener(this.resetState);
     },
 
     componentWillUnmount: function() {
         ShareStore.removeChangeListener(this.resetState);
         ContactStore.removeChangeListener(this.resetState);
+        SalesCycleStore.removeChangeListener(this.resetState);
     },
 
     isShareFormActive: function() {
@@ -118,10 +120,10 @@ var ContactProfileView = React.createClass({
     },
 
     getProducts: function() {
-        var id = this.getParams().id;
-        return _.uniq(_.reduce(SalesCycleStore.getCyclesForCurrentContact(id), function(rv, sc) {
+        var cid = this.getParams().id;
+        return _.uniq(_.reduce(SalesCycleStore.getCyclesForCurrentContact(cid), function(rv, sc) {
                     rv.push(sc.products);
-                    return _.flatten(rv);
+                    return _.compact(_.flatten(rv));
                 }, []));
     },
 
@@ -159,7 +161,6 @@ var ContactProfileView = React.createClass({
             }.bind(this)} href="#" className="text-good text-padLeft">Сохранить</a>)
         }
         var products = this.getProducts();
-        console.log(products);
         return (
             <div>
             <Header />
