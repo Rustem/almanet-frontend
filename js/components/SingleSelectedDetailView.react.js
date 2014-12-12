@@ -1,7 +1,3 @@
-/**
- * @jsx React.DOM
- */
-
 var _ = require('lodash');
 var React = require('react');
 var keyMirror = require('react/lib/keyMirror');
@@ -24,7 +20,7 @@ var Crumb = require('./common/BreadCrumb.react').Crumb;
 var IconSvg = require('./common/IconSvg.react');
 var Modal = require('./common/Modal.react');
 var AppContextMixin = require('../mixins/AppContextMixin');
-var ColdBase = require('./master_views').ColdBase;
+var AllBase = require('./master_views').AllBase;
 var AddActivityForm = require('../forms/AddActivityForm.react');
 var ContactShareForm = require('../forms/ContactShareForm.react');
 var VIEW_MODE = require('../constants/CRMConstants').CONTACT_VIEW_MODE;
@@ -38,8 +34,8 @@ var ACTIONS = keyMirror({
 })
 
 var ControlBar = React.createClass({
-    mixins : [Router.State],
     propTypes: {
+        contact_id: React.PropTypes.string.isRequired,
         onUserAction: React.PropTypes.func
     },
     render: function() {
@@ -69,7 +65,7 @@ var ControlBar = React.createClass({
               Редактировать
             </div>
         </a>
-        <Link to='contact_profile' params={this.getParams()} className="row row--oneliner row--link" href="#">
+        <Link to='contact_profile' params={{id: this.props.contact_id}} className="row row--oneliner row--link" href="#">
             <div className="row-icon">
                 <IconSvg iconKey='profile' />
             </div>
@@ -83,12 +79,14 @@ var ControlBar = React.createClass({
 
 });
 
-var ContactSelectedDetailView = React.createClass({
+var SingleSelectedDetailView = React.createClass({
     mixins: [AppContextMixin],
+
     propTypes: {
         contact_id: React.PropTypes.string,
         onHandleEditContact: React.PropTypes.func
     },
+
     getInitialState: function() {
         return {
             action: ACTIONS.NO_ACTION,
@@ -140,7 +138,8 @@ var ContactSelectedDetailView = React.createClass({
     render_body: function() {
         return (
             <div className="page-body">
-            <ControlBar onUserAction={this.onUserAction} />
+            <ControlBar contact_id={this.props.contact_id}
+                        onUserAction={this.onUserAction} />
             <div className="space-vertical"></div>
             <ContactVCard onHandleSubmit={this.onContactUpdate}
                           contact={this.getContact()}
@@ -149,14 +148,6 @@ var ContactSelectedDetailView = React.createClass({
         )
     },
 
-    render_empty_body: function() {
-        return (
-            <div className="page-body">
-                <p>Пожалуйста выберите хотя бы одного контакта для дальнейшей
-                работы</p>
-            </div>
-        )
-    },
     render: function() {
         var contact = this.getContact();
         return (
@@ -164,7 +155,7 @@ var ContactSelectedDetailView = React.createClass({
                 <div className="page-header">
                     <Crumb />
                 </div>
-                {contact && this.render_body() || this.render_empty_body()}
+                {this.render_body()}
                 <Modal isOpen={this.getAddEventModalState()}
                        onRequestClose={this.resetState}
                        modalTitle='ДОБАВЛЕНИЕ СОБЫТИЯ'>
@@ -184,147 +175,7 @@ var ContactSelectedDetailView = React.createClass({
             </div>
         )
     },
-
 });
 
 
-var ShareContactSelectedView = React.createClass({
-    mixins : [Router.Navigation, Router.State],
-
-    getInitialState: function() {
-        var selection_map = {};
-        var contacts = ContactStore.getByDate(true);
-        var selected_id = this.getParams().id;
-        for(var i = 0; i<contacts.length; i++) {
-            selection_map[contacts[i].id] = false;
-            if(contacts[i].id === selected_id) {
-                selection_map[contacts[i].id] = true;
-            }
-        }
-        return {
-            contacts: contacts,
-            selection_map: selection_map,
-            search_bar: {select_all: false, filter_text: ''}
-        }
-    },
-
-    getFilterText: function() {
-        return this.state.search_bar.filter_text;
-    },
-
-    getContacts: function() {
-        return this.state.contacts;
-    },
-
-    getSelectMap: function() {
-        return this.state.selection_map;
-    },
-
-    componentDidMount: function() {
-        ContactStore.addChangeListener(this._onChange);
-    },
-
-    componentWillUnmount: function(nextProps, nextState) {
-        ContactStore.removeChangeListener(this._onChange);
-    },
-
-    componentDidUpdate: function(prevProps, prevState) {
-        var cids = [], n = 0;
-        for(var contact_id in this.state.selection_map) {
-            var is_selected = this.state.selection_map[contact_id];
-            if(is_selected) {
-                cids.push(contact_id);
-                n += 1;
-            }
-        }
-        if(n === 0) {
-            var route = BreadcrumbStore.prev();
-            this.transitionTo(route.name, route.params, route.query);
-        } else if(n > 1) {
-            this.transitionTo('contacts_selected', {'ids': cids});
-        }
-        return n === 1;
-    },
-
-    onFilterBarUpdate: function(value) {
-        var is_selected = value.select_all;
-        var _map = {};
-        for(var contact_id in this.state.selection_map) {
-            _map[contact_id] = is_selected;
-        }
-        var newState = React.addons.update(this.state, {
-            selection_map: {$set: _map},
-            search_bar: {$set: value}
-        });
-        this.setState(newState);
-    },
-
-    onToggleListItem: function(contact_id, is_selected) {
-        var updItem = {};
-        updItem[contact_id] = is_selected;
-        var newState = React.addons.update(this.state, {
-            selection_map: {$merge: updItem}
-        });
-        this.setState(newState);
-    },
-
-    onUserAction: function(actionType, evt) {
-        evt.preventDefault();
-        var selected_contacts = this.refs.coldbase_list.getSelectedContacts();
-        if(_.size(selected_contacts) == 0) {
-            console.log('Choose at least one contact');
-            return
-        }
-        console.log('You has chosen to ' + actionType, selected_contacts);
-    },
-    onHandleEditContact: function(contact_id, updContact) {
-        ContactActionCreators.editContact(contact_id, updContact);
-    },
-    render: function() {
-        var contact_id = null;
-        for(var cid in this.state.selection_map) {
-            if(this.state.selection_map[cid] === true) {
-                contact_id = cid;
-                break;
-            }
-        }
-        return (
-          <div>
-            <Header />
-            <div>
-                <div className="body-master">
-                    <div className="page">
-                        <div className="page-header">
-                            <BreadCrumb slice={[1, -1]} />
-                            <ColdBase.FilterBar
-                                ref='filter_bar'
-                                value={this.state.search_bar}
-                                onHandleUserInput={this.onFilterBarUpdate}
-                                onUserAction={this.onUserAction} />
-                        </div>
-                        <ColdBase.ColdBaseList
-                            ref="coldbase_list"
-                            filter_text={this.getFilterText()}
-                            contacts={this.getContacts()}
-                            selection_map={this.getSelectMap()}
-                            onChangeState={this.onToggleListItem} />
-                    </div>
-                </div>
-                <div className="body-detail">
-                    <ContactSelectedDetailView
-                        contact_id={contact_id}
-                        onHandleEditContact={this.onHandleEditContact.bind(null, contact_id)} />
-                </div>
-            </div>
-            <Footer />
-          </div>
-        );
-    },
-    _onChange: function() {
-        this.setState(this.getInitialState());
-    }
-
-});
-
-
-module.exports = ShareContactSelectedView;
+module.exports = SingleSelectedDetailView;

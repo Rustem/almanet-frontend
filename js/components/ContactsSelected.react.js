@@ -6,162 +6,38 @@ var _ = require('lodash');
 var React = require('react');
 var keyMirror = require('react/lib/keyMirror');
 var Router = require('react-router');
-var RouteHandler = Router.RouteHandler;
-var master_views = require('./master_views');
 var Header = require('./Header.react');
 var Footer = require('./Footer.react');
-var ShareStore = require('../stores/ShareStore');
 var ContactStore = require('../stores/ContactStore');
-var BreadcrumbStore = require('../stores/BreadcrumbStore');
 var ContactActionCreators = require('../actions/ContactActionCreators');
-var UserActionCreators = require('../actions/UserActionCreators');
-var ContactVCard = require('./ContactVCard.react');
 var BreadCrumb = require('./common/BreadCrumb.react');
-var Crumb = require('./common/BreadCrumb.react').Crumb;
-var IconSvg = require('./common/IconSvg.react');
-var ColdBase = require('./master_views').ColdBase;
-var AppContextMixin = require('../mixins/AppContextMixin');
-var Modal = require('./common/Modal.react');
-var AddActivityForm = require('../forms/AddActivityForm.react');
-var ContactShareForm = require('../forms/ContactShareForm.react');
-var VIEW_MODE = require('../constants/CRMConstants').CONTACT_VIEW_MODE;
+var AllBase = require('./master_views').AllBase;
+var SingleSelectedDetailView = require('./SingleSelectedDetailView.react');
+var MultipleSelectedDetailView = require('./MultipleSelectedDetailView.react');
 
-var ACTIONS = keyMirror({
-    ADD_EVENT: null,
-    SHARE: null
-})
+var _selected_contacts = [];
 
-var ControlBar = React.createClass({
-    propTypes: {
-        onUserAction: React.PropTypes.func
-    },
+var EmptySelectedDetailView = React.createClass({
+
     render: function() {
-        return (
-        <div class='js-contact-actions'>
-        <a onClick={this.props.onUserAction.bind(null, ACTIONS.ADD_EVENT)} className="row row--oneliner row--link">
-            <div className="row-icon text-good">
-                <IconSvg iconKey='add' />
-            </div>
-            <div className="row-body">
-              Добавить событие
-            </div>
-        </a>
-        <a onClick={this.props.onUserAction.bind(null, ACTIONS.SHARE)} className="row row--oneliner row--link">
-            <div className="row-icon">
-                <IconSvg iconKey='share' />
-            </div>
-            <div className="row-body">
-              Поделиться
-            </div>
-        </a>
-        </div>
-        )
+        return <div />
     }
 
 });
 
-var ContactsSelectedDetailView = React.createClass({
-    mixins: [AppContextMixin],
 
-    propTypes: {
-        contact_ids: React.PropTypes.array,
-        onHandleEditContact: React.PropTypes.func
-    },
+var ContactsSelectedView = React.createClass({
 
-    getInitialState: function() {
-        return {
-            action: ACTIONS.NO_ACTION,
-        }
-    },
-
-    getContacts: function() {
-        return _.map(this.props.contact_ids, ContactStore.get)
-    },
-
-    getAddEventModalState: function() {
-        return this.state.action === ACTIONS.ADD_EVENT;
-    },
-
-    isShareFormActive: function() {
-        return this.state.action === ACTIONS.SHARE;
-    },
-
-    componentDidMount: function() {
-        ShareStore.addChangeListener(this.resetState);
-        ContactStore.addChangeListener(this.resetState);
-    },
-
-    componentWillUnmount: function() {
-        ShareStore.removeChangeListener(this.resetState);
-        ContactStore.removeChangeListener(this.resetState);
-    },
-
-    onAddEvent: function(newEvent) {
-        // this.setState({mode: VIEW_MODE.READ});
-        console.log("ADd event", newEvent);
-        this.resetState();
-    },
-
-    onShareSubmit: function(shares){
-        ContactActionCreators.createShares(shares);
-        // this.resetState();
-    },
-
-    onUserAction: function(actionType, evt) {
-        this.setState({action: actionType});
-    },
-
-    resetState: function() {
-        this.setState({action: ACTIONS.NO_ACTION});
-    },
-
-    render: function() {
-        return (
-            <div className="page page--compact">
-                <div className="page-header">
-                    <Crumb />
-                </div>
-                <div className="page-body">
-                    <ControlBar onUserAction={this.onUserAction} />
-                    <div className="space-vertical"></div>
-                    <div className="inputLine">
-                        <strong>{this.props.contact_ids.length} контакта</strong>
-                    </div>
-                </div>
-                <Modal isOpen={this.getAddEventModalState()}
-                       onRequestClose={this.resetState}
-                       modalTitle='ДОБАВЛЕНИЕ СОБЫТИЯ'>
-                    <AddActivityForm
-                        contact_ids={this.props.contact_ids}
-                        current_user={this.context.user}
-                        onHandleSubmit={this.onAddEvent} />
-                </Modal>
-                <Modal isOpen={this.isShareFormActive()}
-                   modalTitle='ПОДЕЛИТЬСЯ СПИСКОМ'
-                   onRequestClose={this.resetState} >
-                    <ContactShareForm
-                        contact_ids={this.props.contact_ids}
-                        current_user={this.context.user}
-                        onHandleSubmit={this.onShareSubmit} />
-                </Modal>
-            </div>
-        )
-    },
-
-});
-
-
-var ShareContactsSelectedView = React.createClass({
-    mixins : [Router.Navigation, Router.State],
+    mixins: [Router.State],
 
     getInitialState: function() {
         var selection_map = {};
         var contacts = ContactStore.getByDate(true);
-        var selected_ids = this.getParams().ids;
+        _selected_contacts = this.getQuery()['ids'] || [];
         var cnt = 0;
         for(var i = 0; i<contacts.length; i++) {
             selection_map[contacts[i].id] = false;
-            if(selected_ids.indexOf(contacts[i].id) > -1) {
+            if(_selected_contacts.indexOf(contacts[i].id) > -1) {
                 selection_map[contacts[i].id] = true;
                 cnt += 1
             }
@@ -194,35 +70,52 @@ var ShareContactsSelectedView = React.createClass({
         ContactStore.removeChangeListener(this._onChange);
     },
 
-    componentDidUpdate: function(prevProps, prevState) {
-        var ids = [], n = 0;
-        for(var contact_id in this.state.selection_map) {
-            var is_selected = this.state.selection_map[contact_id];
-            if(is_selected) {
-                ids.push(contact_id);
-                n += 1;
+    shouldComponentUpdate: function(nextProps, nextState) {
+        var cur_ids = [], n = 0;
+
+        function getSelectedIds(_map) {
+            var cids = [];
+
+            for(var contact_id in _map) {
+                var is_selected = _map[contact_id];
+                if(is_selected) {
+                    cids.push(contact_id);
+                }
             }
+            return cids;
         }
-        if(n === 0) {
-            var route = BreadcrumbStore.prev();
-            this.transitionTo(route.name, route.params, route.query);
-        } else if(n === 1) {
-            this.transitionTo('contact_selected', {'id': ids[0]});
-        } else {
-            this.transitionTo('contacts_selected', {'ids': ids});
-        }
-        return n > 1;
+
+        cur_ids = getSelectedIds(nextState.selection_map);
+        _selected_contacts = cur_ids;
+        return true;
     },
 
-    onHandleUserInput: function(value) {
-        var is_selected = value.select_all;
-        var _map = {};
-        for(var contact_id in this.state.selection_map) {
-            _map[contact_id] = is_selected;
+    onFilterBarUpdate: function(value) {
+        var _map = {}, changed = value.select_all ^ this.state.search_bar.select_all,
+            contacts = null;
+        if(value.filter_text) {
+            contacts = ContactStore.fuzzySearch(value.filter_text, {'asc': false});
+        } else {
+            contacts = ContactStore.getByDate(true);
         }
+        for(var contact_id in this.state.selection_map) {
+            _map[contact_id] = false;
+        }
+        for(var i = 0; i<contacts.length; i++) {
+            contact_id = contacts[i].id;
+            if(changed) {
+                _map[contact_id] = value.select_all;
+            } else if(value.select_all) {
+                _map[contact_id] = true;
+            } else {
+                _map[contact_id] = this.state.selection_map[contact_id];
+            }
+        }
+
         var newState = React.addons.update(this.state, {
+            contacts: {$set: contacts},
             selection_map: {$set: _map},
-            search_bar: {$set: value}
+            search_bar: {$set: value},
         });
         this.setState(newState);
     },
@@ -238,7 +131,7 @@ var ShareContactsSelectedView = React.createClass({
 
     onUserAction: function(actionType, evt) {
         evt.preventDefault();
-        var selected_contacts = this.refs.coldbase_list.getSelectedContacts();
+        var selected_contacts = this.refs.allbase_list.getSelectedContacts();
         if(_.size(selected_contacts) == 0) {
             console.log('Choose at least one contact');
             return
@@ -246,15 +139,29 @@ var ShareContactsSelectedView = React.createClass({
         console.log('You has chosen to ' + actionType, selected_contacts);
     },
 
+    onHandleEditContact: function(contact_id, updContact) {
+        ContactActionCreators.editContact(contact_id, updContact);
+    },
+
     render: function() {
-        var contact_ids = [];
-        var select_map = this.getSelectMap();
-        for(var i = 0; i<this.state.contacts.length; i++) {
-            var c = this.state.contacts[i];
-            if(select_map[c.id] === true) {
-                contact_ids.push(c.id);
-            }
+        var contact_ids = [], DetailView = null;
+        for(var contact_id in this.state.selection_map)
+            if(this.state.selection_map[contact_id])
+                contact_ids.push(contact_id);
+        console.log('hi')
+        if(contact_ids.length === 0) {
+            DetailView = (<EmptySelectedDetailView />);
+        } else if(contact_ids.length === 1) {
+            DetailView = (
+                <SingleSelectedDetailView contact_id={contact_ids[0]}
+                                          onHandleEditContact={this.onHandleEditContact.bind(null, contact_ids[0])} />
+            );
+        } else {
+            DetailView = (
+                <MultipleSelectedDetailView contact_ids={contact_ids} />
+            );
         }
+
         return (
           <div>
             <Header />
@@ -263,22 +170,21 @@ var ShareContactsSelectedView = React.createClass({
                     <div className="page">
                         <div className="page-header">
                             <BreadCrumb slice={[1, -1]} />
-                            <ColdBase.FilterBar
+                            <AllBase.FilterBar
                                 ref='filter_bar'
                                 value={this.state.search_bar}
-                                onHandleUserInput={this.onHandleUserInput}
+                                onHandleUserInput={this.onFilterBarUpdate}
                                 onUserAction={this.onUserAction} />
                         </div>
-                        <ColdBase.ColdBaseList
-                            ref="coldbase_list"
-                            filter_text={this.getFilterText()}
+                        <AllBase.AllBaseList
+                            ref="allbase_list"
                             contacts={this.getContacts()}
                             selection_map={this.getSelectMap()}
                             onChangeState={this.onToggleListItem} />
                     </div>
                 </div>
                 <div className="body-detail">
-                    <ContactsSelectedDetailView contact_ids={contact_ids} />
+                    {DetailView}
                 </div>
             </div>
             <Footer />
@@ -292,4 +198,4 @@ var ShareContactsSelectedView = React.createClass({
 });
 
 
-module.exports = ShareContactsSelectedView;
+module.exports = ContactsSelectedView;

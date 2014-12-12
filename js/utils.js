@@ -4,6 +4,7 @@
 'use strict';
 
 var _ = require('lodash');
+var Fuse = require('./libs/fuse');
 
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
@@ -79,6 +80,22 @@ String.prototype.interpolate = function(props) {
     });
 };
 
+function fuzzySearch(collection, search_str, options) {
+  if(options === undefined) {
+      options = {};
+  }
+  options = _.extend({}, {
+      'keys': []
+  }, options);
+  var searchOptions = {
+      keys: options['keys']
+  };
+
+  var f = new Fuse(collection, searchOptions);
+  collection = f.search(search_str);
+  return collection;
+}
+
 module.exports = {
   extractIds: extractIds,
   mergeInto: mergeInto,
@@ -87,4 +104,5 @@ module.exports = {
   emptyFunction: emptyFunction,
   isString: isString,
   capitalize: capitalize,
-  timeToSeconds: timeToSeconds};
+  timeToSeconds: timeToSeconds,
+  fuzzySearch: fuzzySearch};

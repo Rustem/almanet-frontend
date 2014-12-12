@@ -8,6 +8,7 @@ var React = require('react/addons');
 var cx        = React.addons.classSet;
 var Router = require('react-router');
 var capitalize = require('../../utils').capitalize;
+var fuzzySearch = require('../../utils').fuzzySearch;
 var ActiveState = Router.ActiveState;
 var Link = Router.Link;
 var IconSvg = require('../common/IconSvg.react');
@@ -318,7 +319,6 @@ var LeadBaseDetailView = React.createClass({
     componentDidUpdate: function(prevProps, prevState) {
         var cur_map = prevState.selection_map,
             next_map = this.state.selection_map;
-        console.log(next_map);
 
         function getSelectedList(map) {
             var rv = [];
@@ -341,16 +341,10 @@ var LeadBaseDetailView = React.createClass({
                 return;
             }
         }
-        if(next_ids.length === 1) {
-            setTimeout(function() {
-                this.transitionTo('contact_selected', {'id': next_ids[0]});
-            }.bind(this), 0);
 
-        } else {
-            setTimeout(function() {
-                this.transitionTo('contacts_selected', {'ids': next_ids});
-            }.bind(this), 0);
-        }
+        setTimeout(function() {
+            this.transitionTo('contacts_selected', {}, {'ids': next_ids});
+        }.bind(this), 0);
 
     },
 
@@ -359,14 +353,33 @@ var LeadBaseDetailView = React.createClass({
     },
 
     onFilterBarUpdate: function(value) {
-        var is_selected = value.select_all;
-        var _map = {}, selected_items = 0;
-        for(var contact_id in this.state.selection_map) {
-            _map[contact_id] = is_selected;
+        var _map = {}, changed = value.select_all ^ this.state.search_bar.select_all,
+            contacts = null;
+        if(value.filter_text) {
+            contacts = fuzzySearch(
+                this.state.contacts, value.filter_text, {
+                    'keys': ['fn', 'emails.value']});
+        } else {
+            contacts = ContactStore.getLeads(true);
         }
+        for(var contact_id in this.state.selection_map) {
+            _map[contact_id] = false;
+        }
+        for(var i = 0; i<contacts.length; i++) {
+            contact_id = contacts[i].id;
+            if(changed) {
+                _map[contact_id] = value.select_all;
+            } else if(value.select_all) {
+                _map[contact_id] = true;
+            } else {
+                _map[contact_id] = this.state.selection_map[contact_id];
+            }
+        }
+
         var newState = React.addons.update(this.state, {
+            contacts: {$set: contacts},
             selection_map: {$set: _map},
-            search_bar: {$set: value}
+            search_bar: {$set: value},
         });
         this.setState(newState);
     },

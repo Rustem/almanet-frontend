@@ -374,25 +374,17 @@ var SharedContactDetailView = React.createClass({
                 return;
             }
         }
-
-        if(next_ids.length === 1) {
-            setTimeout(function() {
-                this.transitionTo('contact_selected', {'id': next_ids[0]});
-            }.bind(this), 0);
-
-        } else {
-            setTimeout(function() {
-                this.transitionTo('contacts_selected', {'ids': next_ids});
-            }.bind(this), 0);
-        }
+        setTimeout(function() {
+            this.transitionTo('contacts_selected', {}, {'ids': next_ids});
+        }.bind(this), 0);
 
     },
 
     onFilterBarUpdate: function(value) {
         var is_selected = value.select_all;
         var _map = {};
-        for(var contact_id in this.state.selection_map) {
-            _map[contact_id] = is_selected;
+        for(var share_id in this.state.selection_map) {
+            _map[share_id] = is_selected;
         }
         var newState = React.addons.update(this.state, {
             selection_map: {$set: _map},
