@@ -543,16 +543,16 @@ var ActivityListView = React.createClass({
 
     onCycleCreated: function(salesCycleObject) {
         salesCycleObject.contact_id = this.getParams().id;
-        salesCycleObject.author_id = this.context.user.id;
+        salesCycleObject.author_id = this.getUser().id;
         SalesCycleActionCreators.create(salesCycleObject);
     },
 
     onCycleClosed: function(salesCycleObject) {
         var close_activity = {
-            author_id: this.context.user.id,
+            author_id: this.getUser().id,
             description: "Цикл закрыт. Сумма: " + salesCycleObject.real_value,
             feedback: 'outcome',
-            participant_ids: [this.context.user.id],
+            participant_ids: [this.getUser().id],
             salescycle_id: salesCycleObject.id,
             duration: null
         }
@@ -605,7 +605,7 @@ var ActivityListView = React.createClass({
                 <div className="page-body">
                     <AddActivityWidget action_type={this.state.action}
                                        current_cycle_id={cycle_id}
-                                       current_user={this.context.user}
+                                       current_user={this.getUser()}
                                        onHandleSubmit={this.onAddActivity} />
                     <AddProductWidget action_type={this.state.action}
                                       current_cycle_id={cycle_id}
@@ -613,7 +613,7 @@ var ActivityListView = React.createClass({
                     <CloseCycleWidget action_type={this.state.action}
                                       current_cycle_id={cycle_id}
                                       onCycleClosed={this.onCycleClosed}
-                                      current_user={this.context.user} />
+                                      current_user={this.getUser()} />
                     {activities.map(this.renderActivity)}
                 </div>
 
@@ -624,7 +624,7 @@ var ActivityListView = React.createClass({
 //                        modalTitle='ДОБАВЛЕНИЕ СОБЫТИЯ'>
 //                     <AddActivityForm
 //                         salescycle={this.getParams().salescycle_id || null}
-//                         current_user={this.context.user}
+//                         current_user={this.getUser()}
 //                         onHandleSubmit={this.onAddEvent}
 //                         onCancel={this.resetState} />
 //                 </Modal>

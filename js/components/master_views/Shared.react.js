@@ -162,7 +162,7 @@ var ShareListItem = React.createClass({
     },
     getAuthorName: function() {
         // TODO: should get user from store
-        return this.context.user.first_name;
+        return this.getUser().first_name;
     },
     getTimeAt: function() {
         return this.props.share.at

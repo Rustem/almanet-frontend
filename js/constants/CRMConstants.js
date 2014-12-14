@@ -33,6 +33,9 @@ module.exports = {
         ADD_PRODUCT_TO_SALES_CYCLE: null,
         ADD_PRODUCT_TO_SALES_CYCLE_SUCCESS: null,
         ADD_PRODUCT_TO_SALES_CYCLE_FAIL: null,
+        USER_READ_NOTIFICATION: null,
+        USER_READ_NOTIFICATION_SUCCESS: null,
+        USER_READ_NOTIFICATION_FAIL: null,
         LOGOUT: null,
     }),
     PayloadSources: keyMirror({

@@ -190,7 +190,7 @@ var ContactProfileView = React.createClass({
                             onRequestClose={this.resetState} >
                         <ContactShareForm
                             contact_ids={[this.getParams().id]}
-                            current_user={this.context.user}
+                            current_user={this.getUser()}
                             onHandleSubmit={this.onShareSubmit} />
                     </Modal>
                 </div>

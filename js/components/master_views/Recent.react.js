@@ -415,7 +415,7 @@ var RecentDetailView = React.createClass({
                    onRequestClose={this.resetActions} >
                 <ContactShareForm
                     contact_ids={cids}
-                    current_user={this.context.user}
+                    current_user={this.getUser()}
                     onHandleSubmit={this.onShareSubmit} />
             </Modal>
         </div>

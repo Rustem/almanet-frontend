@@ -14,7 +14,8 @@ var NotificationContactCreateView = React.createClass({
     mixins : [AppContextMixin],
 
     propTypes: {
-        n: React.PropTypes.object
+        n: React.PropTypes.object,
+        onClose: React.PropTypes.func
     },
 
     render: function() {
@@ -22,13 +23,21 @@ var NotificationContactCreateView = React.createClass({
             author = UserStore.get(n.author_id),
             createdContact = ContactStore.get(n.extra.contact_id);
         return (
-            <div className="notificationCenter-item">
-                <div className="notificationCenter-item-meta">
-                    {moment(n.at).fromNow()}
+            <div className="notification active">
+              <div className="notification-body">
+                <div className="notification-message">
+                  Пользователь {utils.capitalize(author.first_name)} создал новый контакт - {createdContact.fn}.
                 </div>
-                Пользователь {utils.capitalize(author.first_name)} создал новый контакт - {createdContact.fn}.
+              </div>
+              <button onClick={this.onClick} className="notification-toggle" type="button">
+                Закрыть
+              </button>
             </div>
         );
+    },
+
+    onClick: function(evt) {
+        this.props.onClose(this.props.n.id)
     }
 
 });
@@ -38,7 +47,8 @@ var NotificationContactUpdateView = React.createClass({
     mixins : [AppContextMixin],
 
     propTypes: {
-        n: React.PropTypes.object
+        n: React.PropTypes.object,
+        onClose: React.PropTypes.func
     },
 
     render: function() {
@@ -46,13 +56,22 @@ var NotificationContactUpdateView = React.createClass({
             author = UserStore.get(n.author_id),
             createdContact = ContactStore.get(n.extra.contact_id);
         return (
-            <div key={n.id} className="notificationCenter-item">
-                <div className="notificationCenter-item-meta">
-                    {moment(n.at).fromNow()}
+            <div className="notification active">
+              <div className="notification-body">
+                <div className="notification-message">
+                  Пользователь {utils.capitalize(author.first_name)} изменил контакт {createdContact.fn}.
                 </div>
-                Пользователь {utils.capitalize(author.first_name)} изменил контакт {createdContact.fn}.
+              </div>
+              <button onClick={this.onClick} className="notification-toggle" type="button">
+                Закрыть
+              </button>
             </div>
         );
+    },
+
+    onClick: function(evt) {
+        console.log('clicked');
+        this.props.onClose(this.props.n.id);
     }
 
 });
@@ -70,7 +89,7 @@ function renderNotification(n) {
             // do nothing
             true;
     };
-    return <TPL key={n.id} n={n} />
+    return <TPL key={n.id} n={n} onClose={this.onNotifRead} />
 };
 
 module.exports = {

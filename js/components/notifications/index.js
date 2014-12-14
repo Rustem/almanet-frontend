@@ -1,6 +1,6 @@
 var NotificationCenterView = require('./NotificationCenterView.react');
-var RecentNotificationView = require('./RecentNotificationView.react');
+var RecentNotificationListView = require('./RecentNotificationListView.react');
 module.exports = {
     NotificationCenterView: NotificationCenterView,
-    RecentNotificationView: RecentNotificationView
+    RecentNotificationListView: RecentNotificationListView
 }

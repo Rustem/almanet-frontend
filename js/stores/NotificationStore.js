@@ -34,7 +34,7 @@ var NotificationStore = assign({}, EventEmitter.prototype, {
     getNewByDate: function() {
         return _(_notifications)
             .map(function(n) { return n })
-            .filter(function(n) { return !n.is_read })
+            .filter(function(n) { return n.is_new })
             .sortBy(function(n) { return n.at })
             .reverse()
             .value();
@@ -58,7 +58,10 @@ NotificationStore.dispatchToken = dispatcher.register(function(payload) {
             _notifications[action.object.id] = action.object;
             NotificationStore.emitChange();
             break;
-
+        case ActionTypes.USER_READ_NOTIFICATION_SUCCESS:
+            _notifications[action.object.id] = action.object;
+            NotificationStore.emitChange();
+            break;
         default:
             // do nothing
     }

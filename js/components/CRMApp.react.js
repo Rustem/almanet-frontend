@@ -7,7 +7,7 @@ var RouteHandler = require('react-router').RouteHandler;
 var SessionStore = require('../stores/SessionStore');
 var n = require('./notifications');
 var NotificationCenterView = n.NotificationCenterView;
-var RecentNotificationView = n.RecentNotificationView;
+var RecentNotificationListView = n.RecentNotificationListView;
 
 
 function getAppState() {
@@ -61,7 +61,7 @@ var CRMApp = React.createClass({
         return (
             <div className="body-container">
                 <RouteHandler />
-                <RecentNotificationView />
+                <RecentNotificationListView />
                 <NotificationCenterView isActive={this.state.notif_center_is_active} />
             </div>
         )
