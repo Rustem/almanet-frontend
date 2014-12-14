@@ -1,9 +1,31 @@
+var _ = require('lodash');
+var SignalManager = require('./utils');
+var dispatcher = require('../dispatcher/CRMAppDispatcher');
+var ContactWebAPI = require('../api/ContactWebAPI');
+var CRMConstants = require('../constants/CRMConstants');
+var NotifTypes = CRMConstants.NotifTypes;
+var ActionTypes = CRMConstants.ActionTypes;
 
-module.exports = {
+module.exports = api = {
     getAll: function(success, failure) {
         var notifications = JSON.parse(localStorage.getItem('notifications'));
         setTimeout(function(){
             success(notifications);
+        }, 0);
+    },
+
+    create: function(details, success, failure) {
+        var timeNow = Date.now();
+        var obj = _.extend({}, details, {
+            id: 'n_' + timeNow,
+            at: timeNow,
+            is_new: true
+        });
+        var rawNotifs = JSON.parse(localStorage.getItem('notifications')) || [];
+        rawNotifs.push(obj);
+        localStorage.setItem('notifications', JSON.stringify(rawNotifs));
+        setTimeout(function() {
+            success(obj);
         }, 0);
     },
 
@@ -24,3 +46,35 @@ module.exports = {
         }, 0);
     },
 };
+
+
+// @askhat, right now I am just take into account notifications that triggered
+// by contact module. However, in future, second argument must be extra params.
+
+function new_notification(notif_tp, contact_id, author_id) {
+    var details = {
+        type: notif_tp,
+        author_id: author_id,
+        extra: {contact_id: contact_id}
+    };
+    dispatcher.handleViewAction({
+        type: ActionTypes.CREATE_NOTIFICATION,
+        object: details
+    });
+    api.create(details, function(n){
+        dispatcher.handleServerAction({
+            type: ActionTypes.CREATE_NOTIFICATION_SUCCESS,
+            object: n
+        });
+    }.bind(null), function(error){
+        dispatcher.handleServerAction({
+            type: ActionTypes.CREATE_NOTIFICATION_FAIL,
+            error: error
+        });
+    }.bind(null));
+};
+SignalManager.connect(ActionTypes.CREATE_CONTACT_SUCCESS,
+                      new_notification.bind(null, NotifTypes.CONTACT_CREATE));
+
+SignalManager.connect(ActionTypes.EDIT_CONTACT_SUCCESS,
+                      new_notification.bind(null, NotifTypes.CONTACT_UPDATE));

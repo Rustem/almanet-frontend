@@ -264,7 +264,7 @@ var AllBaseList = React.createClass({
 
 
 var AllBaseDetailView = React.createClass({
-    mixins: [Router.Navigation],
+    mixins: [AppContextMixin, Router.Navigation],
     propTypes: {
         label: React.PropTypes.string
     },

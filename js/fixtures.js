@@ -72,24 +72,24 @@ module.exports = {
       },
     ]));
 
-    localStorage.setItem('notifications', JSON.stringify([
-      {
-        id: 'n_1',
-        type: NotifTypes.CONTACT_CREATE,
-        author_id: 'u_1',
-        at: moment("2014-12-13 11:02:15"),
-        is_new: true,
-        extra: {contact_id: 'c_1417332567250'}
-      },
-      {
-        id: 'n_2',
-        type: NotifTypes.CONTACT_UPDATE,
-        author_id: 'u_1',
-        at: moment("2014-12-14 17:02:15"),
-        is_new: true,
-        extra: {contact_id: 'c_1417332567250'}
-      },
-    ]));
+    // localStorage.setItem('notifications', JSON.stringify([
+    //   {
+    //     id: 'n_1',
+    //     type: NotifTypes.CONTACT_CREATE,
+    //     author_id: 'u_1',
+    //     at: moment("2014-12-13 11:02:15"),
+    //     is_new: true,
+    //     extra: {contact_id: 'c_1417332567250'}
+    //   },
+    //   {
+    //     id: 'n_2',
+    //     type: NotifTypes.CONTACT_UPDATE,
+    //     author_id: 'u_1',
+    //     at: moment("2014-12-14 17:02:15"),
+    //     is_new: true,
+    //     extra: {contact_id: 'c_1417332567250'}
+    //   },
+    // ]));
   }
 
 };

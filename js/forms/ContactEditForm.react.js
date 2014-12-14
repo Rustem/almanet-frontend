@@ -18,6 +18,7 @@ var PhoneVCardComponent = VCardWidgets.PhoneVCardComponent;
 var UrlVCardComponent = VCardWidgets.UrlVCardComponent;
 var AddressVCardComponent = VCardWidgets.AddressVCardComponent;
 var VCardRow = VCardWidgets.VCardRow;
+var AppContextMixin = require('../mixins/AppContextMixin');
 
 var _ = require('lodash');
 Object.assign = _.extend;
@@ -25,6 +26,7 @@ Object.assign = _.extend;
 require('../utils');
 
 var ContactEditForm = React.createClass({
+  mixins : [AppContextMixin],
 
   propTypes: {
     onHandleSubmit: React.PropTypes.func,
@@ -59,7 +61,6 @@ var ContactEditForm = React.createClass({
 
         <AddressVCardComponent name="adrs" options={[['home', 'место проживания'], ['work', 'место работы']]} />
         {CRDDL ? CRDDL : <div className="space-verticalBorder"></div>}
-
         <div className="inputLine text-right">
             <button className="btn btn--save" type="submit">Сохранить</button>
         </div>
@@ -72,7 +73,9 @@ var ContactEditForm = React.createClass({
     var form = this.refs.contact_form;
     var errors = form.validate();
     if(!errors) {
-      this.props.onHandleSubmit(form.value());
+      var value = form.value();
+      value.author_id = this.getUser().id;
+      this.props.onHandleSubmit(value);
     } else{
         alert(errors);
     }

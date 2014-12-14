@@ -1,4 +1,7 @@
 var _ = require('lodash');
+var SignalManager = require('./utils');
+var CRMConstants = require('../constants/CRMConstants');
+var ActionTypes = CRMConstants.ActionTypes;
 
 module.exports = {
     getAllContacts: function(success, failure) {
@@ -33,19 +36,25 @@ module.exports = {
         // simulate success callback
         setTimeout(function() {
             success(obj);
+            SignalManager.send(ActionTypes.CREATE_CONTACT_SUCCESS, obj.id, obj.user_id);
         }, 0);
     },
     editContact: function(edit_details, success, failure) {
-        var rawContacts = JSON.parse(localStorage.getItem('contacts')) || [];
+        var rawContacts = JSON.parse(localStorage.getItem('contacts')) || [],
+            contact = null;
         for(var i = 0; i<rawContacts.length; i++) {
             var cur = rawContacts[i];
             if(cur.id === edit_details.contact_id) {
                 rawContacts[i] = edit_details.contact;
+                contact = cur;
+                break;
             }
         }
         localStorage.setItem('contacts', JSON.stringify(rawContacts));
         setTimeout(function() {
             success(edit_details);
+            SignalManager.send(ActionTypes.EDIT_CONTACT_SUCCESS,
+                               contact.id, contact.user_id);
         }, 0);
     },
     setLeads: function(contact_ids, success, failure) {

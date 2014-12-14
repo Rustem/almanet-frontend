@@ -36,6 +36,9 @@ module.exports = {
         USER_READ_NOTIFICATION: null,
         USER_READ_NOTIFICATION_SUCCESS: null,
         USER_READ_NOTIFICATION_FAIL: null,
+        CREATE_NOTIFICATION: null,
+        CREATE_NOTIFICATION_SUCCESS: null,
+        CREATE_NOTIFICATION_FAIL: null,
         LOGOUT: null,
     }),
     PayloadSources: keyMirror({

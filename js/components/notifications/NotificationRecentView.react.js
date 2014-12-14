@@ -55,6 +55,8 @@ var NotificationContactUpdateView = React.createClass({
         var n = this.props.n,
             author = UserStore.get(n.author_id),
             createdContact = ContactStore.get(n.extra.contact_id);
+        console.log(n, "jfskdajf;lasjdk", createdContact);
+
         return (
             <div className="notification active">
               <div className="notification-body">

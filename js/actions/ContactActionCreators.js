@@ -13,7 +13,6 @@
 var dispatcher = require('../dispatcher/CRMAppDispatcher');
 var CRMConstants = require('../constants/CRMConstants');
 var ContactWebAPI = require('../api/ContactWebAPI');
-// var ShareStore = require('../stores/ShareStore');
 var ActionTypes = CRMConstants.ActionTypes;
 var utils = require('../utils');
 module.exports = {

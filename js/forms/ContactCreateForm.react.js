@@ -16,6 +16,7 @@ var PhoneVCardComponent = VCardWidgets.PhoneVCardComponent;
 var UrlVCardComponent = VCardWidgets.UrlVCardComponent;
 var AddressVCardComponent = VCardWidgets.AddressVCardComponent;
 var VCardRow = VCardWidgets.VCardRow;
+var AppContextMixin = require('../mixins/AppContextMixin');
 
 var _ = require('lodash');
 Object.assign = _.extend;
@@ -34,6 +35,7 @@ var default_form_state = {
 };
 
 var ContactCreateForm = React.createClass({
+  mixins : [AppContextMixin],
 
   propTypes: {
     onHandleSubmit: React.PropTypes.func,
@@ -60,6 +62,7 @@ var ContactCreateForm = React.createClass({
 
         <AddressVCardComponent name="adrs" options={[['home', 'место проживания'], ['work', 'место работы']]} />
         <VCardRow name='note' label='Заметка' />
+        <input type="hidden" name="author_id" value={this.getUser().id} />
         <div className="inputLine text-right">
             <button className="btn btn--save" type="submit">Сохранить</button>
         </div>
@@ -72,7 +75,9 @@ var ContactCreateForm = React.createClass({
     var form = this.refs.contact_form;
     var errors = form.validate();
     if(!errors) {
-      this.props.onHandleSubmit(form.value());
+      var value = form.value();
+      value.user_id = this.getUser().id;
+      this.props.onHandleSubmit(value);
     } else{
         alert(errors);
     }
