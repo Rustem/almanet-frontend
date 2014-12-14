@@ -147,7 +147,7 @@ var ContactProfileView = React.createClass({
     },
 
     renderProduct: function(p_id) {
-        return (<span>{ProductStore.get(p_id).name}</span>)
+        return (<a href="#" className="text-secondary">{ProductStore.get(p_id).name} </a>)
     },
 
     render: function() {

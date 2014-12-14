@@ -1,5 +1,7 @@
 var _ = require('lodash');
 var React = require('react');
+var Router = require('react-router');
+var Link = Router.Link;
 var ContactEditForm = require('../forms/ContactEditForm.react');
 var VIEW_MODES_MAP = require('../constants/CRMConstants').CONTACT_VIEW_MODE;
 var VIEW_MODES = _.values(VIEW_MODES_MAP);
@@ -89,7 +91,9 @@ var ContactVCard = React.createClass({
               </div>
               {contact.contacts.map(function(c_id){
                 var c = ContactStore.get(c_id);
-                return <div className="inputLine-div">{c.fn}</div>
+                return <div className="inputLine-div">
+                        <Link to='contact_profile' params={{id: c.id}}>{c.fn}</Link>
+                       </div>
               })}
             </div>
           </div>
