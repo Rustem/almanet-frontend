@@ -70,7 +70,6 @@ var NotificationContactUpdateView = React.createClass({
     },
 
     onClick: function(evt) {
-        console.log('clicked');
         this.props.onClose(this.props.n.id);
     }
 

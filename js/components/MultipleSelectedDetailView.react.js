@@ -96,7 +96,6 @@ var MultipleSelectedDetailView = React.createClass({
 
     onAddEvent: function(newEvent) {
         // this.setState({mode: VIEW_MODE.READ});
-        console.log("ADd event", newEvent);
         this.resetState();
     },
 

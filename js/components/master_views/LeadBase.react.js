@@ -450,7 +450,6 @@ var LeadBaseDetailView = React.createClass({
 
     onEdit: function() {
         var contact_ids = this.getSelectedContacts();
-        console.log("EDIT");
     },
 
     _onChange: function() {

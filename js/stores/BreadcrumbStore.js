@@ -103,7 +103,6 @@ BreadcrumbDS.prototype.update = function(routes, params, query) {
     // }
 
     var relatedDepth = this.hasRel(routes[routes.length - 1]);
-    console.log('RELATIONSHIPS', relatedDepth);
     // if no logical relation
     if(relatedDepth === -1) {
         this.clear();
@@ -142,7 +141,6 @@ BreadcrumbDS.prototype.hasRel = function(route) {
         return -1;
     }
     var parentRoutes = this.RELATIONSHIPS[route.name];
-    console.log(parentRoutes, this._routes);
     for(var i = 0; i < this.size(); i++) {
         var curRoute = this._routes[this.size() - i - 1];
         if(parentRoutes.indexOf(curRoute) > -1) {
@@ -168,7 +166,6 @@ var BreadcrumbStore = assign({}, EventEmitter.prototype, {
     },
     update: function(routes, path) {
         this._state.update(routes, path);
-        console.log(this._state.getHydrated(), "hi");
     },
     prev: function() {
         this._state.pop();

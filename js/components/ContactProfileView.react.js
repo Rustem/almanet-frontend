@@ -147,7 +147,6 @@ var ContactProfileView = React.createClass({
     },
 
     renderProduct: function(p_id) {
-        console.log(p_id);
         return (<span>{ProductStore.get(p_id).name}</span>)
     },
 

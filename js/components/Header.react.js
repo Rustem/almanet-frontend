@@ -38,7 +38,6 @@ var Header = React.createClass({
     },
 
     onToggleNotificationBar: function() {
-      console.log(this.context);
       this.context.toggleNotifCenter();
     }
 

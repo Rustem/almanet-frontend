@@ -287,13 +287,7 @@ var SharesList = React.createClass({
 var SharedContactDetailView = React.createClass({
     mixins: [Router.Navigation],
     statics: {
-        // willTransitionFrom: function(transition, component) {
-        //     console.log(transition, component);
-        //     console.log(transition, component);
-        //     if (!confirm('You have unsaved information, are you sure you want to leave this page?')) {
-        //         transition.abort();
-        //     }
-        // }
+
     },
     propTypes: {
         label: React.PropTypes.string,
@@ -402,7 +396,6 @@ var SharedContactDetailView = React.createClass({
     },
 
     render: function() {
-        console.log(this.state);
         return (
             <div className="page">
                 <div className="page-header">
@@ -430,7 +423,6 @@ var SharedContactDetailView = React.createClass({
             console.log('Choose at least one contact');
             return
         }
-        console.log('edit');
     },
     _onChange: function() {
         this.setState(this.getInitialState());

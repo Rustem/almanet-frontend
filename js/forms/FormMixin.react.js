@@ -93,7 +93,6 @@ var FormMixin = {
     mixins: [FormStateMixin, FormContextMixin],
 };
 
-// console.log(FormMixin.getContextTypes());
 
 module.exports = FormMixin;
 module.exports.ContextTypes = ContextTypes;

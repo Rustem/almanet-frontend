@@ -148,7 +148,6 @@ var ContactsSelectedView = React.createClass({
         for(var contact_id in this.state.selection_map)
             if(this.state.selection_map[contact_id])
                 contact_ids.push(contact_id);
-        console.log('hi')
         if(contact_ids.length === 0) {
             DetailView = (<EmptySelectedDetailView />);
         } else if(contact_ids.length === 1) {

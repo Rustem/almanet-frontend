@@ -383,7 +383,6 @@ var SalesCycleSummary = React.createClass({
     },
 
     render: function() {
-        console.log(this.getCycleDuration(), 'hi');
         return (
         <div className="stream-closeItem">
             <table className="table-summary">
