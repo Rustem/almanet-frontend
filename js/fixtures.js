@@ -10,6 +10,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+var moment = require('moment');
+var NotifTypes = require('./constants/CRMConstants').NotifTypes;
+
 module.exports = {
 
   init: function() {
@@ -45,33 +48,6 @@ module.exports = {
 
     ]));
 
-    // localStorage.setItem('salescycles', JSON.stringify([
-    //   {
-    //     id: 'sales_1',
-    //     title: 'Продажа 1С ТОО "Матрикс"',
-    //     status: false,
-    //     activities: [],
-    //     user_ids: ['u_1'],
-    //     products: [],
-    //   },
-    //   {
-    //     id: 'sales_2',
-    //     title: 'Облачные сервисы для ИП "МассивДинамик"',
-    //     status: false,
-    //     activities: [],
-    //     user_ids: ['u_2', 'u_1'],
-    //     products: [],
-    //   },
-    //   {
-    //     id: 'sales_3',
-    //     title: 'Арта Synergy для АО "КБТУ"',
-    //     status: false,
-    //     activities: [],
-    //     user_ids: ['u_2', 'u_1', 'u_3', 'u_4'],
-    //     products: [],
-    //   },
-    // ]));
-
     localStorage.setItem('products', JSON.stringify([
       {
         id: 'prod_1',
@@ -93,6 +69,25 @@ module.exports = {
         description: 'Unlim Internet by Altel',
         price: '4500',
         currency: 'KZT',
+      },
+    ]));
+
+    localStorage.setItem('notifications', JSON.stringify([
+      {
+        id: 'n_1',
+        type: NotifTypes.CONTACT_CREATE,
+        author_id: 'u_1',
+        at: moment("2014-12-13 11:02:15"),
+        is_new: true,
+        extra: {contact_id: 'c_1417332567250'}
+      },
+      {
+        id: 'n_2',
+        type: NotifTypes.CONTACT_UPDATE,
+        author_id: 'u_1',
+        at: moment("2014-12-14 17:02:15"),
+        is_new: true,
+        extra: {contact_id: 'c_1417332567250'}
       },
     ]));
   }

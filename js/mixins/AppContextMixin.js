@@ -3,7 +3,8 @@ var React = require('react');
 var AppContextMixin = {
     contextTypes: {
         isAuth: React.PropTypes.bool,
-        user: React.PropTypes.object
+        user: React.PropTypes.object,
+        toggleNotifCenter: React.PropTypes.func
     },
 
     getUser: function() {

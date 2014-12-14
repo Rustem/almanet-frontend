@@ -47,5 +47,9 @@ module.exports = {
         NEW: null,
         PENDING: null,
         FINISHED: null
-    })
+    }),
+    NotifTypes: keyMirror({
+        CONTACT_CREATE: null,
+        CONTACT_UPDATE: null
+    }),
 }

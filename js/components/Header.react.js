@@ -3,10 +3,12 @@
  */
 
 var React = require('react');
-
+var IconSvg = require('./common/IconSvg.react');
 var ContactComposer = require('./ContactComposer.react');
+var AppContextMixin = require('../mixins/AppContextMixin');
 
 var Header = React.createClass({
+    mixins : [AppContextMixin],
 
     render: function() {
         return (
@@ -26,10 +28,18 @@ var Header = React.createClass({
                 </div>
                 <div className="nav-b">
                   <ContactComposer />
+                  <button type="button" onClick={this.onToggleNotificationBar} className="nav-link">
+                    <IconSvg iconKey="notifications" />
+                  </button>
                 </div>
             </div>
 
         );
+    },
+
+    onToggleNotificationBar: function() {
+      console.log(this.context);
+      this.context.toggleNotifCenter();
     }
 
 });
