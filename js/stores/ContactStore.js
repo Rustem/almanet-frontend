@@ -9,6 +9,7 @@ var CRMConstants = require('../constants/CRMConstants');
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
 var SessionStore = require('./SessionStore');
 var ActivityStore = require('./ActivityStore');
+var SalesCycleStore = require('./SalesCycleStore');
 var ActionTypes = CRMConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 var _contacts = {};
@@ -52,14 +53,14 @@ var ContactStore = assign({}, EventEmitter.prototype, {
     },
 
     getRecent: function() {
-        var recent_acts = ActivityStore.getByDate(true)
+        var recent_acts = ActivityStore.getByDate(true);
         return _.chain(recent_acts)
-                .map(function(act){ return act.contact_ids; })
-                .reduce(function(acc, contact_ids){
-                    return _.union(acc, contact_ids);
-                }, [])
-                .map(this.get).value();
-
+                .map(function(act){ return act.salescycle_id; })
+                .map(function(sc_id){ return SalesCycleStore.get(sc_id) && SalesCycleStore.get(sc_id).contact_id; })
+                .compact()
+                .uniq()
+                .map(this.get)
+                .value();
     },
 
     getAll: function() {

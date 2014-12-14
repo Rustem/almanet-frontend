@@ -259,13 +259,13 @@ var RecentList = React.createClass({
 
 
 var RecentDetailView = React.createClass({
-    mixins: [Router.Navigation],
+    mixins: [Router.Navigation,AppContextMixin],
     propTypes: {
         label: React.PropTypes.string
     },
     getInitialState: function() {
         var selection_map = {};
-        contacts = ContactStore.getRecent(true);
+        contacts = ContactStore.getRecent();
         for(var i = 0; i < contacts.length; i++) {
             selection_map[contacts[i].id] = false;
         }
