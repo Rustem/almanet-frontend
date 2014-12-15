@@ -54,6 +54,8 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
     },
 
     getCyclesForCurrentContact: function(contact_id) {
+        // strange: without this ContactStore is empty object and .get function is undefined
+        var ContactStore = require('./ContactStore');
         var contact = ContactStore.get(contact_id);
         var rv = this.byContact(contact_id)
         if (!contact.is_company)

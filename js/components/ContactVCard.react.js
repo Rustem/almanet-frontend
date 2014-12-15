@@ -101,9 +101,34 @@ var ContactVCard = React.createClass({
       )
     },
 
+    renderCompany: function(c_id) {
+      company = ContactStore.inCompany(c_id);
+      if(company == null)
+        return null;
+      return (
+        <div className="inputLine inputLine--vcardRow">
+          <div className="row">
+            <div className="row-icon">
+            </div>
+            <div className="row-body">
+              <div className="inputLine-negativeTrail">
+                <div className="text-caption text-secondary">
+                  Компания
+                </div>
+              </div>
+                <div className="inputLine-div">
+                  <Link to='contact_profile' params={{id: company.id}}>{company.fn}</Link>
+                </div>
+            </div>
+          </div>
+        </div>
+      )
+    },
+
     render_read: function() {
         var contact = this.props.contact;
         var RelatedContactsWidget = this.renderContacts(contact);
+        var RelatedCompanyWidget = this.renderCompany(contact.id);
         return (
             <div className="contact">
                 <div className="inputLine">
@@ -147,6 +172,8 @@ var ContactVCard = React.createClass({
                 {RelatedContactsWidget ? <div className="space-verticalBorder"></div> : null}
                 {RelatedContactsWidget}
 
+                {RelatedCompanyWidget ? <div className="space-verticalBorder"></div> : null}
+                {RelatedCompanyWidget}
 
             </div>
         );
