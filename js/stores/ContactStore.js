@@ -130,11 +130,9 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             ContactStore.emitChange();
         case ActionTypes.CREATE_ACTIVITY_SUCCESS:
             CRMAppDispatcher.waitFor([ActivityStore.dispatchToken]);
-            var contact_ids = action.object.contact_ids;
-            contact_ids = _.filter(contact_ids, function(cid){
-                return _contacts[cid].is_cold;
-            });
-            ContactWebAPI.setLeads(contact_ids, function(result){
+            var contact_id = action.object.contact_id;
+            _contacts[contact_id].is_cold = false;
+            ContactWebAPI.setLeads([contact_id], function(result){
                 _.forEach(result, function(cid){
                     _contacts[cid].is_cold = false;
                 });
