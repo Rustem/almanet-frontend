@@ -49,7 +49,8 @@ var FormStateMixin = {
     },
 
     onValueUpdate: function(value) {
-        this.setState(this._getFormState(value), function() {
+        var newState = React.addons.update(this.state, {$merge: value});
+        this.setState(newState, function() {
             if (typeof this.valueUpdated === 'function') {
                 this.valueUpdated(this.state)
             }

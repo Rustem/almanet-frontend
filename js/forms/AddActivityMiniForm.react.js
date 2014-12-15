@@ -4,6 +4,7 @@ var Form = require('./Form.react');
 var FormMixin = require('./FormMixin.react');
 var SalesCycleStore = require('../stores/SalesCycleStore');
 var elements = require('./elements');
+var Fieldset = require('./Fieldset.react');
 var InputWithDropDown = elements.InputWithDropDown;
 var FeedbackDropDown = elements.FeedbackDropDown;
 
@@ -41,12 +42,12 @@ var AddActivityMiniForm = React.createClass({
             <Form ref="add_activity_form" value={DEFAULT_ACTIVITY}
                                   onSubmit={this.onHandleSubmit}>
                 <InputWithDropDown name="description" choices={NOTE_TEMPLATES} />
-                <div className="inputLine-submitComment">
+                <Fieldset className="inputLine-submitComment">
                     <FeedbackDropDown name="feedback" choices={FEEDBACK_STATUSES} simple={true} />
                     <div className="inputLine-submitComment-submit">
                       <button className="btn btn--save" type="submit">Сохранить</button>
                     </div>
-                </div>
+                </Fieldset>
             </Form>
         );
     },
