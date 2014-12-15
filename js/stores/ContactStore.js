@@ -52,14 +52,13 @@ var ContactStore = assign({}, EventEmitter.prototype, {
     },
 
     getRecent: function() {
-        var recent_acts = ActivityStore.getByDate(true)
+        var recent_acts = ActivityStore.getByDate(true);
         return _.chain(recent_acts)
-                .map(function(act){ return act.contact_ids; })
-                .reduce(function(acc, contact_ids){
-                    return _.union(acc, contact_ids);
-                }, [])
-                .map(this.get).value();
-
+                .map(function(act){ return act.contact_id; })
+                .compact()
+                .uniq()
+                .map(this.get)
+                .value();
     },
 
     getAll: function() {

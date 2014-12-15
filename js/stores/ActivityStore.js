@@ -29,10 +29,7 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
     getByDate: function(reversed) {
         var activities = this.getAll();
         activities = _.sortBy(activities, function(activity){ return activity.at });
-        if(reversed) {
-            activities = activities.reverse();
-        }
-        return activities;
+        return activities.reverse();
     },
 
     bySalesCycle: function(salescycle_id) {
@@ -45,7 +42,7 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
         rv = _.map(ids, function(id){
             return this.bySalesCycle(id);
         }.bind(this));
-        return _.sortBy(_.flatten(rv), 'at');
+        return _.sortBy(_.flatten(rv), 'at').reverse();
     },
 
     getAll: function() {

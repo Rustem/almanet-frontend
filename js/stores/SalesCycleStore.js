@@ -56,7 +56,7 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
     getCyclesForCurrentContact: function(contact_id) {
         var contact = ContactStore.get(contact_id);
         var rv = this.byContact(contact_id)
-        if (!contact.is_company)
+        if (!contact || !contact.is_company)
             return rv;
         _.forEach(contact.contacts, function(c_id){
             rv.push(this.byContact(c_id));

@@ -264,7 +264,7 @@ var LeadBaseList = React.createClass({
 
 
 var LeadBaseDetailView = React.createClass({
-    mixins: [Router.Navigation],
+    mixins: [Router.Navigation,AppContextMixin],
     propTypes: {
         label: React.PropTypes.string
     },

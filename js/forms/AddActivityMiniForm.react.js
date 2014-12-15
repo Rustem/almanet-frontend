@@ -2,6 +2,7 @@ var _ = require('lodash');
 var React = require('react/addons');
 var Form = require('./Form.react');
 var FormMixin = require('./FormMixin.react');
+var SalesCycleStore = require('../stores/SalesCycleStore');
 var elements = require('./elements');
 var InputWithDropDown = elements.InputWithDropDown;
 var FeedbackDropDown = elements.FeedbackDropDown;
@@ -60,6 +61,7 @@ var AddActivityMiniForm = React.createClass({
             object.salescycle_id = this.props.salescycle_id;
             object.description = formValue.description;
             object.feedback = formValue.feedback;
+            object.contact_id = SalesCycleStore.get(this.props.salescycle_id).contact_id;
           this.props.onHandleSubmit(object);
         } else{
             alert(errors);
