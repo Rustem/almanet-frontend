@@ -15,6 +15,7 @@ var ActivityStore = require('../stores/ActivityStore');
 var UserStore = require('../stores/UserStore');
 var ContactStore = require('../stores/ContactStore');
 var SalesCycleStore = require('../stores/SalesCycleStore');
+var ProductStore = require('../stores/ProductStore');
 // var Modal = require('./common/Modal.react');
 var SalesCycleCloser = require('./SalesCycleCloser.react');
 var SalesCycleCreateForm = require('../forms/SalesCycleCreateForm.react');
@@ -23,8 +24,6 @@ var AddActivityMiniForm = require('../forms/AddActivityMiniForm.react');
 var AddProductMiniForm = require('../forms/AddProductMiniForm.react');
 var CRMConstants = require('../constants/CRMConstants');
 
-// probably not required
-var ProductStore = require('../stores/ProductStore');
 var SALES_CYCLE_STATUS = CRMConstants.SALES_CYCLE_STATUS;
 
 var ACTIONS = keyMirror({
@@ -296,22 +295,24 @@ var SalesCycleByAllSummary = React.createClass({
     },
 
     getTotalDuration: function() {
-        return _.reduce(this.getActivities(), function(acc, act) {
-            return acc + act.duration;
-        }.bind(this), 0);
+        // return _.reduce(this.getActivities(), function(acc, act) {
+        //     return acc + act.duration;
+        // }.bind(this), 0);
+        return 0;
     },
 
     getAvgDuration: function() {
-        var n = this.getActivitiesCnt();
-        if(n === 0) return 0;
-        return this.getTotalDuration() * 1. / n;
+        // var n = this.getActivitiesCnt();
+        // if(n === 0) return 0;
+        // return this.getTotalDuration() * 1. / n;
+        return 0;
     },
 
-    getParticipants: function() {
-        var list_of_lists = _.map(this.getCycles(), function(cycle){ return cycle.user_ids });
-        user_ids = _.reduce(list_of_lists, function(acc, _user_ids){ return _.union(acc, _user_ids) }, []);
-        return user_ids.join(', ');
-    },
+    // getParticipants: function() {
+    //     var list_of_lists = _.map(this.getCycles(), function(cycle){ return cycle.user_ids });
+    //     user_ids = _.reduce(list_of_lists, function(acc, _user_ids){ return _.union(acc, _user_ids) }, []);
+    //     return user_ids.join(', ');
+    // },
 
     render: function() {
         return (
@@ -328,10 +329,6 @@ var SalesCycleByAllSummary = React.createClass({
               <tr>
                 <td>Среднее время ожидания</td>
                 <td>{(this.getAvgDuration() / 60.).toFixed(0)} минут</td>
-              </tr>
-              <tr>
-                <td>Участники</td>
-                <td>{this.getParticipants()}</td>
               </tr>
             </table>
             <div className="space-vertical--compact"></div>
@@ -361,25 +358,27 @@ var SalesCycleSummary = React.createClass({
     },
 
     getCycleDuration: function() {
-        return _.reduce(this.getActivities(), function(acc, act) {
-            return acc + act.duration;
-        }.bind(this), 0);
+        // return _.reduce(this.getActivities(), function(acc, act) {
+        //     return acc + act.duration;
+        // }.bind(this), 0);
+        return 0;
     },
 
     getAvgDuration: function() {
-        var n = this.getActivitiesCnt();
-        if(n === 0) return 0;
-        return this.getCycleDuration() * 1. / n;
+        // var n = this.getActivitiesCnt();
+        // if(n === 0) return 0;
+        // return this.getCycleDuration() * 1. / n;
+        return 0;
     },
 
-    getParticipants: function() {
-        var user_ids = this.getCycle().user_ids;
-        return user_ids.join(', ')
-    },
+    // getParticipants: function() {
+    //     var user_ids = this.getCycle().user_ids;
+    //     return user_ids.join(', ')
+    // },
 
     getProducts: function() {
         var product_ids = this.getCycle().products;
-        return product_ids.join(', ')
+        return _.map(ProductStore.getByIds(product_ids), function(p) {return p.name}).join(', ')
     },
 
     render: function() {
@@ -397,10 +396,6 @@ var SalesCycleSummary = React.createClass({
               <tr>
                 <td>Среднее время ожидания</td>
                 <td>{(this.getAvgDuration() / 60.).toFixed(0)} минут</td>
-              </tr>
-              <tr>
-                <td>Участники</td>
-                <td>{this.getParticipants()}</td>
               </tr>
               <tr>
                 <td>Продукты</td>
