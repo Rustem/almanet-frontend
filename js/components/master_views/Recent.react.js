@@ -208,7 +208,7 @@ var RecentList = React.createClass({
             return contact.fn.toLowerCase();
         }.bind(this);
 
-        contacts = _.sortBy(contacts, sortBy);
+        // contacts = _.sortBy(contacts, sortBy);
         if(!filter_text) {
             return contacts;
         }
