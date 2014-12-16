@@ -30,6 +30,11 @@ var ProductStore = assign({}, EventEmitter.prototype, {
         return _.map(_products, function(c) { return c });
     },
 
+    getByIds: function(ids) {
+        var products = this.getAll();
+        return _.filter(products, function(p){ return _.indexOf(ids, p.id) !== -1 });
+    },
+
     // TODO: delete this
     fakeGet: function(id) {
         return _products['prod_1'];

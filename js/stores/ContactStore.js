@@ -92,9 +92,17 @@ var ContactStore = assign({}, EventEmitter.prototype, {
         return _.filter(contacts, function(c){ return _.indexOf(ids, c.id) !== -1 });
     },
 
+    inCompany: function(id) {
+        var contacts = this.getAll();
+        cs = _.filter(contacts, function(c){ return c.contacts && _.indexOf(c.contacts, id) !== -1 });
+        if(cs)
+            return cs[0];
+        return null;
+    },
+
     getCreatedContact: function(obj) {
         return obj;
-    }
+    },
 
 });
 
