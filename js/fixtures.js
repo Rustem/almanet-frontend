@@ -13,7 +13,6 @@
 var moment = require('moment');
 var CRMConstants = require('./constants/CRMConstants');
 NotifTypes = CRMConstants.NotifTypes;
-console.log(CRMConstants, "hi");
 GLOBAL_SALES_CYCLE_ID = CRMConstants.GLOBAL_SALES_CYCLE_ID;
 GLOBAL_SALES_CYCLE = CRMConstants.GLOBAL_SALES_CYCLE;
 

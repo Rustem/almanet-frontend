@@ -10,7 +10,6 @@ var ContactStore = require('./ContactStore');
 var SALES_CYCLE_STATUS = CRMConstants.SALES_CYCLE_STATUS;
 var ActionTypes = CRMConstants.ActionTypes;
 var GLOBAL_SALES_CYCLE_ID = CRMConstants.GLOBAL_SALES_CYCLE_ID;
-var GLOBAL_SALES_CYCLE = CRMConstants.GLOBAL_SALES_CYCLE;
 
 var CHANGE_EVENT = 'change';
 
@@ -94,7 +93,6 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
                 if(actv.salescycle_id in _salescycles)
                     _salescycles[actv.salescycle_id].activities.push(actv.id);
             });
-            _salescycles[GLOBAL_SALES_CYCLE_ID] = GLOBAL_SALES_CYCLE;
             SalesCycleStore.emitChange();
             break;
         case ActionTypes.CREATE_ACTIVITY_SUCCESS:

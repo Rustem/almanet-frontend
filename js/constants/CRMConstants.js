@@ -54,14 +54,14 @@ module.exports = {
         PENDING: null,
         FINISHED: null
     }),
-    NotifTypes: keyMirror({
-        CONTACT_CREATE: null,
-        CONTACT_UPDATE: null
-    }),
     GLOBAL_SALES_CYCLE_ID: 'sales_0',
     GLOBAL_SALES_CYCLE: {
         id: 'sales_0',
         title: 'Все события',
         status: 'PENDING'
-    }
+    },
+    NotifTypes: keyMirror({
+        CONTACT_CREATE: null,
+        CONTACT_UPDATE: null
+    }),
 }
