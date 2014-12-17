@@ -51,11 +51,11 @@ module.exports = api = {
 // @askhat, right now I am just take into account notifications that triggered
 // by contact module. However, in future, second argument must be extra params.
 
-function new_notification(notif_tp, contact_id, author_id) {
+function new_notification(notif_tp, author_id, extra) {
     var details = {
         type: notif_tp,
         author_id: author_id,
-        extra: {contact_id: contact_id}
+        extra: extra
     };
     dispatcher.handleViewAction({
         type: ActionTypes.CREATE_NOTIFICATION,

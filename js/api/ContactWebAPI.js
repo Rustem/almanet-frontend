@@ -37,7 +37,9 @@ module.exports = {
         // simulate success callback
         setTimeout(function() {
             success(obj);
-            SignalManager.send(ActionTypes.CREATE_CONTACT_SUCCESS, obj.id, obj.user_id);
+            var author_id = obj.user_id,
+                extra = {'contact_id': obj.id};
+            SignalManager.send(ActionTypes.CREATE_CONTACT_SUCCESS, author_id, extra);
         }, 0);
     },
     editContact: function(edit_details, success, failure) {
@@ -54,8 +56,10 @@ module.exports = {
         localStorage.setItem('contacts', JSON.stringify(rawContacts));
         setTimeout(function() {
             success(edit_details);
-            SignalManager.send(ActionTypes.EDIT_CONTACT_SUCCESS,
-                               contact.id, contact.user_id);
+
+            var author_id = contact.user_id,
+                extra = {'contact_id': contact.id};
+            SignalManager.send(ActionTypes.EDIT_CONTACT_SUCCESS, author_id, extra);
         }, 0);
     },
     setLeads: function(contact_ids, success, failure) {

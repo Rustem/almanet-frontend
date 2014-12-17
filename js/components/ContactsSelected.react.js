@@ -191,7 +191,22 @@ var ContactsSelectedView = React.createClass({
         );
     },
     _onChange: function() {
-        this.setState(this.getInitialState());
+        var contacts = ContactStore.getByDate(true),
+            newSelectionItems = {};
+        for(var i = 0; i<contacts.length; i++) {
+            if(!contacts[i].id in this.state.selection_map) {
+                newSelectionItems[contacts[i].id] = false;
+            }
+        }
+        if(!newSelectionItems) {
+            return
+        } else {
+            var newState = React.addons.update(this.state, {
+                contacts: {$set: contacts},
+                selection_map: {$merge: newSelectionItems}
+            });
+            this.setState(newState);
+        }
     }
 
 });
