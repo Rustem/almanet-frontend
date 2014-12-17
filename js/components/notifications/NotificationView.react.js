@@ -68,15 +68,14 @@ var NotificationContactShareView = React.createClass({
     render: function() {
         var n = this.props.n,
             author = UserStore.get(n.author_id),
-            receiver = UserStore.get(n.receiver_id),
+            receiver = UserStore.get(n.extra.receiver_id),
             sharedContact = ContactStore.get(n.extra.contact_id);
         return (
             <div key={n.id} className="notificationCenter-item">
                 <div className="notificationCenter-item-meta">
                     {moment(n.at).fromNow()}
                 </div>
-                Пользователь {utils.capitalize(author.first_name)} поделился контактом
-                {sharedContact.fn} с пользователем {utils.capitalize(receiver.first_name)}.
+                Пользователь {utils.capitalize(author.first_name)} поделился контактом {sharedContact.fn} с пользователем {utils.capitalize(receiver.first_name)}.
             </div>
         );
     }

@@ -81,20 +81,20 @@ var NotificationContactShareView = React.createClass({
     mixins : [AppContextMixin],
 
     propTypes: {
-        n: React.PropTypes.object
+        n: React.PropTypes.object,
+        onClose: React.PropTypes.func
     },
 
     render: function() {
         var n = this.props.n,
             author = UserStore.get(n.author_id),
-            receiver = UserStore.get(n.receiver_id),
+            receiver = UserStore.get(n.extra.receiver_id),
             sharedContact = ContactStore.get(n.extra.contact_id);
         return (
             <div className="notification active">
               <div className="notification-body">
                 <div className="notification-message">
-                  Пользователь {utils.capitalize(author.first_name)} поделился контактом
-                {sharedContact.fn} с пользователем {utils.capitalize(receiver.first_name)}.
+                  Пользователь {utils.capitalize(author.first_name)} поделился контактом {sharedContact.fn} с пользователем {utils.capitalize(receiver.first_name)}.
                 </div>
               </div>
               <button onClick={this.onClick} className="notification-toggle" type="button">
@@ -102,6 +102,10 @@ var NotificationContactShareView = React.createClass({
               </button>
             </div>
         );
+    },
+
+    onClick: function(evt) {
+        this.props.onClose(this.props.n.id);
     }
 
 });
