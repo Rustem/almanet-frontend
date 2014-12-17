@@ -11,7 +11,11 @@
  */
 
 var moment = require('moment');
-var NotifTypes = require('./constants/CRMConstants').NotifTypes;
+var CRMConstants = require('./constants/CRMConstants');
+NotifTypes = CRMConstants.NotifTypes;
+console.log(CRMConstants, "hi");
+GLOBAL_SALES_CYCLE_ID = CRMConstants.GLOBAL_SALES_CYCLE_ID;
+GLOBAL_SALES_CYCLE = CRMConstants.GLOBAL_SALES_CYCLE;
 
 module.exports = {
 
@@ -71,6 +75,12 @@ module.exports = {
         currency: 'KZT',
       },
     ]));
+
+    var cycles = JSON.parse(localStorage.getItem('salescycles')) || [];
+    if(cycles[0].id !== GLOBAL_SALES_CYCLE_ID) {
+      cycles.unshift(GLOBAL_SALES_CYCLE);
+      localStorage.setItem('salescycles', JSON.stringify(cycles));
+    }
 
     // localStorage.setItem('notifications', JSON.stringify([
     //   {

@@ -59,4 +59,9 @@ module.exports = {
         CONTACT_UPDATE: null
     }),
     GLOBAL_SALES_CYCLE_ID: 'sales_0',
+    GLOBAL_SALES_CYCLE: {
+        id: 'sales_0',
+        title: 'Все события',
+        status: 'PENDING'
+    }
 }
