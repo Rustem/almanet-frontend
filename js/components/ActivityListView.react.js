@@ -56,7 +56,7 @@ var SalesCycleControlBar = React.createClass({
 
     shouldRenderControlBar: function() {
         // TODO: make something with 'sales_0'
-        if(_.contains([null, undefined, 'sales_0'], this.props.current_cycle_id))
+        if(_.contains([null, undefined, CRMConstants.GLOBAL_SALES_CYCLE_ID], this.props.current_cycle_id))
           return false;
         return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED);
     },
@@ -116,7 +116,7 @@ var AddActivityWidget = React.createClass({
 
     shouldRenderComponent: function() {
         // TODO: make something with 'sales_0'
-        if(_.contains([null, undefined, 'sales_0'], this.props.current_cycle_id))
+        if(_.contains([null, undefined], this.props.current_cycle_id))
           return false;
         return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED) &&
                this.get_current_action() == ACTIONS.ADD_ACTIVITY;
@@ -152,7 +152,7 @@ var AddProductWidget = React.createClass({
 
     shouldRenderComponent: function() {
         // TODO: make something with 'sales_0'
-        if(_.contains([null, undefined, 'sales_0'], this.props.current_cycle_id))
+        if(_.contains([null, undefined, CRMConstants.GLOBAL_SALES_CYCLE_ID], this.props.current_cycle_id))
           return false;
         return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED) &&
                this.get_current_action() == ACTIONS.ADD_PRODUCT;
@@ -188,7 +188,7 @@ var CloseCycleWidget = React.createClass({
 
     shouldRenderComponent: function() {
         // TODO: make something with 'sales_0'
-        if(_.contains([null, undefined, 'sales_0'], this.props.current_cycle_id))
+        if(_.contains([null, undefined, CRMConstants.GLOBAL_SALES_CYCLE_ID], this.props.current_cycle_id))
           return false;
         return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED) &&
                this.get_current_action() == ACTIONS.CLOSE_SC;
@@ -199,7 +199,7 @@ var CloseCycleWidget = React.createClass({
         if(this.shouldRenderComponent())
             Component = (
                 <div>
-                    {this.props.current_cycle_id === 'sales_0' && (<SalesCycleByAllSummary />) || (<SalesCycleSummary cycle_id={this.props.current_cycle_id} />)}
+                    {this.props.current_cycle_id === CRMConstants.GLOBAL_SALES_CYCLE_ID && (<SalesCycleByAllSummary />) || (<SalesCycleSummary cycle_id={this.props.current_cycle_id} />)}
                     <SalesCycleCloseForm
                     value={this.getSalesCycle()}
                     handleSubmit={this.props.onCycleClosed}
@@ -494,11 +494,11 @@ var ActivityListView = React.createClass({
 
     buildChoices: function(){
         var cycles = this.getCyclesForCurrentContact();
-        cycles.push({
-            'id': 'sales_0',
-            'title': 'Все события',
-            'status': false
-        });
+        // cycles.push({
+        //     'id': 'sales_0',
+        //     'title': 'Все события',
+        //     'status': false
+        // });
         return _.map(cycles, function(c){
             return [c.id, c.title, c.status];
         });
@@ -556,10 +556,10 @@ var ActivityListView = React.createClass({
 
     navigateToSalesCycle: function(cycle_id) {
         var params = this.getParams();
-        params.salescycle_id = cycle_id === 'sales_0' ? null : cycle_id;
+        params.salescycle_id = cycle_id === CRMConstants.GLOBAL_SALES_CYCLE_ID ? null : cycle_id;
         this.transitionTo('activities_by', params);
         return false;
-      },
+    },
 
     resetState: function() {
         this.setState(this.getInitialState(), function(prev_state) {
@@ -572,8 +572,8 @@ var ActivityListView = React.createClass({
     },
 
     render: function() {
-        var cycle_id = ('salescycle_id' in this.getParams()) && this.getParams()['salescycle_id'] || 'sales_0';
-        if(cycle_id === 'sales_0') {
+        var cycle_id = ('salescycle_id' in this.getParams()) && this.getParams()['salescycle_id'] || CRMConstants.GLOBAL_SALES_CYCLE_ID;
+        if(cycle_id === CRMConstants.GLOBAL_SALES_CYCLE_ID) {
             var activities = ActivityStore.bySalesCycles(
                 _.map(this.getCyclesForCurrentContact(),function(sc){
                     return sc.id
@@ -613,15 +613,6 @@ var ActivityListView = React.createClass({
 
             </div>
         );
-//                 <Modal isOpen={this.getAddEventModalState}
-//                        onRequestClose={this.resetState}
-//                        modalTitle='ДОБАВЛЕНИЕ СОБЫТИЯ'>
-//                     <AddActivityForm
-//                         salescycle={this.getParams().salescycle_id || null}
-//                         current_user={this.getUser()}
-//                         onHandleSubmit={this.onAddEvent}
-//                         onCancel={this.resetState} />
-//                 </Modal>
     }
 
 

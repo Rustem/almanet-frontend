@@ -9,6 +9,8 @@ var ContactStore = require('./ContactStore');
 
 var SALES_CYCLE_STATUS = CRMConstants.SALES_CYCLE_STATUS;
 var ActionTypes = CRMConstants.ActionTypes;
+var GLOBAL_SALES_CYCLE_ID = CRMConstants.GLOBAL_SALES_CYCLE_ID;
+
 var CHANGE_EVENT = 'change';
 
 var _salescycles = {};
@@ -53,17 +55,21 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
         return _.filter(salescycles, function(c){ return _.indexOf(ids, c.id) !== -1 });
     },
 
+    getGlobal: function() {
+        return _salescycles[GLOBAL_SALES_CYCLE_ID];
+    },
+
     getCyclesForCurrentContact: function(contact_id) {
         // strange: without this ContactStore is empty object and .get function is undefined
         var ContactStore = require('./ContactStore');
         var contact = ContactStore.get(contact_id);
-        var rv = this.byContact(contact_id)
+        var cycles = [this.getGlobal()].concat(this.byContact(contact_id));
         if (!contact || !contact.is_company)
-            return rv;
+            return cycles;
         _.forEach(contact.contacts, function(c_id){
-            rv.push(this.byContact(c_id));
+            cycles.push(this.byContact(c_id));
         }.bind(this));
-        return _.flatten(rv);
+        return _.flatten(cycles);
     },
 
     getCreatedSalesCycle: function(obj) {
@@ -87,6 +93,11 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
                 if(actv.salescycle_id in _salescycles)
                     _salescycles[actv.salescycle_id].activities.push(actv.id);
             });
+            _salescycles[GLOBAL_SALES_CYCLE_ID] = {
+                id: GLOBAL_SALES_CYCLE_ID,
+                title: 'Все события',
+                status: SALES_CYCLE_STATUS.PENDING
+            }
             SalesCycleStore.emitChange();
             break;
         case ActionTypes.CREATE_ACTIVITY_SUCCESS:

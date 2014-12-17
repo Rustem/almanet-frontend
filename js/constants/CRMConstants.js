@@ -58,4 +58,5 @@ module.exports = {
         CONTACT_CREATE: null,
         CONTACT_UPDATE: null
     }),
+    GLOBAL_SALES_CYCLE_ID: 'sales_0',
 }
