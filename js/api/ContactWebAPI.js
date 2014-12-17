@@ -91,6 +91,12 @@ module.exports = {
         localStorage.setItem('shares', JSON.stringify(rawShares));
         setTimeout(function() {
             success(obj);
+            var author_id = obj.author_id,
+                extra = {
+                    'share_id': obj.id,
+                    'contact_id': obj.contact_id,
+                    'receiver_id': obj.user_id};
+            SignalManager.send(ActionTypes.CREATE_SHARE_SUCCESS, author_id, extra);
         }, 0);
     },
     markSharesAsRead: function(share_ids, success, failure) {

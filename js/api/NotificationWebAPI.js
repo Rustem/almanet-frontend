@@ -78,3 +78,6 @@ SignalManager.connect(ActionTypes.CREATE_CONTACT_SUCCESS,
 
 SignalManager.connect(ActionTypes.EDIT_CONTACT_SUCCESS,
                       new_notification.bind(null, NotifTypes.CONTACT_UPDATE));
+
+SignalManager.connect(ActionTypes.CREATE_SHARE_SUCCESS,
+                      new_notification.bind(null, NotifTypes.CONTACT_SHARED));

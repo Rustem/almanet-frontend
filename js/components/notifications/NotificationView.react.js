@@ -57,6 +57,32 @@ var NotificationContactUpdateView = React.createClass({
 
 });
 
+var NotificationContactShareView = React.createClass({
+
+    mixins : [AppContextMixin],
+
+    propTypes: {
+        n: React.PropTypes.object
+    },
+
+    render: function() {
+        var n = this.props.n,
+            author = UserStore.get(n.author_id),
+            receiver = UserStore.get(n.receiver_id),
+            sharedContact = ContactStore.get(n.extra.contact_id);
+        return (
+            <div key={n.id} className="notificationCenter-item">
+                <div className="notificationCenter-item-meta">
+                    {moment(n.at).fromNow()}
+                </div>
+                Пользователь {utils.capitalize(author.first_name)} поделился контактом
+                {sharedContact.fn} с пользователем {utils.capitalize(receiver.first_name)}.
+            </div>
+        );
+    }
+
+});
+
 function renderNotification(n) {
     var tp = n.type, TPL = null;
     switch(tp) {
@@ -65,6 +91,9 @@ function renderNotification(n) {
             break;
         case NotifTypes.CONTACT_UPDATE:
             TPL = NotificationContactUpdateView;
+            break;
+        case NotifTypes.CONTACT_SHARE:
+            TPL = NotificationContactShareView;
             break;
         default:
             // do nothing

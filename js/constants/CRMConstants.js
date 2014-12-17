@@ -62,6 +62,7 @@ module.exports = {
     },
     NotifTypes: keyMirror({
         CONTACT_CREATE: null,
-        CONTACT_UPDATE: null
+        CONTACT_UPDATE: null,
+        CONTACT_SHARE: null
     }),
 }

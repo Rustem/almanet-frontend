@@ -76,7 +76,7 @@ module.exports = {
     ]));
 
     var cycles = JSON.parse(localStorage.getItem('salescycles')) || [];
-    if(cycles[0].id !== GLOBAL_SALES_CYCLE_ID) {
+    if(cycles.length > 0 && cycles[0].id !== GLOBAL_SALES_CYCLE_ID) {
       cycles.unshift(GLOBAL_SALES_CYCLE);
       localStorage.setItem('salescycles', JSON.stringify(cycles));
     }
