@@ -130,7 +130,7 @@ var MyFeedDetailView = React.createClass({
         activities = ActivityStore.myFeed(this.getUser());
         return {
             activities: activities,
-            search_bar: {select_all: false, filter_text: ''}
+            search_bar: {filter_text: ''}
         }
     },
 
@@ -143,31 +143,16 @@ var MyFeedDetailView = React.createClass({
     },
 
     onFilterBarUpdate: function(value) {
-        var _map = {}, changed = value.select_all ^ this.state.search_bar.select_all,
-            activities = null;
+        var activities = null;
         if(value.filter_text) {
             activities = fuzzySearch(this.state.activities, value.filter_text, {
                 'keys': ['description']});
         } else {
-            activities = ActivityStore.getByDate(true);
-        }
-        for(var activity_id in this.state.selection_map) {
-            _map[activity_id] = false;
-        }
-        for(var i = 0; i<activities.length; i++) {
-            activity_id = activities[i].id;
-            if(changed) {
-                _map[activity_id] = value.select_all;
-            } else if(value.select_all) {
-                _map[activity_id] = true;
-            } else {
-                _map[activity_id] = this.state.selection_map[activity_id];
-            }
+            activities = ActivityStore.myFeed(this.getUser());
         }
 
         var newState = React.addons.update(this.state, {
             activities: {$set: activities},
-            selection_map: {$set: _map},
             search_bar: {$set: value},
         });
         this.setState(newState);
