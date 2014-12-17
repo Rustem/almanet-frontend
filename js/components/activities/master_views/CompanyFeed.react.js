@@ -13,6 +13,7 @@ var ActiveState = Router.ActiveState;
 var Link = Router.Link;
 var IconSvg = require('../../common/IconSvg.react');
 var ActivityStore = require('../../../stores/ActivityStore');
+var UserStore = require('../../../stores/UserStore');
 var AppContextMixin = require('../../../mixins/AppContextMixin');
 var Form = require('../../../forms/Form.react');
 var inputs = require('../../../forms/input');
@@ -37,10 +38,12 @@ var CompanyFeedLink = React.createClass({
 
     componentDidMount: function() {
         ActivityStore.addChangeListener(this._onChange);
+        UserStore.addChangeListener(this._onChange);
     },
 
     componentWillUnmount: function() {
         ActivityStore.removeChangeListener(this._onChange);
+        UserStore.removeChangeListener(this._onChange);
     },
 
     _onChange: function() {
@@ -130,6 +133,16 @@ var CompanyFeedDetailView = React.createClass({
         }
     },
 
+    componentDidMount: function() {
+        ActivityStore.addChangeListener(this._onChange);
+        UserStore.addChangeListener(this._onChange);
+    },
+
+    componentWillUnmount: function() {
+        ActivityStore.removeChangeListener(this._onChange);
+        UserStore.removeChangeListener(this._onChange);
+    },
+
     getFilterText: function() {
         return this.state.search_bar.filter_text;
     },
@@ -171,6 +184,10 @@ var CompanyFeedDetailView = React.createClass({
             </div>
         )
     },
+
+    _onChange: function() {
+        this.setState(this.getInitialState());
+    }
 });
 
 module.exports.DetailView = CompanyFeedDetailView;

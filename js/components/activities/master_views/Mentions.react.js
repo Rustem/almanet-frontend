@@ -13,6 +13,7 @@ var ActiveState = Router.ActiveState;
 var Link = Router.Link;
 var IconSvg = require('../../common/IconSvg.react');
 var ActivityStore = require('../../../stores/ActivityStore');
+var UserStore = require('../../../stores/UserStore');
 var AppContextMixin = require('../../../mixins/AppContextMixin');
 
 function get_mentions_number(user) {
@@ -32,10 +33,12 @@ var MentionsLink = React.createClass({
 
     componentDidMount: function() {
         ActivityStore.addChangeListener(this._onChange);
+        UserStore.addChangeListener(this._onChange);
     },
 
     componentWillUnmount: function() {
         ActivityStore.removeChangeListener(this._onChange);
+        UserStore.removeChangeListener(this._onChange);
     },
 
     _onChange: function() {
@@ -79,6 +82,16 @@ var MentionsDetailView = React.createClass({
     propTypes: {
         label: React.PropTypes.string
     },
+
+    componentDidMount: function() {
+        ActivityStore.addChangeListener(this._onChange);
+        UserStore.addChangeListener(this._onChange);
+    },
+
+    componentWillUnmount: function() {
+        ActivityStore.removeChangeListener(this._onChange);
+        UserStore.removeChangeListener(this._onChange);
+    },
     
     render: function() {
         return (
@@ -92,6 +105,10 @@ var MentionsDetailView = React.createClass({
             </div>
         )
     },
+
+    _onChange: function() {
+        this.setState(this.getInitialState());
+    }
 });
 
 module.exports.DetailView = MentionsDetailView;

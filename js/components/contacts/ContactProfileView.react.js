@@ -19,6 +19,7 @@ var Modal = require('../common/Modal.react');
 var DropDownBehaviour = require('../../forms/behaviours/DropDownBehaviour');
 var ContactShareForm = require('../../forms/ContactShareForm.react');
 var AppContextMixin = require('../../mixins/AppContextMixin');
+var FollowButton = require('../common/FollowButton.react');
 
 var VIEW_MODE = require('../../constants/CRMConstants').CONTACT_VIEW_MODE;
 
@@ -181,6 +182,11 @@ var ContactProfileView = React.createClass({
                             <div className="space-verticalBorder"></div>
                             <div className="text-strong text-large">Продукты</div>
                             {products.map(this.renderProduct)}
+
+                            <div className="space-verticalBorder"></div>
+                            <FollowButton contact={this.getContact()} />
+
+                            
                         </div>
 
                     </div>

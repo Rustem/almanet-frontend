@@ -67,6 +67,10 @@ SessionStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             SessionStore.reset_current(user_id);
             SessionStore.emitChange();
             break;
+        case ActionTypes.TOGGLE_FOLLOWING_SUCCESS:
+            SessionStore.setCurrent(action.object);
+            SessionStore.emitChange();
+            break;
 
     }
 });
