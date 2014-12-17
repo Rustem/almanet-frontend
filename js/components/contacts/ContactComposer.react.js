@@ -4,11 +4,11 @@
 
 var _ = require('lodash');
 var React = require('react');
-var IconSvg = require('./common/IconSvg.react');
-var ContactCreateForm = require('../forms/ContactCreateForm.react');
+var IconSvg = require('../common/IconSvg.react');
+var ContactCreateForm = require('../../forms/ContactCreateForm.react');
 
-var ContactActionCreators = require('../actions/ContactActionCreators');
-var AppContextMixin = require('../mixins/AppContextMixin');
+var ContactActionCreators = require('../../actions/ContactActionCreators');
+var AppContextMixin = require('../../mixins/AppContextMixin');
 
 var ESCAPE_KEY_CODE = 27;
 

@@ -5,12 +5,12 @@
 var _ = require('lodash');
 var React = require('react/addons');
 var cx            = React.addons.classSet;
-var IconSvg = require('./common/IconSvg.react');
-var CRMConstants = require('../constants/CRMConstants');
-var SalesCycleCloseForm = require('../forms/SalesCycleCloseForm.react');
-var SalesCycleStore = require('../stores/SalesCycleStore');
+var IconSvg = require('../common/IconSvg.react');
+var CRMConstants = require('../../constants/CRMConstants');
+var SalesCycleCloseForm = require('../../forms/SalesCycleCloseForm.react');
+var SalesCycleStore = require('../../stores/SalesCycleStore');
 
-var AppContextMixin = require('../mixins/AppContextMixin');
+var AppContextMixin = require('../../mixins/AppContextMixin');
 
 var ESCAPE_KEY_CODE = 27;
 var SALES_CYCLE_STATUS = CRMConstants.SALES_CYCLE_STATUS;

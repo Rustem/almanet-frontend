@@ -54,6 +54,14 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
         return _.filter(activities, function(c){ return _.indexOf(ids, c.id) !== -1 });
     },
 
+    myFeed: function(user) {
+        return 5;
+    },
+
+    getMentions: function(user) {
+        return 3;
+    },
+
     getCreatedActivity: function(obj) {
         return obj;
     }

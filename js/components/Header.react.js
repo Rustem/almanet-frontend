@@ -4,7 +4,7 @@
 
 var React = require('react');
 var IconSvg = require('./common/IconSvg.react');
-var ContactComposer = require('./ContactComposer.react');
+var ContactComposer = require('./contacts/ContactComposer.react');
 var AppContextMixin = require('../mixins/AppContextMixin');
 
 var Header = React.createClass({
@@ -16,7 +16,7 @@ var Header = React.createClass({
                 <div className="nav-a">
                   <a href="index.html" className="nav-link active">
                     Контакты
-                  </a><a href="#" className="nav-link">
+                  </a><a href="#/activities" className="nav-link">
                     События
                   </a><a href="#" className="nav-link">
                     Продукты

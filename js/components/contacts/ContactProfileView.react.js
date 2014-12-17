@@ -5,22 +5,22 @@ var keyMirror = require('react/lib/keyMirror');
 var cx            = React.addons.classSet;
 var Router = require('react-router');
 var RouteHandler = Router.RouteHandler;
-var ContactStore = require('../stores/ContactStore');
-var ShareStore = require('../stores/ShareStore');
-var SalesCycleStore = require('../stores/SalesCycleStore');
-var ProductStore = require('../stores/ProductStore');
-var ContactActionCreators = require('../actions/ContactActionCreators');
-var BreadCrumb = require('./common/BreadCrumb.react');
-var IconSvg = require('./common/IconSvg.react');
+var ContactStore = require('../../stores/ContactStore');
+var ShareStore = require('../../stores/ShareStore');
+var SalesCycleStore = require('../../stores/SalesCycleStore');
+var ProductStore = require('../../stores/ProductStore');
+var ContactActionCreators = require('../../actions/ContactActionCreators');
+var BreadCrumb = require('../common/BreadCrumb.react');
+var IconSvg = require('../common/IconSvg.react');
 var ContactVCard = require('./ContactVCard.react');
-var Header = require('./Header.react');
-var Footer = require('./Footer.react');
-var Modal = require('./common/Modal.react');
-var DropDownBehaviour = require('../forms/behaviours/DropDownBehaviour');
-var ContactShareForm = require('../forms/ContactShareForm.react');
-var AppContextMixin = require('../mixins/AppContextMixin');
+var Header = require('../Header.react');
+var Footer = require('../Footer.react');
+var Modal = require('../common/Modal.react');
+var DropDownBehaviour = require('../../forms/behaviours/DropDownBehaviour');
+var ContactShareForm = require('../../forms/ContactShareForm.react');
+var AppContextMixin = require('../../mixins/AppContextMixin');
 
-var VIEW_MODE = require('../constants/CRMConstants').CONTACT_VIEW_MODE;
+var VIEW_MODE = require('../../constants/CRMConstants').CONTACT_VIEW_MODE;
 
 
 
