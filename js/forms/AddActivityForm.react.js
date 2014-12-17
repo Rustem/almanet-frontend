@@ -5,19 +5,18 @@ var cloneWithProps = React.addons.cloneWithProps;
 var Form = require('./Form.react');
 var FormElementMixin = require('./FormElementMixin.react');
 var inputs = require('./input');
-var ContentEditableInput = inputs.ContentEditableInput;
 var elements = require('./elements');
-var ContactRemoveableDropDownList = elements.ContactRemoveableDropDownList;
-var ParticipantRemoveableDropDownList = elements.ParticipantRemoveableDropDownList;
 var InputWithDropDown = elements.InputWithDropDown;
 var FeedbackDropDown = elements.FeedbackDropDown;
 var DropDownBehaviour = require('./behaviours').DropDownBehaviour;
 var IconSvg = require('../components/common/IconSvg.react');
 var Fieldset = require('./Fieldset.react');
-var ContactStore = require('../stores/ContactStore');
-var UserStore = require('../stores/UserStore');
 var SalesCycleStore = require('../stores/SalesCycleStore');
 var utils = require('../utils');
+
+var CRMConstants = require('../constants/CRMConstants');
+var ActionTypes = CRMConstants.ActionTypes;
+var GLOBAL_SALES_CYCLE_ID = CRMConstants.GLOBAL_SALES_CYCLE_ID;
 
 var NOTE_TEMPLATES = [
     ['Написал клиенту по почте', 'Пример 1: Написал клиенту по почте'],
@@ -163,34 +162,6 @@ var AddActivityForm = React.createClass({
                 </div>
             </Form>
         );
-            // <Form {...this.props} value={form_value}
-            //                       ref="add_event_form"
-            //                       onSubmit={this.onHandleSubmit}>
-            //     <InputWithDropDown name="description" choices={NOTE_TEMPLATES} />
-            //     <FeedbackDropDown name="feedback" choices={FEEDBACK_STATUSES} />
-            //     <hr className="text-neutral" />
-            //     <ContactRemoveableDropDownList
-            //         name="contacts"
-            //         title="Клиенты"
-            //         filter_placeholder="Добавить клиента" />
-            //     <hr className="text-neutral" />
-            //     <SalesCycleDropDownList name="salescycle" />
-            //     <hr className="text-neutral" />
-            //     <ParticipantRemoveableDropDownList
-            //         name="participants"
-            //         title="Коллеги"
-            //         filter_placeholder="Добавить коллегу" />
-            //     <hr className="text-neutral" />
-            //     <Fieldset className="modal-inputLine">
-            //       <strong>Длительность</strong>
-            //       <ContentEditableInput {...this.props} name="duration" />
-            //     </Fieldset>
-            //     <div className="modal-inputLine text-center">
-            //       <button type="submit" className="text-good">СОХРАНИТЬ</button>
-            //       <div className="space-horizontal"></div>
-            //       <button onClick={this.onHandleCancel} type="cancel" className="text-bad">ОТМЕНА</button>
-            //     </div>
-            // </Form>
     },
 
     onHandleCancel: function(e) {
@@ -207,12 +178,14 @@ var AddActivityForm = React.createClass({
             object.author_id = this.props.current_user.id;
             object.description = formValue.description;
             object.feedback = formValue.feedback;
-            // object.contact_ids = formValue.contacts;
-            // object.participant_ids = formValue.participants;
             object.salescycle_id = formValue.salescycle;
-            // duration = utils.timeToSeconds(formValue.duration);
-            // object.duration = duration
-          this.props.onHandleSubmit(object);
+            if(object.salescycle_id != GLOBAL_SALES_CYCLE_ID) {
+                object.contact_id = SalesCycleStore.get(this.props.salescycle_id).contact_id;
+            }
+            else {
+                object.contact_id = null;
+            }
+            this.props.onHandleSubmit(object);
         } else{
             alert(errors);
         }

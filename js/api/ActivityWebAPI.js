@@ -21,9 +21,11 @@ module.exports = {
         var rawActivities = JSON.parse(localStorage.getItem('activities')) || [];
         rawActivities.push(object);
         localStorage.setItem('activities', JSON.stringify(rawActivities));
-        SignalManager.send(ActionTypes.CREATE_ACTIVITY_SUCCESS, activityObject);
         setTimeout(function() {
             success(object);
+            var author_id = object.author_id,
+                extra = {'activity_id': object.id, 'salescycle_id': object.salescycle_id}
+            SignalManager.send(ActionTypes.CREATE_ACTIVITY_SUCCESS, author_id, extra);
         }, 0);
     }
 };

@@ -8,6 +8,11 @@ var Fieldset = require('./Fieldset.react');
 var InputWithDropDown = elements.InputWithDropDown;
 var FeedbackDropDown = elements.FeedbackDropDown;
 
+var CRMConstants = require('../constants/CRMConstants');
+var ActionTypes = CRMConstants.ActionTypes;
+var GLOBAL_SALES_CYCLE_ID = CRMConstants.GLOBAL_SALES_CYCLE_ID;
+
+
 // TODO: probably replace it to constants or get remotely (repeat in forms/AddActivityForm)
 var NOTE_TEMPLATES = [
     ['Написал клиенту по почте', 'Пример 1: Написал клиенту по почте'],
@@ -62,7 +67,12 @@ var AddActivityMiniForm = React.createClass({
             object.salescycle_id = this.props.salescycle_id;
             object.description = formValue.description;
             object.feedback = formValue.feedback;
-            object.contact_id = SalesCycleStore.get(this.props.salescycle_id).contact_id;
+            if(object.salescycle_id != GLOBAL_SALES_CYCLE_ID) {
+                object.contact_id = SalesCycleStore.get(this.props.salescycle_id).contact_id;
+            }
+            else {
+                object.contact_id = null;
+            }
           this.props.onHandleSubmit(object);
         } else{
             alert(errors);

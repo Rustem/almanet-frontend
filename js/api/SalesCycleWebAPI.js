@@ -57,11 +57,10 @@ module.exports = api = {
     }
 };
 
-function update_state(activity) {
+function update_state(author_id, extra) {
     var rawSalesCycles = JSON.parse(localStorage.getItem('salescycles')) || [],
-        current_cycle_id = activity.salescycle_id;
-    var current_cycle = _.find(rawSalesCycles, function(sc){
-        return sc.id === current_cycle_id });
+        current_cycle = _.find(rawSalesCycles, function(sc){
+            return sc.id === extra.salescycle_id });
     if(current_cycle.status == SALES_CYCLE_STATUS.NEW) {
         current_cycle.status = SALES_CYCLE_STATUS.PENDING;
         localStorage.setItem('salescycles', JSON.stringify(rawSalesCycles));

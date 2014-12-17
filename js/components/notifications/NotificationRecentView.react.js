@@ -110,6 +110,40 @@ var NotificationContactShareView = React.createClass({
 
 });
 
+var NotificationActivityCreateView = React.createClass({
+
+    mixins : [AppContextMixin],
+
+    propTypes: {
+        n: React.PropTypes.object,
+        onClose: React.PropTypes.func
+    },
+
+    render: function() {
+        var n = this.props.n,
+            author = UserStore.get(n.author_id);
+
+        return (
+            <div className="notification active">
+              <div className="notification-body">
+                <div className="notification-message">
+                  Пользователь {utils.capitalize(author.first_name)} добавил новое взаимодействие.
+                </div>
+              </div>
+              <button onClick={this.onClick} className="notification-toggle" type="button">
+                Закрыть
+              </button>
+            </div>
+        );
+    },
+
+    onClick: function(evt) {
+        this.props.onClose(this.props.n.id);
+    }
+
+});
+
+
 function renderNotification(n) {
     var tp = n.type, TPL = null;
     switch(tp) {
@@ -122,6 +156,8 @@ function renderNotification(n) {
         case NotifTypes.CONTACT_SHARE:
             TPL = NotificationContactShareView;
             break;
+        case NotifTypes.ACTIVITY_CREATE:
+            TPL = NotificationActivityCreateView;
         default:
             // do nothing
             true;

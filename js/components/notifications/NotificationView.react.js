@@ -82,6 +82,30 @@ var NotificationContactShareView = React.createClass({
 
 });
 
+var NotificationActivityCreateView = React.createClass({
+
+    mixins : [AppContextMixin],
+
+    propTypes: {
+        n: React.PropTypes.object
+    },
+
+    render: function() {
+        var n = this.props.n,
+            author = UserStore.get(n.author_id);
+
+        return (
+            <div key={n.id} className="notificationCenter-item">
+                <div className="notificationCenter-item-meta">
+                    {moment(n.at).fromNow()}
+                </div>
+                Пользователь {utils.capitalize(author.first_name)} добавил новое взаимодействие.
+            </div>
+        );
+    }
+
+});
+
 function renderNotification(n) {
     var tp = n.type, TPL = null;
     switch(tp) {
@@ -93,6 +117,9 @@ function renderNotification(n) {
             break;
         case NotifTypes.CONTACT_SHARE:
             TPL = NotificationContactShareView;
+            break;
+        case NotifTypes.ACTIVITY_CREATE:
+            TPL = NotificationActivityCreateView;
             break;
         default:
             // do nothing
