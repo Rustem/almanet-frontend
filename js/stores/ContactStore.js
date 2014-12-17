@@ -102,6 +102,10 @@ var ContactStore = assign({}, EventEmitter.prototype, {
         return null;
     },
 
+    byActivity: function(a) {
+        return this.get(SalesCycleStore.get(a.salescycle_id).contact_id);
+    },
+
     getCreatedContact: function(obj) {
         return obj;
     },

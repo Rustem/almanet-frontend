@@ -15,9 +15,6 @@ var Link = Router.Link;
 var IconSvg = require('../../common/IconSvg.react');
 var AppContextMixin = require('../../../mixins/AppContextMixin');
 var ActivityStore = require('../../../stores/ActivityStore');
-var ContactStore = require('../../../stores/ContactStore');
-var SalesCycleStore = require('../../../stores/SalesCycleStore');
-var UserStore = require('../../../stores/UserStore');
 var Form = require('../../../forms/Form.react');
 var inputs = require('../../../forms/input');
 var SVGCheckbox = inputs.SVGCheckbox;
@@ -194,5 +191,6 @@ var MyFeedDetailView = React.createClass({
         )
     },
 });
+
 module.exports.DetailView = MyFeedDetailView;
 module.exports.Link = MyFeedLink;

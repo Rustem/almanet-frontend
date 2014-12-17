@@ -2,7 +2,6 @@ var React = require('react/addons');
 var AppContextMixin = require('../../mixins/AppContextMixin');
 var ActivityStore = require('../../stores/ActivityStore');
 var ContactStore = require('../../stores/ContactStore');
-var SalesCycleStore = require('../../stores/SalesCycleStore');
 var UserStore = require('../../stores/UserStore');
 var Router = require('react-router');
 var Link = Router.Link;
@@ -18,14 +17,14 @@ var ActivityListItem = React.createClass({
         return UserStore.get(user_id);
     },
 
-    getContact: function(sc_id) {
-        return ContactStore.get(SalesCycleStore.get(sc_id).contact_id);
+    getContact: function(a) {
+        return ContactStore.byActivity(a);
     },
 
     render: function() {
         var activity = this.props.activity;
         var author = this.getAuthor(activity.author_id);
-        var contact = this.getContact(activity.salescycle_id);
+        var contact = this.getContact(activity);
         return (
             <div className="stream-item">
                 <div className="row">

@@ -4,6 +4,7 @@ var EventEmitter = require('events').EventEmitter;
 var CRMConstants = require('../constants/CRMConstants');
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
 var SessionStore = require('./SessionStore');
+var ContactStore = require('./ContactStore');
 
 var ActionTypes = CRMConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
@@ -55,15 +56,10 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
     },
 
     myFeed: function(user) {
-        function getContactID(a) {
-            var ContactStore = require('./ContactStore');
-            var SalesCycleStore = require('./SalesCycleStore');
-            return ContactStore.get(SalesCycleStore.get(a.salescycle_id).contact_id).id;
-        };
-
+        // strange 2
+        var ContactStore = require('./ContactStore');
         var activities = this.getByDate();
-
-        return _.filter(activities, function(a){ return !(_.contains(user.unfollow_list, getContactID(a))) });
+        return _.filter(activities, function(a){ return !(_.contains(user.unfollow_list, ContactStore.byActivity(a).id)) });
     },
 
     getMentions: function(user) {
