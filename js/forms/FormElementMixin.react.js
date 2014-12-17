@@ -2,7 +2,7 @@
  * @jsx React.DOM
  */
 'use strict';
-
+var _ = require('lodash');
 var React            = require('react');
 var FormMixin = require('./FormMixin.react');
 /**
@@ -37,21 +37,21 @@ var FormElementMixin = {
    * @returns {Value}
    */
   value: function() {
-    if (this.props.value !== undefined && this.props.value !== null) {
+
+    function isBad(val) {
+      return _.contains([undefined, null], val)
+    }
+    if (!isBad(this.props.value)) {
       return this.props.value;
     }
-    var value = this.context.value;
-    if(value !== undefined && value !== null) {
-      if(this.props.name !== undefined) {
-        if(this.props.name in value){
-          return value[this.props.name];
-        }
-        else {
-          return null;
-        }
+    if(!isBad(this.context.value)) {
+      if(this.props.name !== undefined && this.props.name in this.context.value) {
+        return this.context.value[this.props.name];
       } else {
         return null;
       }
+    } else {
+      return null;
     }
   },
 
