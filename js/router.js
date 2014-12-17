@@ -71,7 +71,11 @@ module.exports.NODES = {
     'leadbase': new Node('leadbase', 'Контакты в обработке'),
     'coldbase': new Node('coldbase', 'Холодная база'),
     'shared_default': new Node('shared_default', 'Входящие'),
-    'main': new Node('main', 'главная')
+    'main': new Node('main', 'главная'),
+    'activities': new Node('activities', 'События'),
+    'my_feed': new Node('my_feed', 'Моя лента'),
+    'mentions': new Node('mentions', 'Упоминания'),
+    'company_feed': new Node('company_feed', 'Лента компании'),
 }
 
 module.exports.relationships = {

@@ -20,6 +20,7 @@ var AppContextMixin = require('../../../mixins/AppContextMixin');
 var Form = require('../../../forms/Form.react');
 var inputs = require('../../../forms/input');
 var Input = inputs.Input;
+var Crumb = require('../../common/BreadCrumb.react').Crumb;
 
 function get_activity_number() {
     return _.size(ActivityStore.getByDate());
@@ -257,9 +258,7 @@ var CompanyFeedDetailView = React.createClass({
         return (
             <div className="page page--noHeaderOpts">
                 <div className="page-header">
-                    <ul className="page-breadcrumbs">
-        <li><a href="#" className="page-breadcrumbs-link">Моя лента</a></li>
-      </ul>
+                    <Crumb />
                     <FilterBar
                         ref="filter_bar"
                         value={this.state.search_bar}

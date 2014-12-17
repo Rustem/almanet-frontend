@@ -15,8 +15,7 @@ module.exports = {
         var obj = _.extend({}, {
             id: 'c_' + timeNow,
             at: timeNow,
-            is_cold: true,
-            unfollow_list: []}, contactObject);
+            is_cold: true}, contactObject);
         var share = {
             id: 'share_' + Date.now(),
             user_id: contactObject.author_id,

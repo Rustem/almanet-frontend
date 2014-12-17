@@ -20,6 +20,7 @@ var CRMActivities = React.createClass({
                 <div className="body-master">
                     <div className="page page--compact">
                         <div className="page-header">
+                            <BreadCrumb slice={[1, -1]} />
                         </div>
                         <div className="page-body">
                             <master_views.MyFeed.Link label="Моя лента" />

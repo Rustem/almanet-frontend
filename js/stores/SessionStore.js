@@ -13,7 +13,8 @@ var _anonymous_user = {
     email: '',
     first_name: '',
     last_name: '',
-    userpic: 'sanzhar.png'
+    userpic: 'sanzhar.png',
+    unfollow_list: []
 };
 
 var _current_user = _.cloneDeep(_anonymous_user);

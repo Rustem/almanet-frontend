@@ -46,20 +46,28 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
     },
 
     getAll: function() {
-        return _.map(_activities, function(c) { return c });
+        return _.map(_activities, function(a) { return a });
     },
 
     getByIds: function(ids) {
         var activities = this.getAll();
-        return _.filter(activities, function(c){ return _.indexOf(ids, c.id) !== -1 });
+        return _.filter(activities, function(a){ return _.indexOf(ids, a.id) !== -1 });
     },
 
     myFeed: function(user) {
-        return 5;
+        function getContactID(a) {
+            var ContactStore = require('./ContactStore');
+            var SalesCycleStore = require('./SalesCycleStore');
+            return ContactStore.get(SalesCycleStore.get(a.salescycle_id).contact_id).id;
+        };
+
+        var activities = this.getByDate();
+
+        return _.filter(activities, function(a){ return !(_.contains(user.unfollow_list, getContactID(a))) });
     },
 
     getMentions: function(user) {
-        return 3;
+        return [];
     },
 
     getCreatedActivity: function(obj) {
