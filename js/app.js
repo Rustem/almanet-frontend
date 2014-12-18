@@ -32,7 +32,7 @@ AuthWebAPI.loadCurrentUser(function(user){
                         ProductWebAPI.getAll(function(products){
                             NotificationWebAPI.getAll(function(notifications){
                               var appState = {
-                                  user: user,
+                                  user: users[0],
                                   contacts: contacts,
                                   shares: shares,
                                   users: users,

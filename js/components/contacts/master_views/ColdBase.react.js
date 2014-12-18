@@ -7,37 +7,37 @@ var _ = require('lodash');
 var React = require('react/addons');
 var cx        = React.addons.classSet;
 var Router = require('react-router');
-var capitalize = require('../../utils').capitalize;
-var fuzzySearch = require('../../utils').fuzzySearch;
+var capitalize = require('../../../utils').capitalize;
+var fuzzySearch = require('../../../utils').fuzzySearch;
 var ActiveState = Router.ActiveState;
 var Link = Router.Link;
-var IconSvg = require('../common/IconSvg.react');
-var Modal = require('../common/Modal.react');
-var ContactActionCreators = require('../../actions/ContactActionCreators');
-var ContactStore = require('../../stores/ContactStore');
-var ShareStore = require('../../stores/ShareStore');
-var AppContextMixin = require('../../mixins/AppContextMixin');
-var ContactShareForm = require('../../forms/ContactShareForm.react');
-var Form = require('../../forms/Form.react');
-var inputs = require('../../forms/input');
+var IconSvg = require('../../common/IconSvg.react');
+var Modal = require('../../common/Modal.react');
+var ContactActionCreators = require('../../../actions/ContactActionCreators');
+var ContactStore = require('../../../stores/ContactStore');
+var ShareStore = require('../../../stores/ShareStore');
+var AppContextMixin = require('../../../mixins/AppContextMixin');
+var ContactShareForm = require('../../../forms/ContactShareForm.react');
+var Form = require('../../../forms/Form.react');
+var inputs = require('../../../forms/input');
 var SVGCheckbox = inputs.SVGCheckbox;
 var Input = inputs.Input;
-var Div = require('../../forms/Fieldset.react').Div;
-var Crumb = require('../common/BreadCrumb.react').Crumb;
+var Div = require('../../../forms/Fieldset.react').Div;
+var Crumb = require('../../common/BreadCrumb.react').Crumb;
 
-function get_contacts_number() {
-    return _.size(ContactStore.getLeads(true));
+function get_coldbase_contacts() {
+    return _.size(ContactStore.getColdByDate());
 }
 
 
-var LeadBaseLink = React.createClass({
+var ColdBaseLink = React.createClass({
     mixins: [Router.State],
     propTypes: {
         label: React.PropTypes.string,
     },
 
     getInitialState: function() {
-        return {'amount': get_contacts_number()};
+        return {'amount': get_coldbase_contacts()};
     },
 
     componentDidMount: function() {
@@ -49,7 +49,7 @@ var LeadBaseLink = React.createClass({
     },
 
     _onChange: function() {
-        this.setState({'amount': get_contacts_number()});
+        this.setState({'amount': get_coldbase_contacts()});
     },
 
     render: function() {
@@ -60,7 +60,7 @@ var LeadBaseLink = React.createClass({
             'active': this.isCurrentlyActive()
         });
         return (
-            <Link className={className} to='leadbase'>
+            <Link className={className} to='coldbase'>
                 <div className="row-icon"></div>
                 <div className="row-body">
                     <div className="row-body-primary">
@@ -77,7 +77,7 @@ var LeadBaseLink = React.createClass({
         var routes = this.getRoutes();
         var route = routes[routes.length - 1];
         if(!route) { return false; }
-        return route.name === 'leadbase';
+        return route.name === 'coldbase';
     }
 });
 
@@ -165,7 +165,7 @@ var ContactListItem = React.createClass({
     }
 });
 
-var LeadBaseList = React.createClass({
+var ColdBaseList = React.createClass({
     propTypes: {
         filter_text: React.PropTypes.string,
         contacts: React.PropTypes.array,
@@ -263,14 +263,14 @@ var LeadBaseList = React.createClass({
 });
 
 
-var LeadBaseDetailView = React.createClass({
-    mixins: [Router.Navigation,AppContextMixin],
+var ColdBaseDetailView = React.createClass({
+    mixins: [AppContextMixin, Router.Navigation],
     propTypes: {
         label: React.PropTypes.string
     },
     getInitialState: function() {
         var selection_map = {};
-        contacts = ContactStore.getLeads(true);
+        contacts = ContactStore.getColdByDate(true);
         for(var i = 0; i < contacts.length; i++) {
             selection_map[contacts[i].id] = false;
         }
@@ -345,7 +345,6 @@ var LeadBaseDetailView = React.createClass({
         setTimeout(function() {
             this.transitionTo('contacts_selected', {}, {'ids': next_ids});
         }.bind(this), 0);
-
     },
 
     isShareFormActive: function() {
@@ -360,7 +359,7 @@ var LeadBaseDetailView = React.createClass({
                 this.state.contacts, value.filter_text, {
                     'keys': ['fn', 'emails.value']});
         } else {
-            contacts = ContactStore.getLeads(true);
+            contacts = ContactStore.getColdByDate(true);
         }
         for(var contact_id in this.state.selection_map) {
             _map[contact_id] = false;
@@ -383,6 +382,7 @@ var LeadBaseDetailView = React.createClass({
         });
         this.setState(newState);
     },
+
     onToggleListItem: function(contact_id, is_selected) {
         var updItem = {};
         updItem[contact_id] = is_selected;
@@ -410,8 +410,8 @@ var LeadBaseDetailView = React.createClass({
                     onHandleUserInput={this.onFilterBarUpdate}
                     onUserAction={this.onUserAction} />
             </div>
-            <LeadBaseList
-                ref="allbase_list"
+            <ColdBaseList
+                ref="coldbase_list"
                 filter_text={this.getFilterText()}
                 contacts={this.getContacts()}
                 selection_map={this.getSelectMap()}
@@ -457,7 +457,7 @@ var LeadBaseDetailView = React.createClass({
     }
 });
 
-module.exports.DetailView = LeadBaseDetailView;
-module.exports.Link = LeadBaseLink;
+module.exports.DetailView = ColdBaseDetailView;
+module.exports.Link = ColdBaseLink;
 module.exports.FilterBar = FilterBar;
-module.exports.LeadBaseList = LeadBaseList;
+module.exports.ColdBaseList = ColdBaseList;

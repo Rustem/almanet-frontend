@@ -39,6 +39,9 @@ module.exports = {
         CREATE_NOTIFICATION: null,
         CREATE_NOTIFICATION_SUCCESS: null,
         CREATE_NOTIFICATION_FAIL: null,
+        TOGGLE_FOLLOWING: null,
+        TOGGLE_FOLLOWING_SUCCESS: null,
+        TOGGLE_FOLLOWING_FAIL: null,
         LOGOUT: null,
     }),
     PayloadSources: keyMirror({

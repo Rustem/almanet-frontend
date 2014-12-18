@@ -162,6 +162,34 @@ var AddActivityForm = React.createClass({
                 </div>
             </Form>
         );
+            // <Form {...this.props} value={form_value}
+            //                       ref="add_event_form"
+            //                       onSubmit={this.onHandleSubmit}>
+            //     <InputWithDropDown name="description" choices={NOTE_TEMPLATES} />
+            //     <FeedbackDropDown name="feedback" choices={FEEDBACK_STATUSES} />
+            //     <hr className="text-neutral" />
+            //     <ContactRemoveableDropDownList
+            //         name="contacts"
+            //         title="Клиенты"
+            //         filter_placeholder="Добавить клиента" />
+            //     <hr className="text-neutral" />
+            //     <SalesCycleDropDownList name="salescycle" />
+            //     <hr className="text-neutral" />
+            //     <ParticipantRemoveableDropDownList
+            //         name="participants"
+            //         title="Коллеги"
+            //         filter_placeholder="Добавить коллегу" />
+            //     <hr className="text-neutral" />
+            //     <Fieldset className="modal-inputLine">
+            //       <strong>Длительность</strong>
+            //       <ContentEditableInput {...this.props} name="duration" />
+            //     </Fieldset>
+            //     <div className="modal-inputLine text-center">
+            //       <button type="submit" className="text-good">СОХРАНИТЬ</button>
+            //       <div className="space-horizontal"></div>
+            //       <button onClick={this.onHandleCancel} type="cancel" className="text-bad">ОТМЕНА</button>
+            //     </div>
+            // </Form>
     },
 
     onHandleCancel: function(e) {

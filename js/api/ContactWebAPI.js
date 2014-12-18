@@ -15,8 +15,7 @@ module.exports = {
         var obj = _.extend({}, {
             id: 'c_' + timeNow,
             at: timeNow,
-            is_cold: true,
-            unfollow_list: []}, contactObject);
+            is_cold: true}, contactObject);
         var share = {
             id: 'share_' + Date.now(),
             user_id: contactObject.author_id,
@@ -83,8 +82,10 @@ module.exports = {
         }, 0);
     },
     createShare: function(shareObject, success, failure) {
+        var timeNow = Date.now();
         var obj = _.extend({}, {
-            id: 'share_' + Date.now(),
+            id: 'share_' + timeNow,
+            at: timeNow,
             isNew: true}, shareObject);
         var rawShares = JSON.parse(localStorage.getItem('shares')) || [];
         rawShares.push(obj);

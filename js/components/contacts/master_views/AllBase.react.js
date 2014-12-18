@@ -4,33 +4,34 @@
  */
 
 var _ = require('lodash');
+var Fuse = require('../../../libs/fuse');
 var React = require('react/addons');
 var cx        = React.addons.classSet;
 var Router = require('react-router');
-var capitalize = require('../../utils').capitalize;
-var fuzzySearch = require('../../utils').fuzzySearch;
+var capitalize = require('../../../utils').capitalize;
+var fuzzySearch = require('../../../utils').fuzzySearch;
 var ActiveState = Router.ActiveState;
 var Link = Router.Link;
-var IconSvg = require('../common/IconSvg.react');
-var Modal = require('../common/Modal.react');
-var ContactActionCreators = require('../../actions/ContactActionCreators');
-var ContactStore = require('../../stores/ContactStore');
-var ShareStore = require('../../stores/ShareStore');
-var AppContextMixin = require('../../mixins/AppContextMixin');
-var ContactShareForm = require('../../forms/ContactShareForm.react');
-var Form = require('../../forms/Form.react');
-var inputs = require('../../forms/input');
+var IconSvg = require('../../common/IconSvg.react');
+var Modal = require('../../common/Modal.react');
+var ContactActionCreators = require('../../../actions/ContactActionCreators');
+var ContactStore = require('../../../stores/ContactStore');
+var ShareStore = require('../../../stores/ShareStore');
+var AppContextMixin = require('../../../mixins/AppContextMixin');
+var ContactShareForm = require('../../../forms/ContactShareForm.react');
+var Form = require('../../../forms/Form.react');
+var inputs = require('../../../forms/input');
 var SVGCheckbox = inputs.SVGCheckbox;
 var Input = inputs.Input;
-var Div = require('../../forms/Fieldset.react').Div;
-var Crumb = require('../common/BreadCrumb.react').Crumb;
+var Div = require('../../../forms/Fieldset.react').Div;
+var Crumb = require('../../common/BreadCrumb.react').Crumb;
 
 function get_contacts_number() {
-    return _.size(ContactStore.getRecent());
+    return _.size(ContactStore.getByDate());
 }
 
 
-var RecentLink = React.createClass({
+var AllBaseLink = React.createClass({
     mixins: [Router.State],
     propTypes: {
         label: React.PropTypes.string,
@@ -60,7 +61,7 @@ var RecentLink = React.createClass({
             'active': this.isCurrentlyActive()
         });
         return (
-            <Link className={className} to='recent'>
+            <Link className={className} to='allbase'>
                 <div className="row-icon"></div>
                 <div className="row-body">
                     <div className="row-body-primary">
@@ -77,7 +78,7 @@ var RecentLink = React.createClass({
         var routes = this.getRoutes();
         var route = routes[routes.length - 1];
         if(!route) { return false; }
-        return route.name === 'recent';
+        return route.name === 'allbase';
     }
 });
 
@@ -165,9 +166,8 @@ var ContactListItem = React.createClass({
     }
 });
 
-var RecentList = React.createClass({
+var AllBaseList = React.createClass({
     propTypes: {
-        filter_text: React.PropTypes.string,
         contacts: React.PropTypes.array,
         selection_map: React.PropTypes.object,
         onChangeState: React.PropTypes.func
@@ -208,7 +208,7 @@ var RecentList = React.createClass({
             return contact.fn.toLowerCase();
         }.bind(this);
 
-        // contacts = _.sortBy(contacts, sortBy);
+        contacts = _.sortBy(contacts, sortBy);
         if(!filter_text) {
             return contacts;
         }
@@ -235,11 +235,16 @@ var RecentList = React.createClass({
 
     render: function() {
         var prevContact = null;
-        var contactListItems = this.filterContacts().map(function(contact) {
+        var contactListItems = this.props.contacts.map(function(contact) {
+            var GroupContent = null;
+            if(prevContact == null || prevContact.fn[0] !== contact.fn[0] ) {
+                GroupContent = this.renderGroup(contact.fn[0]);
+            }
             var is_selected = this.props.selection_map[contact.id];
             prevContact = contact;
             return(
                 <div>
+                {GroupContent ? GroupContent : null}
                 <ContactListItem
                     key={'contact__' + contact.id}
                     contact={contact}
@@ -258,14 +263,14 @@ var RecentList = React.createClass({
 });
 
 
-var RecentDetailView = React.createClass({
-    mixins: [Router.Navigation,AppContextMixin],
+var AllBaseDetailView = React.createClass({
+    mixins: [AppContextMixin, Router.Navigation],
     propTypes: {
         label: React.PropTypes.string
     },
     getInitialState: function() {
         var selection_map = {};
-        contacts = ContactStore.getRecent();
+        contacts = ContactStore.getByDate(true);
         for(var i = 0; i < contacts.length; i++) {
             selection_map[contacts[i].id] = false;
         }
@@ -336,10 +341,10 @@ var RecentDetailView = React.createClass({
                 return;
             }
         }
-
         setTimeout(function() {
             this.transitionTo('contacts_selected', {}, {'ids': next_ids});
         }.bind(this), 0);
+
     },
 
     isShareFormActive: function() {
@@ -350,11 +355,10 @@ var RecentDetailView = React.createClass({
         var _map = {}, changed = value.select_all ^ this.state.search_bar.select_all,
             contacts = null;
         if(value.filter_text) {
-            contacts = fuzzySearch(
-                this.state.contacts, value.filter_text, {
-                    'keys': ['fn', 'emails.value']});
+            contacts = fuzzySearch(this.state.contacts, value.filter_text, {
+                'keys': ['fn', 'emails.value']});
         } else {
-            contacts = ContactStore.getRecent();
+            contacts = ContactStore.getByDate(true);
         }
         for(var contact_id in this.state.selection_map) {
             _map[contact_id] = false;
@@ -404,9 +408,8 @@ var RecentDetailView = React.createClass({
                     onHandleUserInput={this.onFilterBarUpdate}
                     onUserAction={this.onUserAction} />
             </div>
-            <RecentList
+            <AllBaseList
                 ref="allbase_list"
-                filter_text={this.getFilterText()}
                 contacts={this.getContacts()}
                 selection_map={this.getSelectMap()}
                 onChangeState={this.onToggleListItem} />
@@ -451,7 +454,7 @@ var RecentDetailView = React.createClass({
     }
 });
 
-module.exports.DetailView = RecentDetailView;
-module.exports.Link = RecentLink;
+module.exports.DetailView = AllBaseDetailView;
+module.exports.Link = AllBaseLink;
 module.exports.FilterBar = FilterBar;
-module.exports.RecentList = RecentList;
+module.exports.AllBaseList = AllBaseList;

@@ -10,27 +10,36 @@ var DefaultRoute = Router.DefaultRoute;
 var Redirect = Router.Redirect;
 
 var CRMApp = React.createFactory(require('./components/CRMApp.react'));
-var Contacts = React.createFactory(require('./components/CRMContacts.react'));
-var ContactsSelectedView = require('./components/ContactsSelected.react');
-var ContactProfileView = require('./components/ContactProfileView.react');
-var ActivityListView = require('./components/ActivityListView.react');
-var master_views = require('./components/master_views');
+var Contacts = React.createFactory(require('./components/contacts/CRMContacts.react'));
+var ContactsSelectedView = require('./components/contacts/ContactsSelected.react');
+var ContactProfileView = require('./components/contacts/ContactProfileView.react');
+var ActivityListView = require('./components/contacts/ActivityListView.react');
+var contacts_master_views = require('./components/contacts/master_views');
+
+var Activities = React.createFactory(require('./components/activities/CRMActivities.react'));
+var activities_master_views = require('./components/activities/master_views');
 
 
 var routes = (
     <Route name="main" path="/" handler={CRMApp}>
         <Route name="contacts" path="/contacts" handler={Contacts}>
-            <DefaultRoute name='shared_default' handler={master_views.Shared.DetailView} />
-            <Route name='shared' handler={master_views.Shared.DetailView} />
-            <Route name='allbase' handler={master_views.AllBase.DetailView} />
-            <Route name='recent' handler={master_views.Recent.DetailView} />
-            <Route name='coldbase' handler={master_views.ColdBase.DetailView} />
-            <Route name='leadbase' handler={master_views.LeadBase.DetailView} />
+            <DefaultRoute name='shared_default' handler={contacts_master_views.Shared.DetailView} />
+            <Route name='shared' handler={contacts_master_views.Shared.DetailView} />
+            <Route name='allbase' handler={contacts_master_views.AllBase.DetailView} />
+            <Route name='recent' handler={contacts_master_views.Recent.DetailView} />
+            <Route name='coldbase' handler={contacts_master_views.ColdBase.DetailView} />
+            <Route name='leadbase' handler={contacts_master_views.LeadBase.DetailView} />
         </Route>
         <Route name="contacts_selected" path="/contacts/selected/" handler={ContactsSelectedView} />
         <Route name="contact_profile" path="/contact/:id/detail" handler={ContactProfileView}>
             <DefaultRoute name="activities_by_default" handler={ActivityListView} />
             <Route name="activities_by" path="actvs/by/:salescycle_id?" handler={ActivityListView} />
+        </Route>
+        <Route name="activities" path="/activities" handler={Activities}>
+            <Route name='my_feed' handler={activities_master_views.MyFeed.DetailView} />
+            <Route name='mentions' handler={activities_master_views.Mentions.DetailView} />
+            <Route name='company_feed' handler={activities_master_views.CompanyFeed.DetailView} />
+            <Redirect from="/activities" to="my_feed" />
         </Route>
         <Redirect from="/" to="contacts" />
     </Route>
@@ -62,7 +71,11 @@ module.exports.NODES = {
     'leadbase': new Node('leadbase', 'Контакты в обработке'),
     'coldbase': new Node('coldbase', 'Холодная база'),
     'shared_default': new Node('shared_default', 'Входящие'),
-    'main': new Node('main', 'главная')
+    'main': new Node('main', 'главная'),
+    'activities': new Node('activities', 'События'),
+    'my_feed': new Node('my_feed', 'Моя лента'),
+    'mentions': new Node('mentions', 'Упоминания'),
+    'company_feed': new Node('company_feed', 'Лента компании'),
 }
 
 module.exports.relationships = {

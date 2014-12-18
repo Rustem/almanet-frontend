@@ -2,12 +2,12 @@ var _ = require('lodash');
 var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
-var ContactEditForm = require('../forms/ContactEditForm.react');
-var VIEW_MODES_MAP = require('../constants/CRMConstants').CONTACT_VIEW_MODE;
+var ContactEditForm = require('../../forms/ContactEditForm.react');
+var VIEW_MODES_MAP = require('../../constants/CRMConstants').CONTACT_VIEW_MODE;
 var VIEW_MODES = _.values(VIEW_MODES_MAP);
 var keyMirror = require('react/lib/keyMirror');
 
-var ContactStore = require('../stores/ContactStore');
+var ContactStore = require('../../stores/ContactStore');
 
 var ContactVCard = React.createClass({
     propTypes: {

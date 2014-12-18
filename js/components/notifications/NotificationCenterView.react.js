@@ -30,7 +30,7 @@ var NotificationCenterView = React.createClass({
     },
 
     _onChange: function() {
-        this.setState({notifications: NotificationStore.getByDate()});
+        this.setState({notifications: NotificationStore.getByDate({limit: this.state.limit})});
     },
 
     onAddMore: function(evt) {

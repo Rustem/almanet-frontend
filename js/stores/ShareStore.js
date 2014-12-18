@@ -31,10 +31,7 @@ var ShareStore = assign({}, EventEmitter.prototype, {
         var reversed = reversed && true || false;
         var shares = this.getAll();
         shares = _.sortBy(shares, function(share){ return share.at });
-        if(reversed) {
-            shares = shares.reverse();
-        }
-        return shares;
+        return shares.reverse();
     },
 
     getAll: function() {

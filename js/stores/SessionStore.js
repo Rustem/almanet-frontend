@@ -13,7 +13,8 @@ var _anonymous_user = {
     email: '',
     first_name: '',
     last_name: '',
-    userpic: 'sanzhar.png'
+    userpic: 'sanzhar.png',
+    unfollow_list: []
 };
 
 var _current_user = _.cloneDeep(_anonymous_user);
@@ -64,6 +65,10 @@ SessionStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             break;
         case ActionTypes.LOGOUT:
             SessionStore.reset_current(user_id);
+            SessionStore.emitChange();
+            break;
+        case ActionTypes.TOGGLE_FOLLOWING_SUCCESS:
+            SessionStore.setCurrent(action.object);
             SessionStore.emitChange();
             break;
 
