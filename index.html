@@ -102,10 +102,13 @@
     </div>
     <script src="libs/js/webfont.min.js"></script>
     <script>
-      WebFont.load({
-        google: { families: [ 'Roboto:400,700:latin,cyrillic', 'Roboto+Condensed::latin,cyrillic' ] }
-      });
+     WebFont.load({
+      google: { families: [ 'Roboto:400,700:latin,cyrillic', 'Roboto+Condensed::latin,cyrillic' ] },
+      active: function(familyName, fvd) {
+      }
+    });
     </script>
     <script type="text/javascript" src="js/bundle.js"></script>
+
   </body>
 </html>
