@@ -180,7 +180,7 @@ var AddActivityForm = React.createClass({
             object.feedback = formValue.feedback;
             object.salescycle_id = formValue.salescycle;
             if(object.salescycle_id != GLOBAL_SALES_CYCLE_ID) {
-                object.contact_id = SalesCycleStore.get(this.props.salescycle_id).contact_id;
+                object.contact_id = SalesCycleStore.get(formValue.salescycle).contact_id;
             }
             else {
                 object.contact_id = null;

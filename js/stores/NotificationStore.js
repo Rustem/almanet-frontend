@@ -23,12 +23,15 @@ var NotificationStore = assign({}, EventEmitter.prototype, {
         this.removeListener(CHANGE_EVENT, callback);
     },
 
-    getByDate: function(){
-        return _(_notifications)
+    getByDate: function(options){
+        var limit = options.limit || 10;
+        var notifs = _(_notifications)
             .map(function(n){ return n })
             .sortBy(function(n){ return n.at })
             .reverse()
+            .first(limit)
             .value();
+        return notifs;
     },
 
     getNewByDate: function() {
