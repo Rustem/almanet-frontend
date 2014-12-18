@@ -78,8 +78,10 @@ module.exports = {
         }, 0);
     },
     createShare: function(shareObject, success, failure) {
+        var timeNow = Date.now();
         var obj = _.extend({}, {
-            id: 'share_' + Date.now(),
+            id: 'share_' + timeNow,
+            at: timeNow,
             isNew: true}, shareObject);
         var rawShares = JSON.parse(localStorage.getItem('shares')) || [];
         rawShares.push(obj);
