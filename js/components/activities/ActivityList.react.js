@@ -53,9 +53,10 @@ var ActivityListItem = React.createClass({
                             {activity.description}
                         </div>
                         <ul className="stream-breadcrumbs">
+                            {contact ?
                             <li>
                                 <Link to='contact_profile' params={{id: contact.id}} className="stream-breadcrumbs">{contact.fn}</Link>
-                            </li>
+                            </li> : null}
                         </ul>
                       </div>
                     </div>
