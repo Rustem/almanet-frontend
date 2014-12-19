@@ -69,14 +69,11 @@ var ActivityListItem = React.createClass({
 
 var ActivityList = React.createClass({
     propTypes: {
-        filter_text: React.PropTypes.string,
         activities: React.PropTypes.array,
-        selection_map: React.PropTypes.object,
-        onChangeState: React.PropTypes.func
     },
 
     render: function() {
-        var activityListItems = activities.map(function(activity) {
+        var activityListItems = this.props.activities.map(function(activity) {
             return(
                 <ActivityListItem
                     activity={activity} />

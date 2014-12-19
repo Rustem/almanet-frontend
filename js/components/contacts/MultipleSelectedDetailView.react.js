@@ -33,7 +33,7 @@ var ControlBar = React.createClass({
     },
     render: function() {
         return (
-        <div class='js-contact-actions'>
+        <div className='js-contact-actions'>
         <a onClick={this.props.onUserAction.bind(null, ACTIONS.ADD_EVENT)} className="row row--oneliner row--link">
             <div className="row-icon text-good">
                 <IconSvg iconKey='add' />

@@ -18,6 +18,7 @@ var AppContextMixin = require('../../../mixins/AppContextMixin');
 var Form = require('../../../forms/Form.react');
 var inputs = require('../../../forms/input');
 var Input = inputs.Input;
+var Div = require('../../../forms/Fieldset.react').Div;
 var Crumb = require('../../common/BreadCrumb.react').Crumb;
 var ActivityList = require('../ActivityList.react');
 
@@ -89,21 +90,22 @@ var FilterBar = React.createClass({
     render: function() {
         return (
             <Form onUpdate={this.onHandleUpdate} value={this.props.value} name='activity:filter_activity_form' ref='filter_activity_form'>
-                <div className="page-header-filterContainer">
-                    <div className="page-header-filter row">
-                        <div className="row-icon">
+                <Div className="page-header-filterContainer">
+                    <Div className="page-header-filter row">
+                        <Div className="row-icon">
                             <IconSvg iconKey='search' />
-                        </div>
-                        <div className="row-body row-body--inverted">
-                            <div className="row-body-secondary">
+                        </Div>
+                        <Div className="row-body row-body--inverted">
+                            <Div className="row-body-secondary">
                                 <IconSvg iconKey='arrow-down' />
-                            </div>
-                            <div className="row-body-primary">
+                            </Div>
+                            <Div className="row-body-primary">
                                 <Input name="filter_text" type="text" className="input-filter" placeholder="Фильтр" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                            </Div>
+                        </Div>
+                    </Div>
+                </Div>
+
             </Form>
         )
     },
@@ -154,7 +156,7 @@ var CompanyFeedDetailView = React.createClass({
     onFilterBarUpdate: function(value) {
         var activities = null;
         if(value.filter_text) {
-            activities = fuzzySearch(this.state.activities, value.filter_text, {
+            activities = fuzzySearch(this.getActivities(), value.filter_text, {
                 'keys': ['description']});
         } else {
             activities = ActivityStore.getByDate(true);

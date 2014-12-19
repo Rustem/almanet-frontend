@@ -130,6 +130,7 @@ var FilterBar = React.createClass({
         )
     },
     onHandleUpdate: function(value) {
+        console.log("2222");
         var form = this.refs.filter_contacts_form;
         var errors = form.validate();
         if(!errors) {
