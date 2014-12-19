@@ -16,11 +16,7 @@ var IconSvg = require('../../common/IconSvg.react');
 var AppContextMixin = require('../../../mixins/AppContextMixin');
 var ActivityStore = require('../../../stores/ActivityStore');
 var UserStore = require('../../../stores/UserStore');
-var Form = require('../../../forms/Form.react');
-var inputs = require('../../../forms/input');
-var SVGCheckbox = inputs.SVGCheckbox;
-var Input = inputs.Input;
-var Div = require('../../../forms/Fieldset.react').Div;
+var FilterBar = require('../ActivityFilterBar.react');
 var Crumb = require('../../common/BreadCrumb.react').Crumb;
 var ActivityList = require('../ActivityList.react');
 
@@ -82,46 +78,6 @@ var MyFeedLink = React.createClass({
         if(!route) { return false; }
         return route.name === 'my_feed';
     }
-});
-
-
-var FilterBar = React.createClass({
-    propTypes: {
-        value: React.PropTypes.object,
-        onHandleUserInput: React.PropTypes.func
-    },
-    render: function() {
-        return (
-            <Form onUpdate={this.onHandleUpdate} value={this.props.value} name='activity:filter_activity_form' ref='filter_activity_form'>
-                <Div className="page-header-filterContainer">
-                    <Div className="page-header-filter row">
-                        <Div className="row-icon">
-                            <IconSvg iconKey='search' />
-                        </Div>
-                        <Div className="row-body row-body--inverted">
-                            <Div className="row-body-secondary">
-                                <IconSvg iconKey='arrow-down' />
-                            </Div>
-                            <Div className="row-body-primary">
-                                <Input name="filter_text" type="text" className="input-filter" placeholder="Фильтр" />
-                            </Div>
-                        </Div>
-                    </Div>
-                </Div>
-
-            </Form>
-        )
-    },
-    onHandleUpdate: function(value) {
-        var form = this.refs.filter_activity_form;
-        var errors = form.validate();
-        if(!errors) {
-            this.props.onHandleUserInput(form.value());
-        } else {
-            alert(errors);
-        }
-    }
-
 });
 
 var MyFeedDetailView = React.createClass({
@@ -197,3 +153,4 @@ var MyFeedDetailView = React.createClass({
 
 module.exports.DetailView = MyFeedDetailView;
 module.exports.Link = MyFeedLink;
+module.exports.FilterBar = FilterBar;

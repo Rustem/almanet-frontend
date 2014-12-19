@@ -1,4 +1,6 @@
 var React = require('react/addons');
+var cx = React.addons.classSet;
+var Router = require('react-router');
 var AppContextMixin = require('../../mixins/AppContextMixin');
 var ActivityStore = require('../../stores/ActivityStore');
 var ContactStore = require('../../stores/ContactStore');
@@ -8,9 +10,24 @@ var Link = Router.Link;
 var IconSvg = require('../common/IconSvg.react');
 
 var ActivityListItem = React.createClass({
-    mixins: [AppContextMixin],
+    mixins: [Router.State, AppContextMixin],
     propTypes: {
         activity: React.PropTypes.object,
+    },
+
+    isItemSelected: function(act_id) {
+        var id = this.getParams().id;
+        if(id != undefined)
+            if(id == act_id)
+                return true;
+        return false;
+    },
+
+    getRouteName: function() {
+        var routes = this.getRoutes();
+        var route = routes[routes.length - 1];
+        if(!route) { return false; }
+        return route.name;
     },
 
     getAuthor: function(user_id) {
@@ -25,8 +42,13 @@ var ActivityListItem = React.createClass({
         var activity = this.props.activity;
         var author = this.getAuthor(activity.author_id);
         var contact = this.getContact(activity);
+        var menu = this.getRouteName();
+        var classNames = cx({
+            'stream-item': true,
+            'active': this.isItemSelected(activity.id),
+        });
         return (
-            <div className="stream-item">
+            <div className={classNames}>
                 <div className="row">
                     <div className="row-icon">
                         <IconSvg iconKey={activity.feedback} />
@@ -44,9 +66,11 @@ var ActivityListItem = React.createClass({
                             <a href="#" className="text-secondary">{author.first_name} {author.last_name}</a> в {activity.at}
                           </div>
                           <div className="row-body-secondary">
-                            <a href="#" className="row-icon">
-                                <IconSvg iconKey="comment" />
-                            </a>
+                            <Link to='activity_selected' 
+                                  params={{menu: menu, id: activity.id}} 
+                                  className="stream-breadcrumbs">
+                                  <IconSvg iconKey="comment" />
+                            </Link>
                           </div>
                         </div>
                         <div className="row-body-message">

@@ -18,6 +18,7 @@ var contacts_master_views = require('./components/contacts/master_views');
 
 var Activities = React.createFactory(require('./components/activities/CRMActivities.react'));
 var activities_master_views = require('./components/activities/master_views');
+var ActivitySelectedView = require('./components/activities/ActivitySelectedView.react');
 
 
 var routes = (
@@ -41,6 +42,7 @@ var routes = (
             <Route name='company_feed' handler={activities_master_views.CompanyFeed.DetailView} />
             <Redirect from="/activities" to="my_feed" />
         </Route>
+        <Route name='activity_selected' path='/activities/:menu/:id/' handler={ActivitySelectedView} />
         <Redirect from="/" to="contacts" />
     </Route>
 );
@@ -76,6 +78,7 @@ module.exports.NODES = {
     'my_feed': new Node('my_feed', 'Моя лента'),
     'mentions': new Node('mentions', 'Упоминания'),
     'company_feed': new Node('company_feed', 'Лента компании'),
+    'activity_selected': new Node('activity_selected', "Выбранное взаимодействие"),
 }
 
 module.exports.relationships = {
