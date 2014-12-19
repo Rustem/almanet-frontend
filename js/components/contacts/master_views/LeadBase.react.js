@@ -343,7 +343,7 @@ var LeadBaseDetailView = React.createClass({
         }
 
         setTimeout(function() {
-            this.transitionTo('contacts_selected', {}, {'ids': next_ids});
+            this.transitionTo('contacts_selected', {'menu': 'leadbase'}, {'ids': next_ids});
         }.bind(this), 0);
 
     },

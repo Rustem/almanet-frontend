@@ -343,7 +343,7 @@ var ColdBaseDetailView = React.createClass({
         }
 
         setTimeout(function() {
-            this.transitionTo('contacts_selected', {}, {'ids': next_ids});
+            this.transitionTo('contacts_selected', {'menu': 'coldbase'}, {'ids': next_ids});
         }.bind(this), 0);
     },
 

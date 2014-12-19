@@ -30,7 +30,7 @@ var routes = (
             <Route name='coldbase' handler={contacts_master_views.ColdBase.DetailView} />
             <Route name='leadbase' handler={contacts_master_views.LeadBase.DetailView} />
         </Route>
-        <Route name="contacts_selected" path="/contacts/selected/" handler={ContactsSelectedView} />
+        <Route name="contacts_selected" path="/contacts/:menu/selected/" handler={ContactsSelectedView} />
         <Route name="contact_profile" path="/contact/:id/detail" handler={ContactProfileView}>
             <DefaultRoute name="activities_by_default" handler={ActivityListView} />
             <Route name="activities_by" path="actvs/by/:salescycle_id?" handler={ActivityListView} />

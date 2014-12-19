@@ -342,7 +342,7 @@ var AllBaseDetailView = React.createClass({
             }
         }
         setTimeout(function() {
-            this.transitionTo('contacts_selected', {}, {'ids': next_ids});
+            this.transitionTo('contacts_selected', {'menu': 'allbase'}, {'ids': next_ids});
         }.bind(this), 0);
 
     },

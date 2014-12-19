@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var Fuse = require('../libs/fuse');
 var assign = require('object-assign');
 var EventEmitter = require('events').EventEmitter;
 var CRMConstants = require('../constants/CRMConstants');
@@ -59,6 +60,28 @@ var ShareStore = assign({}, EventEmitter.prototype, {
 
     getCreatedContact: function(obj) {
         return obj;
+    },
+
+    fuzzySearch: function(search_str, options) {
+        if(options === undefined) {
+            options = {};
+        }
+        options = _.extend({}, {
+            'order_by': 'at',
+            'asc': true
+        }, options);
+        var searchOptions = {
+            keys: ['note']
+        }, shares = this.getAll();
+
+        var f = new Fuse(shares, searchOptions);
+        shares = f.search(search_str);
+        shares = _(shares)
+            .sortBy(function(share){ return contact[options['order_by']] });
+        if (!options['asc']) {
+            return shares.reverse().value();
+        }
+        return shares.value();
     },
 
     markSharesAsRead: function(share_ids) {

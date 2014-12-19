@@ -369,7 +369,7 @@ var SharedContactDetailView = React.createClass({
             }
         }
         setTimeout(function() {
-            this.transitionTo('contacts_selected', {}, {'ids': next_ids});
+            this.transitionTo('contacts_selected', {'menu': 'shared'}, {'ids': next_ids});
         }.bind(this), 0);
 
     },
