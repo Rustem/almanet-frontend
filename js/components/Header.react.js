@@ -14,7 +14,7 @@ var Header = React.createClass({
         return (
             <div className="body-header nav">
                 <div className="nav-a">
-                  <a href="index.html" className="nav-link active">
+                  <a href="#/contacts" className="nav-link active">
                     Контакты
                   </a><a href="#/activities" className="nav-link">
                     События
