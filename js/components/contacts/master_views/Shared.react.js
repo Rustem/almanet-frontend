@@ -48,6 +48,9 @@ var SharedContactLink = React.createClass({
     componentWillUnmount: function() {
         ShareStore.removeChangeListener(this._onChange);
     },
+    componentDidUpdate: function(prevProps, prevState) {
+        ContactActionCreators.markAllSharesAsRead(ShareStore.getAllNew());
+    },
     _onChange: function() {
         this.setState(SharedContactLink.getState());
     },
@@ -60,7 +63,7 @@ var SharedContactLink = React.createClass({
             'new': this.state.hasNewItems
         });
         return (
-            <Link className={className} to='shared' onClick={this.onClick} >
+            <Link className={className} to='shared'>
                 <div className="row-icon">
                     <IconSvg iconKey="inbox" />
                 </div>
@@ -81,13 +84,6 @@ var SharedContactLink = React.createClass({
         if(!route) { return false; }
         return route.name === 'shared' || route.name === 'shared_default';
     },
-    onClick: function(evt) {
-        // Do not prevent bubbling.
-        if(this.state.hasNewItems) {
-            ContactActionCreators.markAllSharesAsRead(ShareStore.getAllNew());
-        }
-
-    }
 });
 
 
