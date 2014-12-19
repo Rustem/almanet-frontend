@@ -122,7 +122,7 @@ ShareStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             break;
         case ActionTypes.MARK_SHARES_READ_SUCCESS:
             ShareStore.markSharesAsRead(action.object);
-            ShareStore.emitChange();
+            // ShareStore.emitChange();
             break;
         default:
             // do nothing

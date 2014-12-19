@@ -30,7 +30,6 @@ var SharedContactLink = React.createClass({
         getState: function() {
             return {
                 'amount': ShareStore.size(),
-                'hasNewItems': ShareStore.hasNew()
             }
         },
     },
@@ -48,9 +47,6 @@ var SharedContactLink = React.createClass({
     componentWillUnmount: function() {
         ShareStore.removeChangeListener(this._onChange);
     },
-    componentDidUpdate: function(prevProps, prevState) {
-        ContactActionCreators.markAllSharesAsRead(ShareStore.getAllNew());
-    },
     _onChange: function() {
         this.setState(SharedContactLink.getState());
     },
@@ -60,7 +56,7 @@ var SharedContactLink = React.createClass({
             'row-oneliner': true,
             'row--link': true,
             'active': this.isCurrentlyActive(),
-            'new': this.state.hasNewItems
+            'new': ShareStore.hasNew()
         });
         return (
             <Link className={className} to='shared'>
@@ -400,6 +396,11 @@ var SharedContactDetailView = React.createClass({
     },
 
     render: function() {
+        if(ShareStore.hasNew()) {
+            setTimeout(function() {
+                ContactActionCreators.markAllSharesAsRead(ShareStore.getAllNew());
+            }.bind(this), 0);
+        }
         return (
             <div className="page">
                 <div className="page-header">
