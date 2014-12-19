@@ -38,5 +38,13 @@ module.exports = {
         */
         // @Rustem, is it correct way of implementing in terms of Flux Architecture?
         // activity creation affects on two stores, so in this ActionCreator produces two actions: for Activity and SalesCycle
-    }
+    },
+    updateNewStatus: function() {
+        ActivityWebAPI.updateNewStatus(function(upd){
+          dispatcher.handleViewAction({
+            type: ActionTypes.ACTIVITY_UPDATE_NEW_STATUS,
+            object: {update_info: upd}
+          });
+        }.bind(this));
+    },
 }

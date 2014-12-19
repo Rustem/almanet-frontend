@@ -12,6 +12,7 @@ var BreadCrumb = require('../common/BreadCrumb.react');
 
 
 var CRMActivities = React.createClass({
+
     render: function() {
         return (
           <div>

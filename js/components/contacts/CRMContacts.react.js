@@ -12,7 +12,9 @@ var UserActionCreators = require('../../actions/UserActionCreators');
 var BreadCrumb = require('../common/BreadCrumb.react');
 
 
+
 var CRMContacts = React.createClass({
+
     render: function() {
         return (
           <div>

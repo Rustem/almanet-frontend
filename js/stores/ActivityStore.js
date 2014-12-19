@@ -5,8 +5,9 @@ var CRMConstants = require('../constants/CRMConstants');
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
 var SessionStore = require('./SessionStore');
 var ContactStore = require('./ContactStore');
-
 var ActionTypes = CRMConstants.ActionTypes;
+var utils = require('../utils');
+
 var CHANGE_EVENT = 'change';
 var _activities = {};
 
@@ -44,6 +45,10 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
             return this.bySalesCycle(id);
         }.bind(this));
         return _.sortBy(_.flatten(rv), 'at').reverse();
+    },
+
+    getNew: function() {
+        return _.filter(this.getAll(), utils.isNewObject)
     },
 
     getAll: function() {
@@ -89,6 +94,13 @@ ActivityStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             _activities[a.id] = a;
             ActivityStore.emitChange();
             break;
+        case ActionTypes.ACTIVITY_UPDATE_NEW_STATUS:
+            var update_info = action.object['update_info'];
+            for(var i = 0; i<update_info.length; i++) {
+                var act_id = update_info[i][0], newStatus = update_info[i][1];
+                _activities[act_id].new_status = newStatus;
+            }
+            ActivityStore.emitChange();
         default:
             // do nothing
     }

@@ -4,13 +4,13 @@ var assign = require('object-assign');
 var EventEmitter = require('events').EventEmitter;
 var ContactWebAPI = require('../api/ContactWebAPI');
 
-
 var CRMConstants = require('../constants/CRMConstants');
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
 var SessionStore = require('./SessionStore');
 var ActivityStore = require('./ActivityStore');
 var SalesCycleStore = require('./SalesCycleStore');
 var ActionTypes = CRMConstants.ActionTypes;
+var utils = require('../utils');
 var CHANGE_EVENT = 'change';
 var _contacts = {};
 
@@ -60,6 +60,10 @@ var ContactStore = assign({}, EventEmitter.prototype, {
                 .uniq()
                 .map(this.get)
                 .value();
+    },
+
+    getNew: function() {
+        return _.filter(this.getAll(), utils.isNewObject)
     },
 
     getAll: function() {
@@ -142,6 +146,14 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
                   return key != 'contacts';
                 });
             _contacts[contact_id] = contact;
+            ContactStore.emitChange();
+        case ActionTypes.CONTACT_UPDATE_NEW_STATUS:
+            var update_info = action.object['update_info'];
+            console.log(update_info);
+            for(var i = 0; i<update_info.length; i++) {
+                var cid = update_info[i][0], newStatus = update_info[i][1];
+                _contacts[cid].new_status = newStatus;
+            }
             ContactStore.emitChange();
         case ActionTypes.CREATE_ACTIVITY_SUCCESS:
             CRMAppDispatcher.waitFor([ActivityStore.dispatchToken]);

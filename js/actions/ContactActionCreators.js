@@ -90,6 +90,15 @@ module.exports = {
     }.bind(this));
   },
 
+  updateNewStatus: function() {
+    ContactWebAPI.updateNewStatus(function(upd){
+      dispatcher.handleViewAction({
+        type: ActionTypes.CONTACT_UPDATE_NEW_STATUS,
+        object: {update_info: upd}
+      });
+    }.bind(this));
+  },
+
   createShares: function(shares) {
     for(var i = 0; i<shares.length; i++) {
       this.createShare(shares[i]);

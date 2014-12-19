@@ -2,6 +2,7 @@ var _ = require('lodash');
 var SignalManager = require('./utils');
 var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
+var CREATION_STATUS = CRMConstants.CREATION_STATUS;
 
 module.exports = {
     getAllContacts: function(success, failure) {
@@ -15,14 +16,15 @@ module.exports = {
         var obj = _.extend({}, {
             id: 'c_' + timeNow,
             at: timeNow,
-            is_cold: true}, contactObject);
+            is_cold: true,
+            new_status: CREATION_STATUS.COLD}, contactObject);
         var share = {
             id: 'share_' + Date.now(),
             user_id: contactObject.author_id,
             contact_id: obj.id,
             at: timeNow,
             note: obj.note,
-            isNew: true};
+            isNew: true,};
         obj.share = share;
         // set contact to local storage
         var rawContacts = JSON.parse(localStorage.getItem('contacts')) || [];
@@ -114,5 +116,24 @@ module.exports = {
         setTimeout(function() {
             success(share_ids);
         }, 0);
+    },
+
+    updateNewStatus: function(success) {
+        var rawContacts = JSON.parse(localStorage.getItem('contacts')) || [],
+            updated_cids = [];
+        _.forEach(rawContacts, function(contact){
+            var updated = null;
+            if(contact.new_status === CREATION_STATUS.COLD){
+                contact.new_status = CREATION_STATUS.WARM;
+                updated = [contact.id, contact.new_status];
+            } else if(contact.new_status === CREATION_STATUS.WARM) {
+                contact.new_status = CREATION_STATUS.HOT;
+                updated = [contact.id, contact.new_status];
+            }
+            if(updated) updated_cids.push(updated);
+        });
+        localStorage.setItem('contacts', JSON.stringify(rawContacts));
+
+        setTimeout(function() { success(updated_cids) }, 0);
     }
 };
