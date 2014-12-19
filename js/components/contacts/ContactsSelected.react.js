@@ -567,24 +567,14 @@ var SharedBaseSelectedView = React.createClass({
     getInitialState: function() {
         var contacts = [], contact_ids = [], selection_map = {}, cnt = 0;
         var shares = ShareStore.sortedByDate(true);
-        _selected_contacts = this.getQuery()['ids'] || [];
-
-        function getContactId(share_id) {
-            for(var i = 0; i<shares.length; i++) {
-                var share = shares[i];
-                if(share.id === share_id)
-                    return share.contact_id;
-            }
-            return null;
-        }
-        
+        _selected_contacts = this.getQuery()['ids'] || [];        
         contact_ids = shares.map(function(share){ return share.contact_id });
         contacts = ContactStore.getByIds(contact_ids);
 
-        for(var i = 0; i<shares.length; i++) {
-            selection_map[shares[i].id] = false;
-            if(_selected_contacts.indexOf(getContactId(shares[i].id)) > -1) {
-                selection_map[shares[i].id] = true;
+        for(var i = 0; i<contacts.length; i++) {
+            selection_map[contacts[i].id] = false;
+            if(_selected_contacts.indexOf(contacts[i].id) > -1) {
+                selection_map[contacts[i].id] = true;
                 cnt += 1
             }
         }
@@ -607,17 +597,17 @@ var SharedBaseSelectedView = React.createClass({
         }
         var contact_ids = shares.map(function(share){ return share.contact_id });
         contacts = ContactStore.getByIds(contact_ids);
-        for(var share_id in this.state.selection_map) {
-            _map[share_id] = false;
+        for(var contact_id in this.state.selection_map) {
+            _map[contact_id] = false;
         }
-        for(var i = 0; i<shares.length; i++) {
-            share_id = shares[i].id;
+        for(var i = 0; i<contacts.length; i++) {
+            contact_id = contacts[i].id;
             if(changed) {
-                _map[share_id] = value.select_all;
+                _map[contact_id] = value.select_all;
             } else if(value.select_all) {
-                _map[share_id] = true;
+                _map[contact_id] = true;
             } else {
-                _map[share_id] = this.state.selection_map[share_id];
+                _map[contact_id] = this.state.selection_map[contact_id];
             }
         }
 
@@ -646,9 +636,11 @@ var SharedBaseSelectedView = React.createClass({
             newSelectionItems = {};
         
         shares = ShareStore.sortedByDate(true);
-        for(var i = 0; i<shares.length; i++) {
-            if(!shares[i].id in this.state.selection_map) {
-                newSelectionItems[shares[i].id] = false;
+        var contact_ids = shares.map(function(share){ return share.contact_id });
+        contacts = ContactStore.getByIds(contact_ids);
+        for(var i = 0; i<contacts.length; i++) {
+            if(!contacts[i].id in this.state.selection_map) {
+                newSelectionItems[contacts[i].id] = false;
             }
         }
         if(!newSelectionItems) {
@@ -656,6 +648,7 @@ var SharedBaseSelectedView = React.createClass({
         } else {
             var newState = React.addons.update(this.state, {
                 shares: {$set: shares},
+                contacts: {$set: contacts},
                 selection_map: {$merge: newSelectionItems}
             });
             this.setState(newState);

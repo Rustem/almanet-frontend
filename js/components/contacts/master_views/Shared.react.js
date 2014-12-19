@@ -181,11 +181,11 @@ var ShareListItem = React.createClass({
         return (
             <div className={classNames}>
                 <SVGCheckbox
-                    name={'share__' + share.id}
+                    name={'share__' + share.contact_id}
                     label={this.getContactName()}
                     className='row'
                     value={this.props.is_selected}
-                    onValueUpdate={this.props.onItemToggle.bind(null, share.id)} />
+                    onValueUpdate={this.props.onItemToggle.bind(null, share.contact_id)} />
                 <div className="stream-item-extra row">
                     <a href="#" className="row-icon">
                       <figure className="icon-userpic">
@@ -235,12 +235,21 @@ var SharesList = React.createClass({
 
     getSelectedContacts: function() {
         var contact_ids = [];
-        for(var share_id in this.props.selection_map) {
-            var is_selected = this.props.selection_map[share_id];
-            if(!is_selected) continue;
-            contact_ids.push(this.findShare(share_id).contact_id);
+        for(var contact_id in this.props.selection_map) {
+            if(this.props.selection_map[contact_id]) {
+                contact_ids.push(contact_id);
+            }
         }
         return _.map(contact_ids, this.findContact);
+    },
+
+    getContactId: function(share_id) {
+        for(var i = 0; i<this.props.shares.length; i++) {
+            var share = this.props.shares[i];
+            if(share.id === share_id)
+                return share.contact_id;
+        }
+        return null;
     },
 
     filterShares: function() {
@@ -256,7 +265,7 @@ var SharesList = React.createClass({
         });
         var notRequiredShares = _.difference(shares, requiredShares);
         _.forEach(notRequiredShares, function(s) {
-            this.props.selection_map[s.id] = false;
+            this.props.selection_map[this.getContactId(s.id)] = false;
         }.bind(this));
         return requiredShares;
     },
@@ -264,7 +273,7 @@ var SharesList = React.createClass({
     render: function() {
         var self = this;
         var shareListItems = this.filterShares().map(function(share) {
-            var is_selected = self.props.selection_map[share.id];
+            var is_selected = self.props.selection_map[self.getContactId(share.id)];
             return(
                 <ShareListItem
                     key={'share__' + share.id}
@@ -298,8 +307,8 @@ var SharedContactDetailView = React.createClass({
         var contacts = [], contact_ids = [], selection_map = {};
         contact_ids = shares.map(function(share){ return share.contact_id });
         contacts = ContactStore.getByIds(contact_ids);
-        for(var i = 0; i<shares.length; i++) {
-            selection_map[shares[i].id] = false;
+        for(var i = 0; i<contacts.length; i++) {
+            selection_map[contacts[i].id] = false;
         }
 
         return {
@@ -348,10 +357,9 @@ var SharedContactDetailView = React.createClass({
 
         function getSelectedList(map) {
             var rv = [];
-            for(var share_id in map) {
-                if(map[share_id] === true) {
-
-                    rv.push(this.getContactId(share_id));
+            for(var _id in map) {
+                if(map[_id] === true) {
+                    rv.push(_id);
                 }
             }
             return rv;
@@ -377,8 +385,8 @@ var SharedContactDetailView = React.createClass({
     onFilterBarUpdate: function(value) {
         var is_selected = value.select_all;
         var _map = {};
-        for(var share_id in this.state.selection_map) {
-            _map[share_id] = is_selected;
+        for(var contact_id in this.state.selection_map) {
+            _map[contact_id] = is_selected;
         }
         var newState = React.addons.update(this.state, {
             selection_map: {$set: _map},
@@ -386,9 +394,9 @@ var SharedContactDetailView = React.createClass({
         });
         this.setState(newState);
     },
-    onToggleListItem: function(share_id, is_selected) {
+    onToggleListItem: function(contact_id, is_selected) {
         var updItem = {};
-        updItem[share_id] = is_selected;
+        updItem[contact_id] = is_selected;
         var newState = React.addons.update(this.state, {
             selection_map: {$merge: updItem}
         });
