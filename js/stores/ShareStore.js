@@ -77,7 +77,7 @@ var ShareStore = assign({}, EventEmitter.prototype, {
         var f = new Fuse(shares, searchOptions);
         shares = f.search(search_str);
         shares = _(shares)
-            .sortBy(function(share){ return contact[options['order_by']] });
+            .sortBy(function(share){ return share[options['order_by']] });
         if (!options['asc']) {
             return shares.reverse().value();
         }
