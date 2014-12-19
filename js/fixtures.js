@@ -19,41 +19,41 @@ GLOBAL_SALES_CYCLE = CRMConstants.GLOBAL_SALES_CYCLE;
 module.exports = {
 
   init: function() {
-    // localStorage.setItem('users', JSON.stringify([
-    //   {
-    //     id: 'u_1',
-    //     email: 'sanzhar@altayev.kz ',
-    //     first_name: 'Санжар',
-    //     last_name: 'Алтаев',
-    //     userpic: 'sanzhar.png',
-    //     unfollow_list: []
-    //   },
-    //   {
-    //     id: 'u_2',
-    //     email: 'mailubai@gmail.com',
-    //     first_name: 'Ернар',
-    //     last_name: 'Майлюбаев',
-    //     userpic: 'abish.png',
-    //     unfollow_list: []
-    //   },
-    //   {
-    //     id: 'u_3',
-    //     email: 'sattar94@outlook.com',
-    //     first_name: 'Данияр',
-    //     last_name: 'Мусакулов',
-    //     userpic: 'sanzhar.png',
-    //     unfollow_list: []
-    //   },
-    //   {
-    //     id: 'u_4',
-    //     email: 'vadim@v3na.kz',
-    //     first_name: 'Вадим',
-    //     last_name: 'Котов',
-    //     userpic: 'abish.png',
-    //     unfollow_list: []
-    //   },
+    localStorage.setItem('users', JSON.stringify([
+      {
+        id: 'u_1',
+        email: 'sanzhar@altayev.kz ',
+        first_name: 'Санжар',
+        last_name: 'Алтаев',
+        userpic: 'sanzhar.png',
+        unfollow_list: []
+      },
+      {
+        id: 'u_2',
+        email: 'mailubai@gmail.com',
+        first_name: 'Ернар',
+        last_name: 'Майлюбаев',
+        userpic: 'abish.png',
+        unfollow_list: []
+      },
+      {
+        id: 'u_3',
+        email: 'sattar94@outlook.com',
+        first_name: 'Данияр',
+        last_name: 'Мусакулов',
+        userpic: 'sanzhar.png',
+        unfollow_list: []
+      },
+      {
+        id: 'u_4',
+        email: 'vadim@v3na.kz',
+        first_name: 'Вадим',
+        last_name: 'Котов',
+        userpic: 'abish.png',
+        unfollow_list: []
+      },
 
-    // ]));
+    ]));
 
     localStorage.setItem('products', JSON.stringify([
       {
