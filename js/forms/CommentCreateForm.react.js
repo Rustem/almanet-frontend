@@ -11,6 +11,7 @@ var Input = inputs.Input;
 var ContentEditableInput = inputs.ContentEditableInput;
 var Form = require('./Form.react');
 var FormMixin = require('./FormMixin.react');
+var Fieldset = require('./Fieldset.react');
 
 var PLACEHOLDER = 'Напишите коммент здесь';
 
@@ -37,21 +38,21 @@ var CommentCreateForm = React.createClass({
             onSubmit={this.onHandleSubmit}
             onKeyDown={this.props.onKeyDown}
             value={default_form_state} >
-            <div className="stream-item stream-item--comment">
-              <div className="row">
+            <Fieldset className="stream-item stream-item--comment">
+              <Fieldset className="row">
                 <a href="#" className="row-icon">
                   <figure className="icon-userpic">
                     <img src={"img/userpics/" + author.userpic} />
                   </figure>
                 </a>
-                <div className="row-body row-body--no-trailer">
+                <Fieldset className="row-body row-body--no-trailer">
                   <ContentEditableInput ref='comment' 
                                 name='comment' 
                                 className='input-div input-div--block' />
-                  <button type="submit" className="text-strong text-primary">Написать</button> • <button onClick={this.onCancelClick} className="text-secondary">Отмена</button>
-                </div>
-              </div>
-            </div>
+                  <button type="submit" className="text-strong text-primary">Написать</button><span> • </span><button onClick={this.onCancelClick} className="text-secondary">Отмена</button>
+                </Fieldset>
+              </Fieldset>
+            </Fieldset>
       </Form>
     )
   },
