@@ -45,6 +45,7 @@ var routes = (
             <Redirect from="/activities" to="my_feed" />
         </Route>
         <Route name="products" path="/products" handler={ProductsView}>
+            <DefaultRoute name='product_new_default' handler={ProductCreateView} />
             <Route name='product_new' path='new' handler={ProductCreateView} />
             <Route name='product_detail' path=':product_id' handler={ProductDetailView} />
         </Route>
@@ -85,6 +86,7 @@ module.exports.NODES = {
     'company_feed': new Node('company_feed', 'Лента компании'),
     'products': new Node('products', 'Продукты'),
     'product_new': new Node('product_new', 'Новый продукт'),
+    'product_new_default': new Node('product_new_default', 'Новый продукт'),
     'product_detail': new Node('product_detail', function(params) {
         return this.get(params.product_id).name;
     }.bind(require('./stores/ProductStore'))),
