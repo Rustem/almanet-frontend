@@ -42,6 +42,9 @@ module.exports = {
         TOGGLE_FOLLOWING: null,
         TOGGLE_FOLLOWING_SUCCESS: null,
         TOGGLE_FOLLOWING_FAIL: null,
+        CREATE_COMMENT: null,
+        CREATE_COMMENT_SUCCESS: null,
+        CREATE_COMMENT_FAIL: null,
         LOGOUT: null,
     }),
     PayloadSources: keyMirror({

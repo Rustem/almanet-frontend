@@ -12,10 +12,14 @@ var fuzzySearch = require('../../utils').fuzzySearch;
 var AppContextMixin = require('../../mixins/AppContextMixin');
 var ActivityStore = require('../../stores/ActivityStore');
 var UserStore = require('../../stores/UserStore');
+var CommentStore = require('../../stores/CommentStore');
 var BreadCrumb = require('../common/BreadCrumb.react');
+var Crumb = BreadCrumb.Crumb;
 var ActivityList = require('./ActivityList.react');
-var CommentsList = require('./CommentsList.react');
+var CommentList = require('./CommentList.react');
 var FilterBar = require('./ActivityFilterBar.react');
+var CommentCreateForm = require('../../forms/CommentCreateForm.react');
+var CommentActionCreators = require('../../actions/CommentActionCreators');
 
 var ActivitySelectedView = React.createClass({
     mixins: [Router.State, AppContextMixin],
@@ -36,9 +40,11 @@ var ActivitySelectedView = React.createClass({
 
     getInitialState: function() {
         var activities = this.getDefaultActivities();
+        var comments = CommentStore.byActivity(this.getActivityID());
 
         return {
             activities: activities,
+            comments: comments,
             search_bar: {filter_text: ''}
         }
     },
@@ -46,11 +52,17 @@ var ActivitySelectedView = React.createClass({
     componentDidMount: function() {
         ActivityStore.addChangeListener(this._onChange);
         UserStore.addChangeListener(this._onChange);
+        CommentStore.addChangeListener(this._onChange);
     },
 
     componentWillUnmount: function() {
         ActivityStore.removeChangeListener(this._onChange);
         UserStore.removeChangeListener(this._onChange);
+        CommentStore.removeChangeListener(this._onChange);
+    },
+
+    getActivityID: function() {
+        return this.getParams().id;
     },
 
     getFilterText: function() {
@@ -59,6 +71,10 @@ var ActivitySelectedView = React.createClass({
 
     getActivities: function() {
         return this.state.activities;
+    },
+
+    getComments: function() {
+        return this.state.comments;
     },
 
     onFilterBarUpdate: function(value) {
@@ -75,6 +91,11 @@ var ActivitySelectedView = React.createClass({
             search_bar: {$set: value},
         });
         this.setState(newState);
+    },
+
+    onCommentCreate: function(commentObject) {
+      CommentActionCreators.create(commentObject);
+      return;
     },
 
     render: function() {
@@ -97,7 +118,15 @@ var ActivitySelectedView = React.createClass({
                     </div>
                 </div>
                 <div className="body-detail">
-                    <CommentsList />
+                    <div className="page page--compact">
+                        <div className="page-header">
+                            <Crumb />
+                        </div>
+                        <div className="page-body">
+                            <CommentList comments={this.getComments()} />
+                            <CommentCreateForm onHandleSubmit={this.onCommentCreate} activity_id={this.getActivityID()} />
+                        </div>
+                    </div>
                 </div>
             </div>
             <Footer />
