@@ -23,6 +23,7 @@ module.exports = api = {
         // simulate success callback
         setTimeout(function() {
             success(curCycle);
+            SignalManager.send(ActionTypes.CLOSE_SALES_CYCLE_SUCCESS, curCycle);
         }, 0);
     },
     create: function(salesCycleObject, success, failure) {

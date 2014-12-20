@@ -4,6 +4,7 @@ var EventEmitter = require('events').EventEmitter;
 var CRMConstants = require('../constants/CRMConstants');
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
 var SessionStore = require('./SessionStore');
+var SalesCycleStore = require('./SalesCycleStore');
 
 var ActionTypes = CRMConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
@@ -72,6 +73,17 @@ ProductStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             var product_id = action.object['product_id'],
                 product = action.object['product'];
             _products[product_id] = product;
+            ProductStore.emitChange();
+            break;
+        case ActionTypes.CLOSE_SALES_CYCLE:
+            CRMAppDispatcher.waitFor([SalesCycleStore.dispatchToken]);
+            var value = action.object.real_value,
+                prod_ids = action.object.products;
+            if(!prod_ids) break;
+
+            for(var i=0; i<prod_ids.length; i++) {
+                _products[prod_ids[i]].current_value += (value * 1. / prod_ids.length);
+            }
             ProductStore.emitChange();
             break;
         default:

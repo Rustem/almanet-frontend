@@ -49,3 +49,20 @@ module.exports = {
         }, 0);
     }
 };
+
+
+function update_current_value(cycle) {
+    if(!cycle.products) { return; }
+    var products = JSON.parse(localStorage.getItem('products'));
+    for(var i = 0; i<cycle.products.length; i++) {
+        var pid = cycle.products[i];
+        _.forEach(products, function(product){
+            if(product.id === pid) {
+                product.current_value += (cycle.real_value * 1. / cycle.products.length)
+            }
+        });
+    }
+    localStorage.setItem('products', JSON.stringify(products));
+};
+
+SignalManager.connect(ActionTypes.CLOSE_SALES_CYCLE_SUCCESS, update_current_value);
