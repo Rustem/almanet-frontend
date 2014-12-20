@@ -1,8 +1,6 @@
 Todo:
-1. Add user_id to share (during create contact/shares)
-2. Retrieve shares by user_id
-3. Contact has followers
-4. Contact has product
+1. https://github.com/bjyoungblood/rnr-constrained-route - very interesting module
+2. https://github.com/rackt/react-router/blob/master/docs/api/run.md - fetching data from the server
 
 1. Build DropDown mixin
 

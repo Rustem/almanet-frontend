@@ -18,6 +18,8 @@ var contacts_master_views = require('./components/contacts/master_views');
 
 var ActivitiesView = React.createFactory(require('./components/activities/CRMActivities.react'));
 var ProductsView = React.createFactory(require('./components/products/CRMProducts.react'));
+var ProductCreateView = React.createFactory(require('./components/products/ProductCreateView.react'));
+var ProductDetailView = React.createFactory(require('./components/products/ProductDetailView.react'));
 var activities_master_views = require('./components/activities/master_views');
 
 
@@ -43,6 +45,8 @@ var routes = (
             <Redirect from="/activities" to="my_feed" />
         </Route>
         <Route name="products" path="/products" handler={ProductsView}>
+            <Route name='product_new' path='new' handler={ProductCreateView} />
+            <Route name='product_detail' path=':product_id' handler={ProductDetailView} />
         </Route>
         <Redirect from="/" to="contacts" />
     </Route>
@@ -63,7 +67,7 @@ Node.prototype.getName = function() {
 module.exports.NODES = {
     'contacts_selected': new Node('contacts_selected', "Выбранные контакты"),
     'contact_profile': new Node('contact_profile', function(params){
-        return this.get(params.id).fn
+        return this.get(params.id).fn;
     }.bind(require('./stores/ContactStore'))),
     'activities_by': new Node('activities_by', 'события'),
     'activities_by_default': new Node('activities_by_default', 'события'),
@@ -79,7 +83,11 @@ module.exports.NODES = {
     'my_feed': new Node('my_feed', 'Моя лента'),
     'mentions': new Node('mentions', 'Упоминания'),
     'company_feed': new Node('company_feed', 'Лента компании'),
-    'products': new Node('products', 'Продукты')
+    'products': new Node('products', 'Продукты'),
+    'product_new': new Node('product_new', 'Новый продукт'),
+    'product_detail': new Node('product_detail', function(params) {
+        return this.get(params.product_id).name;
+    }.bind(require('./stores/ProductStore'))),
 }
 
 module.exports.relationships = {
