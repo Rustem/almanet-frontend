@@ -103,6 +103,8 @@ var Header = React.createClass({
                             amount={_.size(this.state.new_activities)}
                             badgeClassName="badge-new"
                             onClick={this.onActivityMenuItemClick} />
+                  <MenuLink label="Продукты"
+                            routeName='products' />
                 </div>
                 <div className="nav-b">
                   <ContactComposer />

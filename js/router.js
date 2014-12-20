@@ -16,7 +16,8 @@ var ContactProfileView = require('./components/contacts/ContactProfileView.react
 var ActivityListView = require('./components/contacts/ActivityListView.react');
 var contacts_master_views = require('./components/contacts/master_views');
 
-var Activities = React.createFactory(require('./components/activities/CRMActivities.react'));
+var ActivitiesView = React.createFactory(require('./components/activities/CRMActivities.react'));
+var ProductsView = React.createFactory(require('./components/products/CRMProducts.react'));
 var activities_master_views = require('./components/activities/master_views');
 
 
@@ -35,11 +36,13 @@ var routes = (
             <DefaultRoute name="activities_by_default" handler={ActivityListView} />
             <Route name="activities_by" path="actvs/by/:salescycle_id?" handler={ActivityListView} />
         </Route>
-        <Route name="activities" path="/activities" handler={Activities}>
+        <Route name="activities" path="/activities" handler={ActivitiesView}>
             <Route name='my_feed' handler={activities_master_views.MyFeed.DetailView} />
             <Route name='mentions' handler={activities_master_views.Mentions.DetailView} />
             <Route name='company_feed' handler={activities_master_views.CompanyFeed.DetailView} />
             <Redirect from="/activities" to="my_feed" />
+        </Route>
+        <Route name="products" path="/products" handler={ProductsView}>
         </Route>
         <Redirect from="/" to="contacts" />
     </Route>
@@ -76,6 +79,7 @@ module.exports.NODES = {
     'my_feed': new Node('my_feed', 'Моя лента'),
     'mentions': new Node('mentions', 'Упоминания'),
     'company_feed': new Node('company_feed', 'Лента компании'),
+    'products': new Node('products', 'Продукты')
 }
 
 module.exports.relationships = {
