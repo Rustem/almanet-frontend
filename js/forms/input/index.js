@@ -18,7 +18,7 @@ var Input = React.createClass({
 
     render: function() {
         return (
-            <input {...this.props} onChange={this.onChange} />
+            <input {...this.props} onChange={this.onChange} autoComplete='off' />
         )
     }
 });

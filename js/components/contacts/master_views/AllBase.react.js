@@ -130,6 +130,7 @@ var FilterBar = React.createClass({
         )
     },
     onHandleUpdate: function(value) {
+        console.log("2222");
         var form = this.refs.filter_contacts_form;
         var errors = form.validate();
         if(!errors) {
@@ -342,7 +343,7 @@ var AllBaseDetailView = React.createClass({
             }
         }
         setTimeout(function() {
-            this.transitionTo('contacts_selected', {}, {'ids': next_ids});
+            this.transitionTo('contacts_selected', {'menu': 'allbase'}, {'ids': next_ids});
         }.bind(this), 0);
 
     },

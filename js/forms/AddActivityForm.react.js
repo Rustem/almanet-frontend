@@ -124,7 +124,7 @@ var SalesCycleDropDownList = React.createClass({
                     value={this.value()}
                     choices={this.buildChoices()}
                     onChange={this.onChange} />
-                <div class="inputLine-caption">
+                <div className="inputLine-caption">
                 Если не изменять значение, событие попадет в основной поток
                 </div>
             </div>

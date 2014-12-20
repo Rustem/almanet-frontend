@@ -77,7 +77,7 @@ var VCardRow = React.createClass({
                         {this.renderLabel()}
                     </div>
                 </div>
-                <div class="inputLine-div">
+                <div className="inputLine-div">
                     <ContentEditableInput {...this.props} className='input-div input-div--area' isStrong={false} />
                 </div>
             </div>

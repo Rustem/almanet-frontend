@@ -16,11 +16,7 @@ var IconSvg = require('../../common/IconSvg.react');
 var AppContextMixin = require('../../../mixins/AppContextMixin');
 var ActivityStore = require('../../../stores/ActivityStore');
 var UserStore = require('../../../stores/UserStore');
-var Form = require('../../../forms/Form.react');
-var inputs = require('../../../forms/input');
-var SVGCheckbox = inputs.SVGCheckbox;
-var Input = inputs.Input;
-var Div = require('../../../forms/Fieldset.react').Div;
+var FilterBar = require('../ActivityFilterBar.react');
 var Crumb = require('../../common/BreadCrumb.react').Crumb;
 var ActivityList = require('../ActivityList.react');
 
@@ -84,45 +80,6 @@ var MyFeedLink = React.createClass({
     }
 });
 
-
-var FilterBar = React.createClass({
-    propTypes: {
-        value: React.PropTypes.object,
-        onHandleUserInput: React.PropTypes.func
-    },
-    render: function() {
-        return (
-            <Form onUpdate={this.onHandleUpdate} value={this.props.value} name='activity:filter_activity_form' ref='filter_activity_form'>
-                <div className="page-header-filterContainer">
-                    <div className="page-header-filter row">
-                        <div className="row-icon">
-                            <IconSvg iconKey='search' />
-                        </div>
-                        <div className="row-body row-body--inverted">
-                            <div className="row-body-secondary">
-                                <IconSvg iconKey='arrow-down' />
-                            </div>
-                            <div className="row-body-primary">
-                                <Input name="filter_text" type="text" className="input-filter" placeholder="Фильтр" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </Form>
-        )
-    },
-    onHandleUpdate: function(value) {
-        var form = this.refs.filter_activity_form;
-        var errors = form.validate();
-        if(!errors) {
-            this.props.onHandleUserInput(form.value());
-        } else {
-            alert(errors);
-        }
-    }
-
-});
-
 var MyFeedDetailView = React.createClass({
     mixins: [Router.Navigation, AppContextMixin],
     propTypes: {
@@ -158,7 +115,7 @@ var MyFeedDetailView = React.createClass({
     onFilterBarUpdate: function(value) {
         var activities = null;
         if(value.filter_text) {
-            activities = fuzzySearch(this.state.activities, value.filter_text, {
+            activities = fuzzySearch(this.getActivities(), value.filter_text, {
                 'keys': ['description']});
         } else {
             activities = ActivityStore.myFeed(this.getUser());
@@ -196,3 +153,4 @@ var MyFeedDetailView = React.createClass({
 
 module.exports.DetailView = MyFeedDetailView;
 module.exports.Link = MyFeedLink;
+module.exports.FilterBar = FilterBar;

@@ -21,6 +21,7 @@ var ProductsView = React.createFactory(require('./components/products/CRMProduct
 var ProductCreateView = React.createFactory(require('./components/products/ProductCreateView.react'));
 var ProductDetailView = React.createFactory(require('./components/products/ProductDetailView.react'));
 var activities_master_views = require('./components/activities/master_views');
+var ActivitySelectedView = require('./components/activities/ActivitySelectedView.react');
 
 
 var routes = (
@@ -33,7 +34,7 @@ var routes = (
             <Route name='coldbase' handler={contacts_master_views.ColdBase.DetailView} />
             <Route name='leadbase' handler={contacts_master_views.LeadBase.DetailView} />
         </Route>
-        <Route name="contacts_selected" path="/contacts/selected/" handler={ContactsSelectedView} />
+        <Route name="contacts_selected" path="/contacts/:menu/selected/" handler={ContactsSelectedView} />
         <Route name="contact_profile" path="/contact/:id/detail" handler={ContactProfileView}>
             <DefaultRoute name="activities_by_default" handler={ActivityListView} />
             <Route name="activities_by" path="actvs/by/:salescycle_id?" handler={ActivityListView} />
@@ -44,6 +45,7 @@ var routes = (
             <Route name='company_feed' handler={activities_master_views.CompanyFeed.DetailView} />
             <Redirect from="/activities" to="my_feed" />
         </Route>
+        <Route name='activity_selected' path='/activities/:menu/:id/' handler={ActivitySelectedView} />
         <Route name="products" path="/products" handler={ProductsView}>
             <DefaultRoute name='product_new_default' handler={ProductCreateView} />
             <Route name='product_new' path='new' handler={ProductCreateView} />
@@ -81,6 +83,7 @@ module.exports.NODES = {
     'shared_default': new Node('shared_default', 'Входящие'),
     'main': new Node('main', 'главная'),
     'activities': new Node('activities', 'События'),
+    'activity_selected': new Node('activity_selected', "Выбранное взаимодействие"),
     'my_feed': new Node('my_feed', 'Моя лента'),
     'mentions': new Node('mentions', 'Упоминания'),
     'company_feed': new Node('company_feed', 'Лента компании'),

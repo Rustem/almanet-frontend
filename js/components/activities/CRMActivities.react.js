@@ -12,7 +12,7 @@ var BreadCrumb = require('../common/BreadCrumb.react');
 
 
 var CRMActivities = React.createClass({
-
+    // <master_views.Mentions.Link label="Упоминания" />
     render: function() {
         return (
           <div>
@@ -25,7 +25,6 @@ var CRMActivities = React.createClass({
                         </div>
                         <div className="page-body">
                             <master_views.MyFeed.Link label="Моя лента" />
-                            <master_views.Mentions.Link label="Упоминания" />
                             <master_views.CompanyFeed.Link label="Лента компании" />
                         </div>
                     </div>
