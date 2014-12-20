@@ -17,6 +17,18 @@ var CRMProducts = React.createClass({
         }
     },
 
+    componentDidMount: function() {
+        ProductStore.addChangeListener(this.onChangeState)
+    },
+
+    componentWillUnmount: function() {
+        ProductStore.removeChangeListener(this.onChangeState);
+    },
+
+    onChangeState: function() {
+        this.setState(this.getInitialState());
+    },
+
     renderProductDetailLink: function(product) {
         return (
             <Link key={'js-product__' + product.id} to="product_detail" params={{product_id: product.id}} className="row row--oneliner row--link">

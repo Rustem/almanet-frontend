@@ -19,11 +19,8 @@ var Form = React.createClass({
 
     render: function() {
         var Component = this.props.Component;
-        var className = cx({
-
-        });
         return (
-          <Component {...this.props} className={className}>
+          <Component {...this.props}>
             {React.Children.map(this.props.children, this.renderChild)}
           </Component>
         );

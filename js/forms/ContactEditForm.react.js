@@ -7,7 +7,6 @@ var inputs = require('./input');
 var ContentEditableInput = inputs.ContentEditableInput;
 var SVGCheckbox = inputs.SVGCheckbox;
 var Form = require('./Form.react');
-var FormMixin = require('./FormMixin.react');
 var Fieldset = require('./Fieldset.react');
 var elements = require('./elements');
 var ContactRemoveableDropDownList = elements.ContactRemoveableDropDownList;

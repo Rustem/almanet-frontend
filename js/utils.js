@@ -8,7 +8,7 @@ var Fuse = require('./libs/fuse');
 var CREATION_STATUS = require('./constants/CRMConstants').CREATION_STATUS;
 
 function capitalize(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 _.mixin({'capitalize': capitalize});

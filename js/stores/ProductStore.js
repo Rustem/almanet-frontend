@@ -54,6 +54,11 @@ ProductStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             });
             ProductStore.emitChange();
             break;
+        case ActionTypes.EDIT_PRODUCT_SUCCESS:
+            var product_id = action.object['product_id'],
+                product = action.object['product'];
+            _products[product_id] = product;
+            ProductStore.emitChange();
         default:
             // do nothing
     }

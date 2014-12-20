@@ -38,6 +38,9 @@ module.exports = {
         USER_READ_NOTIFICATION: null,
         USER_READ_NOTIFICATION_SUCCESS: null,
         USER_READ_NOTIFICATION_FAIL: null,
+        EDIT_PRODUCT: null,
+        EDIT_PRODUCT_SUCCESS: null,
+        EDIT_PRODUCT_FAIL: null,
         CREATE_NOTIFICATION: null,
         CREATE_NOTIFICATION_SUCCESS: null,
         CREATE_NOTIFICATION_FAIL: null,
@@ -51,6 +54,10 @@ module.exports = {
         VIEW_ACTION: null
     }),
     CONTACT_VIEW_MODE: keyMirror({
+        EDIT: null,
+        READ: null
+    }),
+    PRODUCT_VIEW_MODE: keyMirror({
         EDIT: null,
         READ: null
     }),
