@@ -5,6 +5,7 @@ var keyMirror = require('react/lib/keyMirror');
 var cx            = React.addons.classSet;
 var Router = require('react-router');
 var RouteHandler = Router.RouteHandler;
+var Link = Router.Link;
 var ContactStore = require('../../stores/ContactStore');
 var ShareStore = require('../../stores/ShareStore');
 var SalesCycleStore = require('../../stores/SalesCycleStore');
@@ -148,7 +149,10 @@ var ContactProfileView = React.createClass({
     },
 
     renderProduct: function(p_id) {
-        return (<a href="#" className="text-secondary">{ProductStore.get(p_id).name} </a>)
+        return (
+            <Link to="product_detail" params={{product_id: p_id}} className="text-secondary">
+                {ProductStore.get(p_id).name}
+            </Link>)
     },
 
     render: function() {
@@ -186,7 +190,7 @@ var ContactProfileView = React.createClass({
                             <div className="space-verticalBorder"></div>
                             <FollowButton contact={this.getContact()} />
 
-                            
+
                         </div>
 
                     </div>
