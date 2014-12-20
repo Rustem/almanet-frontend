@@ -118,7 +118,8 @@ var ActivitySelectedView = React.createClass({
                         <ActivityList
                             ref="activity_list"
                             filter_text={this.getFilterText()}
-                            activities={this.getActivities()} />
+                            activities={this.getActivities()} 
+                            onCommentLinkClick={this._onChange} />
                     </div>
                 </div>
                 <div className="body-detail">

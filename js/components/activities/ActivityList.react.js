@@ -13,6 +13,7 @@ var ActivityListItem = React.createClass({
     mixins: [Router.State, AppContextMixin],
     propTypes: {
         activity: React.PropTypes.object,
+        onCommentLinkClick: React.PropTypes.func,
     },
 
     isItemSelected: function(act_id) {
@@ -23,13 +24,6 @@ var ActivityListItem = React.createClass({
         return false;
     },
 
-    getRouteName: function() {
-        var routes = this.getRoutes();
-        var route = routes[routes.length - 1];
-        if(!route) { return false; }
-        return route.name;
-    },
-
     getAuthor: function(user_id) {
         return UserStore.get(user_id);
     },
@@ -38,11 +32,15 @@ var ActivityListItem = React.createClass({
         return ContactStore.byActivity(a);
     },
 
+    onCommentLinkClick: function(e) {
+        this.props.onCommentLinkClick();
+    },
+
     render: function() {
         var activity = this.props.activity;
         var author = this.getAuthor(activity.author_id);
         var contact = this.getContact(activity);
-        var menu = this.getRouteName();
+        var menu = this.getParams().menu;
         var classNames = cx({
             'stream-item': true,
             'active': this.isItemSelected(activity.id),
@@ -68,7 +66,8 @@ var ActivityListItem = React.createClass({
                           <div className="row-body-secondary">
                             <Link to='activity_selected' 
                                   params={{menu: menu, id: activity.id}} 
-                                  className="stream-breadcrumbs">
+                                  className="stream-breadcrumbs"
+                                  onClick={this.onCommentLinkClick}>
                                   <IconSvg iconKey="comment" />
                             </Link>
                           </div>
@@ -94,13 +93,19 @@ var ActivityListItem = React.createClass({
 var ActivityList = React.createClass({
     propTypes: {
         activities: React.PropTypes.array,
+        onCommentLinkClick: React.PropTypes.func,
+    },
+
+    onCommentLinkClick: function() {
+        this.props.onCommentLinkClick();
     },
 
     render: function() {
         var activityListItems = this.props.activities.map(function(activity) {
             return(
                 <ActivityListItem
-                    activity={activity} />
+                    activity={activity} 
+                    onCommentLinkClick={this.onCommentLinkClick} />
             )
         }.bind(this));
 
