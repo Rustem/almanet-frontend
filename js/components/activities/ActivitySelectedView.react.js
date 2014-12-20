@@ -98,6 +98,10 @@ var ActivitySelectedView = React.createClass({
       return;
     },
 
+    onReply: function(recipient) {
+        this.refs.commentComposer.forceIsCommenting(recipient);
+    },
+
     render: function() {
         return (<div>
             <Header />
@@ -123,8 +127,10 @@ var ActivitySelectedView = React.createClass({
                             <Crumb />
                         </div>
                         <div className="page-body">
-                            <CommentList comments={this.getComments()} />
-                            <CommentComposer onHandleSubmit={this.onCommentCreate} 
+                            <CommentList comments={this.getComments()} 
+                                         onReply={this.onReply} />
+                            <CommentComposer ref="commentComposer"
+                                             onHandleSubmit={this.onCommentCreate} 
                                              activity_id={this.getActivityID()} />
                         </div>
                     </div>

@@ -6,13 +6,22 @@ var CommentListItem = React.createClass({
         comment: React.PropTypes.object,
     },
 
-    getAuthor: function(u_id) {
-    	return UserStore.get(u_id);
+    getComment: function() {
+        return this.props.comment;
+    },
+
+    getAuthor: function() {
+    	return UserStore.get(this.getComment().author);
+    },
+
+    onReply: function(e) {
+        e.preventDefault();
+        this.props.onReply(this.getAuthor());
     },
 
     render: function() {
-        var comment = this.props.comment;
-        var author = this.getAuthor(comment.author);
+        var comment = this.getComment();
+        var author = this.getAuthor();
 
         return (
         	<div className="stream-item stream-item--comment">
@@ -29,7 +38,7 @@ var CommentListItem = React.createClass({
 		            <div className="row-body-message">
 		              {comment.comment}
 		            </div>
-		            <a href="#" className="text-caption text-secondary">Ответить</a>
+		            <button onClick={this.onReply} className="text-caption text-secondary">Ответить</button>
 		          </div>
 		        </div>
 		    </div>
@@ -40,13 +49,18 @@ var CommentListItem = React.createClass({
 var CommentList = React.createClass({
     propTypes: {
         comments: React.PropTypes.array,
+        onReply: React.PropTypes.func,
+    },
+
+    onReply: function(recipient) {
+        this.props.onReply(recipient);
     },
 
     render: function() {
         var commentListItems = this.props.comments.map(function(comment) {
             return(
                 <CommentListItem
-                    comment={comment} />
+                    comment={comment} onReply={this.onReply} />
             )
         }.bind(this));
 

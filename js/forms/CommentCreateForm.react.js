@@ -32,12 +32,13 @@ var CommentCreateForm = React.createClass({
 
   render: function() {
     var author = this.props.author;
+    var value = this.props.value || default_form_state;
     return (
       <Form {...this.props}
             ref='comment_create_form'
             onSubmit={this.onHandleSubmit}
             onKeyDown={this.props.onKeyDown}
-            value={default_form_state} >
+            value={value} >
             <Fieldset className="stream-item stream-item--comment">
               <Fieldset className="row">
                 <a href="#" className="row-icon">

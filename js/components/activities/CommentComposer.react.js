@@ -48,7 +48,7 @@ var CommentComposer = React.createClass({
     mixins: [AppContextMixin],
 
     propTypes: {
-    	onHandleSubmit: React.PropTypes.func,
+    	  onHandleSubmit: React.PropTypes.func,
         activity_id: React.PropTypes.string,
     },
 
@@ -62,6 +62,7 @@ var CommentComposer = React.createClass({
 
     resetState: function() {
       this.isCommenting = false;
+      this.value = undefined;
       this.forceUpdate();
     },
 
@@ -70,14 +71,17 @@ var CommentComposer = React.createClass({
 
 	    if (this.isCommenting) {
 	        StateComponent = <CommentCreateForm
+                  ref='commentCreateForm'
 	                activity_id={this.props.activity_id}
 	                author={this.getUser()}
 	                onHandleSubmit={this.props.onHandleSubmit}
 	                onCancelClick={this.onCancelClick}
-	                onKeyDown={this.onFormKeyDown} />;
+	                onKeyDown={this.onFormKeyDown} 
+                  value={this.value} />;
 	    } else {
-	        StateComponent = <LeaveCommentButton author={this.getUser()}
-	        									 onClick={this.onFormToggle} />;
+	        StateComponent = <LeaveCommentButton 
+                              author={this.getUser()}
+	        									  onClick={this.onFormToggle} />;
 	    }
 	    return (
 	        StateComponent
@@ -89,6 +93,12 @@ var CommentComposer = React.createClass({
           this.isCommenting = false;
         }
         this.isCommenting = !this.isCommenting;
+        this.forceUpdate();
+    },
+
+    forceIsCommenting: function(recipient) {
+        this.isCommenting = true;
+        this.value = {'comment': '@'+recipient.first_name+' '}
         this.forceUpdate();
     },
 
