@@ -18,7 +18,7 @@ var Crumb = BreadCrumb.Crumb;
 var ActivityList = require('./ActivityList.react');
 var CommentList = require('./CommentList.react');
 var FilterBar = require('./ActivityFilterBar.react');
-var CommentCreateForm = require('../../forms/CommentCreateForm.react');
+var CommentComposer = require('./CommentComposer.react');
 var CommentActionCreators = require('../../actions/CommentActionCreators');
 
 var ActivitySelectedView = React.createClass({
@@ -124,7 +124,8 @@ var ActivitySelectedView = React.createClass({
                         </div>
                         <div className="page-body">
                             <CommentList comments={this.getComments()} />
-                            <CommentCreateForm onHandleSubmit={this.onCommentCreate} activity_id={this.getActivityID()} />
+                            <CommentComposer onHandleSubmit={this.onCommentCreate} 
+                                             activity_id={this.getActivityID()} />
                         </div>
                     </div>
                 </div>

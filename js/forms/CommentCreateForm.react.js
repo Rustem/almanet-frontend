@@ -11,7 +11,6 @@ var Input = inputs.Input;
 var ContentEditableInput = inputs.ContentEditableInput;
 var Form = require('./Form.react');
 var FormMixin = require('./FormMixin.react');
-var AppContextMixin = require('../mixins/AppContextMixin');
 
 var PLACEHOLDER = 'Напишите коммент здесь';
 
@@ -20,19 +19,23 @@ var default_form_state = {
 };
 
 var CommentCreateForm = React.createClass({
-  mixins: [FormMixin, AppContextMixin],
+  mixins: [FormMixin],
 
   propTypes: {
     onHandleSubmit: React.PropTypes.func,
+    onCancelClick: React.PropTypes.func,
+    onKeyDown: React.PropTypes.func,
     activity_id: React.PropTypes.string,
+    author: React.PropTypes.object,
   },
 
   render: function() {
-    var author = this.getUser();
+    var author = this.props.author;
     return (
       <Form {...this.props}
             ref='comment_create_form'
             onSubmit={this.onHandleSubmit}
+            onKeyDown={this.props.onKeyDown}
             value={default_form_state} >
             <div className="stream-item stream-item--comment">
               <div className="row">
@@ -45,7 +48,7 @@ var CommentCreateForm = React.createClass({
                   <ContentEditableInput ref='comment' 
                                 name='comment' 
                                 className='input-div input-div--block' />
-                  <button type="submit" className="text-strong text-primary">Написать</button> • <a href="#" className="text-secondary">Отмена</a>
+                  <button type="submit" className="text-strong text-primary">Написать</button> • <button onClick={this.onCancelClick} className="text-secondary">Отмена</button>
                 </div>
               </div>
             </div>
@@ -59,13 +62,18 @@ var CommentCreateForm = React.createClass({
     var errors = form.validate();
     if(!errors) {
       var value = form.value();
-      value.author = this.getUser().id;
+      value.author = this.props.author.id;
       value.activity_id = this.props.activity_id;
       this.props.onHandleSubmit(value);
     } else{
         alert(errors);
     }
     return false;
+  },
+
+  onCancelClick: function(e) {
+    e.preventDefault();
+    this.props.onCancelClick();
   }
 
 });
