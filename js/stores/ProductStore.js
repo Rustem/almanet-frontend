@@ -26,6 +26,14 @@ var ProductStore = assign({}, EventEmitter.prototype, {
         return _products[id];
     },
 
+    getLatest: function() {
+        var products = this.getAll();
+        if(!products) return null;
+        return _.sortBy(products, function(p){
+            return p.at
+        }).reverse()[0];
+    },
+
     getAll: function() {
         return _.map(_products, function(c) { return c });
     },
@@ -54,11 +62,18 @@ ProductStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             });
             ProductStore.emitChange();
             break;
+        case ActionTypes.CREATE_PRODUCT_SUCCESS:
+            var product = action.object;
+            if(!product.id) break;
+            _products[product.id] = product;
+            ProductStore.emitChange();
+            break;
         case ActionTypes.EDIT_PRODUCT_SUCCESS:
             var product_id = action.object['product_id'],
                 product = action.object['product'];
             _products[product_id] = product;
             ProductStore.emitChange();
+            break;
         default:
             // do nothing
     }

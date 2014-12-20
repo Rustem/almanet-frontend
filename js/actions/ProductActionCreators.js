@@ -22,4 +22,22 @@ module.exports = {
           });
         }.bind(this));
     },
+
+    createProduct: function(product) {
+      dispatcher.handleViewAction({
+        type: ActionTypes.CREATE_PRODUCT,
+        object: product
+      });
+      ProductWebAPI.createProduct(product, function(createdProduct){
+        dispatcher.handleServerAction({
+          type: ActionTypes.CREATE_PRODUCT_SUCCESS,
+          object: createdProduct
+        });
+      }.bind(this), function(error){
+        dispatcher.handleServerAction({
+          type: ActionTypes.CREATE_PRODUCT_FAIL,
+          error: error
+        });
+      }.bind(this));
+    }
 }

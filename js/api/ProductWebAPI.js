@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var SignalManager = require('./utils');
 var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
@@ -7,6 +8,22 @@ module.exports = {
         var products = JSON.parse(localStorage.getItem('products'));
         setTimeout(function(){
             success(products);
+        }, 0);
+    },
+
+    createProduct: function(p, success, failure) {
+        var timeNow = Date.now();
+        var product = _.extend({}, {
+            id: 'p_' + timeNow,
+            at: timeNow,
+        }, p);
+
+        var products = JSON.parse(localStorage.getItem('products')) || [];
+        products.push(product);
+        localStorage.setItem('products', JSON.stringify(products));
+
+        setTimeout(function() {
+            success(product);
         }, 0);
     },
 
