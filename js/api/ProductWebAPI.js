@@ -16,6 +16,7 @@ module.exports = {
         var product = _.extend({}, {
             id: 'p_' + timeNow,
             at: timeNow,
+            current_value: 0
         }, p);
 
         var products = JSON.parse(localStorage.getItem('products')) || [];

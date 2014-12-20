@@ -48,6 +48,7 @@ var ProductDetailView = React.createClass({
 
     renderRead: function() {
         return (
+            <div>
             <div className="inputLine">
                 <div className="row">
                   <div className="row-icon"></div>
@@ -60,6 +61,25 @@ var ProductDetailView = React.createClass({
                     </div>
                   </div>
                 </div>
+            </div>
+
+            <div className="space-vertical space-vertical--compact"></div>
+            <div className="inputLine inputLine--vcardRow">
+                <div className="row">
+                  <div className="row-icon">
+                  </div>
+                  <div className="row-body">
+                    <div className="inputLine-negativeTrail">
+                      <div className="text-caption text-secondary">
+                        Итого заработано
+                      </div>
+                    </div>
+                    <div className="inputLine-div">
+                      {this.product.current_value} KZT
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
         )
     },
