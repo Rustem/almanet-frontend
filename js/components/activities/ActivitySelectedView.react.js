@@ -40,6 +40,7 @@ var ActivitySelectedView = React.createClass({
 
     getInitialState: function() {
         var activities = this.getDefaultActivities();
+        console.log(this.getActivityID(), "hihihih");
         var comments = CommentStore.byActivity(this.getActivityID());
 
         return {
@@ -47,6 +48,10 @@ var ActivitySelectedView = React.createClass({
             comments: comments,
             search_bar: {filter_text: ''}
         }
+    },
+
+    componentWillReceiveProps: function(nextProps) {
+        this._onChange();
     },
 
     componentDidMount: function() {
@@ -118,8 +123,7 @@ var ActivitySelectedView = React.createClass({
                         <ActivityList
                             ref="activity_list"
                             filter_text={this.getFilterText()}
-                            activities={this.getActivities()} 
-                            onCommentLinkClick={this._onChange} />
+                            activities={this.getActivities()} />
                     </div>
                 </div>
                 <div className="body-detail">
@@ -128,10 +132,10 @@ var ActivitySelectedView = React.createClass({
                             <Crumb />
                         </div>
                         <div className="page-body">
-                            <CommentList comments={this.getComments()} 
+                            <CommentList comments={this.getComments()}
                                          onReply={this.onReply} />
                             <CommentComposer ref="commentComposer"
-                                             onHandleSubmit={this.onCommentCreate} 
+                                             onHandleSubmit={this.onCommentCreate}
                                              activity_id={this.getActivityID()} />
                         </div>
                     </div>

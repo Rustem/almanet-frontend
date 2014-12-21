@@ -39,10 +39,6 @@ var ActivityListItem = React.createClass({
         return ContactStore.byActivity(a);
     },
 
-    onCommentLinkClick: function(e) {
-        this.props.onCommentLinkClick();
-    },
-
     render: function() {
         var activity = this.props.activity;
         var author = this.getAuthor(activity.author_id);
@@ -71,10 +67,9 @@ var ActivityListItem = React.createClass({
                             <a href="#" className="text-secondary">{author.first_name} {author.last_name}</a> в {activity.at}
                           </div>
                           <div className="row-body-secondary">
-                            <Link to='activity_selected' 
-                                  params={{menu: menu, id: activity.id}} 
-                                  className="stream-breadcrumbs"
-                                  onClick={this.onCommentLinkClick}>
+                            <Link to='activity_selected'
+                                  params={{menu: menu, id: activity.id}}
+                                  className="stream-breadcrumbs">
                                   <IconSvg iconKey="comment" />
                             </Link>
                           </div>
@@ -103,16 +98,11 @@ var ActivityList = React.createClass({
         onCommentLinkClick: React.PropTypes.func,
     },
 
-    onCommentLinkClick: function() {
-        this.props.onCommentLinkClick();
-    },
-
     render: function() {
         var activityListItems = this.props.activities.map(function(activity) {
             return(
                 <ActivityListItem
-                    activity={activity} 
-                    onCommentLinkClick={this.onCommentLinkClick} />
+                    activity={activity} />
             )
         }.bind(this));
 
