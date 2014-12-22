@@ -14,10 +14,24 @@ var ContentEditableInput = React.createClass({
         Component: React.PropTypes.constructor
     },
 
+    componentWillMount: function() {
+        this.isOnceFocused = false;
+        this.isOnceTyped = false;
+        this.defaultValue = this.value() || this.props.placeholder; 
+    },
+
     getDefaultProps: function() {
         return {
             Component: 'div'
         }
+    },
+
+    resetInput: function() {
+        this.isOnceFocused = false;
+        this.isOnceTyped = false;
+        this.onChange({
+            target: {value: this.defaultValue}
+        });
     },
 
     getCurrentValue: function() {
@@ -44,7 +58,27 @@ var ContentEditableInput = React.createClass({
           e.stopPropagation();
         }
         var value = getValueFromEvent(e);
+        this.getDOMNode().innerText = value;
         this.updateValue(this.prepValue(this.props.name, value));
+    },
+
+    onFocus: function(e) {
+        this.isOnceFocused = true;
+        if(!this.isOnceTyped) {
+            this.onChange({
+                target: {value: ''}
+            });
+        }
+    },
+
+    onBlur: function(e) {
+        if(this.getCurrentValue() == '')
+            this.resetInput();
+    },
+
+    onInput: function(e) {
+        this.isOnceTyped = true;
+        this.emitChange();
     },
 
     render: function() {
@@ -56,12 +90,13 @@ var ContentEditableInput = React.createClass({
         });
         var className = cx(classNames);
         var props = _.extend({}, this.props, {
-            onInput: this.emitChange,
-            onBlur: this.emitChange,
+            onInput: this.onInput,
+            onBlur: this.onBlur,
+            onFocus: this.onFocus,
             contentEditable: true,
             className: className
         });
-        var value = this.value();
+        var value = this.defaultValue;
         return Component(props, value);
 
     },

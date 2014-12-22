@@ -56,7 +56,6 @@ CommentStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             CommentStore.emitChange();
             break;
         case ActionTypes.CREATE_COMMENT_SUCCESS:
-            console.log(action.object);
             var comment_with_id = CommentStore.getCreatedComment(action.object);
             _comments[comment_with_id.id] = comment_with_id;
             CommentStore.emitChange();
