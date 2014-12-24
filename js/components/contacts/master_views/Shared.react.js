@@ -111,9 +111,6 @@ var FilterBar = React.createClass({
                     <Div className="row-body-primary">
                         <SVGCheckbox name="select_all" className="text-secondary" label="Выбрать все" />
                     </Div>
-                    <div className="row-body-secondary">
-                        <a onClick={this.props.onUserAction.bind(null, 'edit')} href="#" className="text-secondary">Редактировать</a>
-                    </div>
                 </Div>
 
 

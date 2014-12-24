@@ -19,6 +19,7 @@ var ColdBase = require('./master_views').ColdBase;
 var LeadBase = require('./master_views').LeadBase;
 var SingleSelectedDetailView = require('./SingleSelectedDetailView.react');
 var MultipleSelectedDetailView = require('./MultipleSelectedDetailView.react');
+var CommonFilterBar = require('./FilterComposer.react').CommonFilterBar;
 
 var _selected_contacts = [];
 
@@ -102,7 +103,6 @@ var ContactsSelectedViewMixin = {
                 <MultipleSelectedDetailView contact_ids={contact_ids} />
             );
         }
-        var FilterBar = this.getFilterBar();
         var List = this.getList();
 
         return (
@@ -113,7 +113,11 @@ var ContactsSelectedViewMixin = {
                     <div className="page">
                         <div className="page-header">
                             <BreadCrumb slice={[1, -1]} />
-                            {FilterBar}
+                            <CommonFilterBar
+                                ref='filter_bar'
+                                value={this.state.search_bar}
+                                onHandleUserInput={this.onFilterBarUpdate}
+                                onUserAction={this.onUserAction} />
                         </div>
                         {List}
                     </div>
