@@ -16,6 +16,7 @@ var Modal = require('../../common/Modal.react');
 var FilterActionCreators = require('../../../actions/FilterActionCreators');
 var ContactStore = require('../../../stores/ContactStore');
 var ShareStore = require('../../../stores/ShareStore');
+var FilterStore = require('../../../stores/FilterStore');
 var AppContextMixin = require('../../../mixins/AppContextMixin');
 var ContactShareForm = require('../../../forms/ContactShareForm.react');
 var inputs = require('../../../forms/input');
@@ -157,21 +158,33 @@ var FilteredList = React.createClass({
 var FilteredViewMixin = {
 
     getInitialState: function() {
-        var selection_map = {};
-        contacts = ContactStore.getByDate(true);
+        var selection_map = {}, filter = this.getFilter();
+        contacts = this.applyFilter(filter);
         for(var i = 0; i < contacts.length; i++) {
             selection_map[contacts[i].id] = false;
         }
         return {
             contacts: contacts,
             selection_map: selection_map,
-            search_bar: {select_all: false, filter_text: ''},
+            search_bar: {select_all: false, filter_text: filter && filter.filter_text || ''},
             action: null
         }
     },
 
-    getFilterText: function() {
-        return this.state.search_bar.filter_text;
+    getDefaultContacts: function() {
+        var filter = this.getFilter();
+        if(!filter)
+            return [];
+        switch(filter.base) {
+            case 'all':
+                return ContactStore.getByDate(true);
+            case 'recent':
+                return ContactStore.getRecent();
+            case 'cold':
+                return ContactStore.getColdByDate(true);
+            case 'lead':
+                return ContactStore.getLeads(true);
+        }
     },
 
     getContacts: function() {
@@ -180,6 +193,11 @@ var FilteredViewMixin = {
 
     getSelectMap: function() {
         return this.state.selection_map;
+    },
+
+    getFilter: function() {
+        var f_id = this.getParams().id;
+        return FilterStore.get(f_id);
     },
 
     getSelectedContacts: function() {
@@ -239,15 +257,21 @@ var FilteredViewMixin = {
         return this.state.action === 'share'
     },
 
+    applyFilter: function(value) {
+        if(!value)
+            return [];
+        var contacts = this.getDefaultContacts();
+        if(value.filter_text)
+            contacts = fuzzySearch(contacts, value.filter_text, {
+                'keys': ['fn', 'emails.value']});
+        return contacts;
+    },
+
     onFilterBarUpdate: function(value) {
         var _map = {}, changed = value.select_all ^ this.state.search_bar.select_all,
             contacts = null;
-        if(value.filter_text) {
-            contacts = fuzzySearch(this.state.contacts, value.filter_text, {
-                'keys': ['fn', 'emails.value']});
-        } else {
-            contacts = ContactStore.getByDate(true);
-        }
+        contacts = this.applyFilter(value);
+        
         for(var contact_id in this.state.selection_map) {
             _map[contact_id] = false;
         }
@@ -269,6 +293,7 @@ var FilteredViewMixin = {
         });
         this.setState(newState);
     },
+
     onToggleListItem: function(contact_id, is_selected) {
         var updItem = {};
         updItem[contact_id] = is_selected;
@@ -314,7 +339,7 @@ var FilteredViewMixin = {
 }
 
 var FilteredDetailView = React.createClass({
-    mixins: [AppContextMixin, Router.Navigation, FilteredViewMixin],
+    mixins: [AppContextMixin, Router.State, FilteredViewMixin],
 
     render: function() {
         var cids = this.getSelectedContacts();
@@ -347,7 +372,7 @@ var FilteredDetailView = React.createClass({
 });
 
 var FilteredNewView = React.createClass({
-    mixins: [AppContextMixin, Router.Navigation, FilteredViewMixin],
+    mixins: [AppContextMixin, Router.State, FilteredViewMixin],
 
     onHandleSubmit: function(filterObject) {
         FilterActionCreators.create(filterObject);

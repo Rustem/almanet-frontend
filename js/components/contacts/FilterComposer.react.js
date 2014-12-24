@@ -89,7 +89,7 @@ var FilterList = React.createClass({
     },
 
     renderFilter: function(f) {
-        return <a href="#" className="row row--oneliner row--link">
+        return <Link to="filtered" params={{id: f.id}} className="row row--oneliner row--link">
                 <div className="row-icon"></div>
                 <div className="row-body">
                   <div className="row-body-primary">
@@ -99,7 +99,7 @@ var FilterList = React.createClass({
                     xx
                   </div>
                 </div>
-              </a>
+              </Link>
     },
 
     render: function() {
@@ -109,12 +109,12 @@ var FilterList = React.createClass({
                 <div className="row row--oneliner">
                     <div className="row-body">
                         <Link to='new_filter' className="row-body-primary">
-                                <div className="row-icon">
-                                    <IconSvg iconKey="add" />
-                                </div>
-                                <div className="row-body">
-                                  <strong>Новый фильтр</strong>
-                                </div>
+                            <div className="row-icon">
+                                <IconSvg iconKey="add" />
+                            </div>
+                            <div className="row-body">
+                              <strong>Новый фильтр</strong>
+                            </div>
                         </Link>
                         <div className="row-body-secondary">
                             <a href="#" className="text-secondary">Редактировать</a>
