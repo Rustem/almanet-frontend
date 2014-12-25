@@ -113,6 +113,12 @@ var ShareListItem = React.createClass({
     getNote: function() {
         return this.props.share.note
     },
+    isFollowing: function(contact_id) {
+        var user = this.getUser();
+        if(_.contains(user.unfollow_list, contact_id))
+            return <span className="badge-unfollowing">Not following</span>
+        return <span className="badge-following">Following</span>
+    },
     render: function() {
         var share = this.props.share,
             author = this.getAuthor(share.user_id);
@@ -126,6 +132,7 @@ var ShareListItem = React.createClass({
                 <SVGCheckbox
                     name={'share__' + share.contact_id}
                     label={this.getContactName()}
+                    sublabel={this.isFollowing(share.contact_id)}
                     className='row'
                     value={this.props.is_selected}
                     onValueUpdate={this.props.onItemToggle.bind(null, share.contact_id)} />
