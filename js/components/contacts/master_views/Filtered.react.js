@@ -6,7 +6,6 @@
 var _ = require('lodash');
 var Fuse = require('../../../libs/fuse');
 var React = require('react/addons');
-var keyMirror = require('react/lib/keyMirror');
 var cx        = React.addons.classSet;
 var Router = require('react-router');
 var capitalize = require('../../../utils').capitalize;
@@ -24,12 +23,6 @@ var SVGCheckbox = inputs.SVGCheckbox;
 var Crumb = require('../../common/BreadCrumb.react').Crumb;
 var CommonFilterBar = require('../FilterComposer.react').CommonFilterBar;
 var FilterForm = require('../../../forms/FilterForm.react');
-
-var ACTIONS = keyMirror({
-    NONE: null,
-    NEW: null,
-    EDIT: null,
-});
 
 function get_contacts_number() {
     return _.size(ContactStore.getByDate());
@@ -339,7 +332,7 @@ var FilteredViewMixin = {
 }
 
 var FilteredDetailView = React.createClass({
-    mixins: [AppContextMixin, Router.State, FilteredViewMixin],
+    mixins: [AppContextMixin, Router.State, Router.Navigation, FilteredViewMixin],
 
     render: function() {
         var cids = this.getSelectedContacts();
@@ -395,6 +388,32 @@ var FilteredNewView = React.createClass({
     },
 });
 
+var FilteredEditView = React.createClass({
+    mixins: [AppContextMixin, Router.State, FilteredViewMixin],
+
+    onHandleSubmit: function(filterObject) {
+        FilterActionCreators.edit(filterObject);
+    },
+
+    render: function() {
+        var cids = this.getSelectedContacts();
+        return (
+        <div className="page">
+            <div className="page-header">
+                <Crumb />
+                <FilterForm
+                    ref="filter_bar"
+                    value={this.getFilter()}
+                    onHandleUserInput={this.onFilterBarUpdate}
+                    onUserAction={this.onUserAction} 
+                    onHandleSubmit={this.onHandleSubmit} />
+            </div>
+        </div>
+        )
+    },
+});
+
 module.exports.DetailView = FilteredDetailView;
 module.exports.NewView = FilteredNewView;
+module.exports.EditView = FilteredEditView;
 module.exports.FilteredList = FilteredList;

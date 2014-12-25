@@ -73,6 +73,7 @@ var FilterList = React.createClass({
         var user_id = this.getUser().id;
         return {
             filters: FilterStore.getByUser(user_id),
+            isEdit: false,
         }
     },
 
@@ -89,6 +90,20 @@ var FilterList = React.createClass({
     },
 
     renderFilter: function(f) {
+        if(this.state.isEdit)
+            return <Link to="edit_filter" params={{id: f.id}} className="row row--oneliner row--link">
+                    <div className="row-icon">
+                        <IconSvg iconKey="remove" />
+                    </div>
+                    <div className="row-body">
+                      <div className="row-body-primary">
+                        {f.title}
+                      </div>
+                      <div className="row-body-secondary">
+                        xx
+                      </div>
+                    </div>
+                  </Link>
         return <Link to="filtered" params={{id: f.id}} className="row row--oneliner row--link">
                 <div className="row-icon"></div>
                 <div className="row-body">
@@ -100,6 +115,19 @@ var FilterList = React.createClass({
                   </div>
                 </div>
               </Link>
+    },
+
+    renderEditButton: function() {
+        return (<button className="text-secondary" onClick={this.toggleEdit}>
+            {this.state.isEdit ? "Отменить" : "Редактировать"}
+            </button>)
+    },
+
+    toggleEdit: function(action) {
+        var newState = React.addons.update(this.state, {
+            isEdit: {$set: !this.state.isEdit},
+        });
+        this.setState(newState);
     },
 
     render: function() {
@@ -117,7 +145,7 @@ var FilterList = React.createClass({
                             </div>
                         </Link>
                         <div className="row-body-secondary">
-                            <a href="#" className="text-secondary">Редактировать</a>
+                            {this.renderEditButton()}
                         </div>
                     </div>
                 </div>

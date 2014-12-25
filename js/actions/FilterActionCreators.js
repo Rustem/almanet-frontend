@@ -35,5 +35,22 @@ module.exports = {
     }.bind(this));
   },
  
+  edit: function(object) {
+    dispatcher.handleViewAction({
+      type: ActionTypes.EDIT_FILTER,
+      object: object
+    });
+    FilterWebAPI.edit(object, function(object){
+      dispatcher.handleServerAction({
+        type: ActionTypes.EDIT_FILTER_SUCCESS,
+        object: object
+      });
+    }.bind(this), function(error){
+      dispatcher.handleServerAction({
+        type: ActionTypes.EDIT_FILTER_FAIL,
+        error: error
+      });
+    }.bind(this));
+  },
 
 };

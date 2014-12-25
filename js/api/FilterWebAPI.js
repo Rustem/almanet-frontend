@@ -14,7 +14,7 @@ module.exports = {
             id: 'f_' + timeNow,
             at: timeNow}, filterObject);
 
-        // set contact to local storage
+        // set filter to local storage
         var rawFilters = JSON.parse(localStorage.getItem('filters')) || [];
         rawFilters.push(obj);
         localStorage.setItem('filters', JSON.stringify(rawFilters));
@@ -22,6 +22,24 @@ module.exports = {
         // simulate success callback
         setTimeout(function() {
             success(obj);
+        }, 0);
+    },
+    edit: function(filterObject, success, failure) {
+        // set filter to local storage
+        var rawFilters = JSON.parse(localStorage.getItem('filters')) || [];
+        for(var i = 0; i<rawFilters.length; i++) {
+            var cur = rawFilters[i];
+            if(cur.id === filterObject.id) {
+                rawFilters[i] = filterObject;
+                filter = cur;
+                break;
+            }
+        }
+        localStorage.setItem('filters', JSON.stringify(rawFilters));
+
+        // simulate success callback
+        setTimeout(function() {
+            success(filterObject);
         }, 0);
     },
 };
