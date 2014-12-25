@@ -151,8 +151,8 @@ var FilteredList = React.createClass({
 var FilteredViewMixin = {
 
     getInitialState: function() {
-        var selection_map = {}, filter = this.getFilter();
-        contacts = this.applyFilter(filter);
+        var selection_map = {}, filter = this.getFilter(),
+            contacts = this.applyFilter(filter);
         for(var i = 0; i < contacts.length; i++) {
             selection_map[contacts[i].id] = false;
         }
@@ -229,6 +229,8 @@ var FilteredViewMixin = {
             return rv;
         }
 
+        var f_id = this.getParams().id;
+
         var cur_ids = getSelectedList(cur_map),
             next_ids = getSelectedList(next_map);
 
@@ -241,7 +243,7 @@ var FilteredViewMixin = {
             }
         }
         setTimeout(function() {
-            this.transitionTo('contacts_selected', {'menu': 'allbase'}, {'ids': next_ids});
+            this.transitionTo('contacts_selected', {'menu': 'allbase'}, {'ids': next_ids, 'f_id': f_id});
         }.bind(this), 0);
 
     },
