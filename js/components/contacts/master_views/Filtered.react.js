@@ -336,6 +336,10 @@ var FilteredViewMixin = {
 var FilteredDetailView = React.createClass({
     mixins: [AppContextMixin, Router.State, Router.Navigation, FilteredViewMixin],
 
+    componentWillReceiveProps: function(nextProps) {
+        this.setState(this.getInitialState());
+    },
+
     render: function() {
         var cids = this.getSelectedContacts();
         return (

@@ -59,7 +59,7 @@ var CommonFilterBar = React.createClass({
 });
 
 var FilterList = React.createClass({
-    mixins: [AppContextMixin],
+    mixins: [AppContextMixin, Router.State],
 
     getInitialState: function() {
         var user_id = this.getUser().id;
@@ -67,6 +67,19 @@ var FilterList = React.createClass({
             filters: FilterStore.getByUser(user_id),
             isEdit: false,
         }
+    },
+
+    getRouteName: function() {
+        var routes = this.getRoutes();
+        var route = routes[routes.length - 1];
+        if(!route) { return false; }
+        return route.name;
+    },
+
+    componentWillReceiveProps: function(nextProps) {
+        if(this.getRouteName() != 'edit_filter') {
+            this.setState(this.getInitialState());
+        }   
     },
 
     componentDidMount: function() {

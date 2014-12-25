@@ -4,6 +4,7 @@
 
 var _ = require('lodash');
 var React = require('react');
+var Router = require('react-router');
 var inputs = require('./input');
 var Input = inputs.Input;
 var SimpleSelect = inputs.SimpleSelect;
@@ -22,7 +23,7 @@ var BASE_OPTIONS = [
 ]
 
 var FilterForm = React.createClass({
-  mixins: [FormMixin, AppContextMixin],
+  mixins: [FormMixin, AppContextMixin, Router.Navigation],
 
   propTypes: {
     onHandleSubmit: React.PropTypes.func,
@@ -68,12 +69,17 @@ var FilterForm = React.createClass({
               </Fieldset>
               <Fieldset className="row-body-secondary">
                 <button type="submit" className="text-good">Сохранить</button>
-                <span>&bull;</span>
-                <a href="#" className="text-bad">Отмена</a>
+                <span> &bull; </span>
+                <button className="text-bad" onClick={this.onCancelClick}>Отмена</button>
               </Fieldset>
             </Fieldset>
         </Form>
     );
+  },
+
+  onCancelClick: function(e) {
+    e.preventDefault();
+    this.goBack();
   },
 
   onHandleSubmit: function(e) {

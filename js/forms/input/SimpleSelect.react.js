@@ -20,12 +20,18 @@ var SimpleSelect = React.createClass({
         )
     },
 
+    componentDidMount: function() {
+        var value = this.value() || this.props.value || this.props.options.length>0 && this.props.options[0][0];
+        this.updateValue(this.prepValue(this.props.name, value));
+    },
+
     render: function() {
         var children = this.props.options.map(this.renderOption);
         var Component = this.props.Component;
+        var value = this.value() || this.props.value || this.props.options.length>0 && this.props.options[0][0];
         return (
             <Component {...this.props} className="select">
-                <select value={this.value()} onChange={this.onChange}>{children}</select>
+                <select value={value} onChange={this.onChange}>{children}</select>
             </Component>
         );
     },
