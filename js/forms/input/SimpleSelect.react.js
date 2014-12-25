@@ -25,7 +25,7 @@ var SimpleSelect = React.createClass({
         var Component = this.props.Component;
         return (
             <Component {...this.props} className="select">
-                <select value={this.props.value} onChange={this.onChange}>{children}</select>
+                <select value={this.value()} onChange={this.onChange}>{children}</select>
             </Component>
         );
     },
