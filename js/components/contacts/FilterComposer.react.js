@@ -42,14 +42,6 @@ var CommonFilterBar = React.createClass({
                 <Div className="page-header-controls row">
                     <Div className="row-body-primary">
                         <SVGCheckbox name="select_all" className="text-secondary" label="Выбрать все" />
-                        <a onClick={this.props.onUserAction.bind(null, 'share')} href="" className="row--inline text-secondary">
-                            <div className="row-icon">
-                                <IconSvg iconKey='share' />
-                            </div>
-                            <div className="row-body">
-                                Поделиться
-                            </div>
-                        </a>
                     </Div>
                 </Div>
             </Form>

@@ -136,14 +136,6 @@ var ContactsSelectedViewMixin = {
 var AllBaseSelectedView = React.createClass({
     mixins:[Router.State, ContactsSelectedViewMixin],
 
-    getFilterBar: function() {
-        return <AllBase.FilterBar
-                                ref='filter_bar'
-                                value={this.state.search_bar}
-                                onHandleUserInput={this.onFilterBarUpdate}
-                                onUserAction={this.onUserAction} />
-    },
-
     getList: function() {
         return <AllBase.AllBaseList
                             ref="allbase_list"
@@ -237,14 +229,6 @@ var AllBaseSelectedView = React.createClass({
 
 var RecentBaseSelectedView = React.createClass({
     mixins:[Router.State, ContactsSelectedViewMixin],
-
-    getFilterBar: function() {
-        return <RecentBase.FilterBar
-                                ref='filter_bar'
-                                value={this.state.search_bar}
-                                onHandleUserInput={this.onFilterBarUpdate}
-                                onUserAction={this.onUserAction} />
-    },
 
     getList: function() {
         return <RecentBase.RecentList
@@ -341,14 +325,6 @@ var RecentBaseSelectedView = React.createClass({
 var ColdBaseSelectedView = React.createClass({
     mixins:[Router.State, ContactsSelectedViewMixin],
 
-    getFilterBar: function() {
-        return <ColdBase.FilterBar
-                                ref='filter_bar'
-                                value={this.state.search_bar}
-                                onHandleUserInput={this.onFilterBarUpdate}
-                                onUserAction={this.onUserAction} />
-    },
-
     getList: function() {
         return <ColdBase.ColdBaseList
                             ref="coldbase_list"
@@ -444,14 +420,6 @@ var ColdBaseSelectedView = React.createClass({
 var LeadBaseSelectedView = React.createClass({
     mixins:[Router.State, ContactsSelectedViewMixin],
 
-    getFilterBar: function() {
-        return <LeadBase.FilterBar
-                                ref='filter_bar'
-                                value={this.state.search_bar}
-                                onHandleUserInput={this.onFilterBarUpdate}
-                                onUserAction={this.onUserAction} />
-    },
-
     getList: function() {
         return <LeadBase.LeadBaseList
                             ref="leadbase_list"
@@ -546,14 +514,6 @@ var LeadBaseSelectedView = React.createClass({
 
 var SharedBaseSelectedView = React.createClass({
     mixins:[Router.State, ContactsSelectedViewMixin],
-
-    getFilterBar: function() {
-        return <SharedBase.FilterBar
-                                ref='filter_bar'
-                                value={this.state.search_bar}
-                                onHandleUserInput={this.onFilterBarUpdate}
-                                onUserAction={this.onUserAction} />
-    },
 
     getList: function() {
         return <SharedBase.SharesList
