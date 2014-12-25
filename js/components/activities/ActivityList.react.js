@@ -4,6 +4,7 @@ var Router = require('react-router');
 var AppContextMixin = require('../../mixins/AppContextMixin');
 var ActivityStore = require('../../stores/ActivityStore');
 var ContactStore = require('../../stores/ContactStore');
+var SalesCycleStore = require('../../stores/SalesCycleStore');
 var UserStore = require('../../stores/UserStore');
 var Router = require('react-router');
 var Link = Router.Link;
@@ -37,6 +38,10 @@ var ActivityListItem = React.createClass({
 
     getContact: function(a) {
         return ContactStore.byActivity(a);
+    },
+
+    getSalesCycle: function(a) {
+        return SalesCycleStore.get(a.salescycle_id);
     },
 
     render: function() {
@@ -77,12 +82,15 @@ var ActivityListItem = React.createClass({
                         <div className="row-body-message">
                             {activity.description}
                         </div>
+                        {contact ?
                         <ul className="stream-breadcrumbs">
-                            {contact ?
                             <li>
                                 <Link to='contact_profile' params={{id: contact.id}} className="stream-breadcrumbs">{contact.fn}</Link>
-                            </li> : null}
+                            </li>
+                            <li>→</li>
+                            <li><a href="#" className="stream-breadcrumbs">{this.getSalesCycle(activity).title}</a></li>
                         </ul>
+                        : null}
                       </div>
                     </div>
                   </div>
