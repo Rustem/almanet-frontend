@@ -22,6 +22,7 @@ var SVGCheckbox = inputs.SVGCheckbox;
 var Input = inputs.Input;
 var Div = require('../../../forms/Fieldset.react').Div;
 var Crumb = require('../../common/BreadCrumb.react').Crumb;
+var CommonFilterBar = require('../FilterComposer.react').CommonFilterBar;
 
 var SharedContactLink = React.createClass({
     mixins: [AppContextMixin, Router.State],
@@ -82,56 +83,6 @@ var SharedContactLink = React.createClass({
     },
 });
 
-
-var FilterBar = React.createClass({
-    propTypes: {
-        value: React.PropTypes.object,
-        onUserAction: React.PropTypes.func,
-        onHandleUserInput: React.PropTypes.func
-    },
-    render: function() {
-        return (
-            <Form onUpdate={this.onHandleUpdate} value={this.props.value} name='share:filter_contacts_form' ref='filter_contacts_form'>
-                <Div className="page-header-filterContainer">
-                    <Div className="page-header-filter row">
-                        <Div className="row-icon">
-                            <IconSvg iconKey='search' />
-                        </Div>
-                        <Div className="row-body row-body--inverted">
-                            <Div className="row-body-secondary">
-                                <IconSvg iconKey='arrow-down' />
-                            </Div>
-                            <Div className="row-body-primary">
-                                <Input name="filter_text" type="text" className="input-filter" placeholder="Фильтр" />
-                            </Div>
-                        </Div>
-                    </Div>
-                </Div>
-                <Div className="page-header-controls row">
-                    <Div className="row-body-primary">
-                        <SVGCheckbox name="select_all" className="text-secondary" label="Выбрать все" />
-                    </Div>
-                    <div className="row-body-secondary">
-                        <a onClick={this.props.onUserAction.bind(null, 'edit')} href="#" className="text-secondary">Редактировать</a>
-                    </div>
-                </Div>
-
-
-            </Form>
-        )
-    },
-    onHandleUpdate: function(value) {
-        var form = this.refs.filter_contacts_form;
-        var errors = form.validate();
-        if(!errors) {
-            this.props.onHandleUserInput(form.value());
-        } else {
-            alert(errors);
-        }
-    }
-
-});
-
 var ShareListItem = React.createClass({
     mixins: [AppContextMixin],
     propTypes: {
@@ -162,6 +113,12 @@ var ShareListItem = React.createClass({
     getNote: function() {
         return this.props.share.note
     },
+    isFollowing: function(contact_id) {
+        var user = this.getUser();
+        if(_.contains(user.unfollow_list, contact_id))
+            return <span className="badge-unfollowing">Not following</span>
+        return <span className="badge-following">Following</span>
+    },
     render: function() {
         var share = this.props.share,
             author = this.getAuthor(share.user_id);
@@ -175,6 +132,7 @@ var ShareListItem = React.createClass({
                 <SVGCheckbox
                     name={'share__' + share.contact_id}
                     label={this.getContactName()}
+                    sublabel={this.isFollowing(share.contact_id)}
                     className='row'
                     value={this.props.is_selected}
                     onValueUpdate={this.props.onItemToggle.bind(null, share.contact_id)} />
@@ -405,8 +363,8 @@ var SharedContactDetailView = React.createClass({
             <div className="page">
                 <div className="page-header">
                     <Crumb />
-                    <FilterBar
-                        ref='filter_bar'
+                    <CommonFilterBar
+                        ref="filter_bar"
                         value={this.state.search_bar}
                         onHandleUserInput={this.onFilterBarUpdate}
                         onUserAction={this.onUserAction} />
@@ -439,4 +397,3 @@ var SharedContactDetailView = React.createClass({
 module.exports.DetailView = SharedContactDetailView;
 module.exports.Link = SharedContactLink;
 module.exports.SharesList = SharesList;
-module.exports.FilterBar = FilterBar;

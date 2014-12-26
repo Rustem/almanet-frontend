@@ -5,11 +5,13 @@
 var _ = require('lodash');
 var React = require('react');
 var keyMirror = require('react/lib/keyMirror');
+var fuzzySearch = require('../../utils').fuzzySearch;
 var Router = require('react-router');
 var Header = require('../Header.react');
 var Footer = require('../Footer.react');
 var ContactStore = require('../../stores/ContactStore');
 var ShareStore = require('../../stores/ShareStore');
+var FilterStore = require('../../stores/FilterStore');
 var ContactActionCreators = require('../../actions/ContactActionCreators');
 var BreadCrumb = require('../common/BreadCrumb.react');
 var AllBase = require('./master_views').AllBase;
@@ -17,8 +19,10 @@ var SharedBase = require('./master_views').Shared;
 var RecentBase = require('./master_views').Recent;
 var ColdBase = require('./master_views').ColdBase;
 var LeadBase = require('./master_views').LeadBase;
+var Filtered = require('./master_views').Filtered;
 var SingleSelectedDetailView = require('./SingleSelectedDetailView.react');
 var MultipleSelectedDetailView = require('./MultipleSelectedDetailView.react');
+var CommonFilterBar = require('./FilterComposer.react').CommonFilterBar;
 
 var _selected_contacts = [];
 
@@ -102,7 +106,6 @@ var ContactsSelectedViewMixin = {
                 <MultipleSelectedDetailView contact_ids={contact_ids} />
             );
         }
-        var FilterBar = this.getFilterBar();
         var List = this.getList();
 
         return (
@@ -113,7 +116,11 @@ var ContactsSelectedViewMixin = {
                     <div className="page">
                         <div className="page-header">
                             <BreadCrumb slice={[1, -1]} />
-                            {FilterBar}
+                            <CommonFilterBar
+                                ref='filter_bar'
+                                value={this.state.search_bar}
+                                onHandleUserInput={this.onFilterBarUpdate}
+                                onUserAction={this.onUserAction} />
                         </div>
                         {List}
                     </div>
@@ -131,14 +138,6 @@ var ContactsSelectedViewMixin = {
 
 var AllBaseSelectedView = React.createClass({
     mixins:[Router.State, ContactsSelectedViewMixin],
-
-    getFilterBar: function() {
-        return <AllBase.FilterBar
-                                ref='filter_bar'
-                                value={this.state.search_bar}
-                                onHandleUserInput={this.onFilterBarUpdate}
-                                onUserAction={this.onUserAction} />
-    },
 
     getList: function() {
         return <AllBase.AllBaseList
@@ -233,14 +232,6 @@ var AllBaseSelectedView = React.createClass({
 
 var RecentBaseSelectedView = React.createClass({
     mixins:[Router.State, ContactsSelectedViewMixin],
-
-    getFilterBar: function() {
-        return <RecentBase.FilterBar
-                                ref='filter_bar'
-                                value={this.state.search_bar}
-                                onHandleUserInput={this.onFilterBarUpdate}
-                                onUserAction={this.onUserAction} />
-    },
 
     getList: function() {
         return <RecentBase.RecentList
@@ -337,14 +328,6 @@ var RecentBaseSelectedView = React.createClass({
 var ColdBaseSelectedView = React.createClass({
     mixins:[Router.State, ContactsSelectedViewMixin],
 
-    getFilterBar: function() {
-        return <ColdBase.FilterBar
-                                ref='filter_bar'
-                                value={this.state.search_bar}
-                                onHandleUserInput={this.onFilterBarUpdate}
-                                onUserAction={this.onUserAction} />
-    },
-
     getList: function() {
         return <ColdBase.ColdBaseList
                             ref="coldbase_list"
@@ -440,14 +423,6 @@ var ColdBaseSelectedView = React.createClass({
 var LeadBaseSelectedView = React.createClass({
     mixins:[Router.State, ContactsSelectedViewMixin],
 
-    getFilterBar: function() {
-        return <LeadBase.FilterBar
-                                ref='filter_bar'
-                                value={this.state.search_bar}
-                                onHandleUserInput={this.onFilterBarUpdate}
-                                onUserAction={this.onUserAction} />
-    },
-
     getList: function() {
         return <LeadBase.LeadBaseList
                             ref="leadbase_list"
@@ -542,14 +517,6 @@ var LeadBaseSelectedView = React.createClass({
 
 var SharedBaseSelectedView = React.createClass({
     mixins:[Router.State, ContactsSelectedViewMixin],
-
-    getFilterBar: function() {
-        return <SharedBase.FilterBar
-                                ref='filter_bar'
-                                value={this.state.search_bar}
-                                onHandleUserInput={this.onFilterBarUpdate}
-                                onUserAction={this.onUserAction} />
-    },
 
     getList: function() {
         return <SharedBase.SharesList
@@ -656,6 +623,128 @@ var SharedBaseSelectedView = React.createClass({
     }
 });
 
+var FilteredSelectedView = React.createClass({
+    mixins:[Router.State, ContactsSelectedViewMixin],
+
+    getList: function() {
+        return <Filtered.FilteredList
+                            ref="filtered_list"
+                            contacts={this.getContacts()}
+                            selection_map={this.getSelectMap()}
+                            onChangeState={this.onToggleListItem} />
+    },
+
+    getFilter: function() {
+        var f_id = this.getQuery()['f_id'];
+        return FilterStore.get(f_id);
+    },
+
+    getDefaultContacts: function() {
+        var filter = this.getFilter();
+        if(!filter)
+            return [];
+        switch(filter.base) {
+            case 'all':
+                return ContactStore.getByDate(true);
+            case 'recent':
+                return ContactStore.getRecent();
+            case 'cold':
+                return ContactStore.getColdByDate(true);
+            case 'lead':
+                return ContactStore.getLeads(true);
+        }
+    },
+
+    applyFilter: function(value) {
+        if(!value)
+            return [];
+        var contacts = this.getDefaultContacts();
+        if(value.filter_text)
+            contacts = fuzzySearch(contacts, value.filter_text, {
+                'keys': ['fn', 'emails.value']});
+        return contacts;
+    },
+    
+    getInitialState: function() {
+        var selection_map = {}, filter = this.getFilter(), 
+            contacts = this.applyFilter(filter);
+
+        _selected_contacts = this.getQuery()['ids'] || [];
+        var cnt = 0;
+        for(var i = 0; i<contacts.length; i++) {
+            selection_map[contacts[i].id] = false;
+            if(_selected_contacts.indexOf(contacts[i].id) > -1) {
+                selection_map[contacts[i].id] = true;
+                cnt += 1
+            }
+        }
+
+        return {
+            contacts: contacts,
+            selection_map: selection_map,
+            search_bar: {select_all: cnt === contacts.length, filter_text: filter.filter_text}
+        }
+    },
+
+    onFilterBarUpdate: function(value) {
+        var _map = {}, changed = value.select_all ^ this.state.search_bar.select_all,
+            contacts = null;
+        contacts = this.applyFilter(value);
+        for(var contact_id in this.state.selection_map) {
+            _map[contact_id] = false;
+        }
+        for(var i = 0; i<contacts.length; i++) {
+            contact_id = contacts[i].id;
+            if(changed) {
+                _map[contact_id] = value.select_all;
+            } else if(value.select_all) {
+                _map[contact_id] = true;
+            } else {
+                _map[contact_id] = this.state.selection_map[contact_id];
+            }
+        }
+
+        var newState = React.addons.update(this.state, {
+            contacts: {$set: contacts},
+            selection_map: {$set: _map},
+            search_bar: {$set: value},
+        });
+        this.setState(newState);
+    },
+
+    onUserAction: function(actionType, evt) {
+        evt.preventDefault();
+        var selected_contacts = this.refs.filtered_list.getSelectedContacts();
+        
+        if(_.size(selected_contacts) == 0) {
+            console.log('Choose at least one contact');
+            return
+        }
+        console.log('You has chosen to ' + actionType, selected_contacts);
+    },
+
+    _onChange: function() {
+        var contacts = null,
+            newSelectionItems = {};
+        
+        contacts = this.getDefaultContacts();
+        for(var i = 0; i<contacts.length; i++) {
+            if(!contacts[i].id in this.state.selection_map) {
+                newSelectionItems[contacts[i].id] = false;
+            }
+        }
+        if(!newSelectionItems) {
+            return
+        } else {
+            var newState = React.addons.update(this.state, {
+                contacts: {$set: contacts},
+                selection_map: {$merge: newSelectionItems}
+            });
+            this.setState(newState);
+        }
+    }
+});
+
 var ContactsSelectedView = React.createClass({
     mixins: [Router.State],
 
@@ -679,6 +768,8 @@ var ContactsSelectedView = React.createClass({
                 Component = LeadBaseSelectedView;
                 break;
         }
+        if(this.getQuery()['f_id'])
+            Component = FilteredSelectedView;
         return (<Component {...this.props} />)
     },
 

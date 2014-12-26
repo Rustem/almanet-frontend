@@ -14,6 +14,7 @@ var ActivityWebAPI = require("./api/ActivityWebAPI");
 var SalesCycleWebAPI = require("./api/SalesCycleWebAPI");
 var ProductWebAPI = require('./api/ProductWebAPI');
 var CommentWebAPI = require('./api/CommentWebAPI');
+var FilterWebAPI = require('./api/FilterWebAPI');
 var NotificationWebAPI = require('./api/NotificationWebAPI');
 var BreadcrumbStore = require('./stores/BreadcrumbStore');
 var routes = require('./router').routes;
@@ -32,26 +33,29 @@ AuthWebAPI.loadCurrentUser(function(user){
                     SalesCycleWebAPI.getAll(function(salescycles){
                         ProductWebAPI.getAll(function(products){
                             CommentWebAPI.getAll(function(comments){
-                                NotificationWebAPI.getAll(function(notifications){
-                                  var appState = {
-                                      user: users[0],
-                                      contacts: contacts,
-                                      shares: shares,
-                                      users: users,
-                                      activities: activities,
-                                      salescycles: salescycles,
-                                      products: products,
-                                      comments: comments,
-                                      notifications: notifications
-                                  };
-                                  AppActionCreators.load(appState);
-                                  // breadcrumb store is mutable store but the logic remaining as flux
-                                  BreadcrumbStore.initialize(NODES, relationships);
-                                  // render app
-                                  Router.run(routes, function(Handler, state){
-                                      BreadcrumbStore.update(state.routes, state.params, state.query);
-                                      React.render(<Handler />, document.getElementById('js-crm-app'));
-                                  })
+                                FilterWebAPI.getAll(function(filters){
+                                    NotificationWebAPI.getAll(function(notifications){
+                                      var appState = {
+                                          user: users[0],
+                                          contacts: contacts,
+                                          shares: shares,
+                                          users: users,
+                                          activities: activities,
+                                          salescycles: salescycles,
+                                          products: products,
+                                          comments: comments,
+                                          filters: filters,
+                                          notifications: notifications
+                                      };
+                                      AppActionCreators.load(appState);
+                                      // breadcrumb store is mutable store but the logic remaining as flux
+                                      BreadcrumbStore.initialize(NODES, relationships);
+                                      // render app
+                                      Router.run(routes, function(Handler, state){
+                                          BreadcrumbStore.update(state.routes, state.params, state.query);
+                                          React.render(<Handler />, document.getElementById('js-crm-app'));
+                                      })
+                                    });
                                 });
                             });
                         });

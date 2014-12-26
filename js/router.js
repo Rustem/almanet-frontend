@@ -33,6 +33,9 @@ var routes = (
             <Route name='recent' handler={contacts_master_views.Recent.DetailView} />
             <Route name='coldbase' handler={contacts_master_views.ColdBase.DetailView} />
             <Route name='leadbase' handler={contacts_master_views.LeadBase.DetailView} />
+            <Route name='new_filter' path="filter/new" handler={contacts_master_views.Filtered.NewView} />
+            <Route name='filtered' path="filter/:id" handler={contacts_master_views.Filtered.DetailView} />
+            <Route name='edit_filter' path="filter/edit/:id" handler={contacts_master_views.Filtered.EditView} />
         </Route>
         <Route name="contacts_selected" path="/contacts/:menu/selected/" handler={ContactsSelectedView} />
         <Route name="contact_profile" path="/contact/:id/detail" handler={ContactProfileView}>
@@ -80,6 +83,13 @@ module.exports.NODES = {
     'recent': new Node('recent', 'Недавние'),
     'leadbase': new Node('leadbase', 'Контакты в обработке'),
     'coldbase': new Node('coldbase', 'Холодная база'),
+    'new_filter': new Node('new_filter', 'Фильтр'),
+    'filtered': new Node('filtered', function(params) {
+        return this.get(params.id).title;
+    }.bind(require('./stores/FilterStore'))),
+    'edit_filter': new Node('edit_filter', function(params) {
+        return this.get(params.id).title;
+    }.bind(require('./stores/FilterStore'))),
     'shared_default': new Node('shared_default', 'Входящие'),
     'main': new Node('main', 'главная'),
     'activities': new Node('activities', 'События'),
