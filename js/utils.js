@@ -99,12 +99,12 @@ function fuzzySearch(collection, search_str, options) {
 
 function isNewObject(object) {
   // determines whether object is new using duck typing
-  return CREATION_STATUS.COLD === object.new_status;
+  return CREATION_STATUS.HOT === object.new_status;
 };
 
 function isJustCreatedObject(object) {
   // determines whether object is just created using duck typing
-  return _.contains([CREATION_STATUS.COLD, CREATION_STATUS.WARM], object.new_status);
+  return _.contains([CREATION_STATUS.HOT, CREATION_STATUS.WARM], object.new_status);
 };
 
 
@@ -118,4 +118,6 @@ module.exports = {
   capitalize: capitalize,
   timeToSeconds: timeToSeconds,
   fuzzySearch: fuzzySearch,
-  isNewObject: isNewObject};
+  isNewObject: isNewObject,
+  isJustCreatedObject: isJustCreatedObject,
+};

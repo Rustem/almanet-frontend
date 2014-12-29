@@ -76,9 +76,9 @@ var Header = React.createClass({
     },
 
     onContactMenuItemClick: function(evt) {
-      if(_.size(this.state.new_contacts) > 0) {
-        ContactActionCreators.updateNewStatus();
-      }
+      // if(_.size(this.state.new_contacts) > 0) {
+      //   ContactActionCreators.updateNewStatus();
+      // }
       return true;
     },
 
@@ -96,8 +96,7 @@ var Header = React.createClass({
                   <MenuLink label="Контакты"
                             routeName='contacts'
                             amount={_.size(this.state.new_contacts)}
-                            badgeClassName="badge-new"
-                            onClick={this.onContactMenuItemClick} />
+                            badgeClassName="badge-new" />
                   <MenuLink label="Взаимодействия"
                             routeName='activities'
                             amount={_.size(this.state.new_activities)}

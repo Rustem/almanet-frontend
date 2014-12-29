@@ -10,6 +10,7 @@ var Router = require('react-router');
 var ActiveState = Router.ActiveState;
 var Navigation = Router.Navigation;
 var Link = Router.Link;
+var utils = require('../../../utils');
 var IconSvg = require('../../common/IconSvg.react');
 var ContactActionCreators = require('../../../actions/ContactActionCreators');
 var ShareStore = require('../../../stores/ShareStore');
@@ -44,9 +45,11 @@ var SharedContactLink = React.createClass({
     },
     componentDidMount: function() {
         ShareStore.addChangeListener(this._onChange);
+        ContactStore.addChangeListener(this._onChange);
     },
     componentWillUnmount: function() {
         ShareStore.removeChangeListener(this._onChange);
+        ContactStore.removeChangeListener(this._onChange);
     },
     _onChange: function() {
         this.setState(SharedContactLink.getState());
@@ -57,7 +60,7 @@ var SharedContactLink = React.createClass({
             'row-oneliner': true,
             'row--link': true,
             'active': this.isCurrentlyActive(),
-            'new': ShareStore.hasNew()
+            'new': ContactStore.hasJustCreated()
         });
         return (
             <Link className={className} to='shared'>
@@ -125,7 +128,7 @@ var ShareListItem = React.createClass({
 
         var classNames = cx({
             'stream-item': true,
-            'new': this.isNew()
+            'new': utils.isJustCreatedObject(this.props.contact)
         });
         return (
             <div className={classNames}>
@@ -245,9 +248,13 @@ var SharesList = React.createClass({
 
 var SharedContactDetailView = React.createClass({
     mixins: [Router.Navigation],
-    statics: {
 
+    statics: {
+        willTransitionFrom: function (transition, component) {
+            ContactActionCreators.updateNewStatus();
+        }
     },
+
     propTypes: {
         label: React.PropTypes.string,
     },
@@ -354,11 +361,9 @@ var SharedContactDetailView = React.createClass({
     },
 
     render: function() {
-        if(ShareStore.hasNew()) {
-            setTimeout(function() {
-                ContactActionCreators.markAllSharesAsRead(ShareStore.getAllNew());
-            }.bind(this), 0);
-        }
+        setTimeout(function() {
+            ContactActionCreators.updateNewStatus();
+        }.bind(this), 0);
         return (
             <div className="page">
                 <div className="page-header">

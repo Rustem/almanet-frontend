@@ -17,7 +17,7 @@ module.exports = {
         var object = _.extend({}, {
             id: 'act_' + timeNow,
             at: timeNow,
-            new_status: CREATION_STATUS.COLD
+            new_status: CREATION_STATUS.HOT
         }, activityObject);
 
         var rawActivities = JSON.parse(localStorage.getItem('activities')) || [];
@@ -35,11 +35,11 @@ module.exports = {
             updated_cids = [];
         _.forEach(rawActivities, function(activity){
             var updated = null;
-            if(activity.new_status === CREATION_STATUS.COLD){
+            if(activity.new_status === CREATION_STATUS.HOT){
                 activity.new_status = CREATION_STATUS.WARM;
                 updated = [activity.id, activity.new_status];
             } else if(activity.new_status === CREATION_STATUS.WARM) {
-                activity.new_status = CREATION_STATUS.HOT;
+                activity.new_status = CREATION_STATUS.COLD;
                 updated = [activity.id, activity.new_status];
             }
             if(updated) updated_cids.push(updated);

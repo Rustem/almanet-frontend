@@ -66,6 +66,11 @@ var ContactStore = assign({}, EventEmitter.prototype, {
         return _.filter(this.getAll(), utils.isNewObject)
     },
 
+    hasJustCreated: function() {
+        var contacts = this.getAll();
+        return _.any(contacts, function(contact){ return utils.isJustCreatedObject(contact) });
+    },
+
     getAll: function() {
         return _.map(_contacts, function(c) { return c });
     },
@@ -149,7 +154,6 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             ContactStore.emitChange();
         case ActionTypes.CONTACT_UPDATE_NEW_STATUS:
             var update_info = action.object['update_info'];
-            console.log(update_info);
             for(var i = 0; i<update_info.length; i++) {
                 var cid = update_info[i][0], newStatus = update_info[i][1];
                 _contacts[cid].new_status = newStatus;
