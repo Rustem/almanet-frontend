@@ -85,5 +85,8 @@ module.exports = {
         HOT: null,
         WARM: null,
         COLD: null
+    }),
+    SERVICES: keyMirror({
+        crm: null
     })
 }

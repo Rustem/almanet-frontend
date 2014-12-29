@@ -9,15 +9,21 @@ var CHANGE_EVENT = 'change';
 var ANONYMOUS_USER_ID = -1;
 
 var _anonymous_user = {
-    id: -1,
-    email: '',
-    first_name: '',
-    last_name: '',
-    userpic: 'sanzhar.png',
-    unfollow_list: []
-};
+        id: -1,
+        email: '',
+        first_name: '',
+        last_name: '',
+        userpic: 'sanzhar.png',
+        unfollow_list: []
+    },
+    _empty_session = {
+        id: null,
+        expire_date: '',
+        resource_uri: 'api/v1/'
+    };
 
-var _current_user = _.cloneDeep(_anonymous_user);
+var _current_user = _.cloneDeep(_anonymous_user),
+    _current_session = _.cloneDeep(_empty_session);
 
 var SessionStore = assign({}, EventEmitter.prototype, {
     emitChange: function() {
@@ -34,12 +40,20 @@ var SessionStore = assign({}, EventEmitter.prototype, {
         return _current_user;
     },
 
+    current_session: function() {
+        return _current_session;
+    },
+
     getAnonymous: function() {
         return _.cloneDeep(_anonymous_user);
     },
 
     setCurrent: function(user) {
         return _current_user = user;
+    },
+
+    setSession: function(session) {
+        return _current_session = session;
     },
 
     reset_current: function() {
@@ -57,6 +71,7 @@ SessionStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
             SessionStore.setCurrent(action.object.user);
+            SessionStore.setSession(action.object.session);
             SessionStore.emitChange();
             break;
         case ActionTypes.LOAD_CURRENT_USER_SUCCESS:

@@ -152,7 +152,7 @@ var ContactListItem = React.createClass({
     },
 
     getContactName: function() {
-        return this.props.contact.fn;
+        return this.props.contact.vcard.fn;
     },
     render: function() {
         var contact = this.props.contact;
@@ -201,12 +201,12 @@ var AllBaseList = React.createClass({
             filter_text = this.props.filter_text;
 
         var filterContact = function(contact) {
-            var fn = contact.fn.toLowerCase();
+            var fn = contact.vcard.fn.toLowerCase();
             return fn.indexOf(filter_text.toLowerCase()) > -1;
         }.bind(this);
 
         var sortBy = function(contact) {
-            return contact.fn.toLowerCase();
+            return contact.vcard.fn.toLowerCase();
         }.bind(this);
 
         contacts = _.sortBy(contacts, sortBy);
@@ -238,8 +238,9 @@ var AllBaseList = React.createClass({
         var prevContact = null;
         var contactListItems = this.props.contacts.map(function(contact) {
             var GroupContent = null;
-            if(prevContact == null || prevContact.fn[0] !== contact.fn[0] ) {
-                GroupContent = this.renderGroup(contact.fn[0]);
+
+            if(prevContact == null || prevContact.vcard.fn[0] !== contact.vcard.fn[0] ) {
+                GroupContent = this.renderGroup(contact.vcard.fn[0]);
             }
             var is_selected = this.props.selection_map[contact.id];
             prevContact = contact;

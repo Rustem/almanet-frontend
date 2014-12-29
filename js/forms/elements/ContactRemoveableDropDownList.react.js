@@ -11,7 +11,7 @@ var ContactRemoveableDropDownList = React.createClass({
     mixins : [FormElementMixin],
 
     renderContact: function(c) {
-        return c.fn;
+        return c.vcard.fn;
     },
 
     buildProps: function() {
@@ -32,7 +32,7 @@ var ContactRemoveableDropDownList = React.createClass({
     renderSelectedItem: function(object){
         return (
             <div className="row-body">
-                {object.fn}
+                {object.vcard.fn}
             </div>
         )
     },

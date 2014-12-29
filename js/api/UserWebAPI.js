@@ -1,9 +1,14 @@
 var _ = require('lodash');
+var $ = require('jquery');
 var SignalManager = require('./utils');
 var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
 
 module.exports = {
+    getSubscriptions: function(userObject, success, failure) {
+        $.get('api/v1/user/'+userObject.id+'/subscriptions/')
+            .then(success, failure);
+    },
     getAll: function(success, failure) {
         var users = JSON.parse(localStorage.getItem('users'));
         setTimeout(function(){
@@ -20,7 +25,7 @@ module.exports = {
         	user.unfollow_list.push(object.contact.id);
         localStorage.setItem('users', JSON.stringify(users));
         SignalManager.send(ActionTypes.TOGGLE_FOLLOWING_SUCCESS, user);
-        
+
         setTimeout(function(){
             success(user);
         }, 0);

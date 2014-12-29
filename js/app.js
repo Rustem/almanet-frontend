@@ -3,10 +3,13 @@
  */
 
 // This file bootstraps the entire application.
+var _ = require('lodash');
 var RSVP = require('rsvp');
 var React = require('react');
 var Router = require('react-router');
+var whenKeysAll = require('when/keys').all;
 var AppActionCreators = require('./actions/AppActionCreators');
+var AppWebAPI = require('./api/AppWebAPI');
 var ContactWebAPI = require('./api/ContactWebAPI');
 var AuthWebAPI = require('./api/AuthWebAPI');
 var UserWebAPI = require('./api/UserWebAPI');
@@ -24,43 +27,57 @@ var Fixtures = require('./fixtures');
 Fixtures.init();
 // TODO: use promises
 // load initial data to services
-AuthWebAPI.loadCurrentUser(function(user){
-    ContactWebAPI.getAllContacts(function(contacts){
-        ContactWebAPI.getAllShares(function(shares){
-            UserWebAPI.getAll(function(users){
-                ActivityWebAPI.getAll(function(activities){
-                    SalesCycleWebAPI.getAll(function(salescycles){
-                        ProductWebAPI.getAll(function(products){
-                            CommentWebAPI.getAll(function(comments){
-                                NotificationWebAPI.getAll(function(notifications){
-                                  var appState = {
-                                      user: users[0],
-                                      contacts: contacts,
-                                      shares: shares,
-                                      users: users,
-                                      activities: activities,
-                                      salescycles: salescycles,
-                                      products: products,
-                                      comments: comments,
-                                      notifications: notifications
-                                  };
-                                  AppActionCreators.load(appState);
-                                  // breadcrumb store is mutable store but the logic remaining as flux
-                                  BreadcrumbStore.initialize(NODES, relationships);
-                                  // render app
-                                  Router.run(routes, function(Handler, state){
-                                      BreadcrumbStore.update(state.routes, state.params, state.query);
-                                      React.render(<Handler />, document.getElementById('js-crm-app'));
-                                  })
-                                });
-                            });
-                        });
-                    });
-                });
-            });
-        });
-    });
+AuthWebAPI.loadCurrentUser(function(user, session){
+    AppWebAPI.getAll(user, function(appState){
+          // ContactWebAPI.getAllContacts(function(contacts){
+          //     ContactWebAPI.getAllShares(function(shares){
+          //         UserWebAPI.getAll(function(users){
+          //             ActivityWebAPI.getAll(function(activities){
+          //                 SalesCycleWebAPI.getAll(function(salescycles){
+          //                     ProductWebAPI.getAll(function(products){
+                                CommentWebAPI.getAll(function(comments){
+                                    NotificationWebAPI.getAll(function(notifications){
 
+                                      appState = _.assign(appState, {
+                                        user: user,
+                                        session: session,
+                                        comments: comments,
+                                        notifications: notifications
+                                      });
+
+                                      console.log(appState)
+
+                                      AppActionCreators.load(appState);
+                                      // breadcrumb store is mutable store but the logic remaining as flux
+                                      BreadcrumbStore.initialize(NODES, relationships);
+                                      // render app
+                                      Router.run(routes, function(Handler, state){
+                                          // create the promises hash
+                                          var promises = state.routes.filter(function (route) {
+                                            // gather up the handlers that have a static `fetchData` method
+                                            return route.handler.fetchData;
+                                          }).reduce(function (promises, route) {
+                                            // reduce to a hash of `key:promise`
+                                            promises[route.name] = route.handler.fetchData(state.params);
+                                            return promises;
+                                          }, {});
+
+                                          whenKeysAll(promises).then(function (data) {
+                                            // wait until we have data to render, the old screen stays up
+                                            // until we render
+                                            BreadcrumbStore.update(state.routes, state.params, state.query);
+                                            React.render(<Handler />, document.getElementById('js-crm-app'));
+                                          });
+                                      });
+                                    });
+                                });
+    //                         });
+    //                     });
+    //                 });
+    //             });
+    //         });
+    //     });
+    });
 });
 
 

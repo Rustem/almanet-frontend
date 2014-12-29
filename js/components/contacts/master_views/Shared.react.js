@@ -150,7 +150,7 @@ var ShareListItem = React.createClass({
     },
 
     getContactName: function() {
-        return this.props.contact.fn;
+        return this.props.contact.vcard.fn;
     },
     getAuthorName: function() {
         // TODO: should get user from store

@@ -73,6 +73,13 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
 
     getCreatedActivity: function(obj) {
         return obj;
+    },
+
+    setAll: function(obj) {
+        _.forEach(obj.activities, function (activity){
+            _activities[activity.id] = activity;
+        });
+        this.emitChange();
     }
 
 });

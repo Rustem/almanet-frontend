@@ -80,7 +80,7 @@ var ActivityListItem = React.createClass({
                         <ul className="stream-breadcrumbs">
                             {contact ?
                             <li>
-                                <Link to='contact_profile' params={{id: contact.id}} className="stream-breadcrumbs">{contact.fn}</Link>
+                                <Link to='contact_profile' params={{id: contact.id}} className="stream-breadcrumbs">{contact.vcard.fn}</Link>
                             </li> : null}
                         </ul>
                       </div>

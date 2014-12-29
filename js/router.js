@@ -70,7 +70,7 @@ Node.prototype.getName = function() {
 module.exports.NODES = {
     'contacts_selected': new Node('contacts_selected', "Выбранные контакты"),
     'contact_profile': new Node('contact_profile', function(params){
-        return this.get(params.id).fn;
+        return this.get(params.id).vcard.fn;
     }.bind(require('./stores/ContactStore'))),
     'activities_by': new Node('activities_by', 'события'),
     'activities_by_default': new Node('activities_by_default', 'события'),

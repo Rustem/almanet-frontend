@@ -74,6 +74,19 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
 
     getCreatedSalesCycle: function(obj) {
         return obj;
+    },
+
+    setAll: function(obj) {
+        _.forEach(obj.sales_cycles, function (sc){
+            _salescycles[sc.id] = sc;
+            _salescycles[sc.id].activities = [];
+            _salescycles[sc.id].products = sc.products;
+        });
+        _.forEach(obj.activities, function (actv){
+            if(actv.salescycle_id in _salescycles)
+                _salescycles[actv.salescycle_id].activities.push(actv.id);
+        });
+        this.emitChange();
     }
 
 });
@@ -84,10 +97,10 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
-            _.forEach(action.object.salescycles, function(salescycle){
-                _salescycles[salescycle.id] = salescycle;
-                _salescycles[salescycle.id].activities = [];
-                _salescycles[salescycle.id].products = salescycle.products;
+            _.forEach(action.object.sales_cycles, function(sc){
+                _salescycles[sc.id] = sc;
+                _salescycles[sc.id].activities = [];
+                _salescycles[sc.id].products = sc.products;
             });
             _.forEach(action.object.activities, function(actv){
                 if(actv.salescycle_id in _salescycles)
