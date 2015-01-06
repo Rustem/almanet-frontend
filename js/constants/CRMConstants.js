@@ -86,7 +86,6 @@ module.exports = {
     }),
     CREATION_STATUS: keyMirror({
         HOT: null,
-        WARM: null,
         COLD: null
     })
 }

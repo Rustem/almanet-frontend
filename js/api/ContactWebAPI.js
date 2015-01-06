@@ -127,10 +127,6 @@ module.exports = {
                 contact.new_status = CREATION_STATUS.COLD;
                 updated = [contact.id, contact.new_status];
             } 
-            // else if(contact.new_status === CREATION_STATUS.WARM) {
-            //     contact.new_status = CREATION_STATUS.COLD;
-            //     updated = [contact.id, contact.new_status];
-            // }
             if(updated) updated_cids.push(updated);
         });
         localStorage.setItem('contacts', JSON.stringify(rawContacts));

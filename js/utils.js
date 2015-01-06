@@ -102,11 +102,6 @@ function isNewObject(object) {
   return CREATION_STATUS.HOT === object.new_status;
 };
 
-function isJustCreatedObject(object) {
-  // determines whether object is just created using duck typing
-  return _.contains([CREATION_STATUS.HOT, CREATION_STATUS.WARM], object.new_status);
-};
-
 
 module.exports = {
   extractIds: extractIds,
@@ -119,5 +114,4 @@ module.exports = {
   timeToSeconds: timeToSeconds,
   fuzzySearch: fuzzySearch,
   isNewObject: isNewObject,
-  isJustCreatedObject: isJustCreatedObject,
 };
