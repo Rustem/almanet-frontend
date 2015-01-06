@@ -22,62 +22,50 @@ var BreadcrumbStore = require('./stores/BreadcrumbStore');
 var routes = require('./router').routes;
 var NODES = require('./router').NODES;
 var relationships = require('./router').relationships;
-var Fixtures = require('./fixtures');
 
+//var Fixtures = require('./fixtures');
 //Fixtures.init();
 
 // TODO: use promises
 // load initial data to services
 AuthWebAPI.loadCurrentUser(function(user, session){
     AppWebAPI.getAll(user, function(appState){
-          // ContactWebAPI.getAllContacts(function(contacts){
-          //     ContactWebAPI.getAllShares(function(shares){
-          //         UserWebAPI.getAll(function(users){
-          //             ActivityWebAPI.getAll(function(activities){
-          //                 SalesCycleWebAPI.getAll(function(salescycles){
-          //                     ProductWebAPI.getAll(function(products){
-                                CommentWebAPI.getAll(function(comments){
-                                    NotificationWebAPI.getAll(function(notifications){
+        CommentWebAPI.getAll(function(comments){
+            NotificationWebAPI.getAll(function(notifications){
 
-                                      appState = _.assign(appState, {
-                                        user: user,
-                                        session: session,
-                                        comments: comments,
-                                        notifications: notifications
-                                      });
+              appState = _.assign(appState, {
+                user: user,
+                session: session,
+                comments: comments,
+                notifications: notifications
+              });
 
-                                      console.log(appState)
+              console.log(appState)
 
-                                      AppActionCreators.load(appState);
-                                      // breadcrumb store is mutable store but the logic remaining as flux
-                                      BreadcrumbStore.initialize(NODES, relationships);
-                                      // render app
-                                      Router.run(routes, function(Handler, state){
-                                          // create the promises hash
-                                          var promises = state.routes.filter(function (route) {
-                                            // gather up the handlers that have a static `fetchData` method
-                                            return route.handler.fetchData;
-                                          }).reduce(function (promises, route) {
-                                            // reduce to a hash of `key:promise`
-                                            promises[route.name] = route.handler.fetchData(state.params);
-                                            return promises;
-                                          }, {});
+              AppActionCreators.load(appState);
+              // breadcrumb store is mutable store but the logic remaining as flux
+              BreadcrumbStore.initialize(NODES, relationships);
+              // render app
+              Router.run(routes, function(Handler, state){
+                  // create the promises hash
+                  var promises = state.routes.filter(function (route) {
+                    // gather up the handlers that have a static `fetchData` method
+                    return route.handler.fetchData;
+                  }).reduce(function (promises, route) {
+                    // reduce to a hash of `key:promise`
+                    promises[route.name] = route.handler.fetchData(state.params);
+                    return promises;
+                  }, {});
 
-                                          whenKeysAll(promises).then(function (data) {
-                                            // wait until we have data to render, the old screen stays up
-                                            // until we render
-                                            BreadcrumbStore.update(state.routes, state.params, state.query);
-                                            React.render(<Handler />, document.getElementById('js-crm-app'));
-                                          });
-                                      });
-                                    });
-                                });
-    //                         });
-    //                     });
-    //                 });
-    //             });
-    //         });
-    //     });
+                  whenKeysAll(promises).then(function (data) {
+                    // wait until we have data to render, the old screen stays up
+                    // until we render
+                    BreadcrumbStore.update(state.routes, state.params, state.query);
+                    React.render(<Handler />, document.getElementById('js-crm-app'));
+                  });
+              });
+            });
+        });
     });
 });
 
