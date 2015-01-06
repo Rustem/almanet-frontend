@@ -70,18 +70,13 @@ var FilterForm = React.createClass({
               <Fieldset className="row-body-secondary">
                 <button type="submit" className="text-good">Сохранить</button>
                 <span> &bull; </span>
-                <button className="text-bad" onClick={this.onCancelClick}>Отмена</button>
+                <button className="text-bad" onClick={this.props.onCancelClick}>Отмена</button>
               </Fieldset>
             </Fieldset>
         </Form>
     );
   },
-
-  onCancelClick: function(e) {
-    e.preventDefault();
-    this.goBack();
-  },
-
+  
   onHandleSubmit: function(e) {
     e.preventDefault();
     var form = this.refs.filter_form;

@@ -1,6 +1,7 @@
 /**
  * @jsx React.DOM
  */
+var _ = require('lodash');
 var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
@@ -16,8 +17,8 @@ var Div = require('../../forms/Fieldset.react').Div;
 var CommonFilterBar = React.createClass({
     propTypes: {
         value: React.PropTypes.object,
-        onUserAction: React.PropTypes.func,
-        onHandleUserInput: React.PropTypes.func
+        onHandleUserInput: React.PropTypes.func,
+        onEditClick: React.PropTypes.func,
     },
 
     render: function() {
@@ -43,6 +44,11 @@ var CommonFilterBar = React.createClass({
                     <Div className="row-body-primary">
                         <SVGCheckbox name="select_all" className="text-secondary" label="Выбрать все" />
                     </Div>
+                    {this.props.onEditClick ?
+                        <Div className="row-body-secondary">
+                            <a onClick={this.props.onEditClick} href="" className="text-secondary">Редактировать</a>
+                        </Div>
+                    : null }
                 </Div>
             </Form>
         )
@@ -95,22 +101,10 @@ var FilterList = React.createClass({
     },
 
     renderFilter: function(f) {
-        if(this.state.isEdit)
-            return <Link to="edit_filter" params={{id: f.id}} className="row row--oneliner row--link">
-                    <div className="row-icon">
-                        <IconSvg iconKey="remove" />
-                    </div>
-                    <div className="row-body">
-                      <div className="row-body-primary">
-                        {f.title}
-                      </div>
-                      <div className="row-body-secondary">
-                        xx
-                      </div>
-                    </div>
-                  </Link>
         return <Link to="filtered" params={{id: f.id}} className="row row--oneliner row--link">
-                <div className="row-icon"></div>
+                <div className="row-icon">
+                    {this.state.isEdit ? <IconSvg iconKey="remove" /> : null }
+                </div>
                 <div className="row-body">
                   <div className="row-body-primary">
                     {f.title}
@@ -123,9 +117,12 @@ var FilterList = React.createClass({
     },
 
     renderEditButton: function() {
-        return (<button className="text-secondary" onClick={this.toggleEdit}>
-            {this.state.isEdit ? "Отменить" : "Редактировать"}
-            </button>)
+        var Component = null;
+        if(!_.isEmpty(this.getFilters()))
+            Component = <button className="text-secondary" onClick={this.toggleEdit}>
+                {this.state.isEdit ? "Отменить" : "Редактировать"}
+                </button>
+        return (Component)
     },
 
     toggleEdit: function(action) {

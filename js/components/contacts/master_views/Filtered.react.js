@@ -23,6 +23,7 @@ var SVGCheckbox = inputs.SVGCheckbox;
 var Crumb = require('../../common/BreadCrumb.react').Crumb;
 var CommonFilterBar = require('../FilterComposer.react').CommonFilterBar;
 var FilterForm = require('../../../forms/FilterForm.react');
+var VIEW_MODES = require('../../../constants/CRMConstants').PRODUCT_VIEW_MODE;
 
 function get_contacts_number() {
     return _.size(ContactStore.getByDate());
@@ -322,8 +323,6 @@ var FilteredViewMixin = {
         // action creator for share
     },
 
-
-
     onEdit: function() {
         var contact_ids = this.getSelectedContacts();
     },
@@ -340,17 +339,54 @@ var FilteredDetailView = React.createClass({
         this.setState(this.getInitialState());
     },
 
+    componentWillMount: function() {
+        this.setInternalState();
+    },
+
+    setInternalState: function() {
+        this.mode = VIEW_MODES.READ;
+    },
+
+    onEditClick: function(e) {
+        e.preventDefault();
+        this.mode = VIEW_MODES.EDIT;
+        this.forceUpdate();
+    },
+    
+    onCancelClick: function(e) {
+        e.preventDefault();
+        this.mode = VIEW_MODES.READ;
+        this.forceUpdate();
+    },
+
+    renderRead: function() {
+        return (
+            <CommonFilterBar
+                    ref="filter_bar"
+                    value={this.state.search_bar}
+                    onHandleUserInput={this.onFilterBarUpdate}
+                    onUserAction={this.onUserAction} 
+                    onEditClick={this.onEditClick} />
+        )
+    },
+
+    renderEdit: function() {
+        return (
+            <FilterForm
+                    ref="filter_bar"
+                    onHandleUserInput={this.onFilterBarUpdate}
+                    onHandleSubmit={this.onHandleSubmit} 
+                    onCancelClick={this.onCancelClick} />
+        )
+    },
+
     render: function() {
         var cids = this.getSelectedContacts();
         return (
         <div className="page">
             <div className="page-header">
                 <Crumb />
-                <CommonFilterBar
-                    ref="filter_bar"
-                    value={this.state.search_bar}
-                    onHandleUserInput={this.onFilterBarUpdate}
-                    onUserAction={this.onUserAction} />
+                {this.mode === VIEW_MODES.READ && this.renderRead() || this.renderEdit()}
             </div>
             <FilteredList
                 ref="filtered_list"
@@ -370,6 +406,8 @@ var FilteredDetailView = React.createClass({
     },
 });
 
+
+
 var FilteredNewView = React.createClass({
     mixins: [AppContextMixin, Router.State, FilteredViewMixin],
 
@@ -383,36 +421,7 @@ var FilteredNewView = React.createClass({
         <div className="page">
             <div className="page-header">
                 <Crumb />
-                <FilterForm
-                    ref="filter_bar"
-                    onHandleUserInput={this.onFilterBarUpdate}
-                    onUserAction={this.onUserAction} 
-                    onHandleSubmit={this.onHandleSubmit} />
-            </div>
-        </div>
-        )
-    },
-});
-
-var FilteredEditView = React.createClass({
-    mixins: [AppContextMixin, Router.State, FilteredViewMixin],
-
-    onHandleSubmit: function(filterObject) {
-        FilterActionCreators.edit(filterObject);
-    },
-
-    render: function() {
-        var cids = this.getSelectedContacts();
-        return (
-        <div className="page">
-            <div className="page-header">
-                <Crumb />
-                <FilterForm
-                    ref="filter_bar"
-                    value={this.getFilter()}
-                    onHandleUserInput={this.onFilterBarUpdate}
-                    onUserAction={this.onUserAction} 
-                    onHandleSubmit={this.onHandleSubmit} />
+                
             </div>
         </div>
         )
@@ -421,5 +430,4 @@ var FilteredEditView = React.createClass({
 
 module.exports.DetailView = FilteredDetailView;
 module.exports.NewView = FilteredNewView;
-module.exports.EditView = FilteredEditView;
 module.exports.FilteredList = FilteredList;
