@@ -18,15 +18,10 @@ var CounterableEntity = {
     badgeClassName: React.PropTypes.string
   },
 
-  prepareAmount: function() {
-    var amount = this.props.amount;
-    return amount > 9 ? "" + amount : "0" + amount;
-  },
-
   renderCounter: function() {
     if(this.props.amount) {
       return (
-        <sup className={this.props.badgeClassName}>{this.prepareAmount()}</sup>
+        <sup className={this.props.badgeClassName}>{this.props.amount}</sup>
       )
     } else {
       return null;

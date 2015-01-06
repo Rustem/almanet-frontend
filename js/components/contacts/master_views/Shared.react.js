@@ -361,9 +361,6 @@ var SharedContactDetailView = React.createClass({
     },
 
     render: function() {
-        setTimeout(function() {
-            ContactActionCreators.updateNewStatus();
-        }.bind(this), 0);
         return (
             <div className="page">
                 <div className="page-header">
