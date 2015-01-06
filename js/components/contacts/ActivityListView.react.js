@@ -35,7 +35,7 @@ var ACTIONS = keyMirror({
 var SalesCycleControlBar = React.createClass({
     propTypes: {
         action_type: React.PropTypes.string.isRequired,
-        current_cycle_id: React.PropTypes.string.isRequired,
+        current_cycle_id: React.PropTypes.number.isRequired,
     },
 
     get_current_action: function() {
@@ -99,7 +99,7 @@ var SalesCycleControlBar = React.createClass({
 var AddActivityWidget = React.createClass({
     propTypes: {
         action_type: React.PropTypes.string.isRequired,
-        current_cycle_id: React.PropTypes.string.isRequired,
+        current_cycle_id: React.PropTypes.number.isRequired,
     },
 
     get_current_action: function() {
@@ -135,7 +135,7 @@ var AddActivityWidget = React.createClass({
 var AddProductWidget = React.createClass({
     propTypes: {
         action_type: React.PropTypes.string.isRequired,
-        current_cycle_id: React.PropTypes.string.isRequired,
+        current_cycle_id: React.PropTypes.number.isRequired,
     },
 
     get_current_action: function() {
@@ -171,7 +171,7 @@ var AddProductWidget = React.createClass({
 var CloseCycleWidget = React.createClass({
     propTypes: {
         action_type: React.PropTypes.string.isRequired,
-        current_cycle_id: React.PropTypes.string.isRequired,
+        current_cycle_id: React.PropTypes.number.isRequired,
     },
 
     get_current_action: function() {
@@ -214,7 +214,7 @@ var SalesCycleDropDownList = React.createClass({
     mixins: [DropDownBehaviour],
 
     propTypes: {
-        current_cycle_id: React.PropTypes.string.isRequired
+        current_cycle_id: React.PropTypes.number.isRequired
     },
 
     renderChoice: function(choice, idx) {
@@ -342,7 +342,7 @@ var SalesCycleByAllSummary = React.createClass({
 var SalesCycleSummary = React.createClass({
 
     propTypes: {
-        cycle_id: React.PropTypes.string.isRequired,
+        cycle_id: React.PropTypes.number.isRequired,
     },
 
     getCycle: function() {
@@ -574,7 +574,7 @@ var ActivityListView = React.createClass({
     },
 
     render: function() {
-        var cycle_id = ('salescycle_id' in this.getParams()) && this.getParams()['salescycle_id'] || CRMConstants.GLOBAL_SALES_CYCLE_ID;
+        var cycle_id = ('salescycle_id' in this.getParams()) && parseInt(this.getParams()['salescycle_id'], 10) || CRMConstants.GLOBAL_SALES_CYCLE_ID;
         if( !cycle_id ) { // monkey patching
             cycle_id = SalesCycleStore.getGlobal().id
         }

@@ -26,7 +26,7 @@ var CommentCreateForm = React.createClass({
     onHandleSubmit: React.PropTypes.func,
     onCancelClick: React.PropTypes.func,
     onKeyDown: React.PropTypes.func,
-    activity_id: React.PropTypes.string,
+    activity_id: React.PropTypes.number,
     author: React.PropTypes.object,
   },
 
@@ -47,8 +47,8 @@ var CommentCreateForm = React.createClass({
                   </figure>
                 </a>
                 <Fieldset className="row-body row-body--no-trailer">
-                  <ContentEditableInput ref='comment' 
-                                name='comment' 
+                  <ContentEditableInput ref='comment'
+                                name='comment'
                                 className='input-div input-div--block' />
                   <button type="submit" className="text-strong text-primary">Написать</button><span> • </span><button onClick={this.onCancelClick} className="text-secondary">Отмена</button>
                 </Fieldset>

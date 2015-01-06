@@ -39,7 +39,7 @@ var AddActivityMiniForm = React.createClass({
     propTypes: {
         onHandleSubmit: React.PropTypes.func,
         current_user: React.PropTypes.object,
-        salescycle_id: React.PropTypes.string
+        salescycle_id: React.PropTypes.number
     },
 
     render: function() {

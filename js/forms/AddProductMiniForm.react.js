@@ -10,7 +10,7 @@ var AddProductMiniForm = React.createClass({
     propTypes: {
         onHandleSubmit: React.PropTypes.func,
         onCancel: React.PropTypes.func,
-        salescycle_id: React.PropTypes.string,
+        salescycle_id: React.PropTypes.number,
         // products: React.PropTypes.list,
     },
 

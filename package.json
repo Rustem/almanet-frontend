@@ -13,7 +13,8 @@
     "lodash": "^2.4.1",
     "moment": "~2.8",
     "when": "~3.6.4",
-    "superagent": "~0.21.0"
+    "superagent": "~0.21.0",
+    "cookie": "~0.1.2"
   },
   "devDependencies": {
     "browserify": "~4.2.2",

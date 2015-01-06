@@ -139,7 +139,7 @@ var AddActivityForm = React.createClass({
         onCancel: React.PropTypes.func,
         contact_ids: React.PropTypes.array,
         current_user: React.PropTypes.object,
-        salescycle: React.PropTypes.string
+        salescycle: React.PropTypes.number
     },
 
     render: function() {
