@@ -1,6 +1,5 @@
 var _ = require('lodash');
-var cookie_tool = require('cookie');
-var request = require('superagent');
+var requestPost = require('../utils').requestPost;
 var SignalManager = require('./utils');
 var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
@@ -18,12 +17,9 @@ module.exports = {
         var object = _.pick(activityObject,
                             ['author_id', 'salescycle_id', 'description']);
         // object['feedback'] = activityObject.feedback;
-        request
-            .post('/api/v1/activity/')
-            .set('X-CSRFToken', cookie_tool.parse(document.cookie).csrftoken)
-            .type('json')
+        requestPost('/api/v1/activity/')
             .send(object)
-            .end(function (res) {
+            .end(function(res) {
                 if (res.ok) {
                     object = _.assign(object, res.body);
                     success(object);
