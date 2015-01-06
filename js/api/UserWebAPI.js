@@ -1,14 +1,9 @@
 var _ = require('lodash');
-var $ = require('jquery');
 var SignalManager = require('./utils');
 var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
 
 module.exports = {
-    getSubscriptions: function(userObject, success, failure) {
-        $.get('api/v1/user/'+userObject.id+'/subscriptions/')
-            .then(success, failure);
-    },
     getAll: function(success, failure) {
         var users = JSON.parse(localStorage.getItem('users'));
         setTimeout(function(){

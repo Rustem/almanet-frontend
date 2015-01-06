@@ -4,7 +4,6 @@
  */
 
 var _ = require('lodash');
-var $ = require('jquery');
 var Fuse = require('../../../libs/fuse');
 var React = require('react/addons');
 var cx        = React.addons.classSet;
@@ -84,16 +83,6 @@ var MyFeedLink = React.createClass({
 
 var MyFeedDetailView = React.createClass({
     mixins: [Router.Navigation, AppContextMixin],
-    statics: {
-        // this is going to be called in the Router.run callback
-        fetchData: function (params) {
-            return $.get('api/v1/app_state/my_feed/')
-                .done(function (data) {
-                    SalesCycleStore.setAll(data);
-                    ActivityStore.setAll(data);
-                });
-        }
-    },
     propTypes: {
         label: React.PropTypes.string
     },
