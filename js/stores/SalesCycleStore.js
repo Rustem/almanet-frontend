@@ -56,7 +56,9 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
     },
 
     getGlobal: function() {
-        return _salescycles[GLOBAL_SALES_CYCLE_ID];
+        // TODO on BACKEND!
+        // return _salescycles[GLOBAL_SALES_CYCLE_ID];
+        return _.values(_salescycles)[0]; // monkey patching
     },
 
     getCyclesForCurrentContact: function(contact_id) {
@@ -80,7 +82,7 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
         _.forEach(obj.sales_cycles, function (sc){
             _salescycles[sc.id] = sc;
             _salescycles[sc.id].activities = [];
-            _salescycles[sc.id].products = sc.products;
+            _salescycles[sc.id].products = sc.product_ids;
         });
         _.forEach(obj.activities, function (actv){
             if(actv.salescycle_id in _salescycles)
@@ -97,16 +99,16 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
-            _.forEach(action.object.sales_cycles, function(sc){
-                _salescycles[sc.id] = sc;
-                _salescycles[sc.id].activities = [];
-                _salescycles[sc.id].products = sc.products;
-            });
-            _.forEach(action.object.activities, function(actv){
-                if(actv.salescycle_id in _salescycles)
-                    _salescycles[actv.salescycle_id].activities.push(actv.id);
-            });
-            SalesCycleStore.emitChange();
+            SalesCycleStore.setAll(action.object);
+            // _.forEach(action.object.sales_cycles, function(sc){
+            //     _salescycles[sc.id] = sc;
+            //     _salescycles[sc.id].activities = [];
+            //     _salescycles[sc.id].products = sc.products;
+            // });
+            // _.forEach(action.object.activities, function(actv){
+            //     if(actv.salescycle_id in _salescycles)
+            //         _salescycles[actv.salescycle_id].activities.push(actv.id);
+            // });
             break;
         case ActionTypes.CREATE_ACTIVITY_SUCCESS:
             CRMAppDispatcher.waitFor([ActivityStore.dispatchToken]);

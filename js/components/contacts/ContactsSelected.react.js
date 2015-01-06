@@ -147,15 +147,16 @@ var AllBaseSelectedView = React.createClass({
                             selection_map={this.getSelectMap()}
                             onChangeState={this.onToggleListItem} />
     },
-    
+
     getInitialState: function() {
-        var selection_map = {}, contacts = ContactStore.getByDate(true);
+        var selection_map = {},
+            contacts = ContactStore.getByDate(true);
 
         _selected_contacts = this.getQuery()['ids'] || [];
         var cnt = 0;
         for(var i = 0; i<contacts.length; i++) {
             selection_map[contacts[i].id] = false;
-            if(_selected_contacts.indexOf(contacts[i].id) > -1) {
+            if( _.find(_selected_contacts, function (x){ return x == contacts[i].id }) ) {
                 selection_map[contacts[i].id] = true;
                 cnt += 1
             }
@@ -201,7 +202,7 @@ var AllBaseSelectedView = React.createClass({
     onUserAction: function(actionType, evt) {
         evt.preventDefault();
         var selected_contacts = this.refs.allbase_list.getSelectedContacts();
-        
+
         if(_.size(selected_contacts) == 0) {
             console.log('Choose at least one contact');
             return
@@ -212,7 +213,7 @@ var AllBaseSelectedView = React.createClass({
     _onChange: function() {
         var contacts = null,
             newSelectionItems = {};
-        
+
         contacts = ContactStore.getByDate(true);
         for(var i = 0; i<contacts.length; i++) {
             if(!contacts[i].id in this.state.selection_map) {
@@ -249,16 +250,16 @@ var RecentBaseSelectedView = React.createClass({
                             selection_map={this.getSelectMap()}
                             onChangeState={this.onToggleListItem} />
     },
-    
+
     getInitialState: function() {
-        var selection_map = {}, 
+        var selection_map = {},
             contacts = ContactStore.getRecent();
 
         _selected_contacts = this.getQuery()['ids'] || [];
         var cnt = 0;
         for(var i = 0; i<contacts.length; i++) {
             selection_map[contacts[i].id] = false;
-            if(_selected_contacts.indexOf(contacts[i].id) > -1) {
+            if( _.find(_selected_contacts, function (x){ return x == contacts[i].id }) ) {
                 selection_map[contacts[i].id] = true;
                 cnt += 1
             }
@@ -304,7 +305,7 @@ var RecentBaseSelectedView = React.createClass({
     onUserAction: function(actionType, evt) {
         evt.preventDefault();
         var selected_contacts = this.refs.recentbase_list.getSelectedContacts();
-        
+
         if(_.size(selected_contacts) == 0) {
             console.log('Choose at least one contact');
             return
@@ -315,7 +316,7 @@ var RecentBaseSelectedView = React.createClass({
     _onChange: function() {
         var contacts = null,
             newSelectionItems = {};
-        
+
         contacts = ContactStore.getRecent();
         for(var i = 0; i<contacts.length; i++) {
             if(!contacts[i].id in this.state.selection_map) {
@@ -352,16 +353,16 @@ var ColdBaseSelectedView = React.createClass({
                             selection_map={this.getSelectMap()}
                             onChangeState={this.onToggleListItem} />
     },
-    
+
     getInitialState: function() {
-        var selection_map = {}, 
+        var selection_map = {},
             contacts = ContactStore.getColdByDate(true);
 
         _selected_contacts = this.getQuery()['ids'] || [];
         var cnt = 0;
         for(var i = 0; i<contacts.length; i++) {
             selection_map[contacts[i].id] = false;
-            if(_selected_contacts.indexOf(contacts[i].id) > -1) {
+            if( _.find(_selected_contacts, function (x){ return x == contacts[i].id }) ) {
                 selection_map[contacts[i].id] = true;
                 cnt += 1
             }
@@ -407,7 +408,7 @@ var ColdBaseSelectedView = React.createClass({
     onUserAction: function(actionType, evt) {
         evt.preventDefault();
         var selected_contacts = this.refs.coldbase_list.getSelectedContacts();
-        
+
         if(_.size(selected_contacts) == 0) {
             console.log('Choose at least one contact');
             return
@@ -418,7 +419,7 @@ var ColdBaseSelectedView = React.createClass({
     _onChange: function() {
         var contacts = null,
             newSelectionItems = {};
-        
+
         contacts = ContactStore.getColdByDate();
         for(var i = 0; i<contacts.length; i++) {
             if(!contacts[i].id in this.state.selection_map) {
@@ -455,16 +456,16 @@ var LeadBaseSelectedView = React.createClass({
                             selection_map={this.getSelectMap()}
                             onChangeState={this.onToggleListItem} />
     },
-    
+
     getInitialState: function() {
-        var selection_map = {}, 
+        var selection_map = {},
             contacts = ContactStore.getLeads(true);
 
         _selected_contacts = this.getQuery()['ids'] || [];
         var cnt = 0;
         for(var i = 0; i<contacts.length; i++) {
             selection_map[contacts[i].id] = false;
-            if(_selected_contacts.indexOf(contacts[i].id) > -1) {
+            if( _.find(_selected_contacts, function (x){ return x == contacts[i].id }) ) {
                 selection_map[contacts[i].id] = true;
                 cnt += 1
             }
@@ -510,7 +511,7 @@ var LeadBaseSelectedView = React.createClass({
     onUserAction: function(actionType, evt) {
         evt.preventDefault();
         var selected_contacts = this.refs.leadbase_list.getSelectedContacts();
-        
+
         if(_.size(selected_contacts) == 0) {
             console.log('Choose at least one contact');
             return
@@ -521,7 +522,7 @@ var LeadBaseSelectedView = React.createClass({
     _onChange: function() {
         var contacts = null,
             newSelectionItems = {};
-        
+
         contacts = ContactStore.getLeads();
         for(var i = 0; i<contacts.length; i++) {
             if(!contacts[i].id in this.state.selection_map) {
@@ -563,17 +564,17 @@ var SharedBaseSelectedView = React.createClass({
     getShares: function() {
         return this.state.shares;
     },
-    
+
     getInitialState: function() {
         var contacts = [], contact_ids = [], selection_map = {}, cnt = 0;
         var shares = ShareStore.sortedByDate(true);
-        _selected_contacts = this.getQuery()['ids'] || [];        
+        _selected_contacts = this.getQuery()['ids'] || [];
         contact_ids = shares.map(function(share){ return share.contact_id });
         contacts = ContactStore.getByIds(contact_ids);
 
         for(var i = 0; i<contacts.length; i++) {
             selection_map[contacts[i].id] = false;
-            if(_selected_contacts.indexOf(contacts[i].id) > -1) {
+            if( _.find(_selected_contacts, function (x){ return x == contacts[i].id }) ) {
                 selection_map[contacts[i].id] = true;
                 cnt += 1
             }
@@ -623,7 +624,7 @@ var SharedBaseSelectedView = React.createClass({
     onUserAction: function(actionType, evt) {
         evt.preventDefault();
         var selected_contacts = this.refs.sharedbase_list.getSelectedContacts();
-        
+
         if(_.size(selected_contacts) == 0) {
             console.log('Choose at least one contact');
             return
@@ -634,7 +635,7 @@ var SharedBaseSelectedView = React.createClass({
     _onChange: function() {
         var shares = null,
             newSelectionItems = {};
-        
+
         shares = ShareStore.sortedByDate(true);
         var contact_ids = shares.map(function(share){ return share.contact_id });
         contacts = ContactStore.getByIds(contact_ids);

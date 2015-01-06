@@ -36,7 +36,8 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
 
     bySalesCycle: function(salescycle_id) {
         return _.filter(this.getByDate(true), function(actv){
-            return actv.salescycle_id === salescycle_id;
+            // TODO was '===', salescycle_id in DB - int, in Routes - string
+            return actv.salescycle_id == salescycle_id;
         })
     },
 

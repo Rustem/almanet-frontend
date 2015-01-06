@@ -229,7 +229,9 @@ var SalesCycleDropDownList = React.createClass({
 
     getCurrentChoice: function(){
         return _.find(this.props.choices, function(choice){
-            return choice[0] === this.props.current_cycle_id
+            // TODO there was '==='
+            // ids on Backend is 'int', but Query get as 'string'
+            return choice[0] == this.props.current_cycle_id
         }.bind(this));
     },
 
@@ -573,6 +575,10 @@ var ActivityListView = React.createClass({
 
     render: function() {
         var cycle_id = ('salescycle_id' in this.getParams()) && this.getParams()['salescycle_id'] || CRMConstants.GLOBAL_SALES_CYCLE_ID;
+        if( !cycle_id ) { // monkey patching
+            cycle_id = SalesCycleStore.getGlobal().id
+        }
+
         if(cycle_id === CRMConstants.GLOBAL_SALES_CYCLE_ID) {
             var activities = ActivityStore.bySalesCycles(
                 _.map(this.getCyclesForCurrentContact(),function(sc){
@@ -581,6 +587,7 @@ var ActivityListView = React.createClass({
         } else{
             var activities = ActivityStore.bySalesCycle(cycle_id);
         }
+
         return (
             <div className="page">
                 <div className="page-header">

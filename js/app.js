@@ -24,7 +24,8 @@ var NODES = require('./router').NODES;
 var relationships = require('./router').relationships;
 var Fixtures = require('./fixtures');
 
-Fixtures.init();
+//Fixtures.init();
+
 // TODO: use promises
 // load initial data to services
 AuthWebAPI.loadCurrentUser(function(user, session){
@@ -103,7 +104,6 @@ var options = {
 }
 var f = new Fuse(books, options);
 var result = f.search('brwn'); // Fuzzy-search for pattern 'brwn'
-console.log(result);
 
 // var PourOver = require('./libs/pourover');
 
