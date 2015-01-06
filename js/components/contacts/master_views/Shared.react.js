@@ -60,7 +60,7 @@ var SharedContactLink = React.createClass({
             'row-oneliner': true,
             'row--link': true,
             'active': this.isCurrentlyActive(),
-            'new': ContactStore.hasJustCreated()
+            'new': ContactStore.hasNew()
         });
         return (
             <Link className={className} to='shared'>
@@ -128,7 +128,7 @@ var ShareListItem = React.createClass({
 
         var classNames = cx({
             'stream-item': true,
-            'new': utils.isJustCreatedObject(this.props.contact)
+            'new': utils.isNewObject(this.props.contact)
         });
         return (
             <div className={classNames}>

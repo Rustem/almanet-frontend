@@ -30,17 +30,21 @@ module.exports = {
             SignalManager.send(ActionTypes.CREATE_ACTIVITY_SUCCESS, author_id, extra);
         }, 0);
     },
-    updateNewStatus: function(success) {
+    updateNewStatus: function(ids, success) {
         var rawActivities = JSON.parse(localStorage.getItem('activities')) || [],
             updated_cids = [];
         _.forEach(rawActivities, function(activity){
             var updated = null;
-            if(activity.new_status === CREATION_STATUS.HOT){
-                activity.new_status = CREATION_STATUS.WARM;
-                updated = [activity.id, activity.new_status];
-            } else if(activity.new_status === CREATION_STATUS.WARM) {
-                activity.new_status = CREATION_STATUS.COLD;
-                updated = [activity.id, activity.new_status];
+            if(ids) {
+                if(_.contains(ids, activity.id) && activity.new_status === CREATION_STATUS.HOT){
+                    activity.new_status = CREATION_STATUS.COLD;
+                    updated = [activity.id, activity.new_status];
+                }
+            } else {
+                if(activity.new_status === CREATION_STATUS.HOT){
+                    activity.new_status = CREATION_STATUS.COLD;
+                    updated = [activity.id, activity.new_status];
+                }
             }
             if(updated) updated_cids.push(updated);
         });

@@ -6,6 +6,7 @@ var ActivityStore = require('../../stores/ActivityStore');
 var ContactStore = require('../../stores/ContactStore');
 var SalesCycleStore = require('../../stores/SalesCycleStore');
 var UserStore = require('../../stores/UserStore');
+var utils = require('../../utils');
 var Router = require('react-router');
 var Link = Router.Link;
 var IconSvg = require('../common/IconSvg.react');
@@ -52,6 +53,7 @@ var ActivityListItem = React.createClass({
         var classNames = cx({
             'stream-item': true,
             'active': this.isItemSelected(activity.id),
+            'new': utils.isNewObject(activity),
         });
         return (
             <div className={classNames}>

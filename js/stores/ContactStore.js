@@ -66,9 +66,9 @@ var ContactStore = assign({}, EventEmitter.prototype, {
         return _.filter(this.getAll(), utils.isNewObject)
     },
 
-    hasJustCreated: function() {
+    hasNew: function() {
         var contacts = this.getAll();
-        return _.any(contacts, function(contact){ return utils.isJustCreatedObject(contact) });
+        return _.any(contacts, function(contact){ return utils.isNewObject(contact) });
     },
 
     getAll: function() {

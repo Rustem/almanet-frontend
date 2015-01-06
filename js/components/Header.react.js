@@ -11,6 +11,8 @@ var ContactActionCreators = require('../actions/ContactActionCreators');
 var ActivityActionCreators = require('../actions/ActivityActionCreators');
 var ContactStore = require('../stores/ContactStore');
 var ActivityStore = require('../stores/ActivityStore');
+var UserStore = require('../stores/UserStore');
+var SignalManager = require('../api/utils');
 
 var CounterableEntity = {
   propTypes: {
@@ -52,36 +54,25 @@ var Header = React.createClass({
     getInitialState: function() {
       return {
         'new_contacts': ContactStore.getNew(),
-        'new_activities': ActivityStore.getNew()
+        'new_activities': ActivityStore.getNew(this.getUser())
       }
     },
 
     componentDidMount: function() {
       ContactStore.addChangeListener(this._onChange);
       ActivityStore.addChangeListener(this._onChange);
+      UserStore.addChangeListener(this._onChange);
     },
 
     componentWillUnmount: function() {
+      console.log("111");
       ContactStore.removeChangeListener(this._onChange);
       ActivityStore.removeChangeListener(this._onChange);
+      UserStore.removeChangeListener(this._onChange);
     },
 
     _onChange: function() {
       this.setState(this.getInitialState());
-    },
-
-    onContactMenuItemClick: function(evt) {
-      // if(_.size(this.state.new_contacts) > 0) {
-      //   ContactActionCreators.updateNewStatus();
-      // }
-      return true;
-    },
-
-    onActivityMenuItemClick: function(evt) {
-      if(_.size(this.state.new_activities) > 0) {
-        ActivityActionCreators.updateNewStatus();
-      }
-      return true;
     },
 
     render: function() {
@@ -95,8 +86,7 @@ var Header = React.createClass({
                   <MenuLink label="Взаимодействия"
                             routeName='activities'
                             amount={_.size(this.state.new_activities)}
-                            badgeClassName="badge-new"
-                            onClick={this.onActivityMenuItemClick} />
+                            badgeClassName="badge-new" />
                   <MenuLink label="Продукты"
                             routeName='products' />
                 </div>
@@ -116,5 +106,6 @@ var Header = React.createClass({
     }
 
 });
+
 
 module.exports = Header;
