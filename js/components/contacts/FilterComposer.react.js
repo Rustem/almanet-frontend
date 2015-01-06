@@ -48,7 +48,7 @@ var CommonFilterBar = React.createClass({
                         <Div className="row-body-secondary">
                             <a onClick={this.props.onEditClick} href="" className="text-secondary">Редактировать</a>
                         </Div>
-                    : null }
+                    : <div></div> }
                 </Div>
             </Form>
         )

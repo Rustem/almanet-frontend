@@ -335,16 +335,21 @@ var FilteredViewMixin = {
 var FilteredDetailView = React.createClass({
     mixins: [AppContextMixin, Router.State, Router.Navigation, FilteredViewMixin],
 
-    componentWillReceiveProps: function(nextProps) {
-        this.setState(this.getInitialState());
+    componentDidMount: function() {
+        FilterStore.addChangeListener(this._onChange);
     },
 
-    componentWillMount: function() {
+    componentWillUnmount: function() {
+        FilterStore.removeChangeListener(this._onChange);
+    },
+
+    componentWillReceiveProps: function(newProps) {
         this.setInternalState();
     },
 
     setInternalState: function() {
         this.mode = VIEW_MODES.READ;
+        this.setState(this.getInitialState());
     },
 
     onEditClick: function(e) {
@@ -376,8 +381,15 @@ var FilteredDetailView = React.createClass({
                     ref="filter_bar"
                     onHandleUserInput={this.onFilterBarUpdate}
                     onHandleSubmit={this.onHandleSubmit} 
-                    onCancelClick={this.onCancelClick} />
+                    onCancelClick={this.onCancelClick} 
+                    value={this.getFilter()} />
         )
+    },
+
+    onHandleSubmit: function(filterObject) {
+        FilterActionCreators.edit(filterObject);
+        this.mode = VIEW_MODES.READ;
+        this.forceUpdate();
     },
 
     render: function() {
