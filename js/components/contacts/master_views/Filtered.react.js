@@ -152,21 +152,23 @@ var FilteredList = React.createClass({
 var FilteredViewMixin = {
 
     getInitialState: function() {
-        var selection_map = {}, filter = this.getFilter(),
-            contacts = this.applyFilter(filter);
+        var selection_map = {},
+            contacts = this.applyFilter(this.filter),
+            filter_cnt = FilterStore.getAll().length;
         for(var i = 0; i < contacts.length; i++) {
             selection_map[contacts[i].id] = false;
         }
         return {
             contacts: contacts,
             selection_map: selection_map,
-            search_bar: {select_all: false, filter_text: filter && filter.filter_text || ''},
+            filter_cnt: filter_cnt,
+            filter: this.filter,
             action: null
         }
     },
 
-    getDefaultContacts: function() {
-        var filter = this.getFilter();
+    getDefaultContacts: function(value) {
+        var filter = typeof value != undefined ? value : this.getFilter();
         if(!filter)
             return [];
         switch(filter.base) {
@@ -190,8 +192,7 @@ var FilteredViewMixin = {
     },
 
     getFilter: function() {
-        var f_id = this.getParams().id;
-        return FilterStore.get(f_id);
+        return this.state.filter;
     },
 
     getSelectedContacts: function() {
@@ -256,7 +257,7 @@ var FilteredViewMixin = {
     applyFilter: function(value) {
         if(!value)
             return [];
-        var contacts = this.getDefaultContacts();
+        var contacts = this.getDefaultContacts(value);
         if(value.filter_text)
             contacts = fuzzySearch(contacts, value.filter_text, {
                 'keys': ['fn', 'emails.value']});
@@ -264,7 +265,7 @@ var FilteredViewMixin = {
     },
 
     onFilterBarUpdate: function(value) {
-        var _map = {}, changed = value.select_all ^ this.state.search_bar.select_all,
+        var _map = {}, changed = value.select_all,
             contacts = null;
         contacts = this.applyFilter(value);
         
@@ -285,7 +286,7 @@ var FilteredViewMixin = {
         var newState = React.addons.update(this.state, {
             contacts: {$set: contacts},
             selection_map: {$set: _map},
-            search_bar: {$set: value},
+            filter: {$set: value},
         });
         this.setState(newState);
     },
@@ -327,20 +328,29 @@ var FilteredViewMixin = {
         var contact_ids = this.getSelectedContacts();
     },
 
+    navigateToFilter: function(filter_id) {
+        this.transitionTo('filtered', {'id': filter_id});
+        return false;
+    },
+
     _onChange: function() {
         this.setState(this.getInitialState());
-    }
+    },
 }
 
 var FilteredDetailView = React.createClass({
     mixins: [AppContextMixin, Router.State, Router.Navigation, FilteredViewMixin],
 
+    componentWillMount: function() {
+        this.setInternalState();
+    },
+
     componentDidMount: function() {
-        FilterStore.addChangeListener(this._onChange);
+        FilterStore.addChangeListener(this.setInternalState);
     },
 
     componentWillUnmount: function() {
-        FilterStore.removeChangeListener(this._onChange);
+        FilterStore.removeChangeListener(this.setInternalState);
     },
 
     componentWillReceiveProps: function(newProps) {
@@ -349,6 +359,7 @@ var FilteredDetailView = React.createClass({
 
     setInternalState: function() {
         this.mode = VIEW_MODES.READ;
+        this.filter = FilterStore.get(this.getParams().id);
         this.setState(this.getInitialState());
     },
 
@@ -368,7 +379,7 @@ var FilteredDetailView = React.createClass({
         return (
             <CommonFilterBar
                     ref="filter_bar"
-                    value={this.state.search_bar}
+                    value={this.state.filter}
                     onHandleUserInput={this.onFilterBarUpdate}
                     onUserAction={this.onUserAction} 
                     onEditClick={this.onEditClick} />
@@ -382,14 +393,12 @@ var FilteredDetailView = React.createClass({
                     onHandleUserInput={this.onFilterBarUpdate}
                     onHandleSubmit={this.onHandleSubmit} 
                     onCancelClick={this.onCancelClick} 
-                    value={this.getFilter()} />
+                    value={this.state.filter} />
         )
     },
 
     onHandleSubmit: function(filterObject) {
         FilterActionCreators.edit(filterObject);
-        this.mode = VIEW_MODES.READ;
-        this.forceUpdate();
     },
 
     render: function() {
@@ -397,7 +406,6 @@ var FilteredDetailView = React.createClass({
         return (
         <div className="page">
             <div className="page-header">
-                <Crumb />
                 {this.mode === VIEW_MODES.READ && this.renderRead() || this.renderEdit()}
             </div>
             <FilteredList
@@ -421,10 +429,32 @@ var FilteredDetailView = React.createClass({
 
 
 var FilteredNewView = React.createClass({
-    mixins: [AppContextMixin, Router.State, FilteredViewMixin],
+    mixins: [AppContextMixin, Router.State, Router.Navigation, FilteredViewMixin],
 
     onHandleSubmit: function(filterObject) {
         FilterActionCreators.create(filterObject);
+    },
+
+    componentDidMount: function() {
+        FilterStore.addChangeListener(this.resetState);
+    },
+
+    componentWillUnmount: function() {
+        FilterStore.removeChangeListener(this.resetState);
+    },
+
+    resetState: function() {
+        this.setState(this.getInitialState(), function(prev_state) {
+            if(prev_state.filter_cnt < this.state.filter_cnt) {
+                var f = FilterStore.getLatestOne();
+                this.navigateToFilter(f.id);
+            }
+        }.bind(this, this.state));
+    },
+
+    onCancelClick: function(e) {
+        e.preventDefault();
+        this.goBack();
     },
 
     render: function() {
@@ -432,9 +462,17 @@ var FilteredNewView = React.createClass({
         return (
         <div className="page">
             <div className="page-header">
-                <Crumb />
-                
+                <FilterForm
+                    ref="filter_bar"
+                    onHandleUserInput={this.onFilterBarUpdate}
+                    onHandleSubmit={this.onHandleSubmit} 
+                    onCancelClick={this.onCancelClick} />
             </div>
+            <FilteredList
+                ref="filtered_list"
+                contacts={this.getContacts()}
+                selection_map={this.getSelectMap()}
+                onChangeState={this.onToggleListItem} />
         </div>
         )
     },

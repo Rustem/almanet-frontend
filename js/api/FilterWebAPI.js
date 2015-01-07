@@ -31,7 +31,6 @@ module.exports = {
             var cur = rawFilters[i];
             if(cur.id === filterObject.id) {
                 rawFilters[i] = filterObject;
-                filter = cur;
                 break;
             }
         }

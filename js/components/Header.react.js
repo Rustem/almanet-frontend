@@ -65,7 +65,6 @@ var Header = React.createClass({
     },
 
     componentWillUnmount: function() {
-      console.log("111");
       ContactStore.removeChangeListener(this._onChange);
       ActivityStore.removeChangeListener(this._onChange);
       UserStore.removeChangeListener(this._onChange);

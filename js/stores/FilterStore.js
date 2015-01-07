@@ -28,6 +28,14 @@ var FilterStore = assign({}, EventEmitter.prototype, {
     getAll: function() {
         return _.map(_filters, function(f) { return f });
     },
+    
+    getLatestOne: function() {
+        var filters = _.sortBy(this.getAll(), function(f) {
+            f.at
+        }.bind(this)).reverse();
+        if(!filters) return null;
+        return filters[0];
+    },
 
     getByUser: function(user_id) {
         var filters = this.getAll();
@@ -56,7 +64,6 @@ FilterStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             FilterStore.emitChange();
             break;
         case ActionTypes.CREATE_FILTER_SUCCESS:
-            console.log(action.object);
             var filter_with_id = FilterStore.getCreatedFilter(action.object);
             _filters[filter_with_id.id] = filter_with_id;
             FilterStore.emitChange();

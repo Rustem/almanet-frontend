@@ -27,13 +27,15 @@ var FilterForm = React.createClass({
 
   propTypes: {
     onHandleSubmit: React.PropTypes.func,
+    onHandleUserInput: React.PropTypes.func,
   },
 
   render: function() {
     return (
       <Form {...this.props}
             ref='filter_form'
-            onSubmit={this.onHandleSubmit}>
+            onSubmit={this.onHandleSubmit}
+            onUpdate={this.onHandleUpdate} >
             <Fieldset className="page-header-filterContainer">
               <Fieldset className="page-header-controls row">
                 <Fieldset className="row-body-primary">
@@ -75,6 +77,16 @@ var FilterForm = React.createClass({
             </Fieldset>
         </Form>
     );
+  },
+
+  onHandleUpdate: function(value) {
+      var form = this.refs.filter_form;
+      var errors = form.validate();
+      if(!errors) {
+          this.props.onHandleUserInput(form.value());
+      } else {
+          alert(errors);
+      }
   },
   
   onHandleSubmit: function(e) {
