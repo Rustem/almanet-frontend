@@ -12,10 +12,6 @@ var Fieldset = require('./Fieldset.react');
 
 var VCardWidgets = require('./VCardWidgets.react');
 var VCardElement = VCardWidgets.VCardElement;
-var EmailVCardComponent = VCardWidgets.EmailVCardComponent;
-var PhoneVCardComponent = VCardWidgets.PhoneVCardComponent;
-var UrlVCardComponent = VCardWidgets.UrlVCardComponent;
-var AddressVCardComponent = VCardWidgets.AddressVCardComponent;
 var VCardRow = VCardWidgets.VCardRow;
 var AppContextMixin = require('../mixins/AppContextMixin');
 
@@ -71,8 +67,6 @@ var ContactCreateForm = React.createClass({
     var errors = form.validate();
     if(!errors) {
       var value = form.value();
-      console.log(value);
-      return;
       value.user_id = this.getUser().id;
       this.props.onHandleSubmit(value);
     } else{

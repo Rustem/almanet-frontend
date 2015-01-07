@@ -11,12 +11,7 @@ var Fieldset = require('./Fieldset.react');
 var elements = require('./elements');
 var ContactRemoveableDropDownList = elements.ContactRemoveableDropDownList;
 
-var VCardWidgets = require('./VCardWidgets.react');
-var EmailVCardComponent = VCardWidgets.EmailVCardComponent;
-var PhoneVCardComponent = VCardWidgets.PhoneVCardComponent;
-var UrlVCardComponent = VCardWidgets.UrlVCardComponent;
-var AddressVCardComponent = VCardWidgets.AddressVCardComponent;
-var VCardRow = VCardWidgets.VCardRow;
+var VCardElement = require('./VCardWidgets.react').VCardElement;
 var AppContextMixin = require('../mixins/AppContextMixin');
 
 var _ = require('lodash');
@@ -49,16 +44,8 @@ var ContactEditForm = React.createClass({
           <ContentEditableInput className='input-div text-secondary' name='companyName' />
         </Fieldset>
         <SVGCheckbox name="is_company" label="Company" className="row input-checkboxCompact" />
-        <EmailVCardComponent name="emails" options={[['internet', 'адрес в формате интернета'], ['pref', 'предпочитаемый']]} />
-        <div className="space-verticalBorder"></div>
+        <VCardElement name="vcard" />
 
-        <PhoneVCardComponent name="phones" options={[['home', 'по месту проживания'], ['work', 'по месту работы']]} />
-        <div className="space-verticalBorder"></div>
-
-        <UrlVCardComponent name="urls" options={[['website', 'website'], ['github', 'github']]} />
-        <div className="space-verticalBorder"></div>
-
-        <AddressVCardComponent name="adrs" options={[['home', 'место проживания'], ['work', 'место работы']]} />
         {CRDDL ? CRDDL : <div className="space-verticalBorder"></div>}
         <div className="inputLine text-right">
             <button className="btn btn--save" type="submit">Сохранить</button>

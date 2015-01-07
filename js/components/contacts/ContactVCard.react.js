@@ -146,13 +146,13 @@ var ContactVCard = React.createClass({
                 </div>
                 <div className="space-vertical space-vertical--compact"></div>
 
-                {contact.emails.map(this.renderEmail)}
+                {contact.vcard.emails.map(this.renderEmail)}
                 <div className="space-verticalBorder"></div>
 
-                {contact.phones.map(this.renderPhone)}
+                {contact.vcard.phones.map(this.renderPhone)}
                 <div className="space-verticalBorder"></div>
 
-                {contact.urls.map(this.renderUrl)}
+                {contact.vcard.urls.map(this.renderUrl)}
                 <div className="space-verticalBorder"></div>
 
                 <div className="inputLine inputLine--vcardRow">
