@@ -26,7 +26,7 @@ var NotificationContactCreateView = React.createClass({
                 <div className="notificationCenter-item-meta">
                     {moment(n.at).fromNow()}
                 </div>
-                Пользователь {utils.capitalize(author.first_name)} создал новый контакт - {createdContact.fn}.
+                Пользователь {utils.capitalize(author.first_name)} создал новый контакт - {createdContact.vcard.fn}.
             </div>
         );
     }
@@ -50,7 +50,7 @@ var NotificationContactUpdateView = React.createClass({
                 <div className="notificationCenter-item-meta">
                     {moment(n.at).fromNow()}
                 </div>
-                Пользователь {utils.capitalize(author.first_name)} изменил контакт {createdContact.fn}.
+                Пользователь {utils.capitalize(author.first_name)} изменил контакт {createdContact.vcard.fn}.
             </div>
         );
     }
@@ -75,7 +75,7 @@ var NotificationContactShareView = React.createClass({
                 <div className="notificationCenter-item-meta">
                     {moment(n.at).fromNow()}
                 </div>
-                Пользователь {utils.capitalize(author.first_name)} поделился контактом {sharedContact.fn} с пользователем {utils.capitalize(receiver.first_name)}.
+                Пользователь {utils.capitalize(author.first_name)} поделился контактом {sharedContact.vcard.fn} с пользователем {utils.capitalize(receiver.first_name)}.
             </div>
         );
     }

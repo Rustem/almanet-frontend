@@ -84,7 +84,7 @@ var ContactStore = assign({}, EventEmitter.prototype, {
             'asc': true
         }, options);
         var searchOptions = {
-            keys: ['fn']
+            keys: ['vcard.fn']
         }, contacts = this.getAll();
 
         var f = new Fuse(contacts, searchOptions);
@@ -152,6 +152,7 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
                 });
             _contacts[contact_id] = contact;
             ContactStore.emitChange();
+            break;
         case ActionTypes.CONTACT_UPDATE_NEW_STATUS:
             var update_info = action.object['update_info'];
             for(var i = 0; i<update_info.length; i++) {
@@ -159,6 +160,7 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
                 _contacts[cid].new_status = newStatus;
             }
             ContactStore.emitChange();
+            break;
         case ActionTypes.CREATE_ACTIVITY_SUCCESS:
             CRMAppDispatcher.waitFor([ActivityStore.dispatchToken]);
             var contact_id = action.object.contact_id;
@@ -171,6 +173,7 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
                     ContactStore.emitChange();
                 });
             }
+            break;
         default:
             // do nothing
     }

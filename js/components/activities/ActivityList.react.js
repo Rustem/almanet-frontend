@@ -87,7 +87,7 @@ var ActivityListItem = React.createClass({
                         {contact ?
                         <ul className="stream-breadcrumbs">
                             <li>
-                                <Link to='contact_profile' params={{id: contact.id}} className="stream-breadcrumbs">{contact.fn}</Link>
+                                <Link to='contact_profile' params={{id: contact.id}} className="stream-breadcrumbs">{contact.vcard.fn}</Link>
                             </li>
                             <li>→</li>
                             <li><a href="#" className="stream-breadcrumbs">{this.getSalesCycle(activity).title}</a></li>

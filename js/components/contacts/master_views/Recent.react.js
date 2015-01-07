@@ -91,7 +91,7 @@ var ContactListItem = React.createClass({
     },
 
     getContactName: function() {
-        return this.props.contact.fn;
+        return this.props.contact.vcard.fn;
     },
     render: function() {
         var contact = this.props.contact;
@@ -141,12 +141,12 @@ var RecentList = React.createClass({
             filter_text = this.props.filter_text;
 
         var filterContact = function(contact) {
-            var fn = contact.fn.toLowerCase();
+            var fn = contact.vcard.fn.toLowerCase();
             return fn.indexOf(filter_text.toLowerCase()) > -1;
         }.bind(this);
 
         var sortBy = function(contact) {
-            return contact.fn.toLowerCase();
+            return contact.vcard.fn.toLowerCase();
         }.bind(this);
 
         // contacts = _.sortBy(contacts, sortBy);
@@ -293,7 +293,7 @@ var RecentDetailView = React.createClass({
         if(value.filter_text) {
             contacts = fuzzySearch(
                 this.state.contacts, value.filter_text, {
-                    'keys': ['fn', 'emails.value']});
+                    'keys': ['vcard.fn', 'vcard.emails.value']});
         } else {
             contacts = ContactStore.getRecent();
         }

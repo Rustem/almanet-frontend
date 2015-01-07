@@ -92,7 +92,7 @@ var ContactVCard = React.createClass({
               {contact.contacts.map(function(c_id){
                 var c = ContactStore.get(c_id);
                 return <div className="inputLine-div">
-                        <Link to='contact_profile' params={{id: c.id}}>{c.fn}</Link>
+                        <Link to='contact_profile' params={{id: c.id}}>{c.vcard.fn}</Link>
                        </div>
               })}
             </div>
@@ -117,7 +117,7 @@ var ContactVCard = React.createClass({
                 </div>
               </div>
                 <div className="inputLine-div">
-                  <Link to='contact_profile' params={{id: company.id}}>{company.fn}</Link>
+                  <Link to='contact_profile' params={{id: company.id}}>{company.vcard.fn}</Link>
                 </div>
             </div>
           </div>
@@ -136,10 +136,10 @@ var ContactVCard = React.createClass({
                       <div className="row-icon"></div>
                       <div className="row-body">
                         <div className="inputLine-negativeTrail text-large text-strong">
-                          {contact.fn}
+                          {contact.vcard.fn}
                       </div>
                       <div className="inputLine-negativeTrail text-secondary">
-                        {contact.companyName}
+                        {contact.vcard.org.value}
                       </div>
                     </div>
                   </div>

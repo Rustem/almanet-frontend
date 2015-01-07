@@ -661,7 +661,7 @@ var FilteredSelectedView = React.createClass({
         var contacts = this.getDefaultContacts();
         if(value.filter_text)
             contacts = fuzzySearch(contacts, value.filter_text, {
-                'keys': ['fn', 'emails.value']});
+                'keys': ['vcard.fn', 'vcard.emails.value']});
         return contacts;
     },
     

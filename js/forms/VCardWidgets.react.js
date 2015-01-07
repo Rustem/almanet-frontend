@@ -23,8 +23,11 @@ var ItemMixin = RepeatedFieldsetModule.ItemMixin;
 var RepeatingFieldsetMixin = RepeatedFieldsetModule.RepeatingFieldsetMixin;
 
 var IconSvg = require('../components/common/IconSvg.react');
-var SimpleSelect = require('./input').SimpleSelect;
-var ContentEditableInput = require('./input').ContentEditableInput;
+var Fieldset = require('./Fieldset.react');
+var inputs = require('./input');
+var SimpleSelect = inputs.SimpleSelect;
+var ContentEditableInput = inputs.ContentEditableInput;
+var SVGCheckbox = inputs.SVGCheckbox;
 
 
 function getDefaultEmailValue() {
@@ -459,6 +462,13 @@ var VCardElement = React.createClass({
 
         return (
             <div>
+            <Fieldset className="inputLine-negativeTrail">
+              <ContentEditableInput className="input-div input-div--strong" name='fn' value={value.fn}/>
+            </Fieldset>
+            <Fieldset className="inputLine-negativeTrail">
+              <ContentEditableInput className='input-div text-secondary' name='org' value={value.org.value} />
+            </Fieldset>
+            <SVGCheckbox name="is_company" label="Company" className="row input-checkboxCompact" value={value.is_company} />
             <EmailVCardComponent name="emails" value={value.emails} options={[['internet', 'адрес в формате интернета'], ['pref', 'предпочитаемый']]} />
             <div className="space-verticalBorder"></div>
 

@@ -35,15 +35,9 @@ var ContactEditForm = React.createClass({
                     title="Работники в этой компании"
                     filter_placeholder="Добавьте контакт" />;
     }
+    var value = this.preValue(this.props.value);
     return (
-      <Form {...this.props} ref='contact_form' onSubmit={this.onHandleSubmit}>
-        <Fieldset className="inputLine-negativeTrail">
-          <ContentEditableInput className="input-div input-div--strong" name='fn' />
-        </Fieldset>
-        <Fieldset className="inputLine-negativeTrail">
-          <ContentEditableInput className='input-div text-secondary' name='companyName' />
-        </Fieldset>
-        <SVGCheckbox name="is_company" label="Company" className="row input-checkboxCompact" />
+      <Form {...this.props} value={value} ref='contact_form' onSubmit={this.onHandleSubmit}>
         <VCardElement name="vcard" />
 
         {CRDDL ? CRDDL : <div className="space-verticalBorder"></div>}
@@ -54,13 +48,24 @@ var ContactEditForm = React.createClass({
     )
   },
 
+  preValue: function(value) {
+    value.vcard.is_company = value.is_company;
+    return _.omit(value, 'is_company');
+  },
+
+  postValue: function(value) {
+    value.is_company = value.vcard.is_company;
+    value.vcard = _.omit(value.vcard, 'is_company');
+    value.user_id = this.getUser().id;
+    return value
+  },
+
   onHandleSubmit: function(e) {
     e.preventDefault();
     var form = this.refs.contact_form;
     var errors = form.validate();
     if(!errors) {
-      var value = form.value();
-      value.user_id = this.getUser().id;
+      var value = this.postValue(form.value());
       this.props.onHandleSubmit(value);
     } else{
         alert(errors);
