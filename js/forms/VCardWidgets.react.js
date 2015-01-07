@@ -16,8 +16,9 @@
 var _ = require('lodash');
 Object.assign = _.extend;
 var React = require('react/addons');
-var RepeatedFieldsetModule = require('./RepeatingFieldset.react');
+var FormElementMixin = require('./FormElementMixin.react');
 var FieldsetMixin = require('./FieldsetMixin.react');
+var RepeatedFieldsetModule = require('./RepeatingFieldset.react');
 var ItemMixin = RepeatedFieldsetModule.ItemMixin;
 var RepeatingFieldsetMixin = RepeatedFieldsetModule.RepeatingFieldsetMixin;
 
@@ -171,7 +172,7 @@ var EmailVCardComponent = React.createClass({
     onChange: function(idx, changedValue) {
         var value = this.value();
         value[idx] = React.addons.update(value[idx], {$merge: changedValue});
-        this.updateValue(this.prepValue(this.props.name, value));
+        // this.updateValue(this.prepValue(this.props.name, value));
     }
 });
 
@@ -254,7 +255,7 @@ var PhoneVCardComponent = React.createClass({
     onChange: function(idx, changedValue) {
         var value = this.value();
         value[idx] = React.addons.update(value[idx], {$merge: changedValue});
-        this.updateValue(this.prepValue(this.props.name, value));
+        // this.updateValue(this.prepValue(this.props.name, value));
     }
 });
 
@@ -336,7 +337,7 @@ var UrlVCardComponent = React.createClass({
     onChange: function(idx, changedValue) {
         var value = this.value();
         value[idx] = React.addons.update(value[idx], {$merge: changedValue});
-        this.updateValue(this.prepValue(this.props.name, value));
+        // this.updateValue(this.prepValue(this.props.name, value));
     }
 });
 
@@ -446,10 +447,32 @@ var AddressVCardComponent = React.createClass({
     onChange: function(idx, changedValue) {
         var value = this.value();
         value[idx] = React.addons.update(value[idx], {$merge: changedValue});
-        this.updateValue(this.prepValue(this.props.name, value));
+        // this.updateValue(this.prepValue(this.props.name, value));
     }
 });
 
+var VCardElement = React.createClass({
+    mixins: [FormElementMixin],
+
+    render: function() {
+        var value = this.value() || {};
+
+        return (
+            <div>
+            <EmailVCardComponent name="emails" value={value.emails} options={[['internet', 'адрес в формате интернета'], ['pref', 'предпочитаемый']]} />
+            <div className="space-verticalBorder"></div>
+
+            <PhoneVCardComponent name="phones" value={value.phones} options={[['home', 'по месту проживания'], ['work', 'по месту работы']]} />
+            <div className="space-verticalBorder"></div>
+
+            <UrlVCardComponent name="urls" value={value.urls} options={[['website', 'website'], ['github', 'github']]} />
+            <div className="space-verticalBorder"></div>
+
+            <AddressVCardComponent name="adrs" value={value.adrs} options={[['home', 'место проживания'], ['work', 'место работы']]} />
+            </div>
+        )
+    },
+});
 
 function getValueFromEvent(e) {
   return e && e.target && e.target.value !== undefined ?
@@ -463,4 +486,5 @@ module.exports = {
     PhoneVCardComponent: PhoneVCardComponent,
     UrlVCardComponent: UrlVCardComponent,
     AddressVCardComponent: AddressVCardComponent,
+    VCardElement: VCardElement,
 }

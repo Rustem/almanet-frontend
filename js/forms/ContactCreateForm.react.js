@@ -11,6 +11,7 @@ var FormMixin = require('./FormMixin.react');
 var Fieldset = require('./Fieldset.react');
 
 var VCardWidgets = require('./VCardWidgets.react');
+var VCardElement = VCardWidgets.VCardElement;
 var EmailVCardComponent = VCardWidgets.EmailVCardComponent;
 var PhoneVCardComponent = VCardWidgets.PhoneVCardComponent;
 var UrlVCardComponent = VCardWidgets.UrlVCardComponent;
@@ -26,11 +27,13 @@ require('../utils');
 var default_form_state = {
   'fn': 'Аман Куратов',
   'companyName': 'ТОО "Массив Динамик"',
-  'emails': [{'idx': 0, 'type': 'internet', 'value': 'amangeldy@gmail.com'}],
-  'phones': [{'idx': 0, 'type': 'work', 'value': '+7 777 7777777'}],
   'is_company': true,
-  'urls': [{'idx': 0, 'type': 'website', 'value': 'http://massive-dyn.com'}],
-  'adrs': [{'idx': 0, 'type': 'home', 'street_address': 'Zharokov, 11', 'region': 'Almaty', 'locality': 'Almaty', 'country_name': 'Kazakhstan', 'postal_code': '00012'}],
+  'vcard': {
+    'emails': [{'idx': 0, 'type': 'internet', 'value': 'amangeldy@gmail.com'}],
+    'phones': [{'idx': 0, 'type': 'work', 'value': '+7 777 7777777'}],
+    'urls': [{'idx': 0, 'type': 'website', 'value': 'http://massive-dyn.com'}],
+    'adrs': [{'idx': 0, 'type': 'home', 'street_address': 'Zharokov, 11', 'region': 'Almaty', 'locality': 'Almaty', 'country_name': 'Kazakhstan', 'postal_code': '00012'}], 
+  },
   'note': 'Нужно сюда съездить на встречу а то я не успеваю, подмени меня пожалуйста.'
 };
 
@@ -51,16 +54,8 @@ var ContactCreateForm = React.createClass({
           <ContentEditableInput className='input-div text-secondary' name='companyName' />
         </Fieldset>
         <SVGCheckbox name="is_company" label="Company" className="row input-checkboxCompact" />
-        <EmailVCardComponent name="emails" options={[['internet', 'адрес в формате интернета'], ['pref', 'предпочитаемый']]} />
-        <div className="space-verticalBorder"></div>
-
-        <PhoneVCardComponent name="phones" options={[['home', 'по месту проживания'], ['work', 'по месту работы']]} />
-        <div className="space-verticalBorder"></div>
-
-        <UrlVCardComponent name="urls" options={[['website', 'website'], ['github', 'github']]} />
-        <div className="space-verticalBorder"></div>
-
-        <AddressVCardComponent name="adrs" options={[['home', 'место проживания'], ['work', 'место работы']]} />
+        <VCardElement name="vcard" />
+        
         <VCardRow name='note' label='Заметка' />
         <input type="hidden" name="author_id" value={this.getUser().id} />
         <div className="inputLine text-right">
@@ -76,6 +71,8 @@ var ContactCreateForm = React.createClass({
     var errors = form.validate();
     if(!errors) {
       var value = form.value();
+      console.log(value);
+      return;
       value.user_id = this.getUser().id;
       this.props.onHandleSubmit(value);
     } else{
