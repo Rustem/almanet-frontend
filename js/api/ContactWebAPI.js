@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var SignalManager = require('./utils');
+var requestPost = require('../utils').requestPost;
 var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
 var CREATION_STATUS = CRMConstants.CREATION_STATUS;
@@ -14,27 +15,41 @@ module.exports = {
     createContact: function(contactObject, success, failure) {
         var timeNow = Date.now();
         var obj = _.extend({}, {
-            id: 'c_' + timeNow,
-            at: timeNow,
+            // id: 'c_' + timeNow,
+            // at: timeNow,
             is_cold: true,
             new_status: CREATION_STATUS.COLD}, contactObject);
-        var share = {
-            id: 'share_' + Date.now(),
-            user_id: contactObject.author_id,
-            contact_id: obj.id,
-            at: timeNow,
-            note: obj.note,
-            isNew: true,};
-        obj.share = share;
+        console.log(contactObject);
+        // return;
+        requestPost('/api/v1/contact/')
+            .send(obj)
+            .end(function(res) {
+                console.log(res);
+                if (res.ok) {
+                    obj = _.assign(obj, res.body);
+                    success(obj);
+                } else {
+                    failure(obj);
+                }
+            });
+        // return
+        // var share = {
+        //     id: 'share_' + Date.now(),
+        //     user_id: contactObject.author_id,
+        //     contact_id: obj.id,
+        //     at: timeNow,
+        //     note: obj.note,
+        //     isNew: true,};
+        // obj.share = share;
         // set contact to local storage
-        var rawContacts = JSON.parse(localStorage.getItem('contacts')) || [];
-        rawContacts.push(obj);
-        localStorage.setItem('contacts', JSON.stringify(rawContacts));
+        // var rawContacts = JSON.parse(localStorage.getItem('contacts')) || [];
+        // rawContacts.push(obj);
+        // localStorage.setItem('contacts', JSON.stringify(rawContacts));
 
         // set share to local storage
-        var rawShares = JSON.parse(localStorage.getItem('shares')) || [];
-        rawShares.push(share);
-        localStorage.setItem('shares', JSON.stringify(rawShares));
+        // var rawShares = JSON.parse(localStorage.getItem('shares')) || [];
+        // rawShares.push(share);
+        // localStorage.setItem('shares', JSON.stringify(rawShares));
         // simulate success callback
         setTimeout(function() {
             success(obj);

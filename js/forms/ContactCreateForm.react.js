@@ -76,7 +76,26 @@ var ContactCreateForm = React.createClass({
     var errors = form.validate();
     if(!errors) {
       var value = form.value();
-      value.user_id = this.getUser().id;
+      console.log(value);
+      return;
+      value.is_company = + value.is_company; // convert bool to int
+      value.owner_id = this.getUser().id;
+      value.vcard = {};
+      value.status = 0;
+      value.vcard.org = {'value': value.companyName}
+      value.vcard.fn = value.fn;
+      value.vcard.emails = value.emails;
+      value.vcard.adrs = value.adrs;  
+      value.vcard.phones = value.phones;
+      value.vcard.urls = value.urls;
+      // return;
+
+      value = _.omit(value, 'fn');
+      value = _.omit(value, 'emails');
+      value = _.omit(value, 'adrs');
+      value = _.omit(value, 'phones');
+      value = _.omit(value, 'urls');
+      console.log(value);
       this.props.onHandleSubmit(value);
     } else{
         alert(errors);
