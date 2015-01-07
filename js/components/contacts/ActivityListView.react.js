@@ -490,7 +490,7 @@ var ActivityListView = React.createClass({
     },
 
     getCyclesForCurrentContact: function() {
-        var contact_id = this.getParams().id;
+        var contact_id = parseInt(this.getParams().id, 10);
         return SalesCycleStore.getCyclesForCurrentContact(contact_id);
     },
 
@@ -538,7 +538,7 @@ var ActivityListView = React.createClass({
     },
 
     onCycleCreated: function(salesCycleObject) {
-        salesCycleObject.contact_id = this.getParams().id;
+        salesCycleObject.contact_id = parseInt(this.getParams().id, 10);
         salesCycleObject.author_id = this.getUser().id;
         SalesCycleActionCreators.create(salesCycleObject);
     },

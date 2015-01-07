@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var requestPost = require('../utils').requestPost;
 var CRMConstants = require('../constants/CRMConstants');
 var SignalManager = require('./utils');
 var SALES_CYCLE_STATUS = CRMConstants.SALES_CYCLE_STATUS;
@@ -27,23 +28,20 @@ module.exports = api = {
         }, 0);
     },
     create: function(salesCycleObject, success, failure) {
-        var timeNow = Date.now();
-        var obj = _.extend({}, {
-            id: 'sales_' + timeNow,
-            at: timeNow,
-            status: SALES_CYCLE_STATUS.NEW,
-            activities:[],
-            products:[],
-            user_ids:[]}, salesCycleObject);
-        // set contact to local storage
-        var rawSalesCycles = JSON.parse(localStorage.getItem('salescycles')) || [];
-        rawSalesCycles.push(obj);
-        localStorage.setItem('salescycles', JSON.stringify(rawSalesCycles));
-
-        // simulate success callback
-        setTimeout(function() {
-            success(obj);
-        }, 0);
+        var object = _.assign(salesCycleObject, {
+            status: SALES_CYCLE_STATUS.NEW, // TODO: use AppState constants
+            product_ids: []
+        });
+        requestPost('/api/v1/sales_cycle/')
+            .send(object)
+            .end(function(res) {
+                if (res.ok) {
+                    object = _.assign(object, res.body);
+                    success(object);
+                } else {
+                    failure(res);
+                }
+            });
     },
     add_products: function(salesCycleObject, success, failure) {
         var rawSalesCycles = JSON.parse(localStorage.getItem('salescycles')) || [];
