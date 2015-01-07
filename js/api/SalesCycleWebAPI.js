@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var requestPost = require('../utils').requestPost;
+var request = require('../utils').request;
 var CRMConstants = require('../constants/CRMConstants');
 var SignalManager = require('./utils');
 var SALES_CYCLE_STATUS = CRMConstants.SALES_CYCLE_STATUS;
@@ -32,7 +32,7 @@ module.exports = api = {
             status: SALES_CYCLE_STATUS.NEW, // TODO: use AppState constants
             product_ids: []
         });
-        requestPost('/api/v1/sales_cycle/')
+        request('post', '/api/v1/sales_cycle/')
             .send(object)
             .end(function(res) {
                 if (res.ok) {
@@ -44,15 +44,19 @@ module.exports = api = {
             });
     },
     add_products: function(salesCycleObject, success, failure) {
-        var rawSalesCycles = JSON.parse(localStorage.getItem('salescycles')) || [];
-        var curCycle = _.find(rawSalesCycles, function(sc){ return sc.id === salesCycleObject.salescycle_id });
-        curCycle.products = salesCycleObject.products;
-        localStorage.setItem('salescycles', JSON.stringify(rawSalesCycles));
+        var patch_object = {
+            product_ids: salesCycleObject.product_ids
+        };
 
-        // simulate success callback
-        setTimeout(function() {
-            success(curCycle);
-        }, 0);
+        request('patch', '/api/v1/sales_cycle/'+salesCycleObject.salescycle_id+'/')
+            .send(patch_object)
+            .end(function(res) {
+                if (res.ok) {
+                    success(res.body);
+                } else {
+                    failure(res);
+                }
+            });
     }
 };
 

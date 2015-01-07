@@ -11,12 +11,12 @@ var AddProductMiniForm = React.createClass({
         onHandleSubmit: React.PropTypes.func,
         onCancel: React.PropTypes.func,
         salescycle_id: React.PropTypes.number,
-        // products: React.PropTypes.list,
+        // product_ids: React.PropTypes.list,
     },
 
     render: function() {
         var form_value = _.extend({}, {
-            'products': this.props.products
+            'products': this.props.product_ids
         });
         return (
             <Form ref="add_product_form" value={form_value}
@@ -40,7 +40,7 @@ var AddProductMiniForm = React.createClass({
         if(!errors) {
             var object = {}, formValue = form.value();
             object.salescycle_id = this.props.salescycle_id;
-            object.products = formValue.products;
+            object.product_ids = formValue.products;
           this.props.onHandleSubmit(object);
         } else{
             alert(errors);

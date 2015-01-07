@@ -78,7 +78,7 @@ ProductStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
         case ActionTypes.CLOSE_SALES_CYCLE:
             CRMAppDispatcher.waitFor([SalesCycleStore.dispatchToken]);
             var value = action.object.real_value,
-                prod_ids = action.object.products;
+                prod_ids = action.object.product_ids;
             if(!prod_ids) break;
 
             for(var i=0; i<prod_ids.length; i++) {

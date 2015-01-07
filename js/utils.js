@@ -7,7 +7,7 @@ var _ = require('lodash');
 var Fuse = require('./libs/fuse');
 var CREATION_STATUS = require('./constants/CRMConstants').CREATION_STATUS;
 var cookie_tool = require('cookie');
-var request = require('superagent');
+var superagent = require('superagent');
 
 
 function capitalize(string) {
@@ -110,11 +110,18 @@ function isJustCreatedObject(object) {
   return _.contains([CREATION_STATUS.COLD, CREATION_STATUS.WARM], object.new_status);
 };
 
-function requestPost(url) {
-  return request
-    .post(url)
+function request(method, url) {
+  return superagent(method.toUpperCase(), url)
     .type('json')
     .set('X-CSRFToken', cookie_tool.parse(document.cookie).csrftoken);
+};
+
+function requestPost(url) {
+  return request('POST', url);
+};
+
+function requestPatch(url) {
+  return request('PATCH', url);
 };
 
 module.exports = {
@@ -128,5 +135,7 @@ module.exports = {
   timeToSeconds: timeToSeconds,
   fuzzySearch: fuzzySearch,
   isNewObject: isNewObject,
-  requestPost: requestPost
+  request: request,
+  requestPost: requestPost,
+  requestPatch: requestPatch
 };

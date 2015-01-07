@@ -163,7 +163,7 @@ var AddProductWidget = React.createClass({
         if(this.shouldRenderComponent())
             Component = <AddProductMiniForm salescycle_id={this.props.current_cycle_id}
                                             onHandleSubmit={this.props.onHandleSubmit}
-                                            products={this.getSalesCycle().products}/>
+                                            product_ids={this.getSalesCycle().product_ids}/>
         return Component
     },
 });
@@ -379,7 +379,7 @@ var SalesCycleSummary = React.createClass({
     // },
 
     getProducts: function() {
-        var product_ids = this.getCycle().products;
+        var product_ids = this.getCycle().product_ids;
         return _.map(ProductStore.getByIds(product_ids), function(p) {return p.name}).join(', ')
     },
 
