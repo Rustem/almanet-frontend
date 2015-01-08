@@ -29,6 +29,7 @@ var SimpleSelect = inputs.SimpleSelect;
 var ContentEditableInput = inputs.ContentEditableInput;
 var SVGCheckbox = inputs.SVGCheckbox;
 
+var CONTACT_TYPES = require('../constants/CRMConstants').CONTACT_TYPES;
 
 function getDefaultEmailValue() {
     return {
@@ -484,7 +485,7 @@ var VCardElement = React.createClass({
         var value = this.value();
         this.fn = value.fn;
         this.org = value.org;
-        this.is_company = value.is_company;
+        this.tp = value.tp;
         this.emails = value.emails;
         this.phones = value.phones;
         this.urls = value.urls;
@@ -493,13 +494,13 @@ var VCardElement = React.createClass({
 
     render: function() {
         var value = this.value() || {};
-
+        console.log(this.tpUnConverter(value.tp));
         return (
             <div>
                 <FNVCardComponent value={value.fn} onValueUpdate={this.onFnChange} />
                 <OrgVCardComponent value={value.org.value} onValueUpdate={this.onOrgChange} />
 
-                <SVGCheckbox name="is_company" label="Company" className="row input-checkboxCompact" value={value.is_company} onValueUpdate={this.onIsCompanyChange} />
+                <SVGCheckbox name="tp" label="Company" className="row input-checkboxCompact" value={this.tpUnConverter(value.tp)} onValueUpdate={this.onTPChange} />
                 
                 <EmailVCardComponent name="emails" value={value.emails} options={[['internet', 'адрес в формате интернета'], ['pref', 'предпочитаемый']]} onValueUpdate={this.onEmailsChange} />
                 <div className="space-verticalBorder"></div>
@@ -515,6 +516,16 @@ var VCardElement = React.createClass({
         )
     },
 
+    tpUnConverter: function(v) {
+        return (v == CONTACT_TYPES.CO);
+    },
+
+    tpConverter: function(v) {
+        if(v)
+            return CONTACT_TYPES.CO;
+        return CONTACT_TYPES.USER;
+    },
+
     onFnChange: function(value) {
         this.fn = value.fn;
         this.onChange();
@@ -525,8 +536,8 @@ var VCardElement = React.createClass({
         this.onChange();
     },
 
-    onIsCompanyChange: function(value) {
-        this.is_company = value.is_company;
+    onTPChange: function(value) {
+        this.tp = this.tpConverter(value.tp);
         this.onChange();
     },
 
@@ -554,7 +565,7 @@ var VCardElement = React.createClass({
         return {
             'fn': this.fn,
             'org': this.org,
-            'is_company': this.is_company,
+            'tp': this.tp,
             'emails': this.emails,
             'phones': this.phones,
             'urls': this.urls,

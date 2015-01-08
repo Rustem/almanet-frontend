@@ -1,6 +1,7 @@
 var _ = require('lodash');
 
 var React = require('react/addons');
+var utils = require('../../utils');
 var inputs = require('../input');
 var RemoveableDropDownListWidget = inputs.RemoveableDropDownListWidget;
 
@@ -18,7 +19,7 @@ var ContactRemoveableDropDownList = React.createClass({
         var object_list = ContactStore.getByDate();
         if(this.props.excludeCompanies)
             object_list = _.filter(object_list, function(ob){
-                return !ob.is_company;
+                return !utils.isCompany(ob);
             });
         return {
             object_list: object_list,

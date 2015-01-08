@@ -78,6 +78,11 @@ module.exports = {
         title: 'Все события',
         status: 'PENDING'
     },
+    // TODO: should be retrived from server
+    CONTACT_TYPES: {
+        CO: 'co',
+        USER: 'user',
+    },
     NotifTypes: keyMirror({
         CONTACT_CREATE: null,
         CONTACT_UPDATE: null,

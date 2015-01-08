@@ -6,6 +6,7 @@
 var _ = require('lodash');
 var Fuse = require('./libs/fuse');
 var CREATION_STATUS = require('./constants/CRMConstants').CREATION_STATUS;
+var CONTACT_TYPES   = require('./constants/CRMConstants').CONTACT_TYPES;
 
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -102,6 +103,10 @@ function isNewObject(object) {
   return CREATION_STATUS.HOT === object.new_status;
 };
 
+function isCompany(object) {
+  return (object.tp == CONTACT_TYPES.CO);
+}
+
 
 module.exports = {
   extractIds: extractIds,
@@ -114,4 +119,5 @@ module.exports = {
   timeToSeconds: timeToSeconds,
   fuzzySearch: fuzzySearch,
   isNewObject: isNewObject,
+  isCompany: isCompany,
 };

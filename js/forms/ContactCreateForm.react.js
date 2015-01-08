@@ -15,13 +15,15 @@ var VCardElement = VCardWidgets.VCardElement;
 var VCardRow = VCardWidgets.VCardRow;
 var AppContextMixin = require('../mixins/AppContextMixin');
 
+var CONTACT_TYPES = require('../constants/CRMConstants').CONTACT_TYPES;
+
 var _ = require('lodash');
 Object.assign = _.extend;
 
 require('../utils');
 
 var default_form_state = {
-  'is_company': true,
+  'tp': CONTACT_TYPES.CO,
   'vcard': {
     'fn': 'Аман Куратов',
     'org': {'value': 'ТОО "Массив Динамик"'},
@@ -56,15 +58,15 @@ var ContactCreateForm = React.createClass({
   },
 
   preValue: function(value) {
-    value.vcard.is_company = value.is_company;
-    return _.omit(value, 'is_company');
+    value.vcard.tp = value.tp;
+    return _.omit(value, 'tp');
   },
 
   postValue: function(value) {
-    value.is_company = value.vcard.is_company;
-    value.vcard = _.omit(value.vcard, 'is_company');
+    value.tp = value.vcard.tp;
+    value.vcard = _.omit(value.vcard, 'tp');
     value.user_id = this.getUser().id;
-    return value
+    return value;
   },
 
   onHandleSubmit: function(e) {

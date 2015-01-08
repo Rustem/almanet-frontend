@@ -146,7 +146,7 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             var contact_id = action.object['contact_id'],
                 contact = action.object['contact'];
             // if contact is not company it cannot contain other contacts
-            if(!contact.is_company)
+            if(!utils.isCompany(contact))
                 _.pick(contact, function(value, key) {
                   return key != 'contacts';
                 });
