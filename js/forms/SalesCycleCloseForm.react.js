@@ -45,9 +45,12 @@ var SalesCycleCloseForm = React.createClass({
     var form = this.refs.sales_cycle_close_form;
     var errors = form.validate();
     if(!errors) {
-      this.props.handleSubmit(form.value());
+      value = form.value();
+      value.real_value = {value: value.real_value}
+
+      this.props.handleSubmit(value);
     } else{
-        alert(errors);
+      alert(errors);
     }
     return false;
   },

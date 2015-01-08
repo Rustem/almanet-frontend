@@ -109,6 +109,11 @@ ActivityStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
                 _activities[act_id].new_status = newStatus;
             }
             ActivityStore.emitChange();
+        case ActionTypes.CLOSE_SALES_CYCLE_SUCCESS:
+            activity = action.object.activity;
+            _activities[activity.id] = activity;
+            ActivityStore.emitChange();
+            break;
         default:
             // do nothing
     }

@@ -23,10 +23,10 @@ module.exports = {
       type: ActionTypes.CLOSE_SALES_CYCLE,
       object: object
     });
-    SalesCycleWebAPI.close(object, function(salesCycle){
+    SalesCycleWebAPI.close(object, function(salesCycleAndActivity){
       dispatcher.handleServerAction({
         type: ActionTypes.CLOSE_SALES_CYCLE_SUCCESS,
-        object: salesCycle
+        object: salesCycleAndActivity
       });
     }.bind(this), function(error){
       dispatcher.handleServerAction({
@@ -72,6 +72,6 @@ module.exports = {
     }.bind(this));
   },
 
-  
+
 
 };
