@@ -96,6 +96,10 @@ var FormElementMixin = {
   getValueFromEvent: function(e) {
       return e && e.target && e.target.value !== undefined ?
         e.target.value : e;
+  },
+
+  setInnerText: function(value) {
+    this.getDOMNode().innerText = value;
   }
 };
 

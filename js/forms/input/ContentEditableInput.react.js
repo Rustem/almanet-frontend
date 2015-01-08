@@ -17,7 +17,8 @@ var ContentEditableInput = React.createClass({
     componentWillMount: function() {
         this.isOnceFocused = false;
         this.isOnceTyped = false;
-        this.defaultValue = this.value() || this.props.placeholder; 
+        this.defaultValue = this.value() || this.props.placeholder;
+        this.is_placeholder = !this.value();
     },
 
     getDefaultProps: function() {
@@ -58,11 +59,13 @@ var ContentEditableInput = React.createClass({
           e.stopPropagation();
         }
         var value = getValueFromEvent(e);
-        this.getDOMNode().innerText = value;
+        this.setInnerText(value);
         this.updateValue(this.prepValue(this.props.name, value));
     },
 
     onFocus: function(e) {
+        if(!this.is_placeholder)
+            return;
         this.isOnceFocused = true;
         if(!this.isOnceTyped) {
             this.onChange({
@@ -72,11 +75,15 @@ var ContentEditableInput = React.createClass({
     },
 
     onBlur: function(e) {
+        if(!this.is_placeholder)
+            return;
         if(this.getCurrentValue() == '')
             this.resetInput();
     },
 
     onInput: function(e) {
+        if(!this.is_placeholder)
+            return;
         this.isOnceTyped = true;
         this.emitChange();
     },
