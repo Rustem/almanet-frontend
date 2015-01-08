@@ -82,8 +82,6 @@ var ContentEditableInput = React.createClass({
     },
 
     onInput: function(e) {
-        if(!this.is_placeholder)
-            return;
         this.isOnceTyped = true;
         this.emitChange();
     },

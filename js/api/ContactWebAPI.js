@@ -20,7 +20,7 @@ module.exports = {
             is_cold: true,
             new_status: CREATION_STATUS.COLD}, contactObject);
         console.log(contactObject);
-        return;
+        // return;
         requestPost('/api/v1/contact/')
             .send(obj)
             .end(function(res) {
@@ -53,7 +53,7 @@ module.exports = {
         // localStorage.setItem('shares', JSON.stringify(rawShares));
         // simulate success callback
         setTimeout(function() {
-            success(obj);
+            // success(obj);
             var author_id = obj.user_id,
                 extra = {'contact_id': obj.id};
             SignalManager.send(ActionTypes.CREATE_CONTACT_SUCCESS, author_id, extra);
