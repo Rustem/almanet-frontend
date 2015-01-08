@@ -16,14 +16,18 @@
 var _ = require('lodash');
 Object.assign = _.extend;
 var React = require('react/addons');
-var RepeatedFieldsetModule = require('./RepeatingFieldset.react');
+var FormElementMixin = require('./FormElementMixin.react');
 var FieldsetMixin = require('./FieldsetMixin.react');
+var RepeatedFieldsetModule = require('./RepeatingFieldset.react');
 var ItemMixin = RepeatedFieldsetModule.ItemMixin;
 var RepeatingFieldsetMixin = RepeatedFieldsetModule.RepeatingFieldsetMixin;
 
 var IconSvg = require('../components/common/IconSvg.react');
-var SimpleSelect = require('./input').SimpleSelect;
-var ContentEditableInput = require('./input').ContentEditableInput;
+var Fieldset = require('./Fieldset.react');
+var inputs = require('./input');
+var SimpleSelect = inputs.SimpleSelect;
+var ContentEditableInput = inputs.ContentEditableInput;
+var SVGCheckbox = inputs.SVGCheckbox;
 
 
 function getDefaultEmailValue() {
@@ -450,6 +454,119 @@ var AddressVCardComponent = React.createClass({
     }
 });
 
+var FNVCardComponent = React.createClass({
+    mixins: [FormElementMixin],
+
+    render: function() {
+        return (
+            <Fieldset className="inputLine-negativeTrail">
+              <ContentEditableInput className="input-div input-div--strong" name='fn' {...this.props} />
+            </Fieldset>
+        )
+    },
+});
+
+var OrgVCardComponent = React.createClass({
+
+    render: function() {
+        return (
+            <Fieldset className="inputLine-negativeTrail">
+              <ContentEditableInput className="input-div text-secondary" name='org' {...this.props} />
+            </Fieldset>
+        )
+    },
+});
+
+var VCardElement = React.createClass({
+    mixins: [FormElementMixin],
+
+    componentWillMount: function() {
+        var value = this.value();
+        this.fn = value.fn;
+        this.org = value.org;
+        this.is_company = value.is_company;
+        this.emails = value.emails;
+        this.phones = value.phones;
+        this.urls = value.urls;
+        this.adrs = value.adrs;
+    },
+
+    render: function() {
+        var value = this.value() || {};
+
+        return (
+            <div>
+                <FNVCardComponent value={value.fn} onValueUpdate={this.onFnChange} />
+                <OrgVCardComponent value={value.org.value} onValueUpdate={this.onOrgChange} />
+
+                <SVGCheckbox name="is_company" label="Company" className="row input-checkboxCompact" value={value.is_company} onValueUpdate={this.onIsCompanyChange} />
+                
+                <EmailVCardComponent name="emails" value={value.emails} options={[['internet', 'адрес в формате интернета'], ['pref', 'предпочитаемый']]} onValueUpdate={this.onEmailsChange} />
+                <div className="space-verticalBorder"></div>
+
+                <PhoneVCardComponent name="phones" value={value.phones} options={[['home', 'по месту проживания'], ['work', 'по месту работы']]} onValueUpdate={this.onPhonesChange} />
+                <div className="space-verticalBorder"></div>
+
+                <UrlVCardComponent name="urls" value={value.urls} options={[['website', 'website'], ['github', 'github']]} onValueUpdate={this.onUrlsChange} />
+                <div className="space-verticalBorder"></div>
+
+                <AddressVCardComponent name="adrs" value={value.adrs} options={[['home', 'место проживания'], ['work', 'место работы']]} onValueUpdate={this.onAdrsChange} />
+            </div>
+        )
+    },
+
+    onFnChange: function(value) {
+        this.fn = value.fn;
+        this.onChange();
+    },
+
+    onOrgChange: function(value) {
+        this.org = value.org;
+        this.onChange();
+    },
+
+    onIsCompanyChange: function(value) {
+        this.is_company = value.is_company;
+        this.onChange();
+    },
+
+    onEmailsChange: function(value) {
+        this.emails = value.emails;
+        this.onChange();
+    },
+
+    onPhonesChange: function(value) {
+        this.phones = value.phones;
+        this.onChange();
+    },
+
+    onUrlsChange: function(value) {
+        this.urls = value.urls;
+        this.onChange();
+    },
+
+    onAdrsChange: function(value) {
+        this.adrs = value.adrs;
+        this.onChange();
+    },
+
+    retriveValue: function() {
+        return {
+            'fn': this.fn,
+            'org': this.org,
+            'is_company': this.is_company,
+            'emails': this.emails,
+            'phones': this.phones,
+            'urls': this.urls,
+            'adrs': this.adrs,
+        }
+    },
+
+    onChange: function() {
+        var value = this.retriveValue();
+        this.updateValue(this.prepValue(this.props.name, value));
+    }
+});
 
 function getValueFromEvent(e) {
   return e && e.target && e.target.value !== undefined ?
@@ -463,4 +580,5 @@ module.exports = {
     PhoneVCardComponent: PhoneVCardComponent,
     UrlVCardComponent: UrlVCardComponent,
     AddressVCardComponent: AddressVCardComponent,
+    VCardElement: VCardElement,
 }

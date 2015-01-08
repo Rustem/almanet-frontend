@@ -40,7 +40,6 @@ var ActivitySelectedView = React.createClass({
 
     getInitialState: function() {
         var activities = this.getDefaultActivities();
-        console.log(this.getActivityID(), "hihihih");
         var comments = CommentStore.byActivity(this.getActivityID());
 
         return {

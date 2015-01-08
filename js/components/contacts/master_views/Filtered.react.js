@@ -10,78 +10,24 @@ var cx        = React.addons.classSet;
 var Router = require('react-router');
 var capitalize = require('../../../utils').capitalize;
 var fuzzySearch = require('../../../utils').fuzzySearch;
-var ActiveState = Router.ActiveState;
-var Link = Router.Link;
 var IconSvg = require('../../common/IconSvg.react');
 var Modal = require('../../common/Modal.react');
-var ContactActionCreators = require('../../../actions/ContactActionCreators');
+var FilterActionCreators = require('../../../actions/FilterActionCreators');
 var ContactStore = require('../../../stores/ContactStore');
 var ShareStore = require('../../../stores/ShareStore');
+var FilterStore = require('../../../stores/FilterStore');
 var AppContextMixin = require('../../../mixins/AppContextMixin');
 var ContactShareForm = require('../../../forms/ContactShareForm.react');
-var Form = require('../../../forms/Form.react');
 var inputs = require('../../../forms/input');
 var SVGCheckbox = inputs.SVGCheckbox;
-var Input = inputs.Input;
-var Div = require('../../../forms/Fieldset.react').Div;
 var Crumb = require('../../common/BreadCrumb.react').Crumb;
 var CommonFilterBar = require('../FilterComposer.react').CommonFilterBar;
+var FilterForm = require('../../../forms/FilterForm.react');
+var VIEW_MODES = require('../../../constants/CRMConstants').PRODUCT_VIEW_MODE;
 
 function get_contacts_number() {
     return _.size(ContactStore.getByDate());
 }
-
-
-var AllBaseLink = React.createClass({
-    mixins: [Router.State],
-    propTypes: {
-        label: React.PropTypes.string,
-    },
-
-    getInitialState: function() {
-        return {'amount': get_contacts_number()};
-    },
-
-    componentDidMount: function() {
-        ContactStore.addChangeListener(this._onChange);
-    },
-
-    componentWillUnmount: function() {
-        ContactStore.removeChangeListener(this._onChange);
-    },
-
-    _onChange: function() {
-        this.setState({'amount': get_contacts_number()});
-    },
-
-    render: function() {
-        var className = cx({
-            'row': true,
-            'row-oneliner': true,
-            'row--link': true,
-            'active': this.isCurrentlyActive()
-        });
-        return (
-            <Link className={className} to='allbase'>
-                <div className="row-icon"></div>
-                <div className="row-body">
-                    <div className="row-body-primary">
-                        {this.props.label}
-                    </div>
-                    <div className="row-body-secondary">
-                      {this.state.amount}
-                    </div>
-                </div>
-            </Link>
-        )
-    },
-    isCurrentlyActive: function() {
-        var routes = this.getRoutes();
-        var route = routes[routes.length - 1];
-        if(!route) { return false; }
-        return route.name === 'allbase';
-    }
-});
 
 var ContactListItem = React.createClass({
     mixins: [AppContextMixin],
@@ -107,7 +53,7 @@ var ContactListItem = React.createClass({
     }
 });
 
-var AllBaseList = React.createClass({
+var FilteredList = React.createClass({
     propTypes: {
         contacts: React.PropTypes.array,
         selection_map: React.PropTypes.object,
@@ -176,9 +122,8 @@ var AllBaseList = React.createClass({
 
     render: function() {
         var prevContact = null;
-        var contactListItems = this.filterContacts().map(function(contact) {
+        var contactListItems = this.props.contacts.map(function(contact) {
             var GroupContent = null;
-
             if(prevContact == null || prevContact.vcard.fn[0] !== contact.vcard.fn[0] ) {
                 GroupContent = this.renderGroup(contact.vcard.fn[0]);
             }
@@ -204,28 +149,38 @@ var AllBaseList = React.createClass({
     }
 });
 
+var FilteredViewMixin = {
 
-var AllBaseDetailView = React.createClass({
-    mixins: [AppContextMixin, Router.Navigation],
-    propTypes: {
-        label: React.PropTypes.string
-    },
     getInitialState: function() {
-        var selection_map = {};
-        contacts = ContactStore.getByDate(true);
+        var selection_map = {},
+            contacts = this.applyFilter(this.filter),
+            filter_cnt = FilterStore.getAll().length;
         for(var i = 0; i < contacts.length; i++) {
             selection_map[contacts[i].id] = false;
         }
         return {
             contacts: contacts,
             selection_map: selection_map,
-            search_bar: {select_all: false, filter_text: ''},
+            filter_cnt: filter_cnt,
+            filter: this.filter,
             action: null
         }
     },
 
-    getFilterText: function() {
-        return this.state.search_bar.filter_text;
+    getDefaultContacts: function(value) {
+        var filter = typeof value != undefined ? value : this.getFilter();
+        if(!filter)
+            return [];
+        switch(filter.base) {
+            case 'all':
+                return ContactStore.getByDate(true);
+            case 'recent':
+                return ContactStore.getRecent();
+            case 'cold':
+                return ContactStore.getColdByDate(true);
+            case 'lead':
+                return ContactStore.getLeads(true);
+        }
     },
 
     getContacts: function() {
@@ -234,6 +189,10 @@ var AllBaseDetailView = React.createClass({
 
     getSelectMap: function() {
         return this.state.selection_map;
+    },
+
+    getFilter: function() {
+        return this.state.filter;
     },
 
     getSelectedContacts: function() {
@@ -272,6 +231,8 @@ var AllBaseDetailView = React.createClass({
             return rv;
         }
 
+        var f_id = this.getParams().id;
+
         var cur_ids = getSelectedList(cur_map),
             next_ids = getSelectedList(next_map);
 
@@ -284,7 +245,7 @@ var AllBaseDetailView = React.createClass({
             }
         }
         setTimeout(function() {
-            this.transitionTo('contacts_selected', {'menu': 'allbase'}, {'ids': next_ids});
+            this.transitionTo('contacts_selected', {'menu': 'allbase'}, {'ids': next_ids, 'f_id': f_id});
         }.bind(this), 0);
 
     },
@@ -293,15 +254,21 @@ var AllBaseDetailView = React.createClass({
         return this.state.action === 'share'
     },
 
-    onFilterBarUpdate: function(value) {
-        var _map = {}, changed = value.select_all ^ this.state.search_bar.select_all,
-            contacts = null;
-        if(value.filter_text) {
-            contacts = fuzzySearch(this.state.contacts, value.filter_text, {
+    applyFilter: function(value) {
+        if(!value)
+            return [];
+        var contacts = this.getDefaultContacts(value);
+        if(value.filter_text)
+            contacts = fuzzySearch(contacts, value.filter_text, {
                 'keys': ['vcard.fn', 'vcard.emails.value']});
-        } else {
-            contacts = ContactStore.getByDate(true);
-        }
+        return contacts;
+    },
+
+    onFilterBarUpdate: function(value) {
+        var _map = {}, changed = value.select_all,
+            contacts = null;
+        contacts = this.applyFilter(value);
+        
         for(var contact_id in this.state.selection_map) {
             _map[contact_id] = false;
         }
@@ -319,10 +286,11 @@ var AllBaseDetailView = React.createClass({
         var newState = React.addons.update(this.state, {
             contacts: {$set: contacts},
             selection_map: {$set: _map},
-            search_bar: {$set: value},
+            filter: {$set: value},
         });
         this.setState(newState);
     },
+
     onToggleListItem: function(contact_id, is_selected) {
         var updItem = {};
         updItem[contact_id] = is_selected;
@@ -337,35 +305,6 @@ var AllBaseDetailView = React.createClass({
         this.setState(this.state);
     },
 
-    render: function() {
-        var cids = this.getSelectedContacts();
-
-        return (
-        <div className="page">
-            <div className="page-header">
-                <Crumb />
-                <CommonFilterBar
-                    ref="filter_bar"
-                    value={this.state.search_bar}
-                    onHandleUserInput={this.onFilterBarUpdate}
-                    onUserAction={this.onUserAction} />
-            </div>
-            <AllBaseList
-                ref="allbase_list"
-                contacts={this.getContacts()}
-                selection_map={this.getSelectMap()}
-                onChangeState={this.onToggleListItem} />
-            <Modal isOpen={this.isShareFormActive()}
-                   modalTitle='ПОДЕЛИТЬСЯ СПИСКОМ'
-                   onRequestClose={this.resetActions} >
-                <ContactShareForm
-                    contact_ids={cids}
-                    current_user={this.getUser()}
-                    onHandleSubmit={this.onShareSubmit} />
-            </Modal>
-        </div>
-        )
-    },
     onUserAction: function(actionType, evt) {
         evt.preventDefault();
         var actionHandler = 'on' + _.capitalize(actionType);
@@ -385,17 +324,160 @@ var AllBaseDetailView = React.createClass({
         // action creator for share
     },
 
-
-
     onEdit: function() {
         var contact_ids = this.getSelectedContacts();
     },
 
+    navigateToFilter: function(filter_id) {
+        this.transitionTo('filtered', {'id': filter_id});
+        return false;
+    },
+
     _onChange: function() {
         this.setState(this.getInitialState());
-    }
+    },
+}
+
+var FilteredDetailView = React.createClass({
+    mixins: [AppContextMixin, Router.State, Router.Navigation, FilteredViewMixin],
+
+    componentWillMount: function() {
+        this.setInternalState();
+    },
+
+    componentDidMount: function() {
+        FilterStore.addChangeListener(this.setInternalState);
+    },
+
+    componentWillUnmount: function() {
+        FilterStore.removeChangeListener(this.setInternalState);
+    },
+
+    componentWillReceiveProps: function(newProps) {
+        this.setInternalState();
+    },
+
+    setInternalState: function() {
+        this.mode = VIEW_MODES.READ;
+        this.filter = FilterStore.get(this.getParams().id);
+        this.setState(this.getInitialState());
+    },
+
+    onEditClick: function(e) {
+        e.preventDefault();
+        this.mode = VIEW_MODES.EDIT;
+        this.forceUpdate();
+    },
+    
+    onCancelClick: function(e) {
+        e.preventDefault();
+        this.mode = VIEW_MODES.READ;
+        this.forceUpdate();
+    },
+
+    renderRead: function() {
+        return (
+            <CommonFilterBar
+                    ref="filter_bar"
+                    value={this.state.filter}
+                    onHandleUserInput={this.onFilterBarUpdate}
+                    onUserAction={this.onUserAction} 
+                    onEditClick={this.onEditClick} />
+        )
+    },
+
+    renderEdit: function() {
+        return (
+            <FilterForm
+                    ref="filter_bar"
+                    onHandleUserInput={this.onFilterBarUpdate}
+                    onHandleSubmit={this.onHandleSubmit} 
+                    onCancelClick={this.onCancelClick} 
+                    value={this.state.filter} />
+        )
+    },
+
+    onHandleSubmit: function(filterObject) {
+        FilterActionCreators.edit(filterObject);
+    },
+
+    render: function() {
+        var cids = this.getSelectedContacts();
+        return (
+        <div className="page">
+            <div className="page-header">
+                {this.mode === VIEW_MODES.READ && this.renderRead() || this.renderEdit()}
+            </div>
+            <FilteredList
+                ref="filtered_list"
+                contacts={this.getContacts()}
+                selection_map={this.getSelectMap()}
+                onChangeState={this.onToggleListItem} />
+            <Modal isOpen={this.isShareFormActive()}
+                   modalTitle='ПОДЕЛИТЬСЯ СПИСКОМ'
+                   onRequestClose={this.resetActions} >
+                <ContactShareForm
+                    contact_ids={cids}
+                    current_user={this.getUser()}
+                    onHandleSubmit={this.onShareSubmit} />
+            </Modal>
+        </div>
+        )
+    },
 });
 
-module.exports.DetailView = AllBaseDetailView;
-module.exports.Link = AllBaseLink;
-module.exports.AllBaseList = AllBaseList;
+
+
+var FilteredNewView = React.createClass({
+    mixins: [AppContextMixin, Router.State, Router.Navigation, FilteredViewMixin],
+
+    onHandleSubmit: function(filterObject) {
+        FilterActionCreators.create(filterObject);
+    },
+
+    componentDidMount: function() {
+        FilterStore.addChangeListener(this.resetState);
+    },
+
+    componentWillUnmount: function() {
+        FilterStore.removeChangeListener(this.resetState);
+    },
+
+    resetState: function() {
+        this.setState(this.getInitialState(), function(prev_state) {
+            if(prev_state.filter_cnt < this.state.filter_cnt) {
+                var f = FilterStore.getLatestOne();
+                this.navigateToFilter(f.id);
+            }
+        }.bind(this, this.state));
+    },
+
+    onCancelClick: function(e) {
+        e.preventDefault();
+        this.goBack();
+    },
+
+    render: function() {
+        var cids = this.getSelectedContacts();
+        return (
+        <div className="page">
+            <div className="page-header">
+                <FilterForm
+                    ref="filter_bar"
+                    onHandleUserInput={this.onFilterBarUpdate}
+                    onHandleSubmit={this.onHandleSubmit} 
+                    onCancelClick={this.onCancelClick} />
+            </div>
+            <FilteredList
+                ref="filtered_list"
+                contacts={this.getContacts()}
+                selection_map={this.getSelectMap()}
+                onChangeState={this.onToggleListItem} />
+        </div>
+        )
+    },
+});
+
+module.exports.DetailView = FilteredDetailView;
+module.exports.NewView = FilteredNewView;
+module.exports.FilteredList = FilteredList;

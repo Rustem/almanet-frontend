@@ -17,6 +17,7 @@ var ActivityWebAPI = require("./api/ActivityWebAPI");
 var SalesCycleWebAPI = require("./api/SalesCycleWebAPI");
 var ProductWebAPI = require('./api/ProductWebAPI');
 var CommentWebAPI = require('./api/CommentWebAPI');
+var FilterWebAPI = require('./api/FilterWebAPI');
 var NotificationWebAPI = require('./api/NotificationWebAPI');
 var BreadcrumbStore = require('./stores/BreadcrumbStore');
 var routes = require('./router').routes;

@@ -50,6 +50,9 @@ module.exports = {
         CREATE_COMMENT: null,
         CREATE_COMMENT_SUCCESS: null,
         CREATE_COMMENT_FAIL: null,
+        CREATE_FILTER: null,
+        CREATE_FILTER_SUCCESS: null,
+        CREATE_FILTER_FAIL: null,
         LOGOUT: null,
     }),
     PayloadSources: keyMirror({
@@ -79,7 +82,6 @@ module.exports = {
     }),
     CREATION_STATUS: keyMirror({
         HOT: null,
-        WARM: null,
         COLD: null
     }),
     SERVICES: keyMirror({

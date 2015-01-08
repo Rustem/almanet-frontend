@@ -117,7 +117,7 @@ var ContactVCard = React.createClass({
                 </div>
               </div>
                 <div className="inputLine-div">
-                  <Link to='contact_profile' params={{id: company.id}}>{company.fn}</Link>
+                  <Link to='contact_profile' params={{id: company.id}}>{company.vcard.fn}</Link>
                 </div>
             </div>
           </div>
@@ -139,7 +139,7 @@ var ContactVCard = React.createClass({
                           {contact.vcard.fn}
                       </div>
                       <div className="inputLine-negativeTrail text-secondary">
-                        {contact.companyName}
+                        {contact.vcard.org.value}
                       </div>
                     </div>
                   </div>

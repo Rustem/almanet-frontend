@@ -20,7 +20,7 @@ module.exports = {
             is_cold: true,
             new_status: CREATION_STATUS.COLD}, contactObject);
         console.log(contactObject);
-        // return;
+        return;
         requestPost('/api/v1/contact/')
             .send(obj)
             .end(function(res) {
@@ -41,6 +41,7 @@ module.exports = {
         //     note: obj.note,
         //     isNew: true,};
         // obj.share = share;
+
         // set contact to local storage
         // var rawContacts = JSON.parse(localStorage.getItem('contacts')) || [];
         // rawContacts.push(obj);
@@ -138,13 +139,10 @@ module.exports = {
             updated_cids = [];
         _.forEach(rawContacts, function(contact){
             var updated = null;
-            if(contact.new_status === CREATION_STATUS.COLD){
-                contact.new_status = CREATION_STATUS.WARM;
+            if(contact.new_status === CREATION_STATUS.HOT){
+                contact.new_status = CREATION_STATUS.COLD;
                 updated = [contact.id, contact.new_status];
-            } else if(contact.new_status === CREATION_STATUS.WARM) {
-                contact.new_status = CREATION_STATUS.HOT;
-                updated = [contact.id, contact.new_status];
-            }
+            } 
             if(updated) updated_cids.push(updated);
         });
         localStorage.setItem('contacts', JSON.stringify(rawContacts));
