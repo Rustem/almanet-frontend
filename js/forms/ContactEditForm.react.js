@@ -66,7 +66,6 @@ var ContactEditForm = React.createClass({
     var form = this.refs.contact_edit_form;
     var errors = form.validate();
     if(!errors) {
-      f = form.value()
       var value = this.postValue(form.value());
       this.props.onHandleSubmit(value);
     } else{
