@@ -494,7 +494,6 @@ var VCardElement = React.createClass({
 
     render: function() {
         var value = this.value() || {};
-        console.log(this.tpUnConverter(value.tp));
         return (
             <div>
                 <FNVCardComponent value={value.fn} onValueUpdate={this.onFnChange} />
