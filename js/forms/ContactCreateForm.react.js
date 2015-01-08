@@ -48,7 +48,6 @@ var ContactCreateForm = React.createClass({
         <VCardElement name="vcard" />
         
         <VCardRow name='note' label='Заметка' />
-        <input type="hidden" name="author_id" value={this.getUser().id} />
         <div className="inputLine text-right">
             <button className="btn btn--save" type="submit">Сохранить</button>
         </div>
@@ -73,6 +72,7 @@ var ContactCreateForm = React.createClass({
     var form = this.refs.contact_form;
     var errors = form.validate();
     if(!errors) {
+      f = form.value()
       var value = this.postValue(form.value());
       this.props.onHandleSubmit(value);
     } else{

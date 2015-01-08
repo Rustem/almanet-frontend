@@ -36,8 +36,9 @@ var ContactEditForm = React.createClass({
                     filter_placeholder="Добавьте контакт" />;
     }
     var value = this.preValue(this.props.value);
+
     return (
-      <Form {...this.props} value={value} ref='contact_form' onSubmit={this.onHandleSubmit}>
+      <Form {...this.props} value={value} ref='contact_edit_form' onSubmit={this.onHandleSubmit}>
         <VCardElement name="vcard" />
 
         {CRDDL ? CRDDL : <div className="space-verticalBorder"></div>}
@@ -62,9 +63,10 @@ var ContactEditForm = React.createClass({
 
   onHandleSubmit: function(e) {
     e.preventDefault();
-    var form = this.refs.contact_form;
+    var form = this.refs.contact_edit_form;
     var errors = form.validate();
     if(!errors) {
+      f = form.value()
       var value = this.postValue(form.value());
       this.props.onHandleSubmit(value);
     } else{
