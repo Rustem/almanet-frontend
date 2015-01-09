@@ -14,6 +14,8 @@ var ContactRemoveableDropDownList = elements.ContactRemoveableDropDownList;
 var VCardElement = require('./VCardWidgets.react').VCardElement;
 var AppContextMixin = require('../mixins/AppContextMixin');
 
+var CONTACT_TYPES = require('../constants/CRMConstants').CONTACT_TYPES;
+
 var _ = require('lodash');
 Object.assign = _.extend;
 
@@ -28,14 +30,15 @@ var ContactEditForm = React.createClass({
 
   render: function() {
     var CRDDL = null ;
-    if (this.props.value.is_company) {
+    var value = this.preValue(this.props.value);
+
+    if (value.vcard.tp == CONTACT_TYPES.CO) {
       CRDDL = <ContactRemoveableDropDownList
                     excludeCompanies={true}
                     name="contacts"
                     title="Работники в этой компании"
                     filter_placeholder="Добавьте контакт" />;
     }
-    var value = this.preValue(this.props.value);
 
     return (
       <Form {...this.props} value={value} ref='contact_edit_form' onSubmit={this.onHandleSubmit}>
@@ -50,15 +53,15 @@ var ContactEditForm = React.createClass({
   },
 
   preValue: function(value) {
-    value.vcard.is_company = value.is_company;
-    return _.omit(value, 'is_company');
+    value.vcard.tp = value.tp;
+    return _.omit(value, 'tp');
   },
 
   postValue: function(value) {
-    value.is_company = value.vcard.is_company;
-    value.vcard = _.omit(value.vcard, 'is_company');
+    value.tp = value.vcard.tp;
+    value.vcard = _.omit(value.vcard, 'tp');
     value.user_id = this.getUser().id;
-    return value
+    return value;
   },
 
   onHandleSubmit: function(e) {
@@ -66,7 +69,6 @@ var ContactEditForm = React.createClass({
     var form = this.refs.contact_edit_form;
     var errors = form.validate();
     if(!errors) {
-      f = form.value()
       var value = this.postValue(form.value());
       this.props.onHandleSubmit(value);
     } else{

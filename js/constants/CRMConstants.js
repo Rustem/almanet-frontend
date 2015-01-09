@@ -72,8 +72,17 @@ module.exports = {
         PENDING: null,
         FINISHED: null
     }),
-    GLOBAL_SALES_CYCLE_ID: null,
-    GLOBAL_SALES_CYCLE: null,
+    GLOBAL_SALES_CYCLE_ID: 'sales_0',
+    GLOBAL_SALES_CYCLE: {
+        id: 'sales_0',
+        title: 'Все события',
+        status: 'PENDING'
+    },
+    // TODO: should be retrived from server
+    CONTACT_TYPES: {
+        CO: 'co',
+        USER: 'user',
+    },
     NotifTypes: keyMirror({
         CONTACT_CREATE: null,
         CONTACT_UPDATE: null,

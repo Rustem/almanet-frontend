@@ -9,6 +9,7 @@ var CREATION_STATUS = require('./constants/CRMConstants').CREATION_STATUS;
 var cookie_tool = require('cookie');
 var request = require('superagent');
 
+var CONTACT_TYPES   = require('./constants/CRMConstants').CONTACT_TYPES;
 
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -111,6 +112,9 @@ function requestPost(url) {
     .type('json')
     .set('X-CSRFToken', cookie_tool.parse(document.cookie).csrftoken);
 };
+function isCompany(object) {
+  return (object.tp == CONTACT_TYPES.CO);
+}
 
 module.exports = {
   extractIds: extractIds,
@@ -123,5 +127,6 @@ module.exports = {
   timeToSeconds: timeToSeconds,
   fuzzySearch: fuzzySearch,
   isNewObject: isNewObject,
-  requestPost: requestPost
+  requestPost: requestPost,
+  isCompany: isCompany,
 };
