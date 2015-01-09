@@ -34,17 +34,8 @@ var DEFAULT_ACTIVITY = {
 };
 var ESCAPE_KEY_CODE = 27;
 
-var FEEDBACK_STATUSES = [
-    ['waiting', 'Ожидание'],
-    ['positive', 'Событие с позитивнай реакцией контакта'],
-    ['neutral', 'Событие с нейтральной реакцией контакта'],
-    ['negative', 'Событие с негативная реакцией контакта'],
-    ['outcome', 'Результат'],
-]
-
 var SalesCycleDropDownWidget = React.createClass({
     mixins: [DropDownBehaviour],
-
     propTypes: {
         choices: React.PropTypes.array.isRequired,
         onChange: React.PropTypes.func.isRequired
@@ -152,7 +143,7 @@ var AddActivityForm = React.createClass({
                                   ref="add_event_form"
                                   onSubmit={this.onHandleSubmit}>
                 <InputWithDropDown name="description" choices={NOTE_TEMPLATES} />
-                <FeedbackDropDown name="feedback" choices={FEEDBACK_STATUSES} />
+                <FeedbackDropDown name="feedback" />
                 <hr className="text-neutral" />
                 <SalesCycleDropDownList name="salescycle" />
                 <div className="modal-inputLine text-center">
@@ -166,7 +157,7 @@ var AddActivityForm = React.createClass({
             //                       ref="add_event_form"
             //                       onSubmit={this.onHandleSubmit}>
             //     <InputWithDropDown name="description" choices={NOTE_TEMPLATES} />
-            //     <FeedbackDropDown name="feedback" choices={FEEDBACK_STATUSES} />
+            //     <FeedbackDropDown name="feedback" />
             //     <hr className="text-neutral" />
             //     <ContactRemoveableDropDownList
             //         name="contacts"

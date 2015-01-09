@@ -30,7 +30,7 @@ var relationships = require('./router').relationships;
 // TODO: use promises
 // load initial data to services
 AuthWebAPI.loadCurrentUser(function(user, session){
-    AppWebAPI.getAll(user, function(appState){
+    AppWebAPI.getAll(user, function(appState, appConstants){
         CommentWebAPI.getAll(function(comments){
             FilterWebAPI.getAll(function(filters){
                 NotificationWebAPI.getAll(function(notifications){
@@ -40,7 +40,8 @@ AuthWebAPI.loadCurrentUser(function(user, session){
                     session: session,
                     comments: comments,
                     filters: filters,
-                    notifications: notifications
+                    notifications: notifications,
+                    constants: appConstants,
                   });
 
                   console.log(appState)

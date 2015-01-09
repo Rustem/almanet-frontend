@@ -10,8 +10,10 @@ module.exports = {
             .get('api/v1/app_state/'+CRMConstants.SERVICES.crm+'/')
             .end(function (res) {
                 if (res.ok) {
-                    success(res.body.objects)
-                } else {}
+                    success(res.body.objects, res.body.constants);
+                } else {
+                    failure(res);
+                }
             });
     },
 };

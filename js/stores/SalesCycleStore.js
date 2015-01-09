@@ -106,7 +106,6 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             CRMAppDispatcher.waitFor([ActivityStore.dispatchToken]);
             var salescycle_id = action.object.salescycle_id,
                 current_cycle = _salescycles[salescycle_id];
-            console.log(current_cycle, action.object)
             current_cycle.activities.push(action.object.id);
             if (current_cycle.status == SALES_CYCLE_STATUS.NEW)
                 current_cycle.status = SALES_CYCLE_STATUS.PENDING;

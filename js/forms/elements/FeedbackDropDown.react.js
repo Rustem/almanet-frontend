@@ -4,12 +4,15 @@ var React = require('react/addons');
 var inputs = require('../input');
 var FeedbackDropDownWidget = inputs.FeedbackDropDownWidget;
 var FeedbackDropDownWidgetSimple = inputs.FeedbackDropDownWidgetSimple;
+var AppCommonsStore = require('../../stores/AppCommonsStore');
 
 var FormElementMixin = require('../FormElementMixin.react');
 
 var FeedbackDropDown = React.createClass({
     mixins: [FormElementMixin],
-
+    componentWillMount: function() {
+        this.STATUSES = _.pairs(AppCommonsStore.get('activity').feedback);
+    },
     propTypes: {
         simple: React.PropTypes.bool
     },
@@ -19,10 +22,10 @@ var FeedbackDropDown = React.createClass({
     },
 
     render: function() {
-        var Component = <FeedbackDropDownWidget value={this.value()} choices={this.props.choices}
+        var Component = <FeedbackDropDownWidget value={this.value()} choices={this.STATUSES}
                                         onChange={this.onChange} />;
         if(this.props.simple)
-            Component = <FeedbackDropDownWidgetSimple value={this.value()} choices={this.props.choices}
+            Component = <FeedbackDropDownWidgetSimple value={this.value()} choices={this.STATUSES}
                                         onChange={this.onChange} />;
         return Component
     }

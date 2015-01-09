@@ -15,15 +15,16 @@ module.exports = {
 
     create: function(activityObject, success, failure) {
         var object = _.pick(activityObject,
-                            ['author_id', 'salescycle_id', 'description']);
-        // object['feedback'] = activityObject.feedback;
+            ['author_id', 'salescycle_id', 'description', 'feedback']);
         requestPost('/api/v1/activity/')
             .send(object)
             .end(function(res) {
                 if (res.ok) {
                     object = _.assign(object, res.body);
                     success(object);
-                } else {}
+                } else {
+                    failure(res);
+                }
             });
     },
     updateNewStatus: function(ids, success) {

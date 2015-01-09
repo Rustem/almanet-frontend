@@ -8,6 +8,7 @@ var Fieldset = require('./Fieldset.react');
 var InputWithDropDown = elements.InputWithDropDown;
 var FeedbackDropDown = elements.FeedbackDropDown;
 
+
 var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
 var GLOBAL_SALES_CYCLE_ID = CRMConstants.GLOBAL_SALES_CYCLE_ID;
@@ -19,15 +20,6 @@ var NOTE_TEMPLATES = [
     ['Договорились с клиентом о встрече в пятницу', 'Пример 2: Договорились с клиентом о встрече в пятницу'],
     ['Позвонил клиенту. Он согласился.', 'Пример 3: Позвонил клиенту. Он согласился.']
 ];
-
-// TODO: probably replace it to constants or get remotely (repeat in forms/AddActivityForm)
-var FEEDBACK_STATUSES = [
-    ['waiting', 'Ожидание'],
-    ['positive', 'Положительный фидбек'],
-    ['neutral', 'Нейтральный фидбек'],
-    ['negative', 'Негативный фидбек'],
-    ['outcome', 'Закрытие сделки'],
-]
 
 var AddActivityMiniForm = React.createClass({
     mixins: [FormMixin],
@@ -43,7 +35,7 @@ var AddActivityMiniForm = React.createClass({
                                   onSubmit={this.onHandleSubmit}>
                 <InputWithDropDown name="description" choices={NOTE_TEMPLATES} placeholder="Кратко опишите произошедшее" />
                 <Fieldset className="inputLine-submitComment">
-                    <FeedbackDropDown name="feedback" choices={FEEDBACK_STATUSES} simple={true} />
+                    <FeedbackDropDown name="feedback" simple={true} />
                     <div className="inputLine-submitComment-submit">
                       <button className="btn btn--save" type="submit">Сохранить</button>
                     </div>
