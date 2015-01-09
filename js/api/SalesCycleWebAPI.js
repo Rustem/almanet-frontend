@@ -14,18 +14,6 @@ module.exports = api = {
         }, 0);
     },
     close: function(salesCycleObject, success, failure) {
-        // // set salesCycle to local storage
-        // var rawSalesCycles = JSON.parse(localStorage.getItem('salescycles')) || [];
-        // var curCycle = _.find(rawSalesCycles, function(sc){ return sc.id === salesCycleObject.id });
-        // curCycle.status = SALES_CYCLE_STATUS.FINISHED;
-        // curCycle.real_value = salesCycleObject.real_value;
-        // localStorage.setItem('salescycles', JSON.stringify(rawSalesCycles));
-
-        // // simulate success callback
-        // setTimeout(function() {
-        //     success(curCycle);
-        //     SignalManager.send(ActionTypes.CLOSE_SALES_CYCLE_SUCCESS, curCycle);
-        // }, 0);
         request('put', '/api/v1/sales_cycle/'+salesCycleObject.id+'/close/')
             .send(salesCycleObject.real_value)
             .end(function(res) {

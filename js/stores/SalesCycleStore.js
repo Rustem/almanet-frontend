@@ -6,6 +6,7 @@ var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
 var SessionStore = require('./SessionStore');
 var ActivityStore = require('./ActivityStore');
 var ContactStore = require('./ContactStore');
+var utils = require('../utils');
 
 var SALES_CYCLE_STATUS = CRMConstants.SALES_CYCLE_STATUS;
 var ActionTypes = CRMConstants.ActionTypes;
@@ -66,7 +67,7 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
         var ContactStore = require('./ContactStore');
         var contact = ContactStore.get(contact_id);
         var cycles = [this.getGlobal()].concat(this.byContact(contact_id));
-        if (!contact || !contact.is_company)
+        if (!contact || !utils.isCompany(contact))
             return cycles;
         _.forEach(contact.contacts, function(c_id){
             cycles.push(this.byContact(c_id));
@@ -105,10 +106,12 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             CRMAppDispatcher.waitFor([ActivityStore.dispatchToken]);
             var salescycle_id = action.object.salescycle_id,
                 current_cycle = _salescycles[salescycle_id];
+            console.log(current_cycle, action.object)
             current_cycle.activities.push(action.object.id);
             if (current_cycle.status == SALES_CYCLE_STATUS.NEW)
                 current_cycle.status = SALES_CYCLE_STATUS.PENDING;
             SalesCycleStore.emitChange();
+            break;
         case ActionTypes.CLOSE_SALES_CYCLE:
             var salesCycle = SalesCycleStore.getCreatedSalesCycle(action.object);
             SalesCycleStore.emitChange();

@@ -17,7 +17,7 @@ module.exports = {
             id: 'c_' + timeNow,
             at: timeNow,
             is_cold: true,
-            new_status: CREATION_STATUS.COLD}, contactObject);
+            new_status: CREATION_STATUS.HOT}, contactObject);
         var share = {
             id: 'share_' + Date.now(),
             user_id: contactObject.author_id,
@@ -123,13 +123,10 @@ module.exports = {
             updated_cids = [];
         _.forEach(rawContacts, function(contact){
             var updated = null;
-            if(contact.new_status === CREATION_STATUS.COLD){
-                contact.new_status = CREATION_STATUS.WARM;
+            if(contact.new_status === CREATION_STATUS.HOT){
+                contact.new_status = CREATION_STATUS.COLD;
                 updated = [contact.id, contact.new_status];
-            } else if(contact.new_status === CREATION_STATUS.WARM) {
-                contact.new_status = CREATION_STATUS.HOT;
-                updated = [contact.id, contact.new_status];
-            }
+            } 
             if(updated) updated_cids.push(updated);
         });
         localStorage.setItem('contacts', JSON.stringify(rawContacts));

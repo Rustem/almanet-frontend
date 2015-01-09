@@ -8,7 +8,7 @@ var Fuse = require('./libs/fuse');
 var CREATION_STATUS = require('./constants/CRMConstants').CREATION_STATUS;
 var cookie_tool = require('cookie');
 var superagent = require('superagent');
-
+var CONTACT_TYPES   = require('./constants/CRMConstants').CONTACT_TYPES;
 
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -102,13 +102,12 @@ function fuzzySearch(collection, search_str, options) {
 
 function isNewObject(object) {
   // determines whether object is new using duck typing
-  return CREATION_STATUS.COLD === object.new_status;
+  return CREATION_STATUS.HOT === object.new_status;
 };
 
-function isJustCreatedObject(object) {
-  // determines whether object is just created using duck typing
-  return _.contains([CREATION_STATUS.COLD, CREATION_STATUS.WARM], object.new_status);
-};
+function isCompany(object) {
+  return (object.tp == CONTACT_TYPES.CO);
+}
 
 function request(method, url) {
   return superagent(method.toUpperCase(), url)
@@ -137,5 +136,6 @@ module.exports = {
   isNewObject: isNewObject,
   request: request,
   requestPost: requestPost,
-  requestPatch: requestPatch
+  requestPatch: requestPatch,
+  isCompany: isCompany,
 };

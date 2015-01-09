@@ -10,6 +10,7 @@ var Header = require('../Header.react');
 var Footer = require('../Footer.react');
 var UserActionCreators = require('../../actions/UserActionCreators');
 var BreadCrumb = require('../common/BreadCrumb.react');
+var FilterList = require('./FilterComposer.react').FilterList;
 
 
 
@@ -31,11 +32,15 @@ var CRMContacts = React.createClass({
                             <master_views.Recent.Link label="Недавние" />
                             <master_views.ColdBase.Link label="Холодная база" />
                             <master_views.LeadBase.Link label="Контакты в обработке" />
+
+                            <div className="space-vertical"></div>
+                            <FilterList />
+      
                         </div>
                     </div>
                 </div>
                 <div className="body-detail">
-                    <RouteHandler />
+                    <RouteHandler ref="CRMContactsList" {...this.props} />
                 </div>
             </div>
             <Footer />

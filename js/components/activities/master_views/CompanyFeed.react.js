@@ -18,6 +18,7 @@ var AppContextMixin = require('../../../mixins/AppContextMixin');
 var FilterBar = require('../ActivityFilterBar.react');
 var Crumb = require('../../common/BreadCrumb.react').Crumb;
 var ActivityList = require('../ActivityList.react');
+var ActivityActionCreators = require('../../../actions/ActivityActionCreators');
 
 function get_activity_number() {
     return _.size(ActivityStore.getByDate());
@@ -53,7 +54,8 @@ var CompanyFeedLink = React.createClass({
             'row': true,
             'row-oneliner': true,
             'row--link': true,
-            'active': this.isCurrentlyActive()
+            'active': this.isCurrentlyActive(),
+            'new': ActivityStore.hasNew(),
         });
         return (
             <Link className={className} to='company_feed'>
@@ -81,6 +83,13 @@ var CompanyFeedLink = React.createClass({
 
 var CompanyFeedDetailView = React.createClass({
     mixins: [Router.Navigation, AppContextMixin],
+
+    statics: {
+        willTransitionFrom: function (transition, component) {
+            ActivityActionCreators.updateNewStatus();
+        }
+    },
+
     propTypes: {
         label: React.PropTypes.string
     },

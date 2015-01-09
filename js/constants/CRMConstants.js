@@ -50,6 +50,9 @@ module.exports = {
         CREATE_COMMENT: null,
         CREATE_COMMENT_SUCCESS: null,
         CREATE_COMMENT_FAIL: null,
+        CREATE_FILTER: null,
+        CREATE_FILTER_SUCCESS: null,
+        CREATE_FILTER_FAIL: null,
         LOGOUT: null,
     }),
     PayloadSources: keyMirror({
@@ -71,6 +74,11 @@ module.exports = {
     }),
     GLOBAL_SALES_CYCLE_ID: null,
     GLOBAL_SALES_CYCLE: null,
+    // TODO: should be retrived from server
+    CONTACT_TYPES: {
+        CO: 'co',
+        USER: 'user',
+    },
     NotifTypes: keyMirror({
         CONTACT_CREATE: null,
         CONTACT_UPDATE: null,
@@ -79,7 +87,6 @@ module.exports = {
     }),
     CREATION_STATUS: keyMirror({
         HOT: null,
-        WARM: null,
         COLD: null
     }),
     SERVICES: keyMirror({

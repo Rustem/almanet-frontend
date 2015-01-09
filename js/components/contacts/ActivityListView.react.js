@@ -544,16 +544,6 @@ var ActivityListView = React.createClass({
     },
 
     onCycleClosed: function(salesCycleObject) {
-        // var close_activity = {
-        //     author_id: this.getUser().id,
-        //     description: "Цикл закрыт. Сумма: " + salesCycleObject.real_value,
-        //     feedback: 'outcome',
-        //     participant_ids: [this.getUser().id],
-        //     salescycle_id: salesCycleObject.id,
-        //     duration: null
-        // }
-        // ActivityActionCreators.createActivity(close_activity);
-        console.log(salesCycleObject)
         SalesCycleActionCreators.close(salesCycleObject);
     },
 
