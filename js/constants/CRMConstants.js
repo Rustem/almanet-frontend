@@ -67,11 +67,6 @@ module.exports = {
         EDIT: null,
         READ: null
     }),
-    SALES_CYCLE_STATUS: keyMirror({
-        NEW: null,
-        PENDING: null,
-        FINISHED: null
-    }),
     GLOBAL_SALES_CYCLE_ID: null,
     GLOBAL_SALES_CYCLE: null,
     // TODO: should be retrived from server

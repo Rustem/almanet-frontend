@@ -1,10 +1,6 @@
 var _ = require('lodash');
 var request = require('../utils').request;
-var CRMConstants = require('../constants/CRMConstants');
-var SignalManager = require('./utils');
-var SALES_CYCLE_STATUS = CRMConstants.SALES_CYCLE_STATUS;
-var CRMConstants = require('../constants/CRMConstants');
-var ActionTypes = CRMConstants.ActionTypes;
+var AppCommonStore = require('../stores/AppCommonStore');
 
 module.exports = api = {
     getAll: function(success, failure) {
@@ -25,10 +21,11 @@ module.exports = api = {
             });
     },
     create: function(salesCycleObject, success, failure) {
-        var object = _.assign(salesCycleObject, {
-            status: SALES_CYCLE_STATUS.NEW, // TODO: use AppState constants
-            product_ids: []
-        });
+        var SALES_CYCLE_STATUS = AppCommonStore.get_constants('sales_cycle').statuses_hash,
+            object = _.assign(salesCycleObject, {
+                status: SALES_CYCLE_STATUS.NEW,
+                product_ids: []
+            });
         request('post', '/api/v1/sales_cycle/')
             .send(object)
             .end(function(res) {
@@ -56,14 +53,3 @@ module.exports = api = {
             });
     }
 };
-
-function update_state(author_id, extra) {
-    var rawSalesCycles = JSON.parse(localStorage.getItem('salescycles')) || [],
-        current_cycle = _.find(rawSalesCycles, function(sc){
-            return sc.id === extra.salescycle_id });
-    if(current_cycle.status == SALES_CYCLE_STATUS.NEW) {
-        current_cycle.status = SALES_CYCLE_STATUS.PENDING;
-        localStorage.setItem('salescycles', JSON.stringify(rawSalesCycles));
-    }
-}
-SignalManager.connect(ActionTypes.CREATE_ACTIVITY_SUCCESS, update_state);

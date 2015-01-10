@@ -23,8 +23,7 @@ var SalesCycleCloseForm = require('../../forms/SalesCycleCloseForm.react');
 var AddActivityMiniForm = require('../../forms/AddActivityMiniForm.react');
 var AddProductMiniForm = require('../../forms/AddProductMiniForm.react');
 var CRMConstants = require('../../constants/CRMConstants');
-
-var SALES_CYCLE_STATUS = CRMConstants.SALES_CYCLE_STATUS;
+var AppCommonStore = require('../../stores/AppCommonStore');
 
 var ACTIONS = keyMirror({
     ADD_ACTIVITY: null,
@@ -32,10 +31,14 @@ var ACTIONS = keyMirror({
     CLOSE_SC: null,
 });
 
+
 var SalesCycleControlBar = React.createClass({
     propTypes: {
         action_type: React.PropTypes.string.isRequired,
         current_cycle_id: React.PropTypes.number.isRequired,
+    },
+    componentWillMount: function() {
+        this.STATUSES = AppCommonStore.get_constants('sales_cycle').statuses_hash;
     },
 
     get_current_action: function() {
@@ -58,7 +61,7 @@ var SalesCycleControlBar = React.createClass({
         // TODO: make something with 'sales_0'
         if(_.contains([null, undefined, CRMConstants.GLOBAL_SALES_CYCLE_ID], this.props.current_cycle_id))
           return false;
-        return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED);
+        return !(this.getCycleStatus() == this.STATUSES.COMPLETED);
     },
 
     getClassNames: function(action) {
@@ -101,6 +104,9 @@ var AddActivityWidget = React.createClass({
         action_type: React.PropTypes.string.isRequired,
         current_cycle_id: React.PropTypes.number.isRequired,
     },
+    componentWillMount: function() {
+        this.SALES_CYCLE_STATUS = AppCommonStore.get_constants('sales_cycle').statuses_hash;
+    },
 
     get_current_action: function() {
         return this.props.action_type;
@@ -118,7 +124,7 @@ var AddActivityWidget = React.createClass({
         // TODO: make something with 'sales_0'
         if(_.contains([null, undefined], this.props.current_cycle_id))
           return false;
-        return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED) &&
+        return !(this.getCycleStatus() == this.SALES_CYCLE_STATUS.COMPLETED) &&
                this.get_current_action() == ACTIONS.ADD_ACTIVITY;
     },
 
@@ -137,6 +143,9 @@ var AddProductWidget = React.createClass({
         action_type: React.PropTypes.string.isRequired,
         current_cycle_id: React.PropTypes.number.isRequired,
     },
+    componentWillMount: function() {
+        this.SALES_CYCLE_STATUS = AppCommonStore.get_constants('sales_cycle').statuses_hash;
+    },
 
     get_current_action: function() {
         return this.props.action_type;
@@ -154,7 +163,7 @@ var AddProductWidget = React.createClass({
         // TODO: make something with 'sales_0'
         if(_.contains([null, undefined, CRMConstants.GLOBAL_SALES_CYCLE_ID], this.props.current_cycle_id))
           return false;
-        return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED) &&
+        return !(this.getCycleStatus() == this.SALES_CYCLE_STATUS.COMPLETED) &&
                this.get_current_action() == ACTIONS.ADD_PRODUCT;
     },
 
@@ -173,6 +182,9 @@ var CloseCycleWidget = React.createClass({
         action_type: React.PropTypes.string.isRequired,
         current_cycle_id: React.PropTypes.number.isRequired,
     },
+    componentWillMount: function() {
+        this.SALES_CYCLE_STATUS = AppCommonStore.get_constants('sales_cycle').statuses_hash;
+    },
 
     get_current_action: function() {
         return this.props.action_type;
@@ -190,7 +202,7 @@ var CloseCycleWidget = React.createClass({
         // TODO: make something with 'sales_0'
         if(_.contains([null, undefined, CRMConstants.GLOBAL_SALES_CYCLE_ID], this.props.current_cycle_id))
           return false;
-        return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED) &&
+        return !(this.getCycleStatus() == this.SALES_CYCLE_STATUS.COMPLETED) &&
                this.get_current_action() == ACTIONS.CLOSE_SC;
     },
 

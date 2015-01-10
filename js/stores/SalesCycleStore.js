@@ -8,10 +8,8 @@ var ActivityStore = require('./ActivityStore');
 var ContactStore = require('./ContactStore');
 var utils = require('../utils');
 
-var SALES_CYCLE_STATUS = CRMConstants.SALES_CYCLE_STATUS;
 var ActionTypes = CRMConstants.ActionTypes;
 var GLOBAL_SALES_CYCLE_ID = CRMConstants.GLOBAL_SALES_CYCLE_ID;
-
 var CHANGE_EVENT = 'change';
 
 var _salescycles = {};
@@ -90,8 +88,15 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
                 _salescycles[actv.salescycle_id].activities.push(actv.id);
         });
         this.emitChange();
-    }
+    },
 
+    updateStatusToPending: function(sales_cycle_id) {
+        var AppCommonStore = require('./AppCommonStore'),
+            SALES_CYCLE_STATUS = AppCommonStore.get_constants('sales_cycle').statuses_hash;
+        sc = _salescycles[sales_cycle_id];
+        if (sc.status == SALES_CYCLE_STATUS.NEW)
+            sc.status = SALES_CYCLE_STATUS.PENDING;
+    }
 });
 
 
@@ -106,9 +111,9 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             CRMAppDispatcher.waitFor([ActivityStore.dispatchToken]);
             var salescycle_id = action.object.salescycle_id,
                 current_cycle = _salescycles[salescycle_id];
+
             current_cycle.activities.push(action.object.id);
-            if (current_cycle.status == SALES_CYCLE_STATUS.NEW)
-                current_cycle.status = SALES_CYCLE_STATUS.PENDING;
+            SalesCycleStore.updateStatusToPending(salescycle_id);
             SalesCycleStore.emitChange();
             break;
         case ActionTypes.CLOSE_SALES_CYCLE:
