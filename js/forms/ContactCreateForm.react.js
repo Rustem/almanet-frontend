@@ -75,7 +75,6 @@ var ContactCreateForm = React.createClass({
     var errors = form.validate();
     if(!errors) {
       var value = this.postValue(form.value());
-      console.log(value);
       this.props.onHandleSubmit(value);
     } else{
         alert(errors);

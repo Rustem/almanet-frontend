@@ -531,7 +531,7 @@ var VCardElement = React.createClass({
     },
 
     onOrgsChange: function(value) {
-        this.orgs = value.orgs;
+        this.orgs = [{'organization_name': value.orgs}];
         this.onChange();
     },
 
@@ -564,7 +564,7 @@ var VCardElement = React.createClass({
         return {
             'fn': this.fn,
             'tp': this.tp,
-            'orgs': [{'organization_name': this.orgs}],
+            'orgs': this.orgs,
             'emails': this.emails,
             'tels': this.tels,
             'urls': this.urls,

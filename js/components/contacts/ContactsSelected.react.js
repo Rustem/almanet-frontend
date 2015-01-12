@@ -536,7 +536,7 @@ var SharedBaseSelectedView = React.createClass({
         var contacts = [], contact_ids = [], selection_map = {}, cnt = 0;
         var shares = ShareStore.sortedByDate(true);
         _selected_contacts = this.getQuery()['ids'] || [];
-        contact_ids = shares.map(function(share){ return share.contact_id });
+        contact_ids = shares.map(function(share){ return share.contact });
         contacts = ContactStore.getByIds(contact_ids);
 
         for(var i = 0; i<contacts.length; i++) {
@@ -563,7 +563,7 @@ var SharedBaseSelectedView = React.createClass({
         } else {
             shares = ShareStore.sortedByDate(true);
         }
-        var contact_ids = shares.map(function(share){ return share.contact_id });
+        var contact_ids = shares.map(function(share){ return share.contact });
         contacts = ContactStore.getByIds(contact_ids);
         for(var contact_id in this.state.selection_map) {
             _map[contact_id] = false;
@@ -604,7 +604,7 @@ var SharedBaseSelectedView = React.createClass({
             newSelectionItems = {};
 
         shares = ShareStore.sortedByDate(true);
-        var contact_ids = shares.map(function(share){ return share.contact_id });
+        var contact_ids = shares.map(function(share){ return share.contact });
         contacts = ContactStore.getByIds(contact_ids);
         for(var i = 0; i<contacts.length; i++) {
             if(!contacts[i].id in this.state.selection_map) {

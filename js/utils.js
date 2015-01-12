@@ -106,15 +106,24 @@ function isNewObject(object) {
   return CREATION_STATUS.HOT === object.new_status;
 };
 
-function requestPost(url) {
-  return request
-    .post(url)
-    .type('json')
-    .set('X-CSRFToken', cookie_tool.parse(document.cookie).csrftoken);
-};
 function isCompany(object) {
   return (object.tp == CONTACT_TYPES.CO);
 }
+
+function request(method, url) {
+  return superagent(method.toUpperCase(), url)
+    .type('json')
+    .set('X-CSRFToken', cookie_tool.parse(document.cookie).csrftoken);
+};
+
+function requestPost(url) {
+  return request('POST', url);
+};
+
+function requestPatch(url) {
+  return request('PATCH', url);
+};
+
 
 module.exports = {
   extractIds: extractIds,
@@ -127,6 +136,8 @@ module.exports = {
   timeToSeconds: timeToSeconds,
   fuzzySearch: fuzzySearch,
   isNewObject: isNewObject,
+  request: request,
   requestPost: requestPost,
+  requestPatch: requestPatch,
   isCompany: isCompany,
 };
