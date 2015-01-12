@@ -102,9 +102,7 @@ module.exports.NODES = {
     'product_detail': new Node('product_detail', function(params) {
         return this.get(params.product_id).name;
     }.bind(require('./stores/ProductStore'))),
-    'profile': new Node('profile', function(params) {
-        return this.getUser().name;
-    }.bind(require('./mixins/AppContextMixin'))),
+    'profile': new Node('profile', 'Sanzhar'),
 }
 
 module.exports.relationships = {

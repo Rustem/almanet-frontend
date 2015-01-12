@@ -76,6 +76,11 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
         return _.filter(activities, function(a){ return !(ContactStore.byActivity(a) && _.contains(user.unfollow_list, ContactStore.byActivity(a).id)) });
     },
 
+    profileFeed: function(user) {
+        var activities = this.getByDate();
+        return _.filter(activities, function(a){ return a.author_id == user.id });
+    },
+
     getMentions: function(user) {
         return [];
     },
