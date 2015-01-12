@@ -98,6 +98,11 @@ var Header = React.createClass({
                     <IconSvg iconKey="notifications" />
                   </button>
                 </div>
+                <div className="nav-c">
+                  <a href="/" className="nav-link nav-link--logotype">
+                    <IconSvg iconKey="logotype" />
+                  </a>
+                </div>
             </div>
 
         );
