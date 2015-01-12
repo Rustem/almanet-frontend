@@ -23,6 +23,8 @@ var ProductDetailView = React.createFactory(require('./components/products/Produ
 var activities_master_views = require('./components/activities/master_views');
 var ActivitySelectedView = require('./components/activities/ActivitySelectedView.react');
 
+var ProfileView = require('./components/profile/ProfileView.react')
+
 
 var routes = (
     <Route name="main" path="/" handler={CRMApp}>
@@ -53,6 +55,7 @@ var routes = (
             <Route name='product_new' path='new' handler={ProductCreateView} />
             <Route name='product_detail' path=':product_id' handler={ProductDetailView} />
         </Route>
+        <Route name="profile" path="/profile" handler={ProfileView} />
         <Redirect from="/" to="contacts" />
     </Route>
 );
@@ -99,6 +102,9 @@ module.exports.NODES = {
     'product_detail': new Node('product_detail', function(params) {
         return this.get(params.product_id).name;
     }.bind(require('./stores/ProductStore'))),
+    'profile': new Node('profile', function(params) {
+        return this.getUser().name;
+    }.bind(require('./mixins/AppContextMixin'))),
 }
 
 module.exports.relationships = {
