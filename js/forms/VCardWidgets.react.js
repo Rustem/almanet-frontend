@@ -467,12 +467,12 @@ var FNVCardComponent = React.createClass({
     },
 });
 
-var OrgVCardComponent = React.createClass({
+var OrgsVCardComponent = React.createClass({
 
     render: function() {
         return (
             <Fieldset className="inputLine-negativeTrail">
-              <ContentEditableInput className="input-div text-secondary" name='org' {...this.props} />
+              <ContentEditableInput className="input-div text-secondary" name='orgs' {...this.props} />
             </Fieldset>
         )
     },
@@ -484,10 +484,10 @@ var VCardElement = React.createClass({
     componentWillMount: function() {
         var value = this.value();
         this.fn = value.fn;
-        this.org = value.org;
         this.tp = value.tp;
+        this.orgs = value.orgs;
         this.emails = value.emails;
-        this.phones = value.phones;
+        this.tels = value.tels;
         this.urls = value.urls;
         this.adrs = value.adrs;
     },
@@ -497,14 +497,14 @@ var VCardElement = React.createClass({
         return (
             <div>
                 <FNVCardComponent value={value.fn} onValueUpdate={this.onFnChange} />
-                <OrgVCardComponent value={value.org.value} onValueUpdate={this.onOrgChange} />
+                <OrgsVCardComponent value={value.orgs[0].organization_name} onValueUpdate={this.onOrgsChange} />
 
                 <SVGCheckbox name="tp" label="Company" className="row input-checkboxCompact" value={this.tpUnConverter(value.tp)} onValueUpdate={this.onTPChange} />
                 
                 <EmailVCardComponent name="emails" value={value.emails} options={[['internet', 'адрес в формате интернета'], ['pref', 'предпочитаемый']]} onValueUpdate={this.onEmailsChange} />
                 <div className="space-verticalBorder"></div>
 
-                <PhoneVCardComponent name="phones" value={value.phones} options={[['home', 'по месту проживания'], ['work', 'по месту работы']]} onValueUpdate={this.onPhonesChange} />
+                <PhoneVCardComponent name="tels" value={value.tels} options={[['home', 'по месту проживания'], ['work', 'по месту работы']]} onValueUpdate={this.onTelsChange} />
                 <div className="space-verticalBorder"></div>
 
                 <UrlVCardComponent name="urls" value={value.urls} options={[['website', 'website'], ['github', 'github']]} onValueUpdate={this.onUrlsChange} />
@@ -530,8 +530,8 @@ var VCardElement = React.createClass({
         this.onChange();
     },
 
-    onOrgChange: function(value) {
-        this.org = value.org;
+    onOrgsChange: function(value) {
+        this.orgs = [{'organization_name': value.orgs}];
         this.onChange();
     },
 
@@ -545,8 +545,8 @@ var VCardElement = React.createClass({
         this.onChange();
     },
 
-    onPhonesChange: function(value) {
-        this.phones = value.phones;
+    onTelsChange: function(value) {
+        this.tels = value.tels;
         this.onChange();
     },
 
@@ -563,10 +563,10 @@ var VCardElement = React.createClass({
     retriveValue: function() {
         return {
             'fn': this.fn,
-            'org': this.org,
             'tp': this.tp,
+            'orgs': this.orgs,
             'emails': this.emails,
-            'phones': this.phones,
+            'tels': this.tels,
             'urls': this.urls,
             'adrs': this.adrs,
         }

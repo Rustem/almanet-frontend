@@ -66,7 +66,7 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
         var contact = ContactStore.get(contact_id);
         var cycles = [this.getGlobal()].concat(this.byContact(contact_id));
         if (!contact || !utils.isCompany(contact))
-            return cycles;
+            return _.compact(cycles);
         _.forEach(contact.contacts, function(c_id){
             cycles.push(this.byContact(c_id));
         }.bind(this));

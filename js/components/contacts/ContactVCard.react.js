@@ -15,20 +15,20 @@ var ContactVCard = React.createClass({
         mode: React.PropTypes.oneOf(VIEW_MODES),
         onHandleSubmit: React.PropTypes.func
     },
-    renderPhone: function(phone, idx) {
+    renderTel: function(tel, idx) {
         return (
-        <div key={'phone--' + idx} className="inputLine inputLine--vcardRow">
+        <div key={'tel--' + idx} className="inputLine inputLine--vcardRow">
           <div className="row">
             <div className="row-icon">
             </div>
             <div className="row-body">
               <div className="inputLine-negativeTrail">
                 <div className="text-caption text-secondary">
-                  {phone.type}
+                  {tel.type}
                 </div>
               </div>
               <div className="inputLine-div">
-                {phone.value}
+                {tel.value}
               </div>
             </div>
           </div>
@@ -139,7 +139,7 @@ var ContactVCard = React.createClass({
                           {contact.vcard.fn}
                       </div>
                       <div className="inputLine-negativeTrail text-secondary">
-                        {contact.vcard.org.value}
+                        {contact.vcard.orgs[0].organization_name}
                       </div>
                     </div>
                   </div>
@@ -149,7 +149,7 @@ var ContactVCard = React.createClass({
                 {contact.vcard.emails.map(this.renderEmail)}
                 <div className="space-verticalBorder"></div>
 
-                {contact.vcard.phones.map(this.renderPhone)}
+                {contact.vcard.tels.map(this.renderTel)}
                 <div className="space-verticalBorder"></div>
 
                 {contact.vcard.urls.map(this.renderUrl)}
@@ -165,7 +165,7 @@ var ContactVCard = React.createClass({
                           Заметка
                         </div>
                       </div>
-                      <div className="inputLine-div">{contact.note}</div>
+                      <div className="inputLine-div">{contact.share.note}</div>
                     </div>
                   </div>
                 </div>

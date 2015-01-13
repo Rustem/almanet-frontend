@@ -15,7 +15,6 @@ module.exports = {
 
     create: function(activityObject, success, failure) {
         var object = _.omit(activityObject, 'contact_id');
-
         requestPost('/api/v1/activity/')
             .send(object)
             .end(function(res) {

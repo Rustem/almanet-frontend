@@ -178,6 +178,7 @@ var AllBaseList = React.createClass({
         var prevContact = null;
         var contactListItems = this.filterContacts().map(function(contact) {
             var GroupContent = null;
+
             if(prevContact == null || prevContact.vcard.fn[0] !== contact.vcard.fn[0] ) {
                 GroupContent = this.renderGroup(contact.vcard.fn[0]);
             }
