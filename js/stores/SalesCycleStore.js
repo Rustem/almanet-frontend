@@ -81,7 +81,7 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
         _.forEach(obj.sales_cycles, function (sc){
             _salescycles[sc.id] = sc;
             _salescycles[sc.id].activities = [];
-            _salescycles[sc.id].product_ids = sc.product_ids;
+            _salescycles[sc.id].product_ids = obj.sales_cycles_to_products_map[sc.id];
         });
         _.forEach(obj.activities, function (actv){
             if(actv.salescycle_id in _salescycles)
