@@ -71,7 +71,7 @@ var ActivityListItem = React.createClass({
                       <div className="row-body">
                         <div className="row">
                           <div className="row-body-primary text-caption text-secondary">
-                            <a href="#" className="text-secondary">{author.first_name} {author.last_name}</a> в {activity.at}
+                            <a href="#" className="text-secondary">{author.first_name} {author.last_name}</a> в {activity.date_created}
                           </div>
                           <div className="row-body-secondary">
                             <Link to='activity_selected'

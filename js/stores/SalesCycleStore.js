@@ -33,7 +33,7 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
 
     getLatestOne: function() {
         var scycles = _.sortBy(this.getAll(), function(sc) {
-            sc.at
+            sc.date_created
         }.bind(this)).reverse();
         if(!scycles) return null;
         return scycles[0];

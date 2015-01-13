@@ -32,7 +32,7 @@ var ShareStore = assign({}, EventEmitter.prototype, {
     sortedByDate: function(reversed) {
         var reversed = reversed && true || false;
         var shares = this.getAll();
-        shares = _.sortBy(shares, function(share){ return share.at });
+        shares = _.sortBy(shares, function(share){ return share.date_created });
         return shares.reverse();
     },
 

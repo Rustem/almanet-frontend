@@ -111,7 +111,7 @@ var ShareListItem = React.createClass({
         return this.getUser().first_name;
     },
     getTimeAt: function() {
-        return this.props.share.at
+        return this.props.share.date_created
     },
     getNote: function() {
         return this.props.share.note
@@ -147,7 +147,7 @@ var ShareListItem = React.createClass({
                     </a>
                     <div className="row-body">
                       <div className="text-caption text-secondary">
-                        <a href="#" className="text-secondary">{author.first_name}</a>
+                        <a href="#" className="text-secondary">{author.first_name}</a> в {this.getTimeAt()}
                       </div>
                       <div className="row-body-message">
                         {this.getNote()}

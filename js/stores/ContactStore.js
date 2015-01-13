@@ -33,7 +33,7 @@ var ContactStore = assign({}, EventEmitter.prototype, {
 
     getByDate: function(reversed) {
         var contacts = this.getAll();
-        contacts = _.sortBy(contacts, function(contact){ return contact.at });
+        contacts = _.sortBy(contacts, function(contact){ return contact.date_created });
         if(reversed) {
             contacts = contacts.reverse();
         }

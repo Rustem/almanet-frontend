@@ -473,7 +473,7 @@ var ActivityListView = React.createClass({
                   <div className="row-body">
                     <div className="row">
                       <div className="row-body-primary text-caption text-secondary">
-                        <a href="#" className="text-secondary">{author.first_name}</a> в {act.at}
+                        <a href="#" className="text-secondary">{author.first_name}</a> в {act.date_created}
                       </div>
                       <div className="row-body-secondary">
                         <a href="#" className="link-inline">

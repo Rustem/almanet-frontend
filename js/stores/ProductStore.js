@@ -31,7 +31,7 @@ var ProductStore = assign({}, EventEmitter.prototype, {
         var products = this.getAll();
         if(!products) return null;
         return _.sortBy(products, function(p){
-            return p.at
+            return p.date_created
         }).reverse()[0];
     },
 
