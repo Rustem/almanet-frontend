@@ -12,11 +12,15 @@ var AppContextMixin = require('../../mixins/AppContextMixin');
 var ActivityFilterBar = require('../activities/ActivityFilterBar.react');
 var ActivityList = require('../activities/ActivityList.react');
 var ActivityStore = require('../../stores/ActivityStore');
+var SalesCycleStore = require('../../stores/SalesCycleStore');
 var UserStore = require('../../stores/UserStore');
 var fuzzySearch = require('../../utils').fuzzySearch;
 
 var ProfileInformation = React.createClass({
-    
+
+    getOpenedCyclesNumber: function() {
+      return SalesCycleStore.getOpenedCyclesNumber(this.props.user);
+    },
 
     render: function() {
         var user = this.props.user;
@@ -106,7 +110,7 @@ var ProfileInformation = React.createClass({
                     </li>
                     <li className="userProfile-kpi-item">
                         <IconSvg iconKey="clock" />
-                      Открытых циклов на данный момент: <strong className="userProfile-kpi-value">3</strong>
+                      Открытых циклов на данный момент: <strong className="userProfile-kpi-value">{this.getOpenedCyclesNumber()}</strong>
                     </li>
                   </ul>
 

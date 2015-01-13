@@ -75,7 +75,12 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
 
     getCreatedSalesCycle: function(obj) {
         return obj;
-    }
+    },
+
+    getOpenedCyclesNumber: function(user) {
+        var salescycles = this.getAll();
+        return (_.filter(salescycles, function(c){ return c.author_id == user.id && c.status != "FINISHED" })).length;
+    },
 
 });
 
