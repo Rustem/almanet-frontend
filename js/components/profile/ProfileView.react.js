@@ -15,15 +15,58 @@ var ActivityStore = require('../../stores/ActivityStore');
 var SalesCycleStore = require('../../stores/SalesCycleStore');
 var UserStore = require('../../stores/UserStore');
 var fuzzySearch = require('../../utils').fuzzySearch;
+var ContactVCard = require('../contacts/ContactVCard.react');
+
+var VIEW_MODE = require('../../constants/CRMConstants').CONTACT_VIEW_MODE;
 
 var ProfileInformation = React.createClass({
+    getInitialState: function() {
+        return {mode: VIEW_MODE.READ};
+    },
+
+    componentDidMount: function() {
+        UserStore.addChangeListener(this.resetState);
+    },
+
+    componentWillUnmount: function() {
+        UserStore.removeChangeListener(this.resetState);
+    },
 
     getOpenedCyclesNumber: function() {
       return SalesCycleStore.getOpenedCyclesNumber(this.props.user);
     },
 
+    onUserUpdate: function(updContact) {
+        // var contact_id = this.getParams().id;
+        // ContactActionCreators.editContact(contact_id, updContact);
+    },
+
+    getVCardMode: function() {
+        return this.state.mode;
+    },
+
+    setMode: function(mode, evt) {
+        evt.preventDefault();
+        if(mode == VIEW_MODE.READ)
+          // this.refs.vcard_widget.triggerSubmit();
+          console.log(mode)
+        this.setState({mode: mode});
+        return false;
+    },
+
+    getAsideLink: function() {
+      if(this.getVCardMode() == VIEW_MODE.READ)
+        return <a onClick={this.setMode.bind(null, VIEW_MODE.EDIT)} href="#" className="text-secondary">Редактировать</a>
+      return <a onClick={this.setMode.bind(null, VIEW_MODE.READ)} href="#" className="text-good text-padLeft">Сохранить</a>
+    },
+
+    resetState: function() {
+        this.setState({mode: VIEW_MODE.READ});
+    },
+
     render: function() {
         var user = this.props.user;
+        var asideLink = this.getAsideLink();
         return (
             <div className="body-master">
               <div className="page page--breadcrumbsHeader">
@@ -38,67 +81,13 @@ var ProfileInformation = React.createClass({
                     </figure>
                   </div>
 
-                  <div className="contact">
-                    <div className="inputLine">
-                      <div className="row">
-                        <div className="row-icon"></div>
-                        <div className="row-body">
-                          <div className="text-large text-strong">
-                            Алтаев Санжар
-                          </div>
-                          <div className="inputLine-negativeTrail text-secondary">
-                            CEO
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                  <ContactVCard ref="vcard_widget"
+                          onHandleSubmit={this.onUserUpdate}
+                          contact={user}
+                          mode={this.getVCardMode()} />
 
-                    <div className="space-vertical space-vertical--compact"></div>
-
-                    <div className="inputLine inputLine--vcardRow">
-                      <div className="row">
-                        <div className="row-icon">
-                        </div>
-                        <div className="row-body">
-                          <div className="inputLine-negativeTrail">
-                            <div className="text-caption text-secondary">
-                              mobile
-                            </div>
-                          </div>
-                          <div className="inputLine-div">
-                            +7 777 7777777
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-verticalBorder"></div>
-
-                    <div className="inputLine inputLine--vcardRow">
-                      <div className="row">
-                        <div className="row-icon">
-                        </div>
-                        <div className="row-body">
-                          <div className="inputLine-negativeTrail">
-                            <div className="text-caption text-secondary">
-                              work
-                            </div>
-                          </div>
-                          <div className="inputLine-div">
-                            info@companyname.com
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-vertical"></div>
-
-                    <a href="#">
-                      <strong className="text-large">Показать больше</strong>
-                    </a>
-
-                  </div><div className="contact-aside">
-                    <a href="/contacts/details-edit" className="text-secondary">Редактировать</a>
+                  <div className="contact-aside">
+                    {asideLink}
                   </div>
 
                   <div className="space-verticalBorder"></div>

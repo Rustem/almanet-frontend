@@ -29,7 +29,15 @@ module.exports = {
             first_name: 'Санжар',
             last_name: 'Алтаев',
             userpic: 'sanzhar.png',
-            unfollow_list: []
+            unfollow_list: [],
+            vcard: {
+                fn: 'Алтаев Санжар',
+                org: {'value': 'ТОО "Массив Динамик"'},
+                emails: [{'idx': 0, 'type': 'internet', 'value': 'amangeldy@gmail.com'}],
+                phones: [{'idx': 0, 'type': 'work', 'value': '+7 777 7777777'}],
+                urls: [{'idx': 0, 'type': 'website', 'value': 'http://massive-dyn.com'}],
+                adrs: [{'idx': 0, 'type': 'home', 'street_address': 'Zharokov, 11', 'region': 'Almaty', 'locality': 'Almaty', 'country_name': 'Kazakhstan', 'postal_code': '00012'}], 
+            }
           },
           {
             id: 'u_2',
