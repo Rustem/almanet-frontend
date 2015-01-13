@@ -31,8 +31,7 @@ var FollowButton = React.createClass({
 
     onClick: function() {
         var object = {};
-        object.contact = this.getContact();
-        object.user = this.getUser();
+        object = this.getContact();
         UserActionCreators.toggleFollowing(object);
         this.setState({following: !this.isFollowing()});
         this.forceUpdate();
