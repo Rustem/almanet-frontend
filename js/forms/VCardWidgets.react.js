@@ -497,7 +497,7 @@ var VCardElement = React.createClass({
         return (
             <div>
                 <FNVCardComponent value={value.fn} onValueUpdate={this.onFnChange} />
-                <OrgsVCardComponent value={value.orgs[0].organization_name} onValueUpdate={this.onOrgsChange} />
+                <OrgsVCardComponent value={this.orgValue(value.orgs)} onValueUpdate={this.onOrgsChange} />
 
                 <SVGCheckbox name="tp" label="Company" className="row input-checkboxCompact" value={this.tpUnConverter(value.tp)} onValueUpdate={this.onTPChange} />
                 
@@ -513,6 +513,12 @@ var VCardElement = React.createClass({
                 <AddressVCardComponent name="adrs" value={value.adrs} options={[['home', 'место проживания'], ['work', 'место работы']]} onValueUpdate={this.onAdrsChange} />
             </div>
         )
+    },
+
+    orgValue: function(orgs) {
+        if(orgs.length == 0)
+            return ''
+        return orgs[0].organization_name
     },
 
     tpUnConverter: function(v) {

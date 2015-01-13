@@ -101,6 +101,12 @@ var ContactVCard = React.createClass({
       )
     },
 
+    renderOrg: function(org) {
+      return (
+        org.organization_name
+      )
+    },
+
     renderCompany: function(c_id) {
       company = ContactStore.inCompany(c_id);
       if(company == null)
@@ -139,7 +145,7 @@ var ContactVCard = React.createClass({
                           {contact.vcard.fn}
                       </div>
                       <div className="inputLine-negativeTrail text-secondary">
-                        {contact.vcard.orgs[0].organization_name}
+                        {contact.vcard.orgs.map(this.renderOrg)}
                       </div>
                     </div>
                   </div>
