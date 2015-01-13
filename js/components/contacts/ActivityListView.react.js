@@ -54,7 +54,7 @@ var SalesCycleControlBar = React.createClass({
     },
 
     getCycleStatus: function() {
-        return ''; // this.getSalesCycle().status;
+        return this.getSalesCycle().status;
     },
 
     shouldRenderControlBar: function() {
@@ -117,7 +117,7 @@ var AddActivityWidget = React.createClass({
     },
 
     getCycleStatus: function() {
-        return ''; // this.getSalesCycle().status;
+        return this.getSalesCycle().status;
     },
 
     shouldRenderComponent: function() {
@@ -264,7 +264,7 @@ var SalesCycleDropDownList = React.createClass({
                         <IconSvg iconKey="arrow-down" />
                       </div>
                       <div className="row-body-primary row-body-primary--extraOffset">
-                        <strong>{cur_choice}</strong>
+                        <strong>{cur_choice[1]}</strong>
                         <span className="text-caption text-secondary">(выберите цикл продаж)</span>
                       </div>
                     </div>
