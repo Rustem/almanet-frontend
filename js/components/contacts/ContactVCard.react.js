@@ -131,6 +131,27 @@ var ContactVCard = React.createClass({
       )
     },
 
+    renderNote: function(share) {
+      if(share == undefined)
+        return null;
+      return (
+        <div className="inputLine inputLine--vcardRow">
+          <div className="row">
+            <div className="row-icon">
+            </div>
+            <div className="row-body">
+              <div className="inputLine-negativeTrail">
+                <div className="text-caption text-secondary">
+                  Заметка
+                </div>
+              </div>
+              <div className="inputLine-div">{share.note}</div>
+            </div>
+          </div>
+        </div>
+      )
+    },
+
     render_read: function() {
         var contact = this.props.contact;
         var RelatedContactsWidget = this.renderContacts(contact);
@@ -161,20 +182,8 @@ var ContactVCard = React.createClass({
                 {contact.vcard.urls.map(this.renderUrl)}
                 <div className="space-verticalBorder"></div>
 
-                <div className="inputLine inputLine--vcardRow">
-                  <div className="row">
-                    <div className="row-icon">
-                    </div>
-                    <div className="row-body">
-                      <div className="inputLine-negativeTrail">
-                        <div className="text-caption text-secondary">
-                          Заметка
-                        </div>
-                      </div>
-                      <div className="inputLine-div">{contact.share.note}</div>
-                    </div>
-                  </div>
-                </div>
+                {this.renderNote(contact.share)}
+                
                 {RelatedContactsWidget ? <div className="space-verticalBorder"></div> : null}
                 {RelatedContactsWidget}
 
