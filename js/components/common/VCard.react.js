@@ -247,7 +247,7 @@ var UserVCard = React.createClass({
                       {user.vcard.fn}
                     </div>
                     <div className="inputLine-negativeTrail text-secondary">
-                      {contact.vcard.titles.map(this.renderTitle)}
+                      {user.vcard.titles.map(this.renderTitle)}
                     </div>
                   </div>
                 </div>
