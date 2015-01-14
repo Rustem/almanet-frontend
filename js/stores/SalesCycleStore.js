@@ -75,7 +75,24 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
 
     getCreatedSalesCycle: function(obj) {
         return obj;
-    }
+    },
+
+    getClosedCyclesNumber: function(user) {
+        var closing_actvs = _.filter(ActivityStore.byUser(user), function(a){ return a.feedback == "outcome" });
+        var salescycles = _.map(closing_actvs, function(a){ return this.get(a.salescycle_id)}.bind(this));
+        var rv = {
+            'number': salescycles.length,
+            'money': _.reduce(salescycles, function(sum, s) {
+                      return sum + parseInt(s.real_value);
+                    }, 0)
+        }
+        return rv;
+    },
+
+    getOpenedCyclesNumber: function(user) {
+        var salescycles = this.getAll();
+        return (_.filter(salescycles, function(c){ return c.author_id == user.id && c.status != "FINISHED" })).length;
+    },
 
 });
 

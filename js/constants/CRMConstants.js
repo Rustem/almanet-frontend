@@ -53,6 +53,8 @@ module.exports = {
         CREATE_FILTER: null,
         CREATE_FILTER_SUCCESS: null,
         CREATE_FILTER_FAIL: null,
+        EDIT_USER: null,
+        EDIT_USER_SUCCESS: null,
         LOGOUT: null,
     }),
     PayloadSources: keyMirror({

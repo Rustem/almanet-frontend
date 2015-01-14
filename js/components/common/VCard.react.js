@@ -3,32 +3,28 @@ var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
 var ContactEditForm = require('../../forms/ContactEditForm.react');
+var UserEditForm = require('../../forms/UserEditForm.react');
 var VIEW_MODES_MAP = require('../../constants/CRMConstants').CONTACT_VIEW_MODE;
 var VIEW_MODES = _.values(VIEW_MODES_MAP);
 var keyMirror = require('react/lib/keyMirror');
 
 var ContactStore = require('../../stores/ContactStore');
 
-var ContactVCard = React.createClass({
-    propTypes: {
-        contact: React.PropTypes.object,
-        mode: React.PropTypes.oneOf(VIEW_MODES),
-        onHandleSubmit: React.PropTypes.func
-    },
-    renderPhone: function(phone, idx) {
+VCardFields = {
+  renderTel: function(tel, idx) {
         return (
-        <div key={'phone--' + idx} className="inputLine inputLine--vcardRow">
+        <div key={'tel--' + idx} className="inputLine inputLine--vcardRow">
           <div className="row">
             <div className="row-icon">
             </div>
             <div className="row-body">
               <div className="inputLine-negativeTrail">
                 <div className="text-caption text-secondary">
-                  {phone.type}
+                  {tel.type}
                 </div>
               </div>
               <div className="inputLine-div">
-                {phone.value}
+                {tel.value}
               </div>
             </div>
           </div>
@@ -101,6 +97,12 @@ var ContactVCard = React.createClass({
       )
     },
 
+    renderOrg: function(org) {
+      return (
+        org.organization_name
+      )
+    },
+
     renderCompany: function(c_id) {
       company = ContactStore.inCompany(c_id);
       if(company == null)
@@ -125,6 +127,43 @@ var ContactVCard = React.createClass({
       )
     },
 
+    renderNote: function(share) {
+      if(share == undefined)
+        return null;
+      return (
+        <div className="inputLine inputLine--vcardRow">
+          <div className="row">
+            <div className="row-icon">
+            </div>
+            <div className="row-body">
+              <div className="inputLine-negativeTrail">
+                <div className="text-caption text-secondary">
+                  Заметка
+                </div>
+              </div>
+              <div className="inputLine-div">{share.note}</div>
+            </div>
+          </div>
+        </div>
+      )
+    },
+
+    render: function() {
+        var mode = this.props.mode;
+        return mode === VIEW_MODES_MAP.EDIT && this.render_edit() || this.render_read();
+    },
+
+}
+
+var ContactVCard = React.createClass({
+    mixins: [VCardFields],
+
+    propTypes: {
+        contact: React.PropTypes.object,
+        mode: React.PropTypes.oneOf(VIEW_MODES),
+        onHandleSubmit: React.PropTypes.func
+    },    
+
     render_read: function() {
         var contact = this.props.contact;
         var RelatedContactsWidget = this.renderContacts(contact);
@@ -139,7 +178,7 @@ var ContactVCard = React.createClass({
                           {contact.vcard.fn}
                       </div>
                       <div className="inputLine-negativeTrail text-secondary">
-                        {contact.vcard.org.value}
+                        {contact.vcard.orgs.map(this.renderOrg)}
                       </div>
                     </div>
                   </div>
@@ -149,26 +188,13 @@ var ContactVCard = React.createClass({
                 {contact.vcard.emails.map(this.renderEmail)}
                 <div className="space-verticalBorder"></div>
 
-                {contact.vcard.phones.map(this.renderPhone)}
+                {contact.vcard.tels.map(this.renderTel)}
                 <div className="space-verticalBorder"></div>
 
                 {contact.vcard.urls.map(this.renderUrl)}
                 <div className="space-verticalBorder"></div>
 
-                <div className="inputLine inputLine--vcardRow">
-                  <div className="row">
-                    <div className="row-icon">
-                    </div>
-                    <div className="row-body">
-                      <div className="inputLine-negativeTrail">
-                        <div className="text-caption text-secondary">
-                          Заметка
-                        </div>
-                      </div>
-                      <div className="inputLine-div">{contact.note}</div>
-                    </div>
-                  </div>
-                </div>
+                {this.renderNote(contact.share)}
                 {RelatedContactsWidget ? <div className="space-verticalBorder"></div> : null}
                 {RelatedContactsWidget}
 
@@ -187,16 +213,71 @@ var ContactVCard = React.createClass({
         )
     },
 
-    render: function() {
-        var mode = this.props.mode;
-        return mode === VIEW_MODES_MAP.EDIT && this.render_edit() || this.render_read();
-    },
-
     triggerSubmit: function() {
       if(!(this.props.mode === VIEW_MODES_MAP.EDIT)) return;
       this.refs.contact_edit_form.triggerSubmit();
     }
+});
+
+var UserVCard = React.createClass({
+    mixins: [VCardFields],
+
+    propTypes: {
+        user: React.PropTypes.object,
+        mode: React.PropTypes.oneOf(VIEW_MODES),
+        onHandleSubmit: React.PropTypes.func
+    },
+    
+
+    render_read: function() {
+        var user = this.props.user;
+        return (
+            <div className="contact">
+              <div className="inputLine">
+                <div className="row">
+                  <div className="row-icon"></div>
+                  <div className="row-body">
+                    <div className="text-large text-strong">
+                      {user.vcard.fn}
+                    </div>
+                    <div className="inputLine-negativeTrail text-secondary">
+                      {user.vcard.title}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-vertical space-vertical--compact"></div>
+
+              {user.vcard.tels.map(this.renderTel)}
+              <div className="space-verticalBorder"></div>
+
+              {user.vcard.emails.map(this.renderEmail)}
+              <div className="space-verticalBorder"></div>
+
+              {user.vcard.urls.map(this.renderUrl)}
+              <div className="space-verticalBorder"></div>
+
+            </div>
+        );
+    },
+    render_edit: function() {
+        return  (
+            <div className="contact">
+                <UserEditForm ref="user_edit_form" value={this.props.user}
+                                 onHandleSubmit={this.props.onHandleSubmit} />
+            </div>
+        )
+    },
+
+    triggerSubmit: function() {
+      if(!(this.props.mode === VIEW_MODES_MAP.EDIT)) return;
+      this.refs.user_edit_form.triggerSubmit();
+    }
 
 });
 
-module.exports = ContactVCard;
+module.exports = {
+  ContactVCard: ContactVCard,
+  UserVCard: UserVCard
+};

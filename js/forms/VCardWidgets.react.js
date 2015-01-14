@@ -39,7 +39,7 @@ function getDefaultEmailValue() {
 };
 
 
-function getDefaultPhoneValue() {
+function getDefaultTelValue() {
     return {
         type: 'mobile',
         value: '+7 777 7777777'
@@ -182,7 +182,7 @@ var EmailVCardComponent = React.createClass({
 
 
 
-var PhoneVCardComponentItem = React.createClass({
+var TelVCardComponentItem = React.createClass({
     mixins: [ItemMixin],
 
     propTypes:  {
@@ -229,7 +229,7 @@ var PhoneVCardComponentItem = React.createClass({
 });
 
 
-var PhoneVCardComponent = React.createClass({
+var TelVCardComponent = React.createClass({
     mixins: [RepeatingFieldsetMixin],
 
     propTypes: {
@@ -238,8 +238,8 @@ var PhoneVCardComponent = React.createClass({
 
     getDefaultProps: function() {
         return {
-            item: PhoneVCardComponentItem,
-            getDefaultItemValue: getDefaultPhoneValue
+            item: TelVCardComponentItem,
+            getDefaultItemValue: getDefaultTelValue
         }
     },
 
@@ -478,41 +478,75 @@ var OrgVCardComponent = React.createClass({
     },
 });
 
+var TitleVCardComponent = React.createClass({
+
+    render: function() {
+        return (
+            <Fieldset className="inputLine-negativeTrail">
+              <ContentEditableInput className="input-div text-secondary" name='title' {...this.props} />
+            </Fieldset>
+        )
+    },
+});
+
 var VCardElement = React.createClass({
     mixins: [FormElementMixin],
 
+    propTypes: {
+        fields: React.PropTypes.array.isRequired,
+    },
+
     componentWillMount: function() {
         var value = this.value();
-        this.fn = value.fn;
-        this.org = value.org;
-        this.tp = value.tp;
-        this.emails = value.emails;
-        this.phones = value.phones;
-        this.urls = value.urls;
-        this.adrs = value.adrs;
+        _.forEach(this.props.fields, function(f){
+            this[f] = value[f];
+        }.bind(this));
+    },
+
+    renderFields: function() {
+        var value = this.value() || {};
+        var Components = {
+            'fn': <FNVCardComponent value={value.fn} onValueUpdate={this.onFnChange} />,
+            'orgs': <OrgVCardComponent value={this.orgValue(value.orgs)} onValueUpdate={this.onOrgChange} />,
+            'title': <TitleVCardComponent value={this.titleValue(value.title)} onValueUpdate={this.onTitleChange} />,
+
+            'tp': <SVGCheckbox name="tp" label="Company" className="row input-checkboxCompact" value={this.tpUnConverter(value.tp)} onValueUpdate={this.onTPChange} />,
+            
+            'emails': (<div><EmailVCardComponent name="emails" value={value.emails} options={[['internet', 'адрес в формате интернета'], ['pref', 'предпочитаемый']]} onValueUpdate={this.onEmailsChange} />
+                     <div className="space-verticalBorder"></div></div>),
+
+            'tels': (<div><TelVCardComponent name="tels" value={value.tels} options={[['home', 'по месту проживания'], ['work', 'по месту работы']]} onValueUpdate={this.onTelsChange} />
+                   <div className="space-verticalBorder"></div></div>),
+
+            'urls': (<div><UrlVCardComponent name="urls" value={value.urls} options={[['website', 'website'], ['github', 'github']]} onValueUpdate={this.onUrlsChange} />
+                   <div className="space-verticalBorder"></div></div>),
+
+            'adrs': <AddressVCardComponent name="adrs" value={value.adrs} options={[['home', 'место проживания'], ['work', 'место работы']]} onValueUpdate={this.onAdrsChange} />,
+        }
+        var rv = _.map(this.props.fields, function(f){
+            return Components[f];
+        });
+        return rv;
     },
 
     render: function() {
-        var value = this.value() || {};
         return (
             <div>
-                <FNVCardComponent value={value.fn} onValueUpdate={this.onFnChange} />
-                <OrgVCardComponent value={value.org.value} onValueUpdate={this.onOrgChange} />
-
-                <SVGCheckbox name="tp" label="Company" className="row input-checkboxCompact" value={this.tpUnConverter(value.tp)} onValueUpdate={this.onTPChange} />
-                
-                <EmailVCardComponent name="emails" value={value.emails} options={[['internet', 'адрес в формате интернета'], ['pref', 'предпочитаемый']]} onValueUpdate={this.onEmailsChange} />
-                <div className="space-verticalBorder"></div>
-
-                <PhoneVCardComponent name="phones" value={value.phones} options={[['home', 'по месту проживания'], ['work', 'по месту работы']]} onValueUpdate={this.onPhonesChange} />
-                <div className="space-verticalBorder"></div>
-
-                <UrlVCardComponent name="urls" value={value.urls} options={[['website', 'website'], ['github', 'github']]} onValueUpdate={this.onUrlsChange} />
-                <div className="space-verticalBorder"></div>
-
-                <AddressVCardComponent name="adrs" value={value.adrs} options={[['home', 'место проживания'], ['work', 'место работы']]} onValueUpdate={this.onAdrsChange} />
+                {this.renderFields()}
             </div>
         )
+    },
+
+    orgValue: function(orgs) {
+        if(orgs == undefined || orgs.length == 0)
+            return ''
+        return orgs[0].organization_name
+    },
+
+    titleValue: function(title) {
+        if(title == undefined || title.length == 0)
+            return ''
+        return title[0].data
     },
 
     tpUnConverter: function(v) {
@@ -531,7 +565,12 @@ var VCardElement = React.createClass({
     },
 
     onOrgChange: function(value) {
-        this.org = value.org;
+        this.orgs = [{'organization_name': value.orgs}];
+        this.onChange();
+    },
+
+    onTitleChange: function(value) {
+        this.title = [{'data': value.title}];
         this.onChange();
     },
 
@@ -545,8 +584,8 @@ var VCardElement = React.createClass({
         this.onChange();
     },
 
-    onPhonesChange: function(value) {
-        this.phones = value.phones;
+    onTelsChange: function(value) {
+        this.tels = value.tels;
         this.onChange();
     },
 
@@ -561,15 +600,11 @@ var VCardElement = React.createClass({
     },
 
     retriveValue: function() {
-        return {
-            'fn': this.fn,
-            'org': this.org,
-            'tp': this.tp,
-            'emails': this.emails,
-            'phones': this.phones,
-            'urls': this.urls,
-            'adrs': this.adrs,
-        }
+        var rv = {}
+        _.forEach(this.props.fields, function(f){
+            rv[f] = this[f];
+        }.bind(this));
+        return rv
     },
 
     onChange: function() {
@@ -587,7 +622,7 @@ function getValueFromEvent(e) {
 module.exports = {
     VCardRow: VCardRow,
     EmailVCardComponent: EmailVCardComponent,
-    PhoneVCardComponent: PhoneVCardComponent,
+    TelVCardComponent: TelVCardComponent,
     UrlVCardComponent: UrlVCardComponent,
     AddressVCardComponent: AddressVCardComponent,
     VCardElement: VCardElement,
