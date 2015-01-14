@@ -18,7 +18,7 @@ var UserEditForm = React.createClass({
 
   render: function() {
     var value = this.props.value;
-    var fields = ['fn', 'title', 'tels', 'emails', 'urls', 'adrs'];
+    var fields = ['fn', 'titles', 'tels', 'emails', 'urls', 'adrs'];
     return (
       <Form {...this.props} value={value} ref='user_edit_form' onSubmit={this.onHandleSubmit}>
         <VCardElement name="vcard" fields={fields} />
