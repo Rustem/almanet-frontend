@@ -25,6 +25,10 @@ var ProfileInformation = React.createClass({
         return {mode: VIEW_MODE.READ};
     },
 
+    getClosedCyclesNumber: function() {
+      return SalesCycleStore.getClosedCyclesNumber(this.props.user);
+    },
+
     getOpenedCyclesNumber: function() {
       return SalesCycleStore.getOpenedCyclesNumber(this.props.user);
     },
@@ -59,6 +63,7 @@ var ProfileInformation = React.createClass({
     render: function() {
         var user = this.props.user;
         var asideLink = this.getAsideLink();
+        var closed_cycles = this.getClosedCyclesNumber()
         return (
             <div className="body-master">
               <div className="page page--breadcrumbsHeader">
@@ -87,7 +92,7 @@ var ProfileInformation = React.createClass({
                   <ul className="userProfile-kpi">
                     <li className="userProfile-kpi-item">
                         <IconSvg iconKey="cart" />
-                      Закрытых циклов: <strong className="userProfile-kpi-value">20 ($ 1000)</strong>
+                      Закрытых циклов: <strong className="userProfile-kpi-value">{closed_cycles.number} ($ {closed_cycles.money})</strong>
                     </li>
                     <li className="userProfile-kpi-item">
                         <IconSvg iconKey="clock" />

@@ -34,6 +34,12 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
         return activities.reverse();
     },
 
+    byUser: function(user) {
+        return _.filter(this.getByDate(true), function(actv){
+            return actv.author_id === user.id;
+        })
+    },
+
     bySalesCycle: function(salescycle_id) {
         return _.filter(this.getByDate(true), function(actv){
             return actv.salescycle_id === salescycle_id;
