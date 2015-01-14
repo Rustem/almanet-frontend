@@ -3,6 +3,7 @@ var SignalManager = require('./utils');
 var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
 var requestPost = require('../utils').requestPost;
+var requestPatch = require('../utils').requestPatch;
 
 module.exports = {
     getAll: function(success, failure) {
@@ -37,20 +38,25 @@ module.exports = {
     },
 
     editUser: function(user_id, object, success, failure) {
-        var rawUsers = JSON.parse(localStorage.getItem('users')) || [],
-            user = null;
-        for(var i = 0; i<rawUsers.length; i++) {
-            var cur = rawUsers[i];
-            if(cur.id === user_id) {
-                rawUsers[i] = object;
-                user = rawUsers[i];
-                break;
-            }
-        }
-        localStorage.setItem('users', JSON.stringify(rawUsers));
-        setTimeout(function() {
-            console.log(user);
-            success(user);
-        }, 0);
+        requestPatch('/api/v1/user/'+user_id)
+            .send(object)
+            .end(function(res) {
+                if (res.ok) {
+                    success(res.body);
+                } else {
+                    failure(res.body);
+                }
+            });
+        // var rawUsers = JSON.parse(localStorage.getItem('users')) || [],
+        //     user = null;
+        // for(var i = 0; i<rawUsers.length; i++) {
+        //     var cur = rawUsers[i];
+        //     if(cur.id === user_id) {
+        //         rawUsers[i] = object;
+        //         user = rawUsers[i];
+        //         break;
+        //     }
+        // }
+        // localStorage.setItem('users', JSON.stringify(rawUsers));
     },
 };
