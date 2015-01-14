@@ -472,18 +472,18 @@ var OrgVCardComponent = React.createClass({
     render: function() {
         return (
             <Fieldset className="inputLine-negativeTrail">
-              <ContentEditableInput className="input-div text-secondary" name='org' {...this.props} />
+              <ContentEditableInput className="input-div text-secondary" name='orgs' {...this.props} />
             </Fieldset>
         )
     },
 });
 
-var TitleVCardComponent = React.createClass({
+var TitlesVCardComponent = React.createClass({
 
     render: function() {
         return (
             <Fieldset className="inputLine-negativeTrail">
-              <ContentEditableInput className="input-div text-secondary" name='title' {...this.props} />
+              <ContentEditableInput className="input-div text-secondary" name='titles' {...this.props} />
             </Fieldset>
         )
     },
@@ -508,7 +508,7 @@ var VCardElement = React.createClass({
         var Components = {
             'fn': <FNVCardComponent value={value.fn} onValueUpdate={this.onFnChange} />,
             'orgs': <OrgsVCardComponent value={this.orgValue(value.orgs)} onValueUpdate={this.onOrgChange} />,
-            'title': <TitleVCardComponent value={this.titleValue(value.title)} onValueUpdate={this.onTitleChange} />,
+            'titles': <TitlesVCardComponent value={this.titleValue(value.titles)} onValueUpdate={this.onTitlesChange} />,
 
             'tp': <SVGCheckbox name="tp" label="Company" className="row input-checkboxCompact" value={this.tpUnConverter(value.tp)} onValueUpdate={this.onTPChange} />,
             
@@ -543,10 +543,10 @@ var VCardElement = React.createClass({
         return orgs[0].organization_name
     },
 
-    titleValue: function(title) {
-        if(title == undefined || title.length == 0)
+    titleValue: function(titles) {
+        if(titles == undefined || titles.length == 0)
             return ''
-        return title[0].data
+        return titles[0].data
     },
 
     tpUnConverter: function(v) {
@@ -569,8 +569,8 @@ var VCardElement = React.createClass({
         this.onChange();
     },
 
-    onTitleChange: function(value) {
-        this.title = [{'data': value.title}];
+    onTitlesChange: function(value) {
+        this.titles = [{'data': value.titles}];
         this.onChange();
     },
 

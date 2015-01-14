@@ -103,6 +103,12 @@ VCardFields = {
       )
     },
 
+    renderTitle: function(title) {
+      return (
+        title.data
+      )
+    },
+
     renderCompany: function(c_id) {
       company = ContactStore.inCompany(c_id);
       if(company == null)
@@ -241,7 +247,7 @@ var UserVCard = React.createClass({
                       {user.vcard.fn}
                     </div>
                     <div className="inputLine-negativeTrail text-secondary">
-                      {user.vcard.title}
+                      {contact.vcard.titles.map(this.renderTitle)}
                     </div>
                   </div>
                 </div>
