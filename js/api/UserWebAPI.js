@@ -35,4 +35,22 @@ module.exports = {
         // localStorage.setItem('users', JSON.stringify(users));
 
     },
+
+    editUser: function(user_id, object, success, failure) {
+        var rawUsers = JSON.parse(localStorage.getItem('users')) || [],
+            user = null;
+        for(var i = 0; i<rawUsers.length; i++) {
+            var cur = rawUsers[i];
+            if(cur.id === user_id) {
+                rawUsers[i] = object;
+                user = rawUsers[i];
+                break;
+            }
+        }
+        localStorage.setItem('users', JSON.stringify(rawUsers));
+        setTimeout(function() {
+            console.log(user);
+            success(user);
+        }, 0);
+    },
 };

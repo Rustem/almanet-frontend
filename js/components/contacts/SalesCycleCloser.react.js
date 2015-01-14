@@ -8,7 +8,7 @@ var cx            = React.addons.classSet;
 var IconSvg = require('../common/IconSvg.react');
 var SalesCycleCloseForm = require('../../forms/SalesCycleCloseForm.react');
 var SalesCycleStore = require('../../stores/SalesCycleStore');
-
+var ProductStore = require('../../stores/ProductStore');
 var AppContextMixin = require('../../mixins/AppContextMixin');
 
 var AppCommonStore = require('../../stores/AppCommonStore');
@@ -67,6 +67,11 @@ var SalesCycleCloser = React.createClass({
         return SalesCycleStore.get(this.props.salesCycleID);
     },
 
+    getCycleProducts: function() {
+        var product_ids = this.getCurrentCycle().products;
+        return ProductStore.getByIds(product_ids);
+    },
+
     canRenderActionBar: function() {
         var SALES_CYCLE_STATUS = AppCommonStore.get_constants('sales_cycle').statuses_hash;
         if([null, undefined, 'sales_0'].indexOf(this.props.salesCycleID) > -1)
@@ -83,7 +88,8 @@ var SalesCycleCloser = React.createClass({
         if(this.canRenderActionBar()) {
           if (this.isClosing) {
             StateComponent = <SalesCycleCloseForm
-                    value={this.getCurrentCycle()}
+                    products={this.getCycleProducts()}
+                    salesCycleID={this.props.salesCycleID}
                     handleSubmit={this.handleSubmit}
                     onKeyDown={this.onFormKeyDown} />;
           } else {

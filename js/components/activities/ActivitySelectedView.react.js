@@ -62,10 +62,13 @@ var ActivitySelectedView = React.createClass({
         var menu = this.getParams().menu;
         switch(menu) {
             case 'my_feed':
-                activities = ActivityStore.myFeed(this.getUser());;
+                activities = ActivityStore.myFeed(this.getUser());
                 break;
             case 'company_feed':
                 activities = ActivityStore.getByDate(true);
+                break;
+            case 'profile':
+                activities = ActivityStore.profileFeed(this.getUser());
                 break;
         }
         return activities;
