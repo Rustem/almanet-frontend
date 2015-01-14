@@ -209,7 +209,7 @@ var CloseCycleWidget = React.createClass({
           return false;
         if(!products)
             return false;
-        return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED) &&
+        return !(this.getCycleStatus() == this.SALES_CYCLE_STATUS.FINISHED) &&
                this.get_current_action() == ACTIONS.CLOSE_SC;
     },
 

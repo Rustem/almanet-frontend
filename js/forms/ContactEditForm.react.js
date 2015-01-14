@@ -36,7 +36,7 @@ var ContactEditForm = React.createClass({
     if (value.vcard.tp == CONTACT_TYPES.CO) {
       CRDDL = <ContactRemoveableDropDownList
                     excludeCompanies={true}
-                    name="contacts"
+                    name="children"
                     title="Работники в этой компании"
                     filter_placeholder="Добавьте контакт" />;
     }

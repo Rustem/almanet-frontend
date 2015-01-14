@@ -72,7 +72,7 @@ VCardFields = {
     },
 
     renderContacts: function(contact) {
-      if(contact.contacts == undefined)
+      if(contact.children == undefined || contact.children.length == 0)
           return null;
       return (
         <div className="inputLine inputLine--vcardRow">
@@ -85,7 +85,7 @@ VCardFields = {
                   Работники в этой компании
                 </div>
               </div>
-              {contact.contacts.map(function(c_id){
+              {contact.children.map(function(c_id){
                 var c = ContactStore.get(c_id);
                 return <div className="inputLine-div">
                         <Link to='contact_profile' params={{id: c.id}}>{c.vcard.fn}</Link>
