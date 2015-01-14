@@ -21,19 +21,13 @@ module.exports = {
     },
 
     create: function(commentObject, success, failure) {
-        var timeNow = Date.now();
-        var obj = _.extend({}, {
-            id: 'com_' + timeNow,
-            at: timeNow}, commentObject);
-
-        // set contact to local storage
-        var rawComments = JSON.parse(localStorage.getItem('comments')) || [];
-        rawComments.push(obj);
-        localStorage.setItem('comments', JSON.stringify(rawComments));
-
-        // simulate success callback
-        setTimeout(function() {
-            success(obj);
-        }, 0);
+        request('POST', '/api/v1/comment/')
+            .send(commentObject)
+            .end(function(res) {
+                if (res.ok) {
+                    success(res.body);
+                } else
+                    failure(res);
+            });
     },
 };

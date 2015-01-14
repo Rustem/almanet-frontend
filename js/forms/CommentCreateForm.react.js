@@ -43,8 +43,8 @@ var CommentCreateForm = React.createClass({
                   </figure>
                 </a>
                 <Fieldset className="row-body row-body--no-trailer">
-                  <ContentEditableInput ref='comment' 
-                                name='comment' 
+                  <ContentEditableInput ref='comment'
+                                name='comment'
                                 className='input-div input-div--block' placeholder="placeholder" />
                   <button type="submit" className="text-strong text-primary">Написать</button><span> • </span><button onClick={this.onCancelClick} className="text-secondary">Отмена</button>
                 </Fieldset>
@@ -60,7 +60,7 @@ var CommentCreateForm = React.createClass({
     var errors = form.validate();
     if(!errors) {
       var value = form.value();
-      value.author = this.props.author.id;
+      value.author_id = this.props.author.id;
       value.activity_id = this.props.activity_id;
       this.props.onHandleSubmit(value);
     } else{
