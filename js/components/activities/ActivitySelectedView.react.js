@@ -13,6 +13,7 @@ var AppContextMixin = require('../../mixins/AppContextMixin');
 var ActivityStore = require('../../stores/ActivityStore');
 var UserStore = require('../../stores/UserStore');
 var CommentStore = require('../../stores/CommentStore');
+var CommentWebAPI = require('../../api/CommentWebAPI');
 var BreadCrumb = require('../common/BreadCrumb.react');
 var Crumb = BreadCrumb.Crumb;
 var ActivityList = require('./ActivityList.react');
@@ -23,24 +24,15 @@ var CommentActionCreators = require('../../actions/CommentActionCreators');
 
 var ActivitySelectedView = React.createClass({
     mixins: [Router.State, AppContextMixin],
-
-    getDefaultActivities: function() {
-        var activities = null;
-        var menu = this.getParams().menu;
-        switch(menu) {
-            case 'my_feed':
-                activities = ActivityStore.myFeed(this.getUser());;
-                break;
-            case 'company_feed':
-                activities = ActivityStore.getByDate(true);
-                break;
+    statics: {
+        fetchData: function(params) {
+            return CommentActionCreators.loadByActivityID(params.id);
         }
-        return activities;
     },
 
     getInitialState: function() {
-        var activities = this.getDefaultActivities();
-        var comments = CommentStore.byActivity(this.getActivityID());
+        var activities = this.getDefaultActivities(),
+            comments = CommentStore.getByActivityID(this.getActivityID());
 
         return {
             activities: activities,
@@ -63,6 +55,20 @@ var ActivitySelectedView = React.createClass({
         ActivityStore.removeChangeListener(this._onChange);
         UserStore.removeChangeListener(this._onChange);
         CommentStore.removeChangeListener(this._onChange);
+    },
+
+    getDefaultActivities: function() {
+        var activities = null;
+        var menu = this.getParams().menu;
+        switch(menu) {
+            case 'my_feed':
+                activities = ActivityStore.myFeed(this.getUser());;
+                break;
+            case 'company_feed':
+                activities = ActivityStore.getByDate(true);
+                break;
+        }
+        return activities;
     },
 
     getActivityID: function() {

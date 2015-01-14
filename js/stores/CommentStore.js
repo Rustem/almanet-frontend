@@ -29,13 +29,20 @@ var CommentStore = assign({}, EventEmitter.prototype, {
         return _.map(_comments, function(c) { return c });
     },
 
-    byActivity: function(act_id) {
+    getByActivityID: function(act_id) {
         var comments = this.getAll();
         return _.filter(comments, function(c){ return c.activity_id == act_id });
     },
 
     getCreatedComment: function(obj) {
         return obj;
+    },
+
+    setAll: function(obj) {
+        _.forEach(obj.comments, function (comment){
+            _comments[comment.id] = comment;
+        });
+        this.emitChange();
     },
 
 });
@@ -46,10 +53,7 @@ CommentStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
-            _.forEach(action.object.comments, function(comment){
-                _comments[comment.id] = comment;
-            });
-            CommentStore.emitChange();
+            CommentStore.setAll(action.object)
             break;
         case ActionTypes.CREATE_COMMENT:
             // var comment = CommentStore.getCreatedComment(action.object);
@@ -59,6 +63,9 @@ CommentStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             var comment_with_id = CommentStore.getCreatedComment(action.object);
             _comments[comment_with_id.id] = comment_with_id;
             CommentStore.emitChange();
+            break;
+        case ActionTypes.LOAD_ACTIVITY_COMMENTS_SUCCESS:
+            CommentStore.setAll(action.object);
             break;
         default:
             // do nothing
