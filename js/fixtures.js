@@ -32,7 +32,7 @@ module.exports = {
             unfollow_list: [],
             vcard: {
                 fn: 'Алтаев Санжар',
-                title: [{'data': 'CEO'}],
+                titles: [{'data': 'CEO'}],
                 emails: [{'idx': 0, 'type': 'internet', 'value': 'amangeldy@gmail.com'}],
                 tels: [{'idx': 0, 'type': 'work', 'value': '+7 777 7777777'}],
                 urls: [{'idx': 0, 'type': 'website', 'value': 'http://massive-dyn.com'}],
