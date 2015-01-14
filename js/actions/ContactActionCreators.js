@@ -117,16 +117,16 @@ module.exports = {
     }.bind(this));
   },
 
-  markAllSharesAsRead: function(shares) {
+  markSharesAsRead: function(shares) {
     var shares_ids = utils.extractIds(shares);
     dispatcher.handleViewAction({
       type: ActionTypes.MARK_SHARES_READ,
       object: shares_ids
     });
-    ContactWebAPI.markSharesAsRead(shares_ids, function(marked_share_ids){
+    ContactWebAPI.markSharesAsRead(shares_ids, function(shares){
       dispatcher.handleServerAction({
         type: ActionTypes.MARK_SHARES_READ_SUCCESS,
-        object: marked_share_ids
+        object: shares
       });
     }.bind(this), function(error){
       dispatcher.handleServerAction({

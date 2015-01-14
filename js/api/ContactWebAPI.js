@@ -15,8 +15,7 @@ module.exports = {
     },
     createContact: function(contactObject, success, failure) {
         var obj = _.extend({}, {
-            is_cold: true,
-            new_status: CREATION_STATUS.COLD}, contactObject);
+            is_cold: true}, contactObject);
         // return;
         requestPost('/api/v1/contact/')
             .send(obj)
@@ -119,19 +118,30 @@ module.exports = {
         // }, 0);
     },
     markSharesAsRead: function(share_ids, success, failure) {
-        var rawShares = JSON.parse(localStorage.getItem('shares'));
-
-        _.forEach(rawShares, function(share){
-            _.forEach(share_ids, function(share_id){
-                if(share.id === share_id){
-                    share.isNew = false;
+        var obj;
+        requestPost('/api/v1/share/read/')
+            .send(JSON.stringify({share_ids: share_ids}))
+            .end(function(res) {
+                if (res.ok) {
+                    obj = res.body;
+                    success(obj);
+                } else {
+                    failure(obj);
                 }
             });
-        });
-        localStorage.setItem('shares', JSON.stringify(rawShares)) || [];
-        setTimeout(function() {
-            success(share_ids);
-        }, 0);
+        // var rawShares = JSON.parse(localStorage.getItem('shares'));
+
+        // _.forEach(rawShares, function(share){
+        //     _.forEach(share_ids, function(share_id){
+        //         if(share.id === share_id){
+        //             share.isNew = false;
+        //         }
+        //     });
+        // });
+        // localStorage.setItem('shares', JSON.stringify(rawShares)) || [];
+        // setTimeout(function() {
+        //     success(share_ids);
+        // }, 0);
     },
 
     updateNewStatus: function(success) {
