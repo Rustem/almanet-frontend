@@ -33,7 +33,7 @@ var CommentListItem = React.createClass({
 		          </a>
 		          <div className="row-body row-body--no-trailer">
 		            <div className="text-caption text-secondary">
-		              <a href="#" className="text-secondary">{author.first_name} {author.last_name}</a> в {comment.at}
+		              <a href="#" className="text-secondary">{author.vcard.fn}</a> в {comment.at}
 		            </div>
 		            <div className="row-body-message">
 		              {comment.comment}

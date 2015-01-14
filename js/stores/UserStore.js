@@ -62,10 +62,9 @@ UserStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             UserStore.emitChange();
             break;
         case ActionTypes.EDIT_USER_SUCCESS:
-            var user_id = action.object['user_id'],
-                user = action.object['user'];
-            _users[user_id] = user;
+            _users[action.object.id] = action.object;
             UserStore.emitChange();
+            break;
         case ActionTypes.TOGGLE_FOLLOWING:
             UserStore.emitChange();
             break;

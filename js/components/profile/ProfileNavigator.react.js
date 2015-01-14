@@ -8,12 +8,21 @@ var Router = require('react-router');
 var Link = Router.Link;
 var AppContextMixin = require('../../mixins/AppContextMixin');
 var IconSvg = require('../common/IconSvg.react');
+var UserStore = require('../../stores/UserStore');
 
 var ProfileNavigator = React.createClass({
     mixins: [AppContextMixin],
 
     componentWillMount: function() {
-        this.opened = false;
+      this.opened = false;
+    },
+
+    componentDidMount: function() {
+      UserStore.addChangeListener(this._onChange);
+    },
+
+    componentWillUnmount: function() {
+      UserStore.removeChangeListener(this._onChange);
     },
 
     onToggleMenu: function(e) {
@@ -41,7 +50,7 @@ var ProfileNavigator = React.createClass({
                       <figure className="icon-userpic">
                         <img src={"img/userpics/"+user.userpic} />
                       </figure>
-                      {user.first_name}
+                      {user.vcard.fn}
                     </div>
                   </div>
                 </a>
@@ -57,6 +66,11 @@ var ProfileNavigator = React.createClass({
                 </div>
             </div>
         )
+    },
+
+    _onChange: function() {
+      this.opened = false;
+      this.forceUpdate();
     }
 });
 

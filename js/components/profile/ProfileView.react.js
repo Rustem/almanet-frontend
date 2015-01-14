@@ -15,7 +15,8 @@ var ActivityStore = require('../../stores/ActivityStore');
 var SalesCycleStore = require('../../stores/SalesCycleStore');
 var UserStore = require('../../stores/UserStore');
 var fuzzySearch = require('../../utils').fuzzySearch;
-var ContactVCard = require('../contacts/ContactVCard.react');
+var UserVCard = require('../common/VCard.react').UserVCard;
+var UserActionCreators = require('../../actions/UserActionCreators');
 
 var VIEW_MODE = require('../../constants/CRMConstants').CONTACT_VIEW_MODE;
 
@@ -24,21 +25,13 @@ var ProfileInformation = React.createClass({
         return {mode: VIEW_MODE.READ};
     },
 
-    componentDidMount: function() {
-        UserStore.addChangeListener(this.resetState);
-    },
-
-    componentWillUnmount: function() {
-        UserStore.removeChangeListener(this.resetState);
-    },
-
     getOpenedCyclesNumber: function() {
       return SalesCycleStore.getOpenedCyclesNumber(this.props.user);
     },
 
-    onUserUpdate: function(updContact) {
-        // var contact_id = this.getParams().id;
-        // ContactActionCreators.editContact(contact_id, updContact);
+    onUserUpdate: function(updUser) {
+        var user_id = this.props.user.id;
+        UserActionCreators.editUser(user_id, updUser);
     },
 
     getVCardMode: function() {
@@ -48,8 +41,7 @@ var ProfileInformation = React.createClass({
     setMode: function(mode, evt) {
         evt.preventDefault();
         if(mode == VIEW_MODE.READ)
-          // this.refs.vcard_widget.triggerSubmit();
-          console.log(mode)
+          this.refs.vcard_widget.triggerSubmit();
         this.setState({mode: mode});
         return false;
     },
@@ -81,9 +73,9 @@ var ProfileInformation = React.createClass({
                     </figure>
                   </div>
 
-                  <ContactVCard ref="vcard_widget"
+                  <UserVCard ref="vcard_widget"
                           onHandleSubmit={this.onUserUpdate}
-                          contact={user}
+                          user={user}
                           mode={this.getVCardMode()} />
 
                   <div className="contact-aside">
@@ -120,16 +112,6 @@ var ProfileFeed = React.createClass({
             activities: activities,
             search_bar: {filter_text: ''}
         }
-    },
-
-    componentDidMount: function() {
-        ActivityStore.addChangeListener(this._onChange);
-        UserStore.addChangeListener(this._onChange);
-    },
-
-    componentWillUnmount: function() {
-        ActivityStore.removeChangeListener(this._onChange);
-        UserStore.removeChangeListener(this._onChange);
     },
 
     getFilterText: function() {
@@ -176,13 +158,20 @@ var ProfileFeed = React.createClass({
         )
     },
 
-    _onChange: function() {
-        this.setState(this.getInitialState());
-    }
 });
 
 var ProfileView = React.createClass({
     mixins: [AppContextMixin],
+
+    componentDidMount: function() {
+        ActivityStore.addChangeListener(this._onChange);
+        UserStore.addChangeListener(this._onChange);
+    },
+
+    componentWillUnmount: function() {
+        ActivityStore.removeChangeListener(this._onChange);
+        UserStore.removeChangeListener(this._onChange);
+    },
 
     render: function() {
         return (
@@ -195,6 +184,10 @@ var ProfileView = React.createClass({
                 <Footer />
             </div>
         )
+    },
+
+    _onChange: function() {
+        this.forceUpdate();
     }
 });
 
