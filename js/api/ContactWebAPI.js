@@ -61,7 +61,7 @@ module.exports = {
                 }
             });
         setTimeout(function() {
-            success(edit_details);
+            // success(edit_details);
 
             // var author_id = contact.user_id,
             //     extra = {'contact_id': contact.id};
@@ -89,23 +89,34 @@ module.exports = {
         }, 0);
     },
     createShare: function(shareObject, success, failure) {
-        var timeNow = Date.now();
-        var obj = _.extend({}, {
-            id: 'share_' + timeNow,
-            at: timeNow,
-            isNew: true}, shareObject);
-        var rawShares = JSON.parse(localStorage.getItem('shares')) || [];
-        rawShares.push(obj);
-        localStorage.setItem('shares', JSON.stringify(rawShares));
-        setTimeout(function() {
-            success(obj);
-            var author_id = obj.author_id,
-                extra = {
-                    'share_id': obj.id,
-                    'contact_id': obj.contact_id,
-                    'receiver_id': obj.user_id};
-            SignalManager.send(ActionTypes.CREATE_SHARE_SUCCESS, author_id, extra);
-        }, 0);
+        requestPost('/api/v1/share/share_multiple/')
+            .send(shareObject)
+            .end(function(res) {
+                console.log(res);
+                if (res.ok) {
+                    obj = _.assign(obj, res.body);
+                    success(obj);
+                } else {
+                    failure(obj);
+                }
+            });
+        // var timeNow = Date.now();
+        // var obj = _.extend({}, {
+        //     id: 'share_' + timeNow,
+        //     at: timeNow,
+        //     isNew: true}, shareObject);
+        // var rawShares = JSON.parse(localStorage.getItem('shares')) || [];
+        // rawShares.push(obj);
+        // localStorage.setItem('shares', JSON.stringify(rawShares));
+        // setTimeout(function() {
+        //     success(obj);
+        //     var author_id = obj.author_id,
+        //         extra = {
+        //             'share_id': obj.id,
+        //             'contact_id': obj.contact_id,
+        //             'receiver_id': obj.user_id};
+        //     SignalManager.send(ActionTypes.CREATE_SHARE_SUCCESS, author_id, extra);
+        // }, 0);
     },
     markSharesAsRead: function(share_ids, success, failure) {
         var rawShares = JSON.parse(localStorage.getItem('shares'));

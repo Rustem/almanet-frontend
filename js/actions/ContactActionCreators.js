@@ -100,9 +100,21 @@ module.exports = {
   },
 
   createShares: function(shares) {
-    for(var i = 0; i<shares.length; i++) {
-      this.createShare(shares[i]);
-    }
+    dispatcher.handleViewAction({
+      type: ActionTypes.CREATE_SHARE,
+      object: shares
+    });
+    ContactWebAPI.createShare(shares, function(share){
+      dispatcher.handleServerAction({
+        type: ActionTypes.CREATE_SHARE_SUCCESS,
+        object: shares
+      });
+    }.bind(this), function(error){
+      dispatcher.handleServerAction({
+        type: ActionTypes.CREATE_SHARE_FAIL,
+        error: error
+      })
+    }.bind(this));
   },
 
   markAllSharesAsRead: function(shares) {
