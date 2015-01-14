@@ -18,6 +18,7 @@ module.exports = api = {
         var curCycle = _.find(rawSalesCycles, function(sc){ return sc.id === salesCycleObject.id });
         curCycle.status = SALES_CYCLE_STATUS.FINISHED;
         curCycle.real_value = salesCycleObject.real_value;
+        curCycle.closing_stats = salesCycleObject.closing_stats;
         localStorage.setItem('salescycles', JSON.stringify(rawSalesCycles));
 
         // simulate success callback

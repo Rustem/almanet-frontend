@@ -9,7 +9,7 @@ var IconSvg = require('../common/IconSvg.react');
 var CRMConstants = require('../../constants/CRMConstants');
 var SalesCycleCloseForm = require('../../forms/SalesCycleCloseForm.react');
 var SalesCycleStore = require('../../stores/SalesCycleStore');
-
+var ProductStore = require('../../stores/ProductStore');
 var AppContextMixin = require('../../mixins/AppContextMixin');
 
 var ESCAPE_KEY_CODE = 27;
@@ -68,6 +68,11 @@ var SalesCycleCloser = React.createClass({
         return SalesCycleStore.get(this.props.salesCycleID);
     },
 
+    getCycleProducts: function() {
+        var product_ids = this.getCurrentCycle().products;
+        return ProductStore.getByIds(product_ids);
+    },
+
     canRenderActionBar: function() {
         if([null, undefined, 'sales_0'].indexOf(this.props.salesCycleID) > -1)
           return false;
@@ -83,7 +88,8 @@ var SalesCycleCloser = React.createClass({
         if(this.canRenderActionBar()) {
           if (this.isClosing) {
             StateComponent = <SalesCycleCloseForm
-                    value={this.getCurrentCycle()}
+                    products={this.getCycleProducts()}
+                    salesCycleID={this.props.salesCycleID}
                     handleSubmit={this.handleSubmit}
                     onKeyDown={this.onFormKeyDown} />;
           } else {
