@@ -156,7 +156,7 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             SalesCycleStore.emitChange();
             break;
         case ActionTypes.ADD_PRODUCT_TO_SALES_CYCLE_SUCCESS:
-            _salescycles[action.object.id].product_ids = action.object.product_ids;
+            _salescycles[action.object.salescycle_id].product_ids = action.object.product_ids;
             SalesCycleStore.emitChange();
             break;
         default:

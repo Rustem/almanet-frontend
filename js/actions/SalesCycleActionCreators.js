@@ -59,10 +59,10 @@ module.exports = {
       type: ActionTypes.ADD_PRODUCT_TO_SALES_CYCLE,
       object: object
     });
-    SalesCycleWebAPI.add_products(object, function(salesCycle){
+    SalesCycleWebAPI.add_products(object, function(salesCycleData){
       dispatcher.handleServerAction({
         type: ActionTypes.ADD_PRODUCT_TO_SALES_CYCLE_SUCCESS,
-        object: salesCycle
+        object: salesCycleData
       });
     }.bind(this), function(error){
       dispatcher.handleServerAction({

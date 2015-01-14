@@ -38,16 +38,17 @@ module.exports = api = {
                 }
             });
     },
-    add_products: function(salesCycleObject, success, failure) {
-        var patch_object = {
-            product_ids: salesCycleObject.product_ids
+    add_products: function(salesCycleData, success, failure) {
+        var put_object = {
+            product_ids: salesCycleData.product_ids
         };
 
-        request('patch', '/api/v1/sales_cycle/'+salesCycleObject.salescycle_id+'/')
-            .send(patch_object)
+        request('put', '/api/v1/sales_cycle/'+salesCycleData.salescycle_id+'/products/')
+            .send(put_object)
             .end(function(res) {
                 if (res.ok) {
-                    success(res.body);
+                    salesCycleData.product_ids = res.body.object_ids;
+                    success(salesCycleData);
                 } else {
                     failure(res);
                 }
