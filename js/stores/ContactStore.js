@@ -104,7 +104,7 @@ var ContactStore = assign({}, EventEmitter.prototype, {
 
     inCompany: function(id) {
         var contacts = this.getAll();
-        cs = _.filter(contacts, function(c){ return c.contacts && _.indexOf(c.contacts, id) !== -1 });
+        cs = _.filter(contacts, function(c){ return c.children && _.indexOf(c.children, id) !== -1 });
         if(cs)
             return cs[0];
         return null;
