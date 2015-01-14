@@ -19,6 +19,7 @@ module.exports = api = {
                     failure(res);
                 }
             });
+
     },
     create: function(salesCycleObject, success, failure) {
         var SALES_CYCLE_STATUS = AppCommonStore.get_constants('sales_cycle').statuses_hash,

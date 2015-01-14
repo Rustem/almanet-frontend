@@ -21,7 +21,7 @@ var ColleaguesRemoveableDropDownList = React.createClass({
     mixins : [FormElementMixin],
 
     renderUser: function(u) {
-        return u.first_name + " " + u.last_name;
+        return u.vcard.fn;
     },
 
     buildProps: function() {
@@ -42,7 +42,7 @@ var ColleaguesRemoveableDropDownList = React.createClass({
                         <img src={"img/userpics/" + object.userpic} />
                     </figure>
                 </div>
-                <div className="row-body">{object.first_name + " " + object.last_name}</div>
+                <div className="row-body">{object.vcard.fn}</div>
             </div>
         )
     },

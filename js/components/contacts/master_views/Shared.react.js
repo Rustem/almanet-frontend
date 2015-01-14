@@ -108,7 +108,7 @@ var ShareListItem = React.createClass({
     },
     getAuthorName: function() {
         // TODO: should get user from store
-        return this.getUser().first_name;
+        return this.getUser().vcard.fn;
     },
     getTimeAt: function() {
         return this.props.share.date_created
@@ -147,7 +147,7 @@ var ShareListItem = React.createClass({
                     </a>
                     <div className="row-body">
                       <div className="text-caption text-secondary">
-                        <a href="#" className="text-secondary">{author.first_name}</a> в {this.getTimeAt()}
+                        <a href="#" className="text-secondary">{author.vcard.fn}</a>
                       </div>
                       <div className="row-body-message">
                         {this.getNote()}

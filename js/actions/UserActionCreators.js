@@ -38,4 +38,21 @@ module.exports = {
         });
     }.bind(this));
   },
+
+  editUser: function(user_id, object) {
+    dispatcher.handleViewAction({
+        type: ActionTypes.EDIT_USER
+    });
+    UserWebAPI.editUser(user_id, object, function(object){
+        dispatcher.handleServerAction({
+            type: ActionTypes.EDIT_USER_SUCCESS,
+            object: object
+        });
+    }.bind(this), function(error){
+        dispatcher.handleServerAction({
+            type: ActionTypes.EDIT_USER_FAIL,
+            object: error
+        });
+    }.bind(this));
+  },
 };

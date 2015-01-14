@@ -26,7 +26,7 @@ var NotificationContactCreateView = React.createClass({
             <div className="notification active">
               <div className="notification-body">
                 <div className="notification-message">
-                  Пользователь {utils.capitalize(author.first_name)} создал новый контакт - {createdContact.vcard.fn}.
+                  Пользователь {utils.capitalize(author.vcard.fn)} создал новый контакт - {createdContact.vcard.fn}.
                 </div>
               </div>
               <button onClick={this.onClick} className="notification-toggle" type="button">
@@ -60,7 +60,7 @@ var NotificationContactUpdateView = React.createClass({
             <div className="notification active">
               <div className="notification-body">
                 <div className="notification-message">
-                  Пользователь {utils.capitalize(author.first_name)} изменил контакт {createdContact.vcard.fn}.
+                  Пользователь {utils.capitalize(author.vcard.fn)} изменил контакт {createdContact.vcard.fn}.
                 </div>
               </div>
               <button onClick={this.onClick} className="notification-toggle" type="button">
@@ -94,7 +94,7 @@ var NotificationContactShareView = React.createClass({
             <div className="notification active">
               <div className="notification-body">
                 <div className="notification-message">
-                  Пользователь {utils.capitalize(author.first_name)} поделился контактом {sharedContact.vcard.fn} с пользователем {utils.capitalize(receiver.first_name)}.
+                  Пользователь {utils.capitalize(author.vcard.fn)} поделился контактом {sharedContact.vcard.fn} с пользователем {utils.capitalize(receiver.vcard.fn)}.
                 </div>
               </div>
               <button onClick={this.onClick} className="notification-toggle" type="button">
@@ -127,7 +127,7 @@ var NotificationActivityCreateView = React.createClass({
             <div className="notification active">
               <div className="notification-body">
                 <div className="notification-message">
-                  Пользователь {utils.capitalize(author.first_name)} добавил новое взаимодействие.
+                  Пользователь {utils.capitalize(author.vcard.fn)} добавил новое взаимодействие.
                 </div>
               </div>
               <button onClick={this.onClick} className="notification-toggle" type="button">

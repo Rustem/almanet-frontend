@@ -31,6 +31,7 @@ var ContactEditForm = React.createClass({
   render: function() {
     var CRDDL = null ;
     var value = this.preValue(this.props.value);
+    var fields = ['fn', 'orgs', 'tels', 'emails', 'urls', 'adrs'];
 
     if (value.vcard.tp == CONTACT_TYPES.CO) {
       CRDDL = <ContactRemoveableDropDownList
@@ -42,7 +43,7 @@ var ContactEditForm = React.createClass({
 
     return (
       <Form {...this.props} value={value} ref='contact_edit_form' onSubmit={this.onHandleSubmit}>
-        <VCardElement name="vcard" />
+        <VCardElement name="vcard" fields={fields} />
 
         {CRDDL ? CRDDL : <div className="space-verticalBorder"></div>}
         <div className="inputLine text-right">

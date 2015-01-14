@@ -44,10 +44,10 @@ var ContactCreateForm = React.createClass({
 
   render: function() {
     var value = this.preValue(default_form_state);
-
+    var fields = ['fn', 'orgs', 'tels', 'emails', 'urls', 'adrs'];
     return (
       <Form {...this.props} ref='contact_form' value={value} onSubmit={this.onHandleSubmit}>
-        <VCardElement name="vcard" />
+        <VCardElement name="vcard" fields={fields} />
         
         <VCardRow name='note' label='Заметка' />
         <div className="inputLine text-right">

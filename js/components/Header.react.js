@@ -6,6 +6,7 @@ var React = require('react');
 var Link = require('react-router').Link;
 var IconSvg = require('./common/IconSvg.react');
 var ContactComposer = require('./contacts/ContactComposer.react');
+var ProfileNavigator = require('./profile/ProfileNavigator.react');
 var AppContextMixin = require('../mixins/AppContextMixin');
 var ContactActionCreators = require('../actions/ContactActionCreators');
 var ActivityActionCreators = require('../actions/ActivityActionCreators');
@@ -91,9 +92,16 @@ var Header = React.createClass({
                 </div>
                 <div className="nav-b">
                   <ContactComposer />
+                  <div className="space-horizontal"></div>
+                  <ProfileNavigator />
                   <button type="button" onClick={this.onToggleNotificationBar} className="nav-link">
                     <IconSvg iconKey="notifications" />
                   </button>
+                </div>
+                <div className="nav-c">
+                  <a href="/" className="nav-link nav-link--logotype">
+                    <IconSvg iconKey="logotype" />
+                  </a>
                 </div>
             </div>
 
