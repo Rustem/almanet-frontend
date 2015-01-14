@@ -121,6 +121,7 @@ ActivityStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
                 _activities[act_id].new_status = newStatus;
             }
             ActivityStore.emitChange();
+            break;
         default:
             // do nothing
     }

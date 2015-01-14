@@ -121,6 +121,7 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             if (current_cycle.status == SALES_CYCLE_STATUS.NEW)
                 current_cycle.status = SALES_CYCLE_STATUS.PENDING;
             SalesCycleStore.emitChange();
+            break;
         case ActionTypes.CLOSE_SALES_CYCLE:
             var salesCycle = SalesCycleStore.getCreatedSalesCycle(action.object);
             SalesCycleStore.emitChange();
