@@ -507,7 +507,7 @@ var VCardElement = React.createClass({
         var value = this.value() || {};
         var Components = {
             'fn': <FNVCardComponent value={value.fn} onValueUpdate={this.onFnChange} />,
-            'orgs': <OrgVCardComponent value={this.orgValue(value.orgs)} onValueUpdate={this.onOrgChange} />,
+            'orgs': <OrgsVCardComponent value={this.orgValue(value.orgs)} onValueUpdate={this.onOrgChange} />,
             'title': <TitleVCardComponent value={this.titleValue(value.title)} onValueUpdate={this.onTitleChange} />,
 
             'tp': <SVGCheckbox name="tp" label="Company" className="row input-checkboxCompact" value={this.tpUnConverter(value.tp)} onValueUpdate={this.onTPChange} />,
