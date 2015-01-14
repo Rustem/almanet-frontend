@@ -6,6 +6,7 @@ var CRMConstants = require('../constants/CRMConstants');
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
 var ContactActionCreators = require('../actions/ContactActionCreators');
 var ContactStore = require('./ContactStore');
+var utils = require('../utils');
 var ActionTypes = CRMConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
@@ -122,7 +123,7 @@ ShareStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             break;
         case ActionTypes.MARK_SHARES_READ_SUCCESS:
             ShareStore.markSharesAsRead(action.object);
-            // ShareStore.emitChange();
+            ShareStore.emitChange();
             break;
         default:
             // do nothing

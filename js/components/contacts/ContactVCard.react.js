@@ -92,7 +92,7 @@ var ContactVCard = React.createClass({
               {contact.contacts.map(function(c_id){
                 var c = ContactStore.get(c_id);
                 return <div className="inputLine-div">
-                        <Link to='contact_profile' params={{id: c.id}}>{c.fn}</Link>
+                        <Link to='contact_profile' params={{id: c.id}}>{c.vcard.fn}</Link>
                        </div>
               })}
             </div>
@@ -117,7 +117,7 @@ var ContactVCard = React.createClass({
                 </div>
               </div>
                 <div className="inputLine-div">
-                  <Link to='contact_profile' params={{id: company.id}}>{company.fn}</Link>
+                  <Link to='contact_profile' params={{id: company.id}}>{company.vcard.fn}</Link>
                 </div>
             </div>
           </div>
@@ -136,23 +136,23 @@ var ContactVCard = React.createClass({
                       <div className="row-icon"></div>
                       <div className="row-body">
                         <div className="inputLine-negativeTrail text-large text-strong">
-                          {contact.fn}
+                          {contact.vcard.fn}
                       </div>
                       <div className="inputLine-negativeTrail text-secondary">
-                        {contact.companyName}
+                        {contact.vcard.org.value}
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="space-vertical space-vertical--compact"></div>
 
-                {contact.emails.map(this.renderEmail)}
+                {contact.vcard.emails.map(this.renderEmail)}
                 <div className="space-verticalBorder"></div>
 
-                {contact.phones.map(this.renderPhone)}
+                {contact.vcard.phones.map(this.renderPhone)}
                 <div className="space-verticalBorder"></div>
 
-                {contact.urls.map(this.renderUrl)}
+                {contact.vcard.urls.map(this.renderUrl)}
                 <div className="space-verticalBorder"></div>
 
                 <div className="inputLine inputLine--vcardRow">

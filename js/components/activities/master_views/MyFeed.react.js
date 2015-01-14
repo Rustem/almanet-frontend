@@ -19,6 +19,7 @@ var UserStore = require('../../../stores/UserStore');
 var FilterBar = require('../ActivityFilterBar.react');
 var Crumb = require('../../common/BreadCrumb.react').Crumb;
 var ActivityList = require('../ActivityList.react');
+var ActivityActionCreators = require('../../../actions/ActivityActionCreators');
 
 function get_activity_number(user) {
     return _.size(ActivityStore.myFeed(user));
@@ -54,7 +55,8 @@ var MyFeedLink = React.createClass({
             'row': true,
             'row-oneliner': true,
             'row--link': true,
-            'active': this.isCurrentlyActive()
+            'active': this.isCurrentlyActive(),
+            'new': ActivityStore.hasNew(this.getUser()),
         });
         return (
             <Link className={className} to='my_feed'>
@@ -82,6 +84,14 @@ var MyFeedLink = React.createClass({
 
 var MyFeedDetailView = React.createClass({
     mixins: [Router.Navigation, AppContextMixin],
+    
+    statics: {
+        willTransitionFrom: function (transition, component) {
+            var ids = _.map(component.state.activities, function(a){ return a.id } );
+            ActivityActionCreators.updateNewStatus(ids);
+        }
+    },
+
     propTypes: {
         label: React.PropTypes.string
     },

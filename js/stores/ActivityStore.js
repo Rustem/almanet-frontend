@@ -47,8 +47,17 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
         return _.sortBy(_.flatten(rv), 'at').reverse();
     },
 
-    getNew: function() {
-        return _.filter(this.getAll(), utils.isNewObject)
+    getNew: function(user) {
+        return _.filter(this.myFeed(user), utils.isNewObject)
+    },
+
+    hasNew: function(user) {
+        // default value (http://stackoverflow.com/questions/148901/is-there-a-better-way-to-do-optional-function-parameters-in-javascript)
+        user = (typeof user === "undefined") ? false : user;
+        // if user is passed so it implies that we need only activities in myFeed
+        if(user)
+            return _.any(this.myFeed(user), function(activity){ return utils.isNewObject(activity) })
+        return _.any(this.getAll(), function(activity){ return utils.isNewObject(activity) })
     },
 
     getAll: function() {

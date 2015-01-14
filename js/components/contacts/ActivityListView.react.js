@@ -474,7 +474,7 @@ var ActivityListView = React.createClass({
                         {contacts.map(function(c) {
                             return (
                                 <li>
-                                    <a href="#" className="stream-breadcrumbs">{c.fn}</a>
+                                    <a href="#" className="stream-breadcrumbs">{c.vcard.fn}</a>
                                 </li>
                             )
                         }.bind(this))}

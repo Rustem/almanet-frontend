@@ -1,6 +1,7 @@
 var _ = require('lodash');
 
 var React = require('react/addons');
+var utils = require('../../utils');
 var inputs = require('../input');
 var RemoveableDropDownListWidget = inputs.RemoveableDropDownListWidget;
 
@@ -11,14 +12,14 @@ var ContactRemoveableDropDownList = React.createClass({
     mixins : [FormElementMixin],
 
     renderContact: function(c) {
-        return c.fn;
+        return c.vcard.fn;
     },
 
     buildProps: function() {
         var object_list = ContactStore.getByDate();
         if(this.props.excludeCompanies)
             object_list = _.filter(object_list, function(ob){
-                return !ob.is_company;
+                return !utils.isCompany(ob);
             });
         return {
             object_list: object_list,
@@ -32,7 +33,7 @@ var ContactRemoveableDropDownList = React.createClass({
     renderSelectedItem: function(object){
         return (
             <div className="row-body">
-                {object.fn}
+                {object.vcard.fn}
             </div>
         )
     },

@@ -35,7 +35,7 @@ var SVGCheckbox = React.createClass({
                     </div>
                 </div>
                 <div className="row-body">
-                    {this.props.label || 'undefined'}
+                    {this.props.label || 'undefined'} {this.props.sublabel}
                 </div>
             </label>
         )

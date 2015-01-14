@@ -4,7 +4,9 @@ var Router = require('react-router');
 var AppContextMixin = require('../../mixins/AppContextMixin');
 var ActivityStore = require('../../stores/ActivityStore');
 var ContactStore = require('../../stores/ContactStore');
+var SalesCycleStore = require('../../stores/SalesCycleStore');
 var UserStore = require('../../stores/UserStore');
+var utils = require('../../utils');
 var Router = require('react-router');
 var Link = Router.Link;
 var IconSvg = require('../common/IconSvg.react');
@@ -39,6 +41,10 @@ var ActivityListItem = React.createClass({
         return ContactStore.byActivity(a);
     },
 
+    getSalesCycle: function(a) {
+        return SalesCycleStore.get(a.salescycle_id);
+    },
+
     render: function() {
         var activity = this.props.activity;
         var author = this.getAuthor(activity.author_id);
@@ -47,6 +53,7 @@ var ActivityListItem = React.createClass({
         var classNames = cx({
             'stream-item': true,
             'active': this.isItemSelected(activity.id),
+            'new': utils.isNewObject(activity),
         });
         return (
             <div className={classNames}>
@@ -77,12 +84,15 @@ var ActivityListItem = React.createClass({
                         <div className="row-body-message">
                             {activity.description}
                         </div>
+                        {contact ?
                         <ul className="stream-breadcrumbs">
-                            {contact ?
                             <li>
-                                <Link to='contact_profile' params={{id: contact.id}} className="stream-breadcrumbs">{contact.fn}</Link>
-                            </li> : null}
+                                <Link to='contact_profile' params={{id: contact.id}} className="stream-breadcrumbs">{contact.vcard.fn}</Link>
+                            </li>
+                            <li>→</li>
+                            <li><a href="#" className="stream-breadcrumbs">{this.getSalesCycle(activity).title}</a></li>
                         </ul>
+                        : null}
                       </div>
                     </div>
                   </div>

@@ -24,6 +24,7 @@ var SVGCheckbox = inputs.SVGCheckbox;
 var Input = inputs.Input;
 var Div = require('../../../forms/Fieldset.react').Div;
 var Crumb = require('../../common/BreadCrumb.react').Crumb;
+var CommonFilterBar = require('../FilterComposer.react').CommonFilterBar;
 
 function get_contacts_number() {
     return _.size(ContactStore.getLeads(true));
@@ -82,65 +83,6 @@ var LeadBaseLink = React.createClass({
 });
 
 
-var FilterBar = React.createClass({
-    propTypes: {
-        value: React.PropTypes.object,
-        onUserAction: React.PropTypes.func,
-        onHandleUserInput: React.PropTypes.func
-    },
-    render: function() {
-        return (
-            <Form onUpdate={this.onHandleUpdate} value={this.props.value} name='contact:filter_contacts_form' ref='filter_contacts_form'>
-                <Div className="page-header-filterContainer">
-                    <Div className="page-header-filter row">
-                        <Div className="row-icon">
-                            <IconSvg iconKey='search' />
-                        </Div>
-                        <Div className="row-body row-body--inverted">
-                            <Div className="row-body-secondary">
-                                <IconSvg iconKey='arrow-down' />
-                            </Div>
-                            <Div className="row-body-primary">
-                                <Input name="filter_text" type="text" className="input-filter" placeholder="Фильтр" />
-                            </Div>
-                        </Div>
-                    </Div>
-                </Div>
-
-                <Div className="page-header-controls row">
-                    <Div className="row-body-primary">
-                        <SVGCheckbox name="select_all" className="text-secondary" label="Выбрать все" />
-                        <a onClick={this.props.onUserAction.bind(null, 'share')} href="" className="row--inline text-secondary">
-                            <div className="row-icon">
-                                <IconSvg iconKey='share' />
-                            </div>
-                            <div className="row-body">
-                                Поделиться
-                            </div>
-                        </a>
-                    </Div>
-                    <div className="row-body-secondary">
-                        <a onClick={this.props.onUserAction.bind(null, 'edit')} href="" className="text-secondary">Редактировать</a>
-                    </div>
-                </Div>
-
-
-            </Form>
-        )
-    },
-    onHandleUpdate: function(value) {
-        var form = this.refs.filter_contacts_form;
-        var errors = form.validate();
-        if(!errors) {
-            this.props.onHandleUserInput(form.value());
-        } else {
-            alert(errors);
-        }
-    }
-
-});
-
-
 var ContactListItem = React.createClass({
     mixins: [AppContextMixin],
     propTypes: {
@@ -150,7 +92,7 @@ var ContactListItem = React.createClass({
     },
 
     getContactName: function() {
-        return this.props.contact.fn;
+        return this.props.contact.vcard.fn;
     },
     render: function() {
         var contact = this.props.contact;
@@ -200,12 +142,12 @@ var LeadBaseList = React.createClass({
             filter_text = this.props.filter_text;
 
         var filterContact = function(contact) {
-            var fn = contact.fn.toLowerCase();
+            var fn = contact.vcard.fn.toLowerCase();
             return fn.indexOf(filter_text.toLowerCase()) > -1;
         }.bind(this);
 
         var sortBy = function(contact) {
-            return contact.fn.toLowerCase();
+            return contact.vcard.fn.toLowerCase();
         }.bind(this);
 
         contacts = _.sortBy(contacts, sortBy);
@@ -237,8 +179,8 @@ var LeadBaseList = React.createClass({
         var prevContact = null;
         var contactListItems = this.filterContacts().map(function(contact) {
             var GroupContent = null;
-            if(prevContact == null || prevContact.fn[0] !== contact.fn[0] ) {
-                GroupContent = this.renderGroup(contact.fn[0]);
+            if(prevContact == null || prevContact.vcard.fn[0] !== contact.vcard.fn[0] ) {
+                GroupContent = this.renderGroup(contact.vcard.fn[0]);
             }
             var is_selected = this.props.selection_map[contact.id];
             prevContact = contact;
@@ -358,7 +300,7 @@ var LeadBaseDetailView = React.createClass({
         if(value.filter_text) {
             contacts = fuzzySearch(
                 this.state.contacts, value.filter_text, {
-                    'keys': ['fn', 'emails.value']});
+                    'keys': ['vcard.fn', 'vcard.emails.value']});
         } else {
             contacts = ContactStore.getLeads(true);
         }
@@ -404,7 +346,7 @@ var LeadBaseDetailView = React.createClass({
         <div className="page">
             <div className="page-header">
                 <Crumb />
-                <FilterBar
+                <CommonFilterBar
                     ref="filter_bar"
                     value={this.state.search_bar}
                     onHandleUserInput={this.onFilterBarUpdate}
@@ -459,5 +401,4 @@ var LeadBaseDetailView = React.createClass({
 
 module.exports.DetailView = LeadBaseDetailView;
 module.exports.Link = LeadBaseLink;
-module.exports.FilterBar = FilterBar;
 module.exports.LeadBaseList = LeadBaseList;

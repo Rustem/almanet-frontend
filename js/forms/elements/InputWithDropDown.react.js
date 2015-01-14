@@ -10,7 +10,8 @@ var FormElementMixin = require('../FormElementMixin.react');
 var InputWithDropDown = React.createClass({
     mixins : [FormElementMixin],
     propTypes: {
-        choices: React.PropTypes.array.isRequired
+        choices: React.PropTypes.array.isRequired,
+        placeholder: React.PropTypes.string,
     },
     getInitialState: function() {
         return {
@@ -31,7 +32,8 @@ var InputWithDropDown = React.createClass({
                     ref="target_input"
                     name={this.props.name}
                     onValueUpdate={this.onUpdate}
-                    className="input-div input-div--addComment" />
+                    className="input-div input-div--addComment"
+                    placeholder={this.props.placeholder} />
                 <DescriptionDropDownWidget choices={this.props.choices}
                                 onChange={this.onDropDownChange} />
             </div>
@@ -39,7 +41,9 @@ var InputWithDropDown = React.createClass({
     },
 
     onDropDownChange: function(choice_idx, choice) {
-        this.updateValue(this.prepValue(this.props.name, choice[0]));
+        var value = choice[0];
+        this.refs.target_input.setInnerText(value);
+        this.updateValue(this.prepValue(this.props.name, value));
     },
 });
 

@@ -15,10 +15,6 @@ var Fieldset = require('./Fieldset.react');
 
 var PLACEHOLDER = 'Напишите коммент здесь';
 
-var default_form_state = {
-  'comment': PLACEHOLDER
-};
-
 var CommentCreateForm = React.createClass({
   mixins: [FormMixin],
 
@@ -32,13 +28,13 @@ var CommentCreateForm = React.createClass({
 
   render: function() {
     var author = this.props.author;
-    var value = this.props.value || default_form_state;
+    var value = this.props.value;
     return (
       <Form {...this.props}
             ref='comment_create_form'
             onSubmit={this.onHandleSubmit}
             onKeyDown={this.props.onKeyDown}
-            value={value} >
+            value={value}>
             <Fieldset className="stream-item stream-item--comment">
               <Fieldset className="row">
                 <a href="#" className="row-icon">
@@ -49,7 +45,7 @@ var CommentCreateForm = React.createClass({
                 <Fieldset className="row-body row-body--no-trailer">
                   <ContentEditableInput ref='comment' 
                                 name='comment' 
-                                className='input-div input-div--block' />
+                                className='input-div input-div--block' placeholder="placeholder" />
                   <button type="submit" className="text-strong text-primary">Написать</button><span> • </span><button onClick={this.onCancelClick} className="text-secondary">Отмена</button>
                 </Fieldset>
               </Fieldset>

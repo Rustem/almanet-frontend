@@ -20,11 +20,6 @@ var NOTE_TEMPLATES = [
     ['Позвонил клиенту. Он согласился.', 'Пример 3: Позвонил клиенту. Он согласился.']
 ];
 
-var DEFAULT_ACTIVITY = {
-    'description': "Кратко опишите произошедшее",
-    'feedback': null,
-};
-
 // TODO: probably replace it to constants or get remotely (repeat in forms/AddActivityForm)
 var FEEDBACK_STATUSES = [
     ['waiting', 'Ожидание'],
@@ -44,9 +39,9 @@ var AddActivityMiniForm = React.createClass({
 
     render: function() {
         return (
-            <Form ref="add_activity_form" value={DEFAULT_ACTIVITY}
+            <Form ref="add_activity_form"
                                   onSubmit={this.onHandleSubmit}>
-                <InputWithDropDown name="description" choices={NOTE_TEMPLATES} />
+                <InputWithDropDown name="description" choices={NOTE_TEMPLATES} placeholder="Кратко опишите произошедшее" />
                 <Fieldset className="inputLine-submitComment">
                     <FeedbackDropDown name="feedback" choices={FEEDBACK_STATUSES} simple={true} />
                     <div className="inputLine-submitComment-submit">
