@@ -33,7 +33,6 @@ var ProfileNavigator = React.createClass({
 
     render: function() {
         var user = this.getUser();
-        console.log(user)
         var classes = cx({
             'dropdown': true,
             'dropdown--inline': true,
