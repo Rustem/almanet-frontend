@@ -13,10 +13,7 @@ module.exports = {
             success(rawContacts);
         }, 0);
     },
-    createContact: function(contactObject, success, failure) {
-        var obj = _.extend({}, {
-            is_cold: true}, contactObject);
-        // return;
+    createContact: function(obj, success, failure) {
         requestPost('/api/v1/contact/')
             .send(obj)
             .end(function(res) {
