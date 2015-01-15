@@ -52,13 +52,12 @@ module.exports = {
 
 
 function update_current_value(cycle) {
-    if(!cycle.product_ids) { return; }
+    if(!cycle.products || !cycle.closing_stats) { return; }
     var products = JSON.parse(localStorage.getItem('products'));
-    for(var i = 0; i<cycle.product_ids.length; i++) {
-        var pid = cycle.product_ids[i];
-        _.forEach(products, function(product){
-            if(product.id === pid) {
-                product.current_value += (cycle.real_value * 1. / cycle.product_ids.length)
+    for(var product_id in cycle.closing_stats){
+        _.forEach(products, function(product) {
+            if(product.id === product_id) {
+                product.current_value += cycle.closing_stats[product_id];
             }
         });
     }

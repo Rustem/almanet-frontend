@@ -26,9 +26,9 @@ var default_form_state = {
   'tp': CONTACT_TYPES.CO,
   'vcard': {
     'fn': 'Аман Куратов',
-    'org': {'value': 'ТОО "Массив Динамик"'},
+    'orgs': [{'organization_name': 'ТОО "Массив Динамик"'}],
     'emails': [{'idx': 0, 'type': 'internet', 'value': 'amangeldy@gmail.com'}],
-    'phones': [{'idx': 0, 'type': 'work', 'value': '+7 777 7777777'}],
+    'tels': [{'idx': 0, 'type': 'work', 'value': '+7 777 7777777'}],
     'urls': [{'idx': 0, 'type': 'website', 'value': 'http://massive-dyn.com'}],
     'adrs': [{'idx': 0, 'type': 'home', 'street_address': 'Zharokov, 11', 'region': 'Almaty', 'locality': 'Almaty', 'country_name': 'Kazakhstan', 'postal_code': '00012'}], 
   },
@@ -44,10 +44,10 @@ var ContactCreateForm = React.createClass({
 
   render: function() {
     var value = this.preValue(default_form_state);
-
+    var fields = ['fn', 'orgs', 'tp', 'tels', 'emails', 'urls', 'adrs'];
     return (
       <Form {...this.props} ref='contact_form' value={value} onSubmit={this.onHandleSubmit}>
-        <VCardElement name="vcard" />
+        <VCardElement name="vcard" fields={fields} />
         
         <VCardRow name='note' label='Заметка' />
         <div className="inputLine text-right">

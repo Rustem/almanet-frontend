@@ -14,10 +14,14 @@ module.exports = api = {
         }, 0);
     },
     close: function(salesCycleObject, success, failure) {
+        var data = {
+            'real_value': salesCycleObject.real_value,
+            'closing_stats': salesCycleObject.closing_stats};
         request('put', '/api/v1/sales_cycle/'+salesCycleObject.id+'/close/')
-            .send(salesCycleObject.real_value)
+            .send(data)
             .end(function(res) {
                 if (res.ok) {
+                    SignalManager.send(ActionTypes.CLOSE_SALES_CYCLE_SUCCESS, salesCycleObject);
                     success(res.body);
                 } else {
                     failure(res);

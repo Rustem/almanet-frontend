@@ -34,6 +34,12 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
         return activities.reverse();
     },
 
+    byUser: function(user) {
+        return _.filter(this.getByDate(true), function(actv){
+            return actv.author_id === user.id;
+        })
+    },
+
     bySalesCycle: function(salescycle_id) {
         return _.filter(this.getByDate(true), function(actv){
             // TODO was '===', salescycle_id in DB - int, in Routes - string
@@ -75,6 +81,11 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
         var ContactStore = require('./ContactStore');
         var activities = this.getByDate();
         return _.filter(activities, function(a){ return !(ContactStore.byActivity(a) && _.contains(user.unfollow_list, ContactStore.byActivity(a).id)) });
+    },
+
+    profileFeed: function(user) {
+        var activities = this.getByDate();
+        return _.filter(activities, function(a){ return a.author_id == user.id });
     },
 
     getMentions: function(user) {

@@ -11,7 +11,6 @@ var ContactStore = require('../../stores/ContactStore');
 var BreadcrumbStore = require('../../stores/BreadcrumbStore');
 var ContactActionCreators = require('../../actions/ContactActionCreators');
 var UserActionCreators = require('../../actions/UserActionCreators');
-var ContactVCard = require('./ContactVCard.react');
 var BreadCrumb = require('../common/BreadCrumb.react');
 var Crumb = require('../common/BreadCrumb.react').Crumb;
 var IconSvg = require('../common/IconSvg.react');

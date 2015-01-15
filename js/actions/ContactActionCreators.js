@@ -35,6 +35,24 @@ module.exports = {
     }.bind(this));
   },
 
+  importFromVC: function(form_data) {
+    dispatcher.handleViewAction({
+      type: ActionTypes.IMPORT_CONTACTS,
+      object: form_data
+    });
+    ContactWebAPI.importContacts(form_data, function(contacts){
+      dispatcher.handleServerAction({
+        type: ActionTypes.IMPORT_CONTACTS_SUCCESS,
+        object: contacts
+      });
+    }.bind(this), function(error) {
+      dispatcher.handleServerAction({
+        type: ActionTypes.IMPORT_CONTACTS_FAIL,
+        error: error
+      });
+    }.bind(this));
+  },
+
   editContact: function(contact_id, contact) {
     var details = {contact_id: contact_id, contact: contact};
     dispatcher.handleViewAction({

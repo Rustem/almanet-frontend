@@ -98,7 +98,7 @@ var CommentComposer = React.createClass({
 
     forceIsCommenting: function(recipient) {
         this.isCommenting = true;
-        this.value = {'comment': '@'+recipient.first_name+' '}
+        this.value = {'comment': '@'+recipient.vcard.fn+' '}
         this.forceUpdate();
     },
 

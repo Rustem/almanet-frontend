@@ -186,22 +186,31 @@ var CloseCycleWidget = React.createClass({
         return this.getSalesCycle().status;
     },
 
-    shouldRenderComponent: function() {
+    getCycleProducts: function() {
+        var product_ids = this.getSalesCycle().products;
+        return ProductStore.getByIds(product_ids);
+    },
+
+    shouldRenderComponent: function(products) {
         // TODO: make something with 'sales_0'
         if(_.contains([null, undefined, CRMConstants.GLOBAL_SALES_CYCLE_ID], this.props.current_cycle_id))
           return false;
+        if(!products)
+            return false;
         return !(this.getCycleStatus() == SALES_CYCLE_STATUS.FINISHED) &&
                this.get_current_action() == ACTIONS.CLOSE_SC;
     },
 
     render: function(){
-        var Component = null;
-        if(this.shouldRenderComponent())
+        var Component = null, products=this.getCycleProducts();
+        console.log('fucku', products);
+        if(this.shouldRenderComponent(products))
             Component = (
                 <div>
                     {this.props.current_cycle_id === CRMConstants.GLOBAL_SALES_CYCLE_ID && (<SalesCycleByAllSummary />) || (<SalesCycleSummary cycle_id={this.props.current_cycle_id} />)}
                     <SalesCycleCloseForm
-                    value={this.getSalesCycle()}
+                    products={products}
+                    salesCycleID={this.props.current_cycle_id}
                     handleSubmit={this.props.onCycleClosed}
                     onKeyDown={this.onFormKeyDown} />
                 </div>
@@ -461,7 +470,7 @@ var ActivityListView = React.createClass({
                   <div className="row-body">
                     <div className="row">
                       <div className="row-body-primary text-caption text-secondary">
-                        <a href="#" className="text-secondary">{author.first_name}</a> в {act.at}
+                        <a href="#" className="text-secondary">{author.vcard.fn}</a> в {act.at}
                       </div>
                       <div className="row-body-secondary">
                         <a href="#" className="link-inline">
@@ -543,8 +552,21 @@ var ActivityListView = React.createClass({
         SalesCycleActionCreators.create(salesCycleObject);
     },
 
-    onCycleClosed: function(salesCycleObject) {
-        SalesCycleActionCreators.close(salesCycleObject);
+    onCycleClosed: function(sales_cycle_closing) {
+        var close_activity = {
+            author_id: this.getUser().id,
+            description: "Цикл закрыт. Сумма: " + sales_cycle_closing.real_value,
+            feedback: 'outcome',
+            participant_ids: [this.getUser().id],
+            salescycle_id: sales_cycle_closing.id,
+            duration: null
+        }
+        ActivityActionCreators.createActivity(close_activity);
+        var sales_cycle = _.extend(
+            {},
+            SalesCycleStore.get(sales_cycle_closing.id),
+            sales_cycle_closing);
+        SalesCycleActionCreators.close(sales_cycle);
     },
 
     navigateToSalesCycle: function(cycle_id) {

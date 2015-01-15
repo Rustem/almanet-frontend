@@ -43,6 +43,11 @@ module.exports = {
             SignalManager.send(ActionTypes.CREATE_CONTACT_SUCCESS, author_id, extra);
         }, 0);
     },
+
+    importContacts: function(form_data, success, failure) {
+        console.log(form_data);
+    },
+
     editContact: function(edit_details, success, failure) {
         var rawContacts = JSON.parse(localStorage.getItem('contacts')) || [],
             contact = null;
@@ -126,7 +131,7 @@ module.exports = {
             if(contact.new_status === CREATION_STATUS.HOT){
                 contact.new_status = CREATION_STATUS.COLD;
                 updated = [contact.id, contact.new_status];
-            } 
+            }
             if(updated) updated_cids.push(updated);
         });
         localStorage.setItem('contacts', JSON.stringify(rawContacts));
