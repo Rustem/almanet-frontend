@@ -121,14 +121,14 @@ var ContactShareForm = React.createClass({
                 for(var j = 0; j<share.contacts.length; j++) {
 
                     shares.push({
-                        'author_id': this.props.current_user.id,
-                        'user_id': share.participants[i],
-                        'contact_id': share.contacts[j],
+                        'share_from': this.props.current_user.id,
+                        'share_to': share.participants[i],
+                        'contact': share.contacts[j],
                         'note': share.note});
                 }
             }
 
-            this.props.onHandleSubmit(shares);
+            this.props.onHandleSubmit({shares: shares});
         } else{
             alert(errors);
         }

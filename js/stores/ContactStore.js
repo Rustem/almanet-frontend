@@ -62,15 +62,6 @@ var ContactStore = assign({}, EventEmitter.prototype, {
                 .value();
     },
 
-    getNew: function() {
-        return _.filter(this.getAll(), utils.isNewObject)
-    },
-
-    hasNew: function() {
-        var contacts = this.getAll();
-        return _.any(contacts, function(contact){ return utils.isNewObject(contact) });
-    },
-
     getAll: function() {
         return _.map(_contacts, function(c) { return c });
     },
@@ -104,7 +95,7 @@ var ContactStore = assign({}, EventEmitter.prototype, {
 
     inCompany: function(id) {
         var contacts = this.getAll();
-        cs = _.filter(contacts, function(c){ return c.contacts && _.indexOf(c.contacts, id) !== -1 });
+        cs = _.filter(contacts, function(c){ return c.children && _.indexOf(c.children, id) !== -1 });
         if(cs)
             return cs[0];
         return null;

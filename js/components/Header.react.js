@@ -10,7 +10,7 @@ var ProfileNavigator = require('./profile/ProfileNavigator.react');
 var AppContextMixin = require('../mixins/AppContextMixin');
 var ContactActionCreators = require('../actions/ContactActionCreators');
 var ActivityActionCreators = require('../actions/ActivityActionCreators');
-var ContactStore = require('../stores/ContactStore');
+var ShareStore = require('../stores/ShareStore');
 var ActivityStore = require('../stores/ActivityStore');
 var UserStore = require('../stores/UserStore');
 var SignalManager = require('../api/utils');
@@ -54,19 +54,19 @@ var Header = React.createClass({
 
     getInitialState: function() {
       return {
-        'new_contacts': ContactStore.getNew(),
+        'new_shares': ShareStore.getNew(),
         'new_activities': ActivityStore.getNew(this.getUser())
       }
     },
 
     componentDidMount: function() {
-      ContactStore.addChangeListener(this._onChange);
+      ShareStore.addChangeListener(this._onChange);
       ActivityStore.addChangeListener(this._onChange);
       UserStore.addChangeListener(this._onChange);
     },
 
     componentWillUnmount: function() {
-      ContactStore.removeChangeListener(this._onChange);
+      ShareStore.removeChangeListener(this._onChange);
       ActivityStore.removeChangeListener(this._onChange);
       UserStore.removeChangeListener(this._onChange);
     },
@@ -81,7 +81,7 @@ var Header = React.createClass({
                 <div className="nav-a">
                   <MenuLink label="Контакты"
                             routeName='contacts'
-                            amount={_.size(this.state.new_contacts)}
+                            amount={_.size(this.state.new_shares)}
                             badgeClassName="badge-new" />
                   <MenuLink label="Взаимодействия"
                             routeName='activities'

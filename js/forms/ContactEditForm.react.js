@@ -31,12 +31,12 @@ var ContactEditForm = React.createClass({
   render: function() {
     var CRDDL = null ;
     var value = this.preValue(this.props.value);
-    var fields = ['fn', 'orgs', 'tels', 'emails', 'urls', 'adrs'];
+    var fields = ['fn', 'orgs', 'tp', 'tels', 'emails', 'urls', 'adrs'];
 
     if (value.vcard.tp == CONTACT_TYPES.CO) {
       CRDDL = <ContactRemoveableDropDownList
                     excludeCompanies={true}
-                    name="contacts"
+                    name="children"
                     title="Работники в этой компании"
                     filter_placeholder="Добавьте контакт" />;
     }

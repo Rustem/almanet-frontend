@@ -29,6 +29,14 @@ var ShareStore = assign({}, EventEmitter.prototype, {
         return _shares[id];
     },
 
+    getNew: function() {
+        return _.filter(this.getAll(), function(share){ return !share.is_read })
+    },
+
+    hasNew: function() {
+        return _.any(this.getAll(), function(share){ return !share.is_read })
+    },
+
     sortedByDate: function(reversed) {
         var reversed = reversed && true || false;
         var shares = this.getAll();
@@ -40,23 +48,8 @@ var ShareStore = assign({}, EventEmitter.prototype, {
         return _.map(_shares, function(share) {return share});
     },
 
-    getAllNew: function() {
-        var shares = this.getAll();
-        return _.filter(shares, function(share) { return share.isNew });
-    },
-
-    getAllButNew: function() {
-        var shares = this.getAll();
-        return _.filter(shares, function(share) { return !share.isNew });
-    },
-
     size: function() {
         return _.size(this.getAll());
-    },
-
-    hasNew: function() {
-        var shares = this.getAll();
-        return _.any(shares, function(share){ return share.isNew });
     },
 
     getCreatedContact: function(obj) {
@@ -85,10 +78,10 @@ var ShareStore = assign({}, EventEmitter.prototype, {
         return shares.value();
     },
 
-    markSharesAsRead: function(share_ids) {
-        for(var i = 0; i < share_ids.length; i++) {
-            var share_id = share_ids[i];
-            _shares[share_id].isNew = false;
+    markSharesAsRead: function(shares) {
+        for(var i = 0; i < shares.length; i++) {
+            var share = shares[i];
+            _shares[share.id] = share;
         }
         return true;
     }
@@ -122,7 +115,7 @@ ShareStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             ShareStore.emitChange();
             break;
         case ActionTypes.MARK_SHARES_READ_SUCCESS:
-            ShareStore.markSharesAsRead(action.object);
+            ShareStore.markSharesAsRead(action.object.objects);
             ShareStore.emitChange();
             break;
         default:
