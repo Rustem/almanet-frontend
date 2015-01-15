@@ -1,5 +1,7 @@
 var _ = require('lodash');
 var CRMConstants = require('../constants/CRMConstants');
+var requestPost = require('../utils').requestPost;
+var requestPatch = require('../utils').requestPatch;
 
 module.exports = {
     getAll: function(success, failure) {
@@ -8,21 +10,19 @@ module.exports = {
             success(rawFilters);
         }, 0);
     },
-    create: function(filterObject, success, failure) {
-        var timeNow = Date.now();
-        var obj = _.extend({}, {
-            id: 'f_' + timeNow,
-            at: timeNow}, filterObject);
-
-        // set filter to local storage
-        var rawFilters = JSON.parse(localStorage.getItem('filters')) || [];
-        rawFilters.push(obj);
-        localStorage.setItem('filters', JSON.stringify(rawFilters));
-
-        // simulate success callback
-        setTimeout(function() {
-            success(obj);
-        }, 0);
+    create: function(obj, success, failure) {
+        requestPost('/api/v1/filter/')
+            .send(obj)
+            .end(function(res) {
+                console.log(res);
+                return;
+                if (res.ok) {
+                    obj = _.assign(obj, res.body);
+                    success(obj);
+                } else {
+                    failure(obj);
+                }
+            });
     },
     edit: function(filterObject, success, failure) {
         // set filter to local storage
