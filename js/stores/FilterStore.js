@@ -28,7 +28,7 @@ var FilterStore = assign({}, EventEmitter.prototype, {
     getAll: function() {
         return _.map(_filters, function(f) { return f });
     },
-    
+
     getLatestOne: function() {
         var filters = _.sortBy(this.getAll(), function(f) {
             f.at

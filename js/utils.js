@@ -8,6 +8,7 @@ var Fuse = require('./libs/fuse');
 var CREATION_STATUS = require('./constants/CRMConstants').CREATION_STATUS;
 var cookie_tool = require('cookie');
 var superagent = require('superagent');
+
 var CONTACT_TYPES   = require('./constants/CRMConstants').CONTACT_TYPES;
 
 function capitalize(string) {

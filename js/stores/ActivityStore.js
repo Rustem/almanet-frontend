@@ -30,7 +30,7 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
 
     getByDate: function(reversed) {
         var activities = this.getAll();
-        activities = _.sortBy(activities, function(activity){ return activity.at });
+        activities = _.sortBy(activities, function(activity){ return activity.date_created });
         return activities.reverse();
     },
 
@@ -129,6 +129,7 @@ ActivityStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
                 _activities[act_id].new_status = newStatus;
             }
             ActivityStore.emitChange();
+            break;
         case ActionTypes.CLOSE_SALES_CYCLE_SUCCESS:
             activity = action.object.activity;
             _activities[activity.id] = activity;

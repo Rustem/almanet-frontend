@@ -69,7 +69,12 @@ UserStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             UserStore.emitChange();
             break;
         case ActionTypes.TOGGLE_FOLLOWING_SUCCESS:
-            _users[action.object.id] = action.object;
+            // temporary until user without vcard
+                _users[action.object.id].unfollow_list = action.object.unfollow_list;
+                console.log(_users);
+            // 
+
+            // _users[action.object.id] = action.object;
             UserStore.emitChange();
             break;
         default:

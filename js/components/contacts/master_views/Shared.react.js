@@ -111,7 +111,7 @@ var ShareListItem = React.createClass({
         return this.getUser().vcard.fn;
     },
     getTimeAt: function() {
-        return this.props.share.at
+        return this.props.share.date_created
     },
     getNote: function() {
         return this.props.share.note
@@ -124,7 +124,7 @@ var ShareListItem = React.createClass({
     },
     render: function() {
         var share = this.props.share,
-            author = this.getAuthor(share.user_id);
+            author = this.getAuthor(share.share_from);
 
         var classNames = cx({
             'stream-item': true,
@@ -133,12 +133,12 @@ var ShareListItem = React.createClass({
         return (
             <div className={classNames}>
                 <SVGCheckbox
-                    name={'share__' + share.contact_id}
+                    name={'share__' + share.contact}
                     label={this.getContactName()}
-                    sublabel={this.isFollowing(share.contact_id)}
+                    sublabel={this.isFollowing(share.contact)}
                     className='row'
                     value={this.props.is_selected}
-                    onValueUpdate={this.props.onItemToggle.bind(null, share.contact_id)} />
+                    onValueUpdate={this.props.onItemToggle.bind(null, share.contact)} />
                 <div className="stream-item-extra row">
                     <a href="#" className="row-icon">
                       <figure className="icon-userpic">
@@ -200,7 +200,7 @@ var SharesList = React.createClass({
         for(var i = 0; i<this.props.shares.length; i++) {
             var share = this.props.shares[i];
             if(share.id === share_id)
-                return share.contact_id;
+                return share.contact;
         }
         return null;
     },
@@ -231,7 +231,7 @@ var SharesList = React.createClass({
                 <ShareListItem
                     key={'share__' + share.id}
                     share={share}
-                    contact={self.findContact(share.contact_id)}
+                    contact={self.findContact(share.contact)}
                     is_selected={is_selected}
                     onItemToggle={self.onItemToggle} />
             )
@@ -262,7 +262,7 @@ var SharedContactDetailView = React.createClass({
     getInitialState: function() {
         var shares = ShareStore.sortedByDate(true);
         var contacts = [], contact_ids = [], selection_map = {};
-        contact_ids = shares.map(function(share){ return share.contact_id });
+        contact_ids = shares.map(function(share){ return share.contact });
         contacts = ContactStore.getByIds(contact_ids);
         for(var i = 0; i<contacts.length; i++) {
             selection_map[contacts[i].id] = false;
@@ -290,7 +290,7 @@ var SharedContactDetailView = React.createClass({
         for(var i = 0; i<this.state.shares.length; i++) {
             var share = this.state.shares[i];
             if(share.id === share_id)
-                return share.contact_id;
+                return share.contact;
         }
         return null;
     },

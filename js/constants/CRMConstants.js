@@ -56,6 +56,9 @@ module.exports = {
         CREATE_COMMENT: null,
         CREATE_COMMENT_SUCCESS: null,
         CREATE_COMMENT_FAIL: null,
+        LOAD_ACTIVITY_COMMENTS: null,
+        LOAD_ACTIVITY_COMMENTS_SUCCESS: null,
+        LOAD_ACTIVITY_COMMENTS_FAIL: null,
         CREATE_FILTER: null,
         CREATE_FILTER_SUCCESS: null,
         CREATE_FILTER_FAIL: null,
@@ -77,11 +80,6 @@ module.exports = {
     PRODUCT_VIEW_MODE: keyMirror({
         EDIT: null,
         READ: null
-    }),
-    SALES_CYCLE_STATUS: keyMirror({
-        NEW: null,
-        PENDING: null,
-        FINISHED: null
     }),
     GLOBAL_SALES_CYCLE_ID: null,
     GLOBAL_SALES_CYCLE: null,

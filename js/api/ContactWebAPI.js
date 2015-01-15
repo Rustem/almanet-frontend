@@ -1,5 +1,7 @@
 var _ = require('lodash');
 var SignalManager = require('./utils');
+var requestPost = require('../utils').requestPost;
+var requestPatch = require('../utils').requestPatch;
 var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
 var CREATION_STATUS = CRMConstants.CREATION_STATUS;
@@ -12,35 +14,27 @@ module.exports = {
         }, 0);
     },
     createContact: function(contactObject, success, failure) {
-        var timeNow = Date.now();
         var obj = _.extend({}, {
-            id: 'c_' + timeNow,
-            at: timeNow,
             is_cold: true,
-            new_status: CREATION_STATUS.HOT}, contactObject);
-        var share = {
-            id: 'share_' + Date.now(),
-            user_id: contactObject.author_id,
-            contact_id: obj.id,
-            at: timeNow,
-            note: obj.note,
-            isNew: true,};
-        obj.share = share;
-        // set contact to local storage
-        var rawContacts = JSON.parse(localStorage.getItem('contacts')) || [];
-        rawContacts.push(obj);
-        localStorage.setItem('contacts', JSON.stringify(rawContacts));
-
-        // set share to local storage
-        var rawShares = JSON.parse(localStorage.getItem('shares')) || [];
-        rawShares.push(share);
-        localStorage.setItem('shares', JSON.stringify(rawShares));
-        // simulate success callback
+            new_status: CREATION_STATUS.COLD}, contactObject);
+        // return;
+        requestPost('/api/v1/contact/')
+            .send(obj)
+            .end(function(res) {
+                console.log(res);
+                if (res.ok) {
+                    obj = _.assign(obj, res.body);
+                    success(obj);
+                } else {
+                    failure(obj);
+                }
+            });
+        // for notifications
         setTimeout(function() {
-            success(obj);
+            // success(obj);
             var author_id = obj.user_id,
                 extra = {'contact_id': obj.id};
-            SignalManager.send(ActionTypes.CREATE_CONTACT_SUCCESS, author_id, extra);
+            // SignalManager.send(ActionTypes.CREATE_CONTACT_SUCCESS, author_id, extra);
         }, 0);
     },
 
@@ -49,23 +43,34 @@ module.exports = {
     },
 
     editContact: function(edit_details, success, failure) {
-        var rawContacts = JSON.parse(localStorage.getItem('contacts')) || [],
-            contact = null;
-        for(var i = 0; i<rawContacts.length; i++) {
-            var cur = rawContacts[i];
-            if(cur.id === edit_details.contact_id) {
-                rawContacts[i] = edit_details.contact;
-                contact = cur;
-                break;
-            }
-        }
-        localStorage.setItem('contacts', JSON.stringify(rawContacts));
+        // var rawContacts = JSON.parse(localStorage.getItem('contacts')) || [],
+        //     contact = null;
+        // for(var i = 0; i<rawContacts.length; i++) {
+        //     var cur = rawContacts[i];
+        //     if(cur.id === edit_details.contact_id) {
+        //         rawContacts[i] = edit_details.contact;
+        //         contact = cur;
+        //         break;
+        //     }
+        // }
+        // localStorage.setItem('contacts', JSON.stringify(rawContacts));
+        requestPatch('/api/v1/contact/'+edit_details.contact_id)
+            .send(edit_details.contact)
+            .end(function(res) {
+                console.log(res);
+                if (res.ok) {
+                    edit_details.contact = _.assign(edit_details.contact, res.body);
+                    success(edit_details);
+                } else {
+                    failure(edit_details);
+                }
+            });
         setTimeout(function() {
             success(edit_details);
 
-            var author_id = contact.user_id,
-                extra = {'contact_id': contact.id};
-            SignalManager.send(ActionTypes.EDIT_CONTACT_SUCCESS, author_id, extra);
+            // var author_id = contact.user_id,
+            //     extra = {'contact_id': contact.id};
+            // SignalManager.send(ActionTypes.EDIT_CONTACT_SUCCESS, author_id, extra);
         }, 0);
     },
     setLeads: function(contact_ids, success, failure) {

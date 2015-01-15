@@ -201,6 +201,7 @@ var ContactVCard = React.createClass({
                 <div className="space-verticalBorder"></div>
 
                 {this.renderNote(contact.share)}
+
                 {RelatedContactsWidget ? <div className="space-verticalBorder"></div> : null}
                 {RelatedContactsWidget}
 

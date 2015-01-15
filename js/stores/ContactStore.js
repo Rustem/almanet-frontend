@@ -33,7 +33,7 @@ var ContactStore = assign({}, EventEmitter.prototype, {
 
     getByDate: function(reversed) {
         var contacts = this.getAll();
-        contacts = _.sortBy(contacts, function(contact){ return contact.at });
+        contacts = _.sortBy(contacts, function(contact){ return contact.date_created });
         if(reversed) {
             contacts = contacts.reverse();
         }
@@ -129,6 +129,7 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
             _.forEach(action.object.contacts, function(contact){
+                contact.new_status = CRMConstants.CREATION_STATUS.COLD;
                 _contacts[contact.id] = contact;
             });
             ContactStore.emitChange();
@@ -139,6 +140,7 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             break;
         case ActionTypes.CREATE_CONTACT_SUCCESS:
             var contact_with_id = ContactStore.getCreatedContact(action.object);
+            contact_with_id.new_status = CRMConstants.CREATION_STATUS.HOT;
             _contacts[contact_with_id.id] = contact_with_id;
             ContactStore.emitChange();
             break;

@@ -467,7 +467,7 @@ var FNVCardComponent = React.createClass({
     },
 });
 
-var OrgVCardComponent = React.createClass({
+var OrgsVCardComponent = React.createClass({
 
     render: function() {
         return (

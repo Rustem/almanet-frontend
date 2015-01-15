@@ -60,7 +60,7 @@ var CommentCreateForm = React.createClass({
     var errors = form.validate();
     if(!errors) {
       var value = form.value();
-      value.author = this.props.author.id;
+      value.author_id = this.props.author.id;
       value.activity_id = this.props.activity_id;
       this.props.onHandleSubmit(value);
     } else{

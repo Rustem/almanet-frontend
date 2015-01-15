@@ -24,13 +24,13 @@ var AppCommonStore = assign({}, EventEmitter.prototype, {
         this.removeListener(CHANGE_EVENT, callback);
     },
 
-    get: function(object_name) {
+    get_constants: function(object_name) {
         return _constants[object_name];
     },
 
     // getByDate: function(reversed) {
     //     var activities = this.getAll();
-    //     activities = _.sortBy(activities, function(activity){ return activity.at });
+    //     activities = _.sortBy(activities, function(activity){ return activity.date_created });
     //     return activities.reverse();
     // },
 
@@ -70,8 +70,16 @@ var AppCommonStore = assign({}, EventEmitter.prototype, {
         return _constants;
     },
 
+    genSalesCycleStatusesHash: function() {
+        var statuses_hash = _.reduce(_constants['sales_cycle']['statuses'], function(acc, x) { acc[x[1].toUpperCase()] = x[0]; return acc; }, {});
+        _constants['sales_cycle']['statuses_hash'] = statuses_hash
+    },
+
     setAll: function(obj) {
         _constants = obj;
+
+        this.genSalesCycleStatusesHash();
+
         this.emitChange();
     }
 

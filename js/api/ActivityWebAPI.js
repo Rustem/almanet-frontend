@@ -14,14 +14,12 @@ module.exports = {
     },
 
     create: function(activityObject, success, failure) {
-        var object = _.pick(activityObject,
-            ['author_id', 'salescycle_id', 'description', 'feedback']);
+        var object = _.omit(activityObject, 'contact_id');
         requestPost('/api/v1/activity/')
             .send(object)
             .end(function(res) {
                 if (res.ok) {
-                    object = _.assign(object, res.body);
-                    success(object);
+                    success(res.body);
                 } else {
                     failure(res);
                 }

@@ -49,7 +49,7 @@ var CommentComposer = React.createClass({
 
     propTypes: {
     	  onHandleSubmit: React.PropTypes.func,
-        activity_id: React.PropTypes.string,
+        activity_id: React.PropTypes.number,
     },
 
     componentDidMount: function() {
@@ -67,7 +67,7 @@ var CommentComposer = React.createClass({
     },
 
     render: function() {
-        var StateComponent = null;
+      var StateComponent = null;
 
 	    if (this.isCommenting) {
 	        StateComponent = <CommentCreateForm
@@ -76,10 +76,10 @@ var CommentComposer = React.createClass({
 	                author={this.getUser()}
 	                onHandleSubmit={this.props.onHandleSubmit}
 	                onCancelClick={this.onCancelClick}
-	                onKeyDown={this.onFormKeyDown} 
+	                onKeyDown={this.onFormKeyDown}
                   value={this.value} />;
 	    } else {
-	        StateComponent = <LeaveCommentButton 
+	        StateComponent = <LeaveCommentButton
                               author={this.getUser()}
 	        									  onClick={this.onFormToggle} />;
 	    }

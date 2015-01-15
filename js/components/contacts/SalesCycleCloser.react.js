@@ -6,14 +6,13 @@ var _ = require('lodash');
 var React = require('react/addons');
 var cx            = React.addons.classSet;
 var IconSvg = require('../common/IconSvg.react');
-var CRMConstants = require('../../constants/CRMConstants');
 var SalesCycleCloseForm = require('../../forms/SalesCycleCloseForm.react');
 var SalesCycleStore = require('../../stores/SalesCycleStore');
 var ProductStore = require('../../stores/ProductStore');
 var AppContextMixin = require('../../mixins/AppContextMixin');
 
+var AppCommonStore = require('../../stores/AppCommonStore');
 var ESCAPE_KEY_CODE = 27;
-var SALES_CYCLE_STATUS = CRMConstants.SALES_CYCLE_STATUS;
 
 var SalesCycleCloserButton = React.createClass({
 
@@ -74,9 +73,10 @@ var SalesCycleCloser = React.createClass({
     },
 
     canRenderActionBar: function() {
+        var SALES_CYCLE_STATUS = AppCommonStore.get_constants('sales_cycle').statuses_hash;
         if([null, undefined, 'sales_0'].indexOf(this.props.salesCycleID) > -1)
           return false;
-        return !(this.getCurrentCycle().status == SALES_CYCLE_STATUS.FINISHED);
+        return !(this.getCurrentCycle().status == SALES_CYCLE_STATUS.COMPLETED);
     },
 
     render: function() {
