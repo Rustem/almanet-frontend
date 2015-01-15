@@ -33,6 +33,7 @@ var ProfileNavigator = React.createClass({
 
     render: function() {
         var user = this.getUser();
+        console.log(user)
         var classes = cx({
             'dropdown': true,
             'dropdown--inline': true,
@@ -50,7 +51,7 @@ var ProfileNavigator = React.createClass({
                       <figure className="icon-userpic">
                         <img src={"img/userpics/"+user.userpic} />
                       </figure>
-                      {user.vcard.fn}
+                      {user.first_name}
                     </div>
                   </div>
                 </a>

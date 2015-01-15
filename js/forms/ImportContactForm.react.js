@@ -1,5 +1,6 @@
 var React = require('react/addons');
 var IconSvg = require('../components/common/IconSvg.react');
+var waitUntil = require('../libs/wait');
 
 var ImportContactForm = React.createClass({
 
@@ -14,11 +15,20 @@ var ImportContactForm = React.createClass({
 
     handleFileDialogChange: function(evt) {
         var files = evt.target.files, formData = new FormData();
-        for(var i = 0; i<files.length; i++) {
-            // todo(xepa4ep): might be validate here
-            formData.append('vcards[]', files[i], files[i].name);
-        }
-        this.props.handleChoice(formData);
+        var reader = new FileReader(), file = files[0];
+        reader.readAsText(files[0]);
+        waitUntil()
+            .interval(50)
+            .times(20)
+            .condition(function() {
+                return this.readyState === 2
+            }.bind(reader))
+            .done(function(result) {
+                if(result) {
+                    this.props.handleChoice([file.name, reader.result]);
+                }
+            }.bind(this))
+
     },
 
     render: function() {

@@ -5,17 +5,17 @@ var request = require('superagent');
 module.exports = {
     loadCurrentUser: function(success, failure) {
         var createSessionAuth = function(email, password, callback) {
-                request
-                    .post('api/v1/user_session/')
-                    .type('json')
-                    .send({email: email, password:password})
-                    .end(callback);
-            },
+            request
+                .post('api/v1/user_session/')
+                .type('json')
+                .send({email: email, password:password})
+                .end(callback);
+        },
 
-            user = {
-                email: 'b.wayne@batman.bat',
-                password: '123'
-            };
+        user = {
+            email: 'b.wayne@batman.bat',
+            password: '123'
+        };
 
         createSessionAuth(user.email, user.password, function (res) {
             if (res.ok) {
