@@ -507,11 +507,11 @@ var VCardElement = React.createClass({
         var value = this.value() || {};
         var Components = {
             'fn': <FNVCardComponent value={value.fn} onValueUpdate={this.onFnChange} />,
-            'orgs': <OrgsVCardComponent value={this.orgValue(value.orgs)} onValueUpdate={this.onOrgChange} />,
+            'orgs': <OrgVCardComponent value={this.orgValue(value.orgs)} onValueUpdate={this.onOrgChange} />,
             'titles': <TitlesVCardComponent value={this.titleValue(value.titles)} onValueUpdate={this.onTitlesChange} />,
 
             'tp': <SVGCheckbox name="tp" label="Company" className="row input-checkboxCompact" value={this.tpUnConverter(value.tp)} onValueUpdate={this.onTPChange} />,
-            
+
             'emails': (<div><EmailVCardComponent name="emails" value={value.emails} options={[['internet', 'адрес в формате интернета'], ['pref', 'предпочитаемый']]} onValueUpdate={this.onEmailsChange} />
                      <div className="space-verticalBorder"></div></div>),
 

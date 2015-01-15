@@ -44,7 +44,7 @@ var ProfileNavigator = React.createClass({
                 <a className="nav-link" onClick={this.onToggleMenu}>
                   <div className="row-body row-body--inverted">
                     <div className="row-body-secondary">
-                        <IconSvg iconKey="arrow-down" />      
+                        <IconSvg iconKey="arrow-down" />
                     </div>
                     <div className="row-body-primary">
                       <figure className="icon-userpic">
