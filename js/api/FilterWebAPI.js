@@ -14,8 +14,6 @@ module.exports = {
         requestPost('/api/v1/filter/')
             .send(obj)
             .end(function(res) {
-                console.log(res);
-                return;
                 if (res.ok) {
                     obj = _.assign(obj, res.body);
                     success(obj);
@@ -24,21 +22,16 @@ module.exports = {
                 }
             });
     },
-    edit: function(filterObject, success, failure) {
-        // set filter to local storage
-        var rawFilters = JSON.parse(localStorage.getItem('filters')) || [];
-        for(var i = 0; i<rawFilters.length; i++) {
-            var cur = rawFilters[i];
-            if(cur.id === filterObject.id) {
-                rawFilters[i] = filterObject;
-                break;
-            }
-        }
-        localStorage.setItem('filters', JSON.stringify(rawFilters));
-
-        // simulate success callback
-        setTimeout(function() {
-            success(filterObject);
-        }, 0);
+    edit: function(obj, success, failure) {
+        requestPatch('/api/v1/filter/'+obj.id)
+            .send(obj)
+            .end(function(res) {
+                if (res.ok) {
+                    obj = _.assign(obj, res.body);
+                    success(obj);
+                } else {
+                    failure(obj);
+                }
+            });
     },
 };
