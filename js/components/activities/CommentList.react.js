@@ -11,7 +11,7 @@ var CommentListItem = React.createClass({
     },
 
     getAuthor: function() {
-    	return UserStore.get(this.getComment().author);
+    	return UserStore.get(this.getComment().author_id);
     },
 
     onReply: function(e) {

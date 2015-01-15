@@ -13,6 +13,7 @@
 var dispatcher = require('../dispatcher/CRMAppDispatcher');
 var CRMConstants = require('../constants/CRMConstants');
 var CommentWebAPI = require('../api/CommentWebAPI');
+var promise = require('when').promise;
 // var ShareStore = require('../stores/ShareStore');
 var ActionTypes = CRMConstants.ActionTypes;
 
@@ -35,6 +36,30 @@ module.exports = {
       });
     }.bind(this));
   },
- 
+
+  loadByActivityID: function(activity_id) {
+    return promise(function (resolve, reject) {
+
+      dispatcher.handleViewAction({
+        type: ActionTypes.LOAD_ACTIVITY_COMMENTS
+      });
+      CommentWebAPI.getByActivityID(activity_id, function (comments){
+          dispatcher.handleServerAction({
+              type: ActionTypes.LOAD_ACTIVITY_COMMENTS_SUCCESS,
+              object: comments
+          });
+          resolve();
+
+      }.bind(this), function(error){
+          dispatcher.handleServerAction({
+              type: ActionTypes.LOAD_ACTIVITY_COMMENTS_FAIL,
+              object: comments
+          });
+          reject();
+
+      }.bind(this));
+
+    });
+  },
 
 };

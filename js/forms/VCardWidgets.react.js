@@ -511,7 +511,7 @@ var VCardElement = React.createClass({
             'titles': <TitlesVCardComponent value={this.titleValue(value.titles)} onValueUpdate={this.onTitlesChange} />,
 
             'tp': <SVGCheckbox name="tp" label="Company" className="row input-checkboxCompact" value={this.tpUnConverter(value.tp)} onValueUpdate={this.onTPChange} />,
-            
+
             'emails': (<div><EmailVCardComponent name="emails" value={value.emails} options={[['internet', 'адрес в формате интернета'], ['pref', 'предпочитаемый']]} onValueUpdate={this.onEmailsChange} />
                      <div className="space-verticalBorder"></div></div>),
 

@@ -110,6 +110,16 @@ function isCompany(object) {
   return (object.tp == CONTACT_TYPES.CO);
 }
 
+
+function buildPost(url) {
+  return superagent.post(url)
+      .set('X-CSRFToken', cookie_tool.parse(document.cookie).csrftoken);
+};
+function buildGet(url) {
+  return superagent.get(url)
+      .set('X-CSRFToken', cookie_tool.parse(document.cookie).csrftoken);
+};
+
 function request(method, url) {
   return superagent(method.toUpperCase(), url)
     .type('json')
@@ -138,5 +148,7 @@ module.exports = {
   request: request,
   requestPost: requestPost,
   requestPatch: requestPatch,
+  buildPost: buildPost,
+  buildGet: buildGet,
   isCompany: isCompany,
 };

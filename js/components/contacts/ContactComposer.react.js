@@ -6,9 +6,10 @@ var _ = require('lodash');
 var React = require('react');
 var IconSvg = require('../common/IconSvg.react');
 var ContactCreateForm = require('../../forms/ContactCreateForm.react');
-
+var ImportContactForm = require('../../forms/ImportContactForm.react');
 var ContactActionCreators = require('../../actions/ContactActionCreators');
 var AppContextMixin = require('../../mixins/AppContextMixin');
+
 
 var ESCAPE_KEY_CODE = 27;
 
@@ -43,10 +44,17 @@ var ContactComposerForm = React.createClass({
     handleSubmit: React.PropTypes.func
   },
 
+  handleVCardChoice: function(form_data) {
+      ContactActionCreators.importFromVC(form_data);
+  },
+
   render: function() {
     return (
       <div className="dropdown-menu dropdown-menu--verticalfit" style={{height: '310px'}}>
         <div className="addContact">
+          <div className="addContact-import">
+            <ImportContactForm handleChoice={this.handleVCardChoice} />
+          </div>
           <div className="addContact-edit">
               <ContactCreateForm ref={FORM_REF} onHandleSubmit={this.props.handleSubmit} />
           </div>

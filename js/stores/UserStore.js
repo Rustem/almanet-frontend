@@ -72,7 +72,7 @@ UserStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             // temporary until user without vcard
                 _users[action.object.id].unfollow_list = action.object.unfollow_list;
                 console.log(_users);
-            // 
+            //
 
             // _users[action.object.id] = action.object;
             UserStore.emitChange();

@@ -77,6 +77,19 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
         return obj;
     },
 
+    setAll: function(obj) {
+        _.forEach(obj.sales_cycles, function (sc){
+            _salescycles[sc.id] = sc;
+            _salescycles[sc.id].activities = [];
+            _salescycles[sc.id].product_ids = sc.product_ids;
+        });
+        _.forEach(obj.activities, function (actv){
+            if(actv.salescycle_id in _salescycles)
+                _salescycles[actv.salescycle_id].activities.push(actv.id);
+        });
+        this.emitChange();
+    },
+
     getClosedCyclesNumber: function(user) {
         var closing_actvs = _.filter(ActivityStore.byUser(user), function(a){ return a.feedback == "outcome" });
         var salescycles = _.map(closing_actvs, function(a){ return this.get(a.salescycle_id)}.bind(this));
@@ -98,7 +111,7 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
         _.forEach(obj.sales_cycles, function (sc){
             _salescycles[sc.id] = sc;
             _salescycles[sc.id].activities = [];
-            _salescycles[sc.id].product_ids = obj.sales_cycles_to_products_map[sc.id];
+            _salescycles[sc.id].product_ids = obj.sales_cycles_to_products_map !== undefined && obj.sales_cycles_to_products_map[sc.id] || [];
         });
         _.forEach(obj.activities, function (actv){
             if(actv.salescycle_id in _salescycles)
@@ -156,7 +169,7 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             SalesCycleStore.emitChange();
             break;
         case ActionTypes.ADD_PRODUCT_TO_SALES_CYCLE_SUCCESS:
-            _salescycles[action.object.id].product_ids = action.object.product_ids;
+            _salescycles[action.object.salescycle_id].product_ids = action.object.product_ids;
             SalesCycleStore.emitChange();
             break;
         default:

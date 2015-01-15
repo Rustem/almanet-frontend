@@ -2,6 +2,7 @@ var _ = require('lodash');
 var SignalManager = require('./utils');
 var requestPost = require('../utils').requestPost;
 var requestPatch = require('../utils').requestPatch;
+var buildPost = require('../utils').buildPost;
 var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
 var CREATION_STATUS = CRMConstants.CREATION_STATUS;
@@ -36,6 +37,21 @@ module.exports = {
             // SignalManager.send(ActionTypes.CREATE_CONTACT_SUCCESS, author_id, extra);
         }, 0);
     },
+
+    importContacts: function(vcard_file, success, failure) {
+        console.log(vcard_file)
+        requestPost('/api/v1/contact/import/')
+            .send({'uploaded_file': vcard_file[1]})
+            .end(function(error, res){
+                console.log(res)
+                if(res.ok) {
+                    success(res.body.success)
+                } else {
+                    failure();
+                }
+            });
+    },
+
     editContact: function(edit_details, success, failure) {
         // var rawContacts = JSON.parse(localStorage.getItem('contacts')) || [],
         //     contact = null;
@@ -152,7 +168,7 @@ module.exports = {
             if(contact.new_status === CREATION_STATUS.HOT){
                 contact.new_status = CREATION_STATUS.COLD;
                 updated = [contact.id, contact.new_status];
-            } 
+            }
             if(updated) updated_cids.push(updated);
         });
         localStorage.setItem('contacts', JSON.stringify(rawContacts));
