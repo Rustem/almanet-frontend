@@ -1,12 +1,11 @@
 var _ = require('lodash');
 var UserStore = require('../stores/UserStore');
-var request = require('superagent');
+var requestPost = require('../utils').requestPost;
 
 module.exports = {
     loadCurrentUser: function(success, failure) {
         var createSessionAuth = function(email, password, callback) {
-            request
-                .post('api/v1/user_session/')
+            requestPost('/api/v1/user_session/')
                 .type('json')
                 .send({email: email, password:password})
                 .end(callback);

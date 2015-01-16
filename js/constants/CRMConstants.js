@@ -102,3 +102,6 @@ module.exports = {
         crm: null
     })
 }
+
+
+module.exports.URL_PREFIX = require('superagent-prefix')('http://alma.net:8000');

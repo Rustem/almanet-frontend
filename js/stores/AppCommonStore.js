@@ -34,9 +34,9 @@ var AppCommonStore = assign({}, EventEmitter.prototype, {
 
     genSalesCycleStatusesHash: function() {
         var sc_const = {};
-        for(var i = 0; i<_constants['salescycle']['statuses'].length; i++) {
-            for(var key in _constants['salescycle']['statuses'][i]) {
-                sc_const[key.toUpperCase()] = _constants['salescycle']['statuses'][i][key]
+        for(var i = 0; i<_constants['sales_cycle']['statuses'].length; i++) {
+            for(var key in _constants['sales_cycle']['statuses'][i]) {
+                sc_const[key.toUpperCase()] = _constants['sales_cycle']['statuses'][i][key]
             }
         }
         _constants['sales_cycle'] = {'statuses_hash': sc_const};

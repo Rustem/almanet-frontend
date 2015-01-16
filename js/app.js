@@ -29,6 +29,8 @@ var relationships = require('./router').relationships;
 
 // TODO: use promises
 // load initial data to services
+
+
 AuthWebAPI.loadCurrentUser(function(user, session){
     AppWebAPI.getAll(user, function(appState, appConstants){
         CommentWebAPI.getAll(function(comments){

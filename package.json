@@ -14,6 +14,7 @@
     "moment": "~2.8",
     "when": "~3.6.4",
     "superagent": "~0.21.0",
+    "superagent-prefix": "~0.0.2",
     "cookie": "~0.1.2"
   },
   "devDependencies": {
