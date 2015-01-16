@@ -53,4 +53,22 @@ module.exports = {
     }.bind(this));
   },
 
+  delete: function(id) {
+    dispatcher.handleViewAction({
+      type: ActionTypes.DELETE_FILTER,
+      object: id
+    });
+    FilterWebAPI.delete(id, function(id){
+      dispatcher.handleServerAction({
+        type: ActionTypes.DELETE_FILTER_SUCCESS,
+        object: id
+      });
+    }.bind(this), function(error){
+      dispatcher.handleServerAction({
+        type: ActionTypes.DELETE_FILTER_FAIL,
+        error: error
+      });
+    }.bind(this));
+  },
+
 };

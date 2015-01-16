@@ -134,6 +134,10 @@ function requestPatch(url) {
   return request('PATCH', url);
 };
 
+function requestDelete(url) {
+  return request('DELETE', url);
+};
+
 module.exports = {
   extractIds: extractIds,
   mergeInto: mergeInto,
@@ -148,6 +152,7 @@ module.exports = {
   request: request,
   requestPost: requestPost,
   requestPatch: requestPatch,
+  requestDelete: requestDelete,
   buildPost: buildPost,
   buildGet: buildGet,
   isCompany: isCompany,

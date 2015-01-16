@@ -73,6 +73,11 @@ FilterStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             _filters[filter.id] = filter;
             FilterStore.emitChange();
             break;
+        case ActionTypes.DELETE_FILTER_SUCCESS:
+            var id = action.object;
+            _filters = delete _filters.id
+            FilterStore.emitChange();
+            break;
         default:
             // do nothing
     }

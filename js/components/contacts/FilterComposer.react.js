@@ -8,6 +8,7 @@ var Link = Router.Link;
 var IconSvg = require('../common/IconSvg.react');
 var Form = require('../../forms/Form.react');
 var FilterStore = require('../../stores/FilterStore');
+var FilterActionCreators = require('../../actions/FilterActionCreators');
 var AppContextMixin = require('../../mixins/AppContextMixin');
 var inputs = require('../../forms/input');
 var SVGCheckbox = inputs.SVGCheckbox;
@@ -101,19 +102,25 @@ var FilterList = React.createClass({
     },
 
     renderFilter: function(f) {
-        return <Link to="filtered" params={{id: f.id}} className="row row--oneliner row--link">
+        return <div className="row row--oneliner row--link">
                 <div className="row-icon">
-                    {this.state.isEdit ? <IconSvg iconKey="remove" /> : null }
+                    {this.state.isEdit ? 
+                        <button onClick={this.deleteFilter.bind(null, f.id)} >
+                            <IconSvg iconKey="remove" />
+                        </button>
+                    : null }
                 </div>
-                <div className="row-body">
-                  <div className="row-body-primary">
-                    {f.title}
-                  </div>
-                  <div className="row-body-secondary">
-                    xx
-                  </div>
-                </div>
-              </Link>
+                <Link to="filtered" params={{id: f.id}} >
+                    <div className="row-body">
+                      <div className="row-body-primary">
+                        {f.title}
+                      </div>
+                      <div className="row-body-secondary">
+                        xx
+                      </div>
+                    </div>
+                </Link>
+              </div>
     },
 
     renderEditButton: function() {
@@ -123,6 +130,10 @@ var FilterList = React.createClass({
                 {this.state.isEdit ? "Отменить" : "Редактировать"}
                 </button>
         return (Component)
+    },
+
+    deleteFilter: function(id) {
+        FilterActionCreators.delete(id);
     },
 
     toggleEdit: function(action) {
