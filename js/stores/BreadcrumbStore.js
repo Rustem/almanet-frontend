@@ -82,7 +82,7 @@ BreadcrumbDS.prototype.update = function(routes, params, query) {
             this.pop();
             currentDepth -= 1;
         }
-        return true
+        // return true
     }
     // has common tail with length one route less that current then simply add head to tail
     if(routes.length - currentDepth === 1) {

@@ -8,6 +8,7 @@ var Fuse = require('../../../libs/fuse');
 var React = require('react/addons');
 var cx        = React.addons.classSet;
 var Router = require('react-router');
+var RouteHandler = Router.RouteHandler;
 var capitalize = require('../../../utils').capitalize;
 var fuzzySearch = require('../../../utils').fuzzySearch;
 var IconSvg = require('../../common/IconSvg.react');
@@ -152,8 +153,10 @@ var FilteredList = React.createClass({
 var FilteredViewMixin = {
 
     getInitialState: function() {
+        this.mode = VIEW_MODES.READ;
+        filter = FilterStore.get(this.getParams().id);
         var selection_map = {},
-            contacts = this.applyFilter(this.filter),
+            contacts = this.applyFilter(filter),
             filter_cnt = FilterStore.getAll().length;
         for(var i = 0; i < contacts.length; i++) {
             selection_map[contacts[i].id] = false;
@@ -162,7 +165,7 @@ var FilteredViewMixin = {
             contacts: contacts,
             selection_map: selection_map,
             filter_cnt: filter_cnt,
-            filter: this.filter,
+            filter: filter,
             action: null
         }
     },
@@ -341,26 +344,16 @@ var FilteredViewMixin = {
 var FilteredDetailView = React.createClass({
     mixins: [AppContextMixin, Router.State, Router.Navigation, FilteredViewMixin],
 
-    componentWillMount: function() {
-        this.setInternalState();
-    },
-
     componentDidMount: function() {
-        FilterStore.addChangeListener(this.setInternalState);
+        FilterStore.addChangeListener(this._onChange);
     },
 
     componentWillUnmount: function() {
-        FilterStore.removeChangeListener(this.setInternalState);
+        FilterStore.removeChangeListener(this._onChange);
     },
 
     componentWillReceiveProps: function(newProps) {
-        this.setInternalState();
-    },
-
-    setInternalState: function() {
-        this.mode = VIEW_MODES.READ;
-        this.filter = FilterStore.get(this.getParams().id);
-        this.setState(this.getInitialState());
+        this._onChange();
     },
 
     onEditClick: function(e) {
@@ -377,12 +370,15 @@ var FilteredDetailView = React.createClass({
 
     renderRead: function() {
         return (
-            <CommonFilterBar
-                    ref="filter_bar"
-                    value={this.state.filter}
-                    onHandleUserInput={this.onFilterBarUpdate}
-                    onUserAction={this.onUserAction} 
-                    onEditClick={this.onEditClick} />
+            <div>
+                <Crumb />
+                <CommonFilterBar
+                        ref="filter_bar"
+                        value={this.state.filter}
+                        onHandleUserInput={this.onFilterBarUpdate}
+                        onUserAction={this.onUserAction} 
+                        onEditClick={this.onEditClick} />
+            </div>
         )
     },
 
