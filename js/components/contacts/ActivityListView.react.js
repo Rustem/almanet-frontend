@@ -199,17 +199,16 @@ var CloseCycleWidget = React.createClass({
     },
 
     getCycleProducts: function() {
-        var product_ids = this.getSalesCycle().products;
+        var product_ids = this.getSalesCycle().product_ids;
         return ProductStore.getByIds(product_ids);
     },
 
     shouldRenderComponent: function(products) {
-        // TODO: make something with 'sales_0'
         if(_.contains([null, undefined, CRMConstants.GLOBAL_SALES_CYCLE_ID], this.props.current_cycle_id))
           return false;
-        if(!products)
+        if(products.length <= 0)
             return false;
-        return !(this.getCycleStatus() == this.SALES_CYCLE_STATUS.FINISHED) &&
+        return !(this.getCycleStatus() == this.SALES_CYCLE_STATUS.COMPLETED) &&
                this.get_current_action() == ACTIONS.CLOSE_SC;
     },
 

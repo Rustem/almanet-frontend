@@ -11,7 +11,7 @@ module.exports = api = {
     },
     close: function(salesCycleObject, success, failure) {
         request('put', '/api/v1/sales_cycle/'+salesCycleObject.id+'/close/')
-            .send(salesCycleObject.real_value)
+            .send(salesCycleObject.closing_stats)
             .end(function(res) {
                 if (res.ok) {
                     success(res.body);
@@ -19,7 +19,6 @@ module.exports = api = {
                     failure(res);
                 }
             });
-
     },
     create: function(salesCycleObject, success, failure) {
         var SALES_CYCLE_STATUS = AppCommonStore.get_constants('sales_cycle').statuses_hash,
@@ -40,7 +39,7 @@ module.exports = api = {
     },
     add_products: function(salesCycleData, success, failure) {
         var put_object = {
-            product_ids: salesCycleData.product_ids
+            object_ids: salesCycleData.product_ids
         };
 
         request('put', '/api/v1/sales_cycle/'+salesCycleData.salescycle_id+'/products/')
