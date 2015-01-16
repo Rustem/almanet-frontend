@@ -60,7 +60,7 @@ var SharedContactLink = React.createClass({
             'row-oneliner': true,
             'row--link': true,
             'active': this.isCurrentlyActive(),
-            'new': ContactStore.hasNew()
+            'new': ShareStore.hasNew()
         });
         return (
             <Link className={className} to='shared'>
@@ -95,10 +95,6 @@ var ShareListItem = React.createClass({
         onItemToggle: React.PropTypes.func
     },
 
-    isNew: function() {
-        return this.props.share.isNew;
-    },
-
     getAuthor: function(user_id) {
         return UserStore.get(user_id);
     },
@@ -128,7 +124,7 @@ var ShareListItem = React.createClass({
 
         var classNames = cx({
             'stream-item': true,
-            'new': utils.isNewObject(this.props.contact)
+            'new': !share.is_read,
         });
         return (
             <div className={classNames}>
@@ -251,7 +247,7 @@ var SharedContactDetailView = React.createClass({
 
     statics: {
         willTransitionFrom: function (transition, component) {
-            ContactActionCreators.updateNewStatus();
+            ContactActionCreators.markSharesAsRead(ShareStore.getNew());
         }
     },
 

@@ -104,7 +104,6 @@ var ContactComposer = React.createClass({
         }
     },
     handleSubmit: function(contactObject) {
-      contactObject.author_id = this.getUser().id;
       ContactActionCreators.createContact(contactObject);
       this.setState({isOpen: false});
       return;
