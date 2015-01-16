@@ -1,9 +1,9 @@
 var _ = require('lodash');
 var request = require('../utils').request;
-var CRMConstants = require('../constants/CRMConstants');
 var SignalManager = require('./utils');
-var SALES_CYCLE_STATUS = CRMConstants.SALES_CYCLE_STATUS;
 var CRMConstants = require('../constants/CRMConstants');
+var AppCommonStore = require('../stores/AppCommonStore');
+
 var ActionTypes = CRMConstants.ActionTypes;
 
 module.exports = api = {
@@ -14,11 +14,8 @@ module.exports = api = {
         }, 0);
     },
     close: function(salesCycleObject, success, failure) {
-        var data = {
-            'real_value': salesCycleObject.real_value,
-            'closing_stats': salesCycleObject.closing_stats};
         request('put', '/api/v1/sales_cycle/'+salesCycleObject.id+'/close/')
-            .send(data)
+            .send(salesCycleObject.closing_stats)
             .end(function(res) {
                 if (res.ok) {
                     SignalManager.send(ActionTypes.CLOSE_SALES_CYCLE_SUCCESS, salesCycleObject);
@@ -29,10 +26,11 @@ module.exports = api = {
             });
     },
     create: function(salesCycleObject, success, failure) {
-        var object = _.assign(salesCycleObject, {
-            status: SALES_CYCLE_STATUS.NEW, // TODO: use AppState constants
-            product_ids: []
-        });
+        var SALES_CYCLE_STATUS = AppCommonStore.get('sales_cycle').statuses_hash;
+            object = _.assign(salesCycleObject, {
+                status: SALES_CYCLE_STATUS.NEW
+            });
+
         request('post', '/api/v1/sales_cycle/')
             .send(object)
             .end(function(res) {
@@ -44,16 +42,17 @@ module.exports = api = {
                 }
             });
     },
-    add_products: function(salesCycleObject, success, failure) {
-        var patch_object = {
-            product_ids: salesCycleObject.product_ids
-        };
+    add_products: function(salesCycleData, success, failure) {
+        var put_object = {
+                object_ids: salesCycleData.product_ids
+            };
 
-        request('patch', '/api/v1/sales_cycle/'+salesCycleObject.salescycle_id+'/')
-            .send(patch_object)
+        request('put', '/api/v1/sales_cycle/'+salesCycleData.sales_cycle_id+'/products/')
+            .send(put_object)
             .end(function(res) {
                 if (res.ok) {
-                    success(res.body);
+                    salesCycleData.product_ids = res.body.object_ids;
+                    success(salesCycleData);
                 } else {
                     failure(res);
                 }

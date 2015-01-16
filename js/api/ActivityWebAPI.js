@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var requestPost = require('../utils').requestPost;
+var request = require('../utils').request;
 var SignalManager = require('./utils');
 var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
@@ -15,7 +15,7 @@ module.exports = {
 
     create: function(activityObject, success, failure) {
         var object = _.omit(activityObject, 'contact_id');
-        requestPost('/api/v1/activity/')
+        request('POST','/api/v1/activity/')
             .send(object)
             .end(function(res) {
                 if (res.ok) {

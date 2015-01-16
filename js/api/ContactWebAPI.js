@@ -2,7 +2,6 @@ var _ = require('lodash');
 var SignalManager = require('./utils');
 var requestPost = require('../utils').requestPost;
 var requestPatch = require('../utils').requestPatch;
-var buildPost = require('../utils').buildPost;
 var waitUntil = require('../libs/wait');
 var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;

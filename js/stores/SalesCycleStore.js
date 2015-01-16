@@ -2,6 +2,7 @@ var _ = require('lodash');
 var assign = require('object-assign');
 var EventEmitter = require('events').EventEmitter;
 var CRMConstants = require('../constants/CRMConstants');
+var AppCommonStore = require('../stores/AppCommonStore');
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
 var SessionStore = require('./SessionStore');
 var ActivityStore = require('./ActivityStore');
@@ -91,8 +92,10 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
     },
 
     getClosedCyclesNumber: function(user) {
-        var closing_actvs = _.filter(ActivityStore.byUser(user), function(a){ return a.feedback == "outcome" });
-        var salescycles = _.map(closing_actvs, function(a){ return this.get(a.salescycle_id)}.bind(this));
+        var FEEDBACK_STATUSES = AppCommonStore.get('activity').feedback_hash;
+        var closing_actvs = _.filter(ActivityStore.byUser(user),
+            function(a){ return a.feedback_status == FEEDBACK_STATUSES.OUTCOME });
+        var salescycles = _.map(closing_actvs, function(a){ return this.get(a.sales_cycle_id)}.bind(this));
         var rv = {
             'number': salescycles.length,
             'money': _.reduce(salescycles, function(sum, s) {
@@ -103,8 +106,9 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
     },
 
     getOpenedCyclesNumber: function(user) {
-        var salescycles = this.getAll();
-        return (_.filter(salescycles, function(c){ return c.author_id == user.id && c.status != "FINISHED" })).length;
+        var SALES_CYCLE_STATUS = AppCommonStore.get('sales_cycle').statuses_hash;
+            salescycles = this.getAll();
+        return (_.filter(salescycles, function(c){ return c.author_id == user.id && c.status != SALES_CYCLE_STATUS.FINISHED })).length;
     },
 
     setAll: function(obj) {
@@ -114,8 +118,8 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
             _salescycles[sc.id].product_ids = obj.sales_cycles_to_products_map !== undefined && obj.sales_cycles_to_products_map[sc.id] || [];
         });
         _.forEach(obj.activities, function (actv){
-            if(actv.salescycle_id in _salescycles)
-                _salescycles[actv.salescycle_id].activities.push(actv.id);
+            if(actv.sales_cycle_id in _salescycles)
+                _salescycles[actv.sales_cycle_id].activities.push(actv.id);
         });
         this.emitChange();
     },
@@ -139,11 +143,11 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             break;
         case ActionTypes.CREATE_ACTIVITY_SUCCESS:
             CRMAppDispatcher.waitFor([ActivityStore.dispatchToken]);
-            var salescycle_id = action.object.salescycle_id,
-                current_cycle = _salescycles[salescycle_id];
+            var sales_cycle_id = action.object.sales_cycle_id,
+                current_cycle = _salescycles[sales_cycle_id];
 
             current_cycle.activities.push(action.object.id);
-            SalesCycleStore.updateStatusToPending(salescycle_id);
+            SalesCycleStore.updateStatusToPending(sales_cycle_id);
             SalesCycleStore.emitChange();
             break;
         case ActionTypes.CLOSE_SALES_CYCLE:
@@ -169,7 +173,7 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             SalesCycleStore.emitChange();
             break;
         case ActionTypes.ADD_PRODUCT_TO_SALES_CYCLE_SUCCESS:
-            _salescycles[action.object.salescycle_id].product_ids = action.object.product_ids;
+            _salescycles[action.object.sales_cycle_id].product_ids = action.object.product_ids;
             SalesCycleStore.emitChange();
             break;
         default:

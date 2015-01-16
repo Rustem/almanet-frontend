@@ -33,19 +33,22 @@ var AppCommonStore = assign({}, EventEmitter.prototype, {
     },
 
     genSalesCycleStatusesHash: function() {
-        var sc_const = {};
-        for(var i = 0; i<_constants['sales_cycle']['statuses'].length; i++) {
-            for(var key in _constants['sales_cycle']['statuses'][i]) {
-                sc_const[key.toUpperCase()] = _constants['sales_cycle']['statuses'][i][key]
-            }
-        }
-        _constants['sales_cycle'] = {'statuses_hash': sc_const};
+        var statuses_hash = _.reduce(_constants['sales_cycle']['statuses'],
+            function(acc, x) { acc[x[1].toUpperCase()] = x[0]; return acc; }, {});
+        _constants['sales_cycle'] = {'statuses_hash': statuses_hash};
+    },
+
+    genActivityFeedbackHash: function() {
+        var statuses_hash = _.reduce(_constants['activity']['feedback'],
+            function(acc, x) { var t = (x[1][0]==='C' ? x[1].split('Client is ')[1] : x[1]).toUpperCase(); acc[t] = x[0]; return acc; }, {});
+        _constants['activity']['feedback_hash'] = statuses_hash;
     },
 
     setAll: function(obj) {
         _constants = obj;
 
         this.genSalesCycleStatusesHash();
+        this.genActivityFeedbackHash();
 
         this.emitChange();
     }
@@ -58,7 +61,6 @@ AppCommonStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
-            console.log(action.object.constants, 'hi')
             AppCommonStore.setAll(action.object.constants);
             break;
         default:

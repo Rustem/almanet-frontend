@@ -26,7 +26,7 @@ var AddActivityMiniForm = React.createClass({
     propTypes: {
         onHandleSubmit: React.PropTypes.func,
         current_user: React.PropTypes.object,
-        salescycle_id: React.PropTypes.number
+        sales_cycle_id: React.PropTypes.number
     },
 
     render: function() {
@@ -35,7 +35,7 @@ var AddActivityMiniForm = React.createClass({
                                   onSubmit={this.onHandleSubmit}>
                 <InputWithDropDown name="description" choices={NOTE_TEMPLATES} placeholder="Кратко опишите произошедшее" />
                 <Fieldset className="inputLine-submitComment">
-                    <FeedbackDropDown name="feedback" simple={true} />
+                    <FeedbackDropDown name="feedback_status" simple={true} />
                     <div className="inputLine-submitComment-submit">
                       <button className="btn btn--save" type="submit">Сохранить</button>
                     </div>
@@ -51,11 +51,11 @@ var AddActivityMiniForm = React.createClass({
         if(!errors) {
             var object = {}, formValue = form.value();
             object.author_id = this.props.current_user.id;
-            object.salescycle_id = this.props.salescycle_id;
+            object.sales_cycle_id = this.props.sales_cycle_id;
             object.description = formValue.description;
-            object.feedback = formValue.feedback;
-            if(object.salescycle_id != GLOBAL_SALES_CYCLE_ID) {
-                object.contact_id = SalesCycleStore.get(this.props.salescycle_id).contact_id;
+            object.feedback_status = formValue.feedback_status;
+            if(object.sales_cycle_id != GLOBAL_SALES_CYCLE_ID) {
+                object.contact_id = SalesCycleStore.get(this.props.sales_cycle_id).contact_id;
             }
             else {
                 object.contact_id = null;

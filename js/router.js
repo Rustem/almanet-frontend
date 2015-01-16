@@ -41,7 +41,7 @@ var routes = (
         <Route name="contacts_selected" path="/contacts/:menu/selected/" handler={ContactsSelectedView} />
         <Route name="contact_profile" path="/contact/:id/detail" handler={ContactProfileView}>
             <DefaultRoute name="activities_by_default" handler={ActivityListView} />
-            <Route name="activities_by" path="actvs/by/:salescycle_id?" handler={ActivityListView} />
+            <Route name="activities_by" path="actvs/by/:sales_cycle_id?" handler={ActivityListView} />
         </Route>
         <Route name="activities" path="/activities" handler={ActivitiesView}>
             <Route name='my_feed' handler={activities_master_views.MyFeed.DetailView} />

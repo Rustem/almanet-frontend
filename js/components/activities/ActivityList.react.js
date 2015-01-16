@@ -42,7 +42,7 @@ var ActivityListItem = React.createClass({
     },
 
     getSalesCycle: function(a) {
-        return SalesCycleStore.get(a.salescycle_id);
+        return SalesCycleStore.get(a.sales_cycle_id);
     },
 
     render: function() {
@@ -59,7 +59,7 @@ var ActivityListItem = React.createClass({
             <div className={classNames}>
                 <div className="row">
                     <div className="row-icon">
-                        <IconSvg iconKey={activity.feedback} />
+                        <IconSvg iconKey={activity.feedback_status} />
                   </div>
                   <div className="row-body row-body--no-trailer">
                     <div className="row">

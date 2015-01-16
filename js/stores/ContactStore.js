@@ -102,9 +102,9 @@ var ContactStore = assign({}, EventEmitter.prototype, {
     },
 
     byActivity: function(a) {
-        if(a.salescycle_id == CRMConstants.GLOBAL_SALES_CYCLE_ID)
+        if(a.sales_cycle_id == CRMConstants.GLOBAL_SALES_CYCLE_ID)
             return null;
-        return this.get(SalesCycleStore.get(a.salescycle_id).contact_id);
+        return this.get(SalesCycleStore.get(a.sales_cycle_id).contact_id);
     },
 
     getCreatedContact: function(obj) {

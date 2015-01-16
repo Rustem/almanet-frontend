@@ -12,8 +12,6 @@ var superagent = require('superagent');
 var CONTACT_TYPES   = require('./constants/CRMConstants').CONTACT_TYPES;
 var URL_PREFIX   = require('./constants/CRMConstants').URL_PREFIX;
 
-console.log(cookie_tool.parse(document.cookie), 'cookies');
-
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -111,27 +109,19 @@ function isNewObject(object) {
 
 function isCompany(object) {
   return (object.tp == CONTACT_TYPES.CO);
-}
-
-
-function buildPost(url) {
-  return superagent.post(url)
-      .use(URL_PREFIX)
-      .set('X-CSRFToken', cookie_tool.parse(document.cookie).csrftoken)
-      .withCredentials();
-};
-function buildGet(url) {
-  return superagent.get(url)
-      .use(URL_PREFIX)
-      .set('X-CSRFToken', cookie_tool.parse(document.cookie).csrftoken)
-      .withCredentials();
 };
 
 function request(method, url) {
-  return superagent(method.toUpperCase(), url)
-    .use(URL_PREFIX)
-    .type('json')
-    .withCredentials();
+  var _request = superagent(method.toUpperCase(), url)
+      .use(URL_PREFIX)
+      .type('json')
+      .withCredentials();
+
+  if ('POST PUT PATCH'.indexOf(method.toUpperCase()) != -1)
+    return _request;
+      //.set('X-CSRFToken', cookie_tool.parse(document.cookie).csrftoken)
+  else
+    return _request;
 };
 
 function requestGet(url) {
@@ -139,13 +129,11 @@ function requestGet(url) {
 };
 
 function requestPost(url) {
-  return request('POST', url)
-    .set('X-CSRFToken', cookie_tool.parse(document.cookie).csrftoken)
+  return request('POST', url);
 };
 
 function requestPatch(url) {
-  return request('PATCH', url)
-    .set('X-CSRFToken', cookie_tool.parse(document.cookie).csrftoken);
+  return request('PATCH', url);
 };
 
 function requestDelete(url) {
@@ -168,7 +156,5 @@ module.exports = {
   requestPatch: requestPatch,
   requestGet: requestGet,
   requestDelete: requestDelete,
-  buildPost: buildPost,
-  buildGet: buildGet,
   isCompany: isCompany,
 };
