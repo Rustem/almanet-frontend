@@ -26,10 +26,10 @@ var NOTE_TEMPLATES = [
 
 var DEFAULT_ACTIVITY = {
     'description': "Краткое описание",
-    'feedback': null,
+    'feedback_status': null,
     'contacts': [],
     'participants': [],
-    'salescycle': null,
+    'sales_cycle_id': null,
     'duration': 'ЧЧ:MM'
 };
 var ESCAPE_KEY_CODE = 27;
@@ -130,22 +130,22 @@ var AddActivityForm = React.createClass({
         onCancel: React.PropTypes.func,
         contact_ids: React.PropTypes.array,
         current_user: React.PropTypes.object,
-        salescycle: React.PropTypes.number
+        sales_cycle_id: React.PropTypes.number
     },
 
     render: function() {
         var form_value = _.extend({}, DEFAULT_ACTIVITY, {
             'contacts': this.props.contact_ids,
             'participants': [this.props.current_user.id],
-            'salescycle': this.props.salescycle});
+            'sales_cycle_id': this.props.sales_cycle_id});
         return (
             <Form {...this.props} value={form_value}
                                   ref="add_event_form"
                                   onSubmit={this.onHandleSubmit}>
                 <InputWithDropDown name="description" choices={NOTE_TEMPLATES} />
-                <FeedbackDropDown name="feedback" />
+                <FeedbackDropDown name="feedback_status" />
                 <hr className="text-neutral" />
-                <SalesCycleDropDownList name="salescycle" />
+                <SalesCycleDropDownList name="sales_cycle_id" />
                 <div className="modal-inputLine text-center">
                   <button type="submit" className="text-good">СОХРАНИТЬ</button>
                   <div className="space-horizontal"></div>
@@ -157,7 +157,7 @@ var AddActivityForm = React.createClass({
             //                       ref="add_event_form"
             //                       onSubmit={this.onHandleSubmit}>
             //     <InputWithDropDown name="description" choices={NOTE_TEMPLATES} />
-            //     <FeedbackDropDown name="feedback" />
+            //     <FeedbackDropDown name="feedback_status" />
             //     <hr className="text-neutral" />
             //     <ContactRemoveableDropDownList
             //         name="contacts"
@@ -196,10 +196,10 @@ var AddActivityForm = React.createClass({
             var object = {}, formValue = form.value();
             object.author_id = this.props.current_user.id;
             object.description = formValue.description;
-            object.feedback = formValue.feedback;
-            object.salescycle_id = formValue.salescycle;
-            if(object.salescycle_id != GLOBAL_SALES_CYCLE_ID) {
-                object.contact_id = SalesCycleStore.get(formValue.salescycle).contact_id;
+            object.feedback_status = formValue.feedback_status;
+            object.sales_cycle_id = formValue.sales_cycle_id;
+            if(object.sales_cycle_id != GLOBAL_SALES_CYCLE_ID) {
+                object.contact_id = SalesCycleStore.get(formValue.sales_cycle_id).contact_id;
             }
             else {
                 object.contact_id = null;

@@ -132,7 +132,7 @@ var AddActivityWidget = React.createClass({
         var Component = null;
         if(this.shouldRenderComponent())
             Component = <AddActivityMiniForm current_user={this.props.current_user}
-                                             salescycle_id={this.props.current_cycle_id}
+                                             sales_cycle_id={this.props.current_cycle_id}
                                              onHandleSubmit={this.props.onHandleSubmit} />
         return Component
     },
@@ -170,7 +170,7 @@ var AddProductWidget = React.createClass({
     render: function(){
         var Component = null;
         if(this.shouldRenderComponent())
-            Component = <AddProductMiniForm salescycle_id={this.props.current_cycle_id}
+            Component = <AddProductMiniForm sales_cycle_id={this.props.current_cycle_id}
                                             onHandleSubmit={this.props.onHandleSubmit}
                                             product_ids={this.getSalesCycle().product_ids}/>
         return Component
@@ -468,7 +468,7 @@ var ActivityListView = React.createClass({
             <div key={'activity__' + idx} className="stream-item">
             <div className="row">
               <div className="row-icon">
-                <IconSvg iconKey={act.feedback} />
+                <IconSvg iconKey={act.feedback_status} />
               </div>
               <div className="row-body row-body--no-trailer">
                 <div className="row">
@@ -569,7 +569,7 @@ var ActivityListView = React.createClass({
 
     navigateToSalesCycle: function(cycle_id) {
         var params = this.getParams();
-        params.salescycle_id = cycle_id === CRMConstants.GLOBAL_SALES_CYCLE_ID ? null : cycle_id;
+        params.sales_cycle_id = cycle_id === CRMConstants.GLOBAL_SALES_CYCLE_ID ? null : cycle_id;
         this.transitionTo('activities_by', params);
         return false;
     },
@@ -585,7 +585,7 @@ var ActivityListView = React.createClass({
     },
 
     render: function() {
-        var cycle_id = ('salescycle_id' in this.getParams()) && parseInt(this.getParams()['salescycle_id'], 10) || CRMConstants.GLOBAL_SALES_CYCLE_ID;
+        var cycle_id = ('sales_cycle_id' in this.getParams()) && parseInt(this.getParams()['sales_cycle_id'], 10) || CRMConstants.GLOBAL_SALES_CYCLE_ID;
         if( !cycle_id ) { // monkey patching
             cycle_id = SalesCycleStore.getGlobal().id
         }

@@ -43,7 +43,7 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
     bySalesCycle: function(salescycle_id) {
         return _.filter(this.getByDate(true), function(actv){
             // TODO was '===', salescycle_id in DB - int, in Routes - string
-            return actv.salescycle_id == salescycle_id;
+            return actv.sales_cycle_id == salescycle_id;
         })
     },
 
@@ -96,10 +96,12 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
         return obj;
     },
 
+    set: function(activity) {
+        _activities[activity.id] = activity;
+    },
+
     setAll: function(obj) {
-        _.forEach(obj.activities, function (activity){
-            _activities[activity.id] = activity;
-        });
+        _.forEach(obj.activities, this.set);
         this.emitChange();
     }
 
@@ -112,14 +114,11 @@ ActivityStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
             CRMAppDispatcher.waitFor([SessionStore.dispatchToken]);
-            _.forEach(action.object.activities, function(activity){
-                _activities[activity.id] = activity;
-            });
-            ActivityStore.emitChange();
+            ActivityStore.setAll(action.object);
             break;
         case ActionTypes.CREATE_ACTIVITY_SUCCESS:
             var a = ActivityStore.getCreatedActivity(action.object);
-            _activities[a.id] = a;
+            ActivityStore.set(a);
             ActivityStore.emitChange();
             break;
         case ActionTypes.ACTIVITY_UPDATE_NEW_STATUS:
@@ -132,7 +131,7 @@ ActivityStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             break;
         case ActionTypes.CLOSE_SALES_CYCLE_SUCCESS:
             activity = action.object.activity;
-            _activities[activity.id] = activity;
+            ActivityStore.set(activity);
             ActivityStore.emitChange();
             break;
         default:

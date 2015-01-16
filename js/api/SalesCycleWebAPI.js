@@ -42,7 +42,7 @@ module.exports = api = {
             object_ids: salesCycleData.product_ids
         };
 
-        request('put', '/api/v1/sales_cycle/'+salesCycleData.salescycle_id+'/products/')
+        request('put', '/api/v1/sales_cycle/'+salesCycleData.sales_cycle_id+'/products/')
             .send(put_object)
             .end(function(res) {
                 if (res.ok) {

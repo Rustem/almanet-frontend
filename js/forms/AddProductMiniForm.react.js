@@ -10,7 +10,7 @@ var AddProductMiniForm = React.createClass({
     propTypes: {
         onHandleSubmit: React.PropTypes.func,
         onCancel: React.PropTypes.func,
-        salescycle_id: React.PropTypes.number,
+        sales_cycle_id: React.PropTypes.number,
         // product_ids: React.PropTypes.list,
     },
 
@@ -39,7 +39,7 @@ var AddProductMiniForm = React.createClass({
         var errors = form.validate();
         if(!errors) {
             var object = {}, formValue = form.value();
-            object.salescycle_id = this.props.salescycle_id;
+            object.sales_cycle_id = this.props.sales_cycle_id;
             object.product_ids = formValue.products;
           this.props.onHandleSubmit(object);
         } else{

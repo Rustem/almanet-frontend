@@ -37,7 +37,7 @@ var AppCommonStore = assign({}, EventEmitter.prototype, {
     // bySalesCycle: function(salescycle_id) {
     //     return _.filter(this.getByDate(true), function(actv){
     //         // TODO was '===', salescycle_id in DB - int, in Routes - string
-    //         return actv.salescycle_id == salescycle_id;
+    //         return actv.sales_cycle_id == salescycle_id;
     //     })
     // },
 
@@ -71,14 +71,22 @@ var AppCommonStore = assign({}, EventEmitter.prototype, {
     },
 
     genSalesCycleStatusesHash: function() {
-        var statuses_hash = _.reduce(_constants['sales_cycle']['statuses'], function(acc, x) { acc[x[1].toUpperCase()] = x[0]; return acc; }, {});
-        _constants['sales_cycle']['statuses_hash'] = statuses_hash
+        var statuses_hash = _.reduce(_constants['sales_cycle']['statuses'],
+            function(acc, x) { acc[x[1].toUpperCase()] = x[0]; return acc; }, {});
+        _constants['sales_cycle']['statuses_hash'] = statuses_hash;
+    },
+
+    genActivityFeedbackHash: function() {
+        var statuses_hash = _.reduce(_constants['activity']['feedback'],
+            function(acc, x) { var t = (x[1][0]==='C' ? x[1].split('Client is ')[1] : x[1]).toUpperCase(); acc[t] = x[0]; return acc; }, {});
+        _constants['activity']['feedback_hash'] = statuses_hash;
     },
 
     setAll: function(obj) {
         _constants = obj;
 
         this.genSalesCycleStatusesHash();
+        this.genActivityFeedbackHash();
 
         this.emitChange();
     }
