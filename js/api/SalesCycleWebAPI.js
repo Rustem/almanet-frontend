@@ -61,13 +61,13 @@ module.exports = api = {
     }
 };
 
-function update_state(author_id, extra) {
-    var rawSalesCycles = JSON.parse(localStorage.getItem('salescycles')) || [],
-        current_cycle = _.find(rawSalesCycles, function(sc){
-            return sc.id === extra.salescycle_id });
-    if(current_cycle.status == SALES_CYCLE_STATUS.NEW) {
-        current_cycle.status = SALES_CYCLE_STATUS.PENDING;
-        localStorage.setItem('salescycles', JSON.stringify(rawSalesCycles));
-    }
-}
-SignalManager.connect(ActionTypes.CREATE_ACTIVITY_SUCCESS, update_state);
+// function update_state(author_id, extra) {
+//     var rawSalesCycles = JSON.parse(localStorage.getItem('salescycles')) || [],
+//         current_cycle = _.find(rawSalesCycles, function(sc){
+//             return sc.id === extra.salescycle_id });
+//     if(current_cycle.status == SALES_CYCLE_STATUS.NEW) {
+//         current_cycle.status = SALES_CYCLE_STATUS.PENDING;
+//         localStorage.setItem('salescycles', JSON.stringify(rawSalesCycles));
+//     }
+// }
+// SignalManager.connect(ActionTypes.CREATE_ACTIVITY_SUCCESS, update_state);
