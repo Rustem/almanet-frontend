@@ -122,10 +122,10 @@ module.exports = {
       type: ActionTypes.CREATE_SHARE,
       object: shares
     });
-    ContactWebAPI.createShare(shares, function(share){
+    ContactWebAPI.createShare(shares, function(share_objects){
       dispatcher.handleServerAction({
         type: ActionTypes.CREATE_SHARE_SUCCESS,
-        object: shares
+        object: share_objects
       });
     }.bind(this), function(error){
       dispatcher.handleServerAction({

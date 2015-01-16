@@ -1,5 +1,8 @@
 var _ = require('lodash');
 var CRMConstants = require('../constants/CRMConstants');
+var requestPost = require('../utils').requestPost;
+var requestPatch = require('../utils').requestPatch;
+var requestDelete = require('../utils').requestDelete;
 
 module.exports = {
     getAll: function(success, failure) {
@@ -8,37 +11,38 @@ module.exports = {
             success(rawFilters);
         }, 0);
     },
-    create: function(filterObject, success, failure) {
-        var timeNow = Date.now();
-        var obj = _.extend({}, {
-            id: 'f_' + timeNow,
-            at: timeNow}, filterObject);
-
-        // set filter to local storage
-        var rawFilters = JSON.parse(localStorage.getItem('filters')) || [];
-        rawFilters.push(obj);
-        localStorage.setItem('filters', JSON.stringify(rawFilters));
-
-        // simulate success callback
-        setTimeout(function() {
-            success(obj);
-        }, 0);
+    create: function(obj, success, failure) {
+        requestPost('/api/v1/filter/')
+            .send(obj)
+            .end(function(res) {
+                if (res.ok) {
+                    obj = _.assign(obj, res.body);
+                    success(obj);
+                } else {
+                    failure(obj);
+                }
+            });
     },
-    edit: function(filterObject, success, failure) {
-        // set filter to local storage
-        var rawFilters = JSON.parse(localStorage.getItem('filters')) || [];
-        for(var i = 0; i<rawFilters.length; i++) {
-            var cur = rawFilters[i];
-            if(cur.id === filterObject.id) {
-                rawFilters[i] = filterObject;
-                break;
-            }
-        }
-        localStorage.setItem('filters', JSON.stringify(rawFilters));
-
-        // simulate success callback
-        setTimeout(function() {
-            success(filterObject);
-        }, 0);
+    edit: function(obj, success, failure) {
+        requestPatch('/api/v1/filter/'+obj.id)
+            .send(obj)
+            .end(function(res) {
+                if (res.ok) {
+                    obj = _.assign(obj, res.body);
+                    success(obj);
+                } else {
+                    failure(obj);
+                }
+            });
+    },
+    delete: function(id, success, failure) {
+        requestDelete('/api/v1/filter/'+id)
+            .end(function(res) {
+                if (res.ok) {
+                    success(id);
+                } else {
+                    failure(id);
+                }
+            });
     },
 };

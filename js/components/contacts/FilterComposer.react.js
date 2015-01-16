@@ -5,9 +5,12 @@ var _ = require('lodash');
 var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
+var fuzzySearch = require('../../utils').fuzzySearch;
 var IconSvg = require('../common/IconSvg.react');
 var Form = require('../../forms/Form.react');
+var ContactStore = require('../../stores/ContactStore');
 var FilterStore = require('../../stores/FilterStore');
+var FilterActionCreators = require('../../actions/FilterActionCreators');
 var AppContextMixin = require('../../mixins/AppContextMixin');
 var inputs = require('../../forms/input');
 var SVGCheckbox = inputs.SVGCheckbox;
@@ -65,7 +68,7 @@ var CommonFilterBar = React.createClass({
 });
 
 var FilterList = React.createClass({
-    mixins: [AppContextMixin, Router.State],
+    mixins: [AppContextMixin, Router.State, Router.Navigation],
 
     getInitialState: function() {
         var user_id = this.getUser().id;
@@ -100,20 +103,47 @@ var FilterList = React.createClass({
         return this.state.filters;
     },
 
+    getDefaultContacts: function(filter) {
+        switch(filter.base) {
+            case 'all':
+                return ContactStore.getByDate(true);
+            case 'recent':
+                return ContactStore.getRecent();
+            case 'cold':
+                return ContactStore.getColdByDate(true);
+            case 'lead':
+                return ContactStore.getLeads(true);
+        }
+    },
+    
+    applyFilter: function(filter) {
+        var contacts = this.getDefaultContacts(filter);
+        if(filter.filter_text)
+            contacts = fuzzySearch(contacts, filter.filter_text, {
+                'keys': ['vcard.fn', 'vcard.emails.value']});
+        return contacts;
+    },
+
     renderFilter: function(f) {
-        return <Link to="filtered" params={{id: f.id}} className="row row--oneliner row--link">
+        return <div className="row row--oneliner row--link">
                 <div className="row-icon">
-                    {this.state.isEdit ? <IconSvg iconKey="remove" /> : null }
+                    {this.state.isEdit ? 
+                        <button onClick={this.deleteFilter.bind(null, f.id)} >
+                            <IconSvg iconKey="remove" />
+                        </button>
+                    : null }
                 </div>
-                <div className="row-body">
-                  <div className="row-body-primary">
-                    {f.title}
-                  </div>
-                  <div className="row-body-secondary">
-                    xx
-                  </div>
-                </div>
-              </Link>
+                <Link to="filtered" params={{id: f.id}} >
+                    <div className="row-body">
+                      <div className="row-body-primary">
+                        {f.title}
+                      </div>
+                      <div className="row-body-secondary">
+                        {this.applyFilter(f).length}
+                      </div>
+                    </div>
+                </Link>
+              </div>
     },
 
     renderEditButton: function() {
@@ -123,6 +153,10 @@ var FilterList = React.createClass({
                 {this.state.isEdit ? "Отменить" : "Редактировать"}
                 </button>
         return (Component)
+    },
+
+    deleteFilter: function(id) {
+        FilterActionCreators.delete(id);
     },
 
     toggleEdit: function(action) {
@@ -157,8 +191,17 @@ var FilterList = React.createClass({
     },
 
     _onChange: function() {
-        this.setState(this.getInitialState());
+        this.setState(this.getInitialState(), function(prev_state) {
+            if(prev_state.filters.length > this.state.filters.length) {
+                var f = FilterStore.getLatestOne();
+                if(f == null)
+                    this.transitionTo('new_filter');
+                else
+                    this.transitionTo('filtered', {'id': f.id});
+            }
+        }.bind(this, this.state));
     },
+
 });
 
 

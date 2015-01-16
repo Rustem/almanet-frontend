@@ -6,6 +6,7 @@ var CRMConstants = require('../constants/CRMConstants');
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
 var ContactActionCreators = require('../actions/ContactActionCreators');
 var ContactStore = require('./ContactStore');
+var SessionStore = require('./SessionStore');
 var utils = require('../utils');
 var ActionTypes = CRMConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
@@ -110,8 +111,11 @@ ShareStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             ShareStore.emitChange();
             break;
         case ActionTypes.CREATE_SHARE_SUCCESS:
-            var share_object = ShareStore.getCreatedContact(action.object);
-            _shares[share_object.id] = share_object;
+            var share_objects = action.object;
+            _.forEach(share_objects.objects, function(share){
+                if(SessionStore.current_user().id == share.share_to)
+                    _shares[share.id] = share;
+            });
             ShareStore.emitChange();
             break;
         case ActionTypes.MARK_SHARES_READ_SUCCESS:

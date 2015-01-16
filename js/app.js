@@ -34,14 +34,12 @@ var relationships = require('./router').relationships;
 AuthWebAPI.loadCurrentUser(function(user, session){
     AppWebAPI.getAll(user, function(appState, appConstants){
         CommentWebAPI.getAll(function(comments){
-            FilterWebAPI.getAll(function(filters){
                 NotificationWebAPI.getAll(function(notifications){
 
                   appState = _.assign(appState, {
                     user: user,
                     session: session,
                     comments: comments,
-                    filters: filters,
                     notifications: notifications,
                     constants: appConstants,
                   });
@@ -71,7 +69,6 @@ AuthWebAPI.loadCurrentUser(function(user, session){
                       });
                   });
                 });
-            });
         });
     });
 });

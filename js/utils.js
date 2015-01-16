@@ -138,7 +138,7 @@ function requestGet(url) {
 
 function requestPost(url) {
   return request('POST', url)
-    .set('X-CSRFToken', cookie_tool.parse(document.cookie).csrftoken);
+    .set('X-CSRFToken', cookie_tool.parse(document.cookie).csrftoken)
 };
 
 function requestPatch(url) {
@@ -146,6 +146,9 @@ function requestPatch(url) {
     .set('X-CSRFToken', cookie_tool.parse(document.cookie).csrftoken);
 };
 
+function requestDelete(url) {
+  return request('DELETE', url);
+};
 
 module.exports = {
   extractIds: extractIds,
@@ -162,6 +165,7 @@ module.exports = {
   requestPost: requestPost,
   requestPatch: requestPatch,
   requestGet: requestGet,
+  requestDelete: requestDelete,
   buildPost: buildPost,
   buildGet: buildGet,
   isCompany: isCompany,

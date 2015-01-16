@@ -102,7 +102,9 @@ module.exports.NODES = {
     'product_detail': new Node('product_detail', function(params) {
         return this.get(params.product_id).name;
     }.bind(require('./stores/ProductStore'))),
-    'profile': new Node('profile', 'Sanzhar'),
+    'profile': new Node('profile', function(params) {
+        return this.current_user().vcard.fn;
+    }.bind(require('./stores/SessionStore'))),
 }
 
 module.exports.relationships = {

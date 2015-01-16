@@ -31,9 +31,9 @@ var FilterStore = assign({}, EventEmitter.prototype, {
 
     getLatestOne: function() {
         var filters = _.sortBy(this.getAll(), function(f) {
-            f.at
+            f.date_created
         }.bind(this)).reverse();
-        if(!filters) return null;
+        if(filters.length == 0) return null;
         return filters[0];
     },
 
@@ -64,13 +64,18 @@ FilterStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             FilterStore.emitChange();
             break;
         case ActionTypes.CREATE_FILTER_SUCCESS:
-            var filter_with_id = FilterStore.getCreatedFilter(action.object);
+            var filter_with_id = action.object;
             _filters[filter_with_id.id] = filter_with_id;
             FilterStore.emitChange();
             break;
         case ActionTypes.EDIT_FILTER_SUCCESS:
             var filter = action.object;
             _filters[filter.id] = filter;
+            FilterStore.emitChange();
+            break;
+        case ActionTypes.DELETE_FILTER_SUCCESS:
+            var id = action.object;
+            delete _filters[id];
             FilterStore.emitChange();
             break;
         default:

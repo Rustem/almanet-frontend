@@ -1,6 +1,7 @@
 /**
  * @jsx React.DOM
  */
+var _ = require('lodash');
 var moment = require('moment');
 var React = require('react');
 var AppContextMixin = require('../../mixins/AppContextMixin');
@@ -68,14 +69,14 @@ var NotificationContactShareView = React.createClass({
     render: function() {
         var n = this.props.n,
             author = UserStore.get(n.author_id),
-            receiver = UserStore.get(n.extra.receiver_id),
-            sharedContact = ContactStore.get(n.extra.contact_id);
+            receivers = _.uniq(_.map(n.extra.receivers, function(id){ return UserStore.get(id)})),
+            sharedContacts = _.uniq(_.map(n.extra.contacts, function(id){ return ContactStore.get(id)}));
         return (
             <div key={n.id} className="notificationCenter-item">
                 <div className="notificationCenter-item-meta">
                     {moment(n.at).fromNow()}
                 </div>
-                Пользователь {utils.capitalize(author.vcard.fn)} поделился контактом {sharedContact.vcard.fn} с пользователем {utils.capitalize(receiver.vcard.fn)}.
+                Пользователь {utils.capitalize(author.vcard.fn)} поделился {sharedContacts.length == 1 ? 'контактом' : 'контактами'} {_.map(sharedContacts, function(c) { return c.vcard.fn}).join(', ')} с {receivers.length == 1 ? 'пользователем' : 'пользователями'} {_.map(receivers, function(r) { return r.vcard.fn}).join(', ')}.
             </div>
         );
     }
