@@ -12,6 +12,8 @@ var superagent = require('superagent');
 var CONTACT_TYPES   = require('./constants/CRMConstants').CONTACT_TYPES;
 var URL_PREFIX   = require('./constants/CRMConstants').URL_PREFIX;
 
+console.log(cookie_tool.parse(document.cookie), 'cookies');
+
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }

@@ -24,7 +24,7 @@ module.exports = {
             });
     },
     edit: function(obj, success, failure) {
-        requestPatch('/api/v1/filter/'+obj.id)
+        requestPatch('/api/v1/filter/'+obj.id + '/')
             .send(obj)
             .end(function(res) {
                 if (res.ok) {
@@ -36,7 +36,7 @@ module.exports = {
             });
     },
     delete: function(id, success, failure) {
-        requestDelete('/api/v1/filter/'+id)
+        requestDelete('/api/v1/filter/'+id + '/')
             .end(function(res) {
                 if (res.ok) {
                     success(id);

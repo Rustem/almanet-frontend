@@ -24,7 +24,7 @@ module.exports = {
                 if (res.ok) {
                     obj = _.assign(obj, res.body);
                     success(obj);
-                    
+
                     // for notifications
                     var author_id = obj.user_id,
                         extra = {'contact_id': obj.id};
@@ -49,7 +49,7 @@ module.exports = {
     },
 
     editContact: function(edit_details, success, failure) {
-        requestPatch('/api/v1/contact/'+edit_details.contact_id)
+        requestPatch('/api/v1/contact/'+edit_details.contact_id + '/')
             .send(edit_details.contact)
             .end(function(res) {
                 console.log(res);
