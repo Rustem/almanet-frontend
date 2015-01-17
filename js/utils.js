@@ -118,8 +118,8 @@ function request(method, url) {
       .withCredentials();
 
   if ('POST PUT PATCH'.indexOf(method.toUpperCase()) != -1)
-    return _request;
-      //.set('X-CSRFToken', cookie_tool.parse(document.cookie).csrftoken)
+    return _request
+      .set('X-CSRFToken', cookie_tool.parse(document.cookie).csrftoken);
   else
     return _request;
 };

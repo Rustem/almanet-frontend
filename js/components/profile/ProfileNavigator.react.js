@@ -9,6 +9,7 @@ var Link = Router.Link;
 var AppContextMixin = require('../../mixins/AppContextMixin');
 var IconSvg = require('../common/IconSvg.react');
 var UserStore = require('../../stores/UserStore');
+var LOGOUT_URL = require('../../constants/CRMConstants').LOGOUT_URL;
 
 var ProfileNavigator = React.createClass({
     mixins: [AppContextMixin],
@@ -60,7 +61,7 @@ var ProfileNavigator = React.createClass({
                       <li><Link className="dropdown-menu-link" to="profile">Профиль</Link></li>
                       <li><a href="#" className="dropdown-menu-link">Настройки</a></li>
                       <li><a href="#" className="dropdown-menu-link">Администрирование</a></li>
-                      <li><a href="#" className="dropdown-menu-link">Выход</a></li>
+                      <li><a href={LOGOUT_URL} className="dropdown-menu-link">Выход</a></li>
                     </ul>
                   </div>
                 </div>

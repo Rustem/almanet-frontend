@@ -31,14 +31,13 @@ var relationships = require('./router').relationships;
 // load initial data to services
 
 
-AuthWebAPI.loadCurrentUser(function(user, session){
+AuthWebAPI.loadCurrentUser(function(user){
     AppWebAPI.getAll(user, function(appState, appConstants){
         CommentWebAPI.getAll(function(comments){
                 NotificationWebAPI.getAll(function(notifications){
-
+                  console.log(user, "hithatsload");
                   appState = _.assign(appState, {
                     user: user,
-                    session: session,
                     comments: comments,
                     notifications: notifications,
                     constants: appConstants,

@@ -108,3 +108,4 @@ module.exports = {
 
 
 module.exports.URL_PREFIX = require('superagent-prefix')('http://alma.net:8000');
+module.exports.LOGOUT_URL = 'http://alma.net:8000' + '/auth/logout/'
