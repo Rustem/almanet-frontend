@@ -3,6 +3,8 @@ var div = React.DOM.div;
 var IconSvg = require('./IconSvg.react');
 var cx        = React.addons.classSet;
 
+ESCAPE_KEY = 27;
+
 var ModalPortal = React.createClass({
 
     componentDidMount: function() {
@@ -35,7 +37,7 @@ var ModalPortal = React.createClass({
     },
 
     focusContent: function() {
-        this.refs.content.getDOMNode().focus();
+        this.refs.cancel_btn.getDOMNode().focus();
     },
 
     open: function() {
@@ -56,6 +58,13 @@ var ModalPortal = React.createClass({
         }
     },
 
+    handleKeyUp: function(evt) {
+        if(evt.which === ESCAPE_KEY) {
+            this.props.isOpen = false;
+            this.forceUpdate();
+        }
+    },
+
     ownerHandlesClose: function() {
         return this.props.onRequestClose;
     },
@@ -73,12 +82,12 @@ var ModalPortal = React.createClass({
             <div>
                 <div className={className}>
                     <div className="modal-header">
-                        <button onClick={this.handleCloseClick} type="button" className="modal-close">
+                        <button ref="cancel_btn" onClick={this.handleCloseClick} type="button" className="modal-close">
                             <IconSvg iconKey='close' />
                         </button>
                         {this.props.modalTitle}
                     </div>
-                    <div ref='content' className="modal-body">
+                    <div ref='content' className="modal-body" onKeyDown={this.handleKeyUp}>
                         {this.props.children}
                     </div>
                 </div>
