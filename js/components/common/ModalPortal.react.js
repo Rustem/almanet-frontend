@@ -82,7 +82,7 @@ var ModalPortal = React.createClass({
             <div>
                 <div className={className}>
                     <div className="modal-header">
-                        <button ref="cancel_btn" onClick={this.handleCloseClick} type="button" className="modal-close">
+                        <button ref="cancel_btn" onKeyDown={this.handleKeyUp} onClick={this.handleCloseClick} type="button" className="modal-close">
                             <IconSvg iconKey='close' />
                         </button>
                         {this.props.modalTitle}
