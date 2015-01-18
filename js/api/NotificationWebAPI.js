@@ -77,10 +77,16 @@ SignalManager.connect(ActionTypes.CREATE_CONTACT_SUCCESS,
                       new_notification.bind(null, NotifTypes.CONTACT_CREATE));
 
 SignalManager.connect(ActionTypes.EDIT_CONTACT_SUCCESS,
-                      new_notification.bind(null, NotifTypes.CONTACT_UPDATE));
+                      new_notification.bind(null, NotifTypes.CONTACT_EDIT));
 
 SignalManager.connect(ActionTypes.CREATE_SHARE_SUCCESS,
                       new_notification.bind(null, NotifTypes.CONTACT_SHARE));
 
 SignalManager.connect(ActionTypes.CREATE_ACTIVITY_SUCCESS,
                       new_notification.bind(null, NotifTypes.ACTIVITY_CREATE));
+
+SignalManager.connect(ActionTypes.CREATE_FILTER_SUCCESS,
+                      new_notification.bind(null, NotifTypes.FILTER_CREATE));
+
+SignalManager.connect(ActionTypes.EDIT_FILTER_SUCCESS,
+                      new_notification.bind(null, NotifTypes.FILTER_EDIT));

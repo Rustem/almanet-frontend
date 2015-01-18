@@ -145,13 +145,80 @@ var NotificationActivityCreateView = React.createClass({
 });
 
 
+var NotificationFilterCreateView = React.createClass({
+
+    mixins : [AppContextMixin],
+
+    propTypes: {
+        n: React.PropTypes.object
+    },
+
+    render: function() {
+        var n = this.props.n,
+            author = UserStore.get(n.author_id),
+            filter_title = n.extra.filter_title;
+
+        return (
+            <div className="notification active">
+              <div className="notification-body">
+                <div className="notification-message">
+                  Пользователь {utils.capitalize(author.vcard.fn)} добавил новый фильтр - {filter_title}.
+                </div>
+              </div>
+              <button onClick={this.onClick} className="notification-toggle" type="button">
+                Закрыть
+              </button>
+            </div>
+        );
+    },
+
+    onClick: function(evt) {
+        this.props.onClose(this.props.n.id);
+    }
+
+});
+
+var NotificationFilterEditView = React.createClass({
+
+    mixins : [AppContextMixin],
+
+    propTypes: {
+        n: React.PropTypes.object
+    },
+
+    render: function() {
+        var n = this.props.n,
+            author = UserStore.get(n.author_id),
+            filter_title = n.extra.filter_title;
+
+        return (
+            <div className="notification active">
+              <div className="notification-body">
+                <div className="notification-message">
+                  Пользователь {utils.capitalize(author.vcard.fn)} изменил фильтр - {filter_title}.
+                </div>
+              </div>
+              <button onClick={this.onClick} className="notification-toggle" type="button">
+                Закрыть
+              </button>
+            </div>
+        );
+    },
+
+    onClick: function(evt) {
+        this.props.onClose(this.props.n.id);
+    }
+
+});
+
+
 function renderNotification(n) {
     var tp = n.type, TPL = null;
     switch(tp) {
         case NotifTypes.CONTACT_CREATE:
             TPL = NotificationContactCreateView;
             break;
-        case NotifTypes.CONTACT_UPDATE:
+        case NotifTypes.CONTACT_EDIT:
             TPL = NotificationContactUpdateView;
             break;
         case NotifTypes.CONTACT_SHARE:
@@ -159,6 +226,13 @@ function renderNotification(n) {
             break;
         case NotifTypes.ACTIVITY_CREATE:
             TPL = NotificationActivityCreateView;
+            break;
+        case NotifTypes.FILTER_CREATE:
+            TPL = NotificationFilterCreateView;
+            break;
+        case NotifTypes.FILTER_EDIT:
+            TPL = NotificationFilterEditView;
+            break;
         default:
             // do nothing
             true;
