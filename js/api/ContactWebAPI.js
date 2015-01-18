@@ -18,7 +18,6 @@ module.exports = {
         requestPost('/api/v1/contact/')
             .send(obj)
             .end(function(res) {
-                console.log(res);
                 if (res.ok) {
                     obj = _.assign(obj, res.body);
                     success(obj);
@@ -37,9 +36,10 @@ module.exports = {
         requestPost('/api/v1/contact/import/')
             .send({'uploaded_file': vcard_file[1]})
             .end(function(error, res){
-                console.log(res)
                 if(res.ok) {
                     success(res.body.success)
+                    var extra = {'count': res.body.success.length};
+                    SignalManager.send(ActionTypes.IMPORT_CONTACTS_SUCCESS, null, extra);
                 } else {
                     failure();
                 }
@@ -50,7 +50,6 @@ module.exports = {
         requestPatch('/api/v1/contact/'+edit_details.contact_id + '/')
             .send(edit_details.contact)
             .end(function(res) {
-                console.log(res);
                 if (res.ok) {
                     edit_details.contact = _.assign(edit_details.contact, res.body);
                     success(edit_details);

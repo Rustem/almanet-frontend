@@ -90,3 +90,6 @@ SignalManager.connect(ActionTypes.CREATE_FILTER_SUCCESS,
 
 SignalManager.connect(ActionTypes.EDIT_FILTER_SUCCESS,
                       new_notification.bind(null, NotifTypes.FILTER_EDIT));
+
+SignalManager.connect(ActionTypes.IMPORT_CONTACTS_SUCCESS,
+                      new_notification.bind(null, NotifTypes.IMPORT_CONTACTS));

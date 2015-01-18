@@ -41,11 +41,8 @@ var ContactComposerButton = React.createClass({
 FORM_REF = 'contact_form'
 var ContactComposerForm = React.createClass({
   propTypes: {
-    handleSubmit: React.PropTypes.func
-  },
-
-  handleVCardChoice: function(form_data) {
-      ContactActionCreators.importFromVC(form_data);
+    handleSubmit: React.PropTypes.func,
+    handleImportSubmit: React.PropTypes.func,
   },
 
   render: function() {
@@ -53,7 +50,7 @@ var ContactComposerForm = React.createClass({
       <div className="dropdown-menu dropdown-menu--verticalfit" style={{height: '310px'}}>
         <div className="addContact">
           <div className="addContact-import">
-            <ImportContactForm handleChoice={this.handleVCardChoice} />
+            <ImportContactForm handleChoice={this.props.handleImportSubmit} />
           </div>
           <div className="addContact-edit">
               <ContactCreateForm ref={FORM_REF} onHandleSubmit={this.props.handleSubmit} />
@@ -95,6 +92,7 @@ var ContactComposer = React.createClass({
             <ContactComposerForm
               ref="contactForm"
               handleSubmit={this.handleSubmit}
+              handleImportSubmit={this.handleImportSubmit}
               isOpen={this.isOpen()} />
           </div>
         );
@@ -105,6 +103,11 @@ var ContactComposer = React.createClass({
     },
     handleSubmit: function(contactObject) {
       ContactActionCreators.createContact(contactObject);
+      this.setState({isOpen: false});
+      return;
+    },
+    handleImportSubmit: function(form_data) {
+      ContactActionCreators.importFromVC(form_data);
       this.setState({isOpen: false});
       return;
     },

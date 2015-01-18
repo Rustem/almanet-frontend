@@ -97,6 +97,7 @@ module.exports = {
         ACTIVITY_CREATE: null,
         FILTER_CREATE: null,
         FILTER_EDIT: null,
+        IMPORT_CONTACTS: null,
     }),
     SERVICES: keyMirror({
         crm: null

@@ -211,6 +211,38 @@ var NotificationFilterEditView = React.createClass({
 
 });
 
+var NotificationImportContactsView = React.createClass({
+
+    mixins : [AppContextMixin],
+
+    propTypes: {
+        n: React.PropTypes.object
+    },
+
+    render: function() {
+        var n = this.props.n,
+            count = n.extra.count;
+
+        return (
+            <div className="notification active">
+              <div className="notification-body">
+                <div className="notification-message">
+                  Успешно импортировано: {count} {count == 1 ? 'контакт' : 'контактов'}.
+                </div>
+              </div>
+              <button onClick={this.onClick} className="notification-toggle" type="button">
+                Закрыть
+              </button>
+            </div>
+        );
+    },
+
+    onClick: function(evt) {
+        this.props.onClose(this.props.n.id);
+    }
+
+});
+
 
 function renderNotification(n) {
     var tp = n.type, TPL = null;
@@ -232,6 +264,9 @@ function renderNotification(n) {
             break;
         case NotifTypes.FILTER_EDIT:
             TPL = NotificationFilterEditView;
+            break;
+        case NotifTypes.IMPORT_CONTACTS:
+            TPL = NotificationImportContactsView;
             break;
         default:
             // do nothing
