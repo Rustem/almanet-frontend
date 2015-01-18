@@ -5,7 +5,6 @@ var requestPatch = require('../utils').requestPatch;
 var waitUntil = require('../libs/wait');
 var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
-var CREATION_STATUS = CRMConstants.CREATION_STATUS;
 
 module.exports = {
     getAllContacts: function(success, failure) {
@@ -133,19 +132,4 @@ module.exports = {
         // }, 0);
     },
 
-    updateNewStatus: function(success) {
-        var rawContacts = JSON.parse(localStorage.getItem('contacts')) || [],
-            updated_cids = [];
-        _.forEach(rawContacts, function(contact){
-            var updated = null;
-            if(contact.new_status === CREATION_STATUS.HOT){
-                contact.new_status = CREATION_STATUS.COLD;
-                updated = [contact.id, contact.new_status];
-            }
-            if(updated) updated_cids.push(updated);
-        });
-        localStorage.setItem('contacts', JSON.stringify(rawContacts));
-
-        setTimeout(function() { success(updated_cids) }, 0);
-    }
 };

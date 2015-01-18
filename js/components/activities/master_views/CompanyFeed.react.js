@@ -86,7 +86,10 @@ var CompanyFeedDetailView = React.createClass({
 
     statics: {
         willTransitionFrom: function (transition, component) {
-            ActivityActionCreators.updateNewStatus();
+            var ids = _.map(_.filter(component.state.activities, function(a) {
+                    return !a.has_read;
+                }), function(a){ return a.id });
+            ActivityActionCreators.mark_as_read(ids);
         }
     },
 

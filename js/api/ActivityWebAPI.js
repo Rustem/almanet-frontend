@@ -3,7 +3,6 @@ var request = require('../utils').request;
 var SignalManager = require('./utils');
 var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
-var CREATION_STATUS = CRMConstants.CREATION_STATUS;
 
 module.exports = {
     getAll: function(success, failure) {
@@ -28,26 +27,15 @@ module.exports = {
                 }
             });
     },
-    updateNewStatus: function(ids, success) {
-        var rawActivities = JSON.parse(localStorage.getItem('activities')) || [],
-            updated_cids = [];
-        _.forEach(rawActivities, function(activity){
-            var updated = null;
-            if(ids) {
-                if(_.contains(ids, activity.id) && activity.new_status === CREATION_STATUS.HOT){
-                    activity.new_status = CREATION_STATUS.COLD;
-                    updated = [activity.id, activity.new_status];
+    mark_as_read: function(ids, success) {
+        request('POST','/api/v1/activity/read/')
+            .send(ids)
+            .end(function(res) {
+                if (res.ok) {
+                    success(ids);
+                } else {
+                    failure(res);
                 }
-            } else {
-                if(activity.new_status === CREATION_STATUS.HOT){
-                    activity.new_status = CREATION_STATUS.COLD;
-                    updated = [activity.id, activity.new_status];
-                }
-            }
-            if(updated) updated_cids.push(updated);
-        });
-        localStorage.setItem('activities', JSON.stringify(rawActivities));
-
-        setTimeout(function() { success(updated_cids) }, 0);
+            });
     }
 };
