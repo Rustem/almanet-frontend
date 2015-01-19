@@ -65,14 +65,12 @@ ProductStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             break;
         case ActionTypes.CREATE_PRODUCT_SUCCESS:
             var product = action.object;
-            if(!product.id) break;
             _products[product.id] = product;
             ProductStore.emitChange();
             break;
         case ActionTypes.EDIT_PRODUCT_SUCCESS:
-            var product_id = action.object['product_id'],
-                product = action.object['product'];
-            _products[product_id] = product;
+            var product = action.object;
+            _products[product.id] = product;
             ProductStore.emitChange();
             break;
         case ActionTypes.CLOSE_SALES_CYCLE:
@@ -80,6 +78,8 @@ ProductStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             var value = action.object.real_value,
                 prod_ids = action.object.product_ids;
             if(!prod_ids) break;
+
+            // TODO
 
             for(var i=0; i<prod_ids.length; i++) {
                 _products[prod_ids[i]].current_value += (value * 1. / prod_ids.length);

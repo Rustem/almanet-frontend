@@ -33,7 +33,7 @@ var ProductEditForm = React.createClass({
         var errors = form.validate();
         if(!errors) {
           var value = form.value();
-          value.user_id = this.getUser().id;
+          value.author_id = this.getUser().id;
           this.props.onHandleSubmit(value);
         } else{
             alert(errors);
