@@ -124,6 +124,14 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
         this.emitChange();
     },
 
+    set: function(sales_cycle) {
+        _salescycles[sales_cycle.id] = sales_cycle;
+        _salescycles[sales_cycle.id].activities = [];
+        // TODO fetch Products on create
+        _salescycles[sales_cycle.id].product_ids = [];
+        this.emitChange();
+    },
+
     updateStatusToPending: function(sales_cycle_id) {
         var AppCommonStore = require('./AppCommonStore'),
             SALES_CYCLE_STATUS = AppCommonStore.get_constants('sales_cycle').statuses_hash;
@@ -164,9 +172,7 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             SalesCycleStore.emitChange();
             break;
         case ActionTypes.CREATE_SALES_CYCLE_SUCCESS:
-            var salesCycle_with_id = SalesCycleStore.getCreatedSalesCycle(action.object);
-            _salescycles[salesCycle_with_id.id] = salesCycle_with_id;
-            SalesCycleStore.emitChange();
+            SalesCycleStore.set(SalesCycleStore.getCreatedSalesCycle(action.object));
             break;
         case ActionTypes.ADD_PRODUCT_TO_SALES_CYCLE:
             var salesCycle = SalesCycleStore.getCreatedSalesCycle(action.object);
