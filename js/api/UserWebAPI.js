@@ -14,13 +14,11 @@ module.exports = {
     },
 
     toggleFollowing: function(object, success, failure) {
-        console.log(object);
         obj = _.extend({}, {
             contact_ids: [object.id]});
         requestPost('/api/v1/crmuser/follow_unfollow/')
             .send(obj)
             .end(function(res) {
-                console.log(res);
                 if (res.ok) {
                     success(res.body);
                 } else {

@@ -1,5 +1,5 @@
 var keyMirror = require('react/lib/keyMirror');
-
+var config = require('../../config');
 
 module.exports = {
     ActionTypes: keyMirror({
@@ -106,6 +106,6 @@ module.exports = {
     })
 }
 
-
-module.exports.URL_PREFIX = require('superagent-prefix')('http://alma.net:8000');
-module.exports.LOGOUT_URL = 'http://alma.net:8000' + '/auth/logout/'
+console.log(config)
+module.exports.URL_PREFIX = require('superagent-prefix')(config['URL_PREFIX']);
+module.exports.LOGOUT_URL = config['URL_PREFIX'] + '/auth/logout/'
