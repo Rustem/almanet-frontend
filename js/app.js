@@ -35,15 +35,12 @@ AuthWebAPI.loadCurrentUser(function(user){
     AppWebAPI.getAll(user, function(appState, appConstants){
         CommentWebAPI.getAll(function(comments){
                 NotificationWebAPI.getAll(function(notifications){
-                  console.log(user, "hithatsload");
                   appState = _.assign(appState, {
                     user: user,
                     comments: comments,
                     notifications: notifications,
                     constants: appConstants,
                   });
-
-                  console.log(appState)
 
                   AppActionCreators.load(appState);
                   // breadcrumb store is mutable store but the logic remaining as flux
@@ -73,28 +70,28 @@ AuthWebAPI.loadCurrentUser(function(user){
 });
 
 
-var Fuse = require('./libs/fuse');
-var books = [{
-  id: 1,
-  title: 'The Great Gatsby',
-  author: 'F. Scott Fitzgerald'
-},{
-  id: 2,
-  title: 'The DaVinci Code',
-  author: 'Dan Brown'
-},{
-  id: 3,
-  title: 'Angels & Demons',
-  author: 'Dan Brown'
-}];
+// var Fuse = require('./libs/fuse');
+// var books = [{
+//   id: 1,
+//   title: 'The Great Gatsby',
+//   author: 'F. Scott Fitzgerald'
+// },{
+//   id: 2,
+//   title: 'The DaVinci Code',
+//   author: 'Dan Brown'
+// },{
+//   id: 3,
+//   title: 'Angels & Demons',
+//   author: 'Dan Brown'
+// }];
 
 // Example 1
-var options = {
-  keys: ['author', 'title'],   // keys to search in
-  id: 'id'                     // return a list of identifiers only
-}
-var f = new Fuse(books, options);
-var result = f.search('brwn'); // Fuzzy-search for pattern 'brwn'
+// var options = {
+//   keys: ['author', 'title'],   // keys to search in
+//   id: 'id'                     // return a list of identifiers only
+// }
+// var f = new Fuse(books, options);
+// var result = f.search('brwn'); // Fuzzy-search for pattern 'brwn'
 
 // var PourOver = require('./libs/pourover');
 
