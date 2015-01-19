@@ -6,7 +6,7 @@ var UserWebAPI = require('./UserWebAPI');
 
 
 module.exports = {
-    getAll: function(user, success, failure) {
+    getAll: function(success, failure) {
         requestGet('/api/v1/app_state/'+CRMConstants.SERVICES.crm+'/')
             .end(function (res) {
                 if (res.ok) {

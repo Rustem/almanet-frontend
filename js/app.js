@@ -32,10 +32,10 @@ var relationships = require('./router').relationships;
 
 
 AuthWebAPI.loadCurrentUser(function(user){
-    AppWebAPI.getAll(user, function(appState, appConstants){
+    AppWebAPI.getAll(function(appState, appConstants){
         CommentWebAPI.getAll(function(comments){
                 NotificationWebAPI.getAll(function(notifications){
-                  console.log(user, "hithatsload");
+
                   appState = _.assign(appState, {
                     user: user,
                     comments: comments,
@@ -43,7 +43,6 @@ AuthWebAPI.loadCurrentUser(function(user){
                     constants: appConstants,
                   });
 
-                  console.log(appState)
 
                   AppActionCreators.load(appState);
                   // breadcrumb store is mutable store but the logic remaining as flux
