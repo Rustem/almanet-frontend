@@ -120,7 +120,6 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
             _.forEach(action.object.contacts, function(contact){
-                contact.new_status = CRMConstants.CREATION_STATUS.COLD;
                 _contacts[contact.id] = contact;
             });
             ContactStore.emitChange();
@@ -131,7 +130,6 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             break;
         case ActionTypes.CREATE_CONTACT_SUCCESS:
             var contact_with_id = ContactStore.getCreatedContact(action.object);
-            contact_with_id.new_status = CRMConstants.CREATION_STATUS.HOT;
             _contacts[contact_with_id.id] = contact_with_id;
             ContactStore.emitChange();
             break;
@@ -144,14 +142,6 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
                   return key != 'contacts';
                 });
             _contacts[contact_id] = contact;
-            ContactStore.emitChange();
-            break;
-        case ActionTypes.CONTACT_UPDATE_NEW_STATUS:
-            var update_info = action.object['update_info'];
-            for(var i = 0; i<update_info.length; i++) {
-                var cid = update_info[i][0], newStatus = update_info[i][1];
-                _contacts[cid].new_status = newStatus;
-            }
             ContactStore.emitChange();
             break;
         case ActionTypes.CREATE_ACTIVITY_SUCCESS:
@@ -168,12 +158,12 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             }
             break;
         case ActionTypes.IMPORT_CONTACTS_SUCCESS:
-            console.log(action.object, "success")
             var newContacts = _.map(action.object, ContactStore.getCreatedContact);
             _.forEach(newContacts, function(c) {
                 _contacts[c.id] = c;
             })
             ContactStore.emitChange();
+            break;
         default:
             // do nothing
     }

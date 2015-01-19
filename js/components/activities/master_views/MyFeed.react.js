@@ -88,8 +88,11 @@ var MyFeedDetailView = React.createClass({
     
     statics: {
         willTransitionFrom: function (transition, component) {
-            var ids = _.map(component.state.activities, function(a){ return a.id } );
-            ActivityActionCreators.updateNewStatus(ids);
+            var ids = _.map(_.filter(component.state.activities, function(a) {
+                    return !a.has_read;
+                }), function(a){ return a.id });
+
+            ActivityActionCreators.mark_as_read(ids);
         }
     },
 

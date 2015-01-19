@@ -3,6 +3,8 @@ var CRMConstants = require('../constants/CRMConstants');
 var requestPost = require('../utils').requestPost;
 var requestPatch = require('../utils').requestPatch;
 var requestDelete = require('../utils').requestDelete;
+var SignalManager = require('./utils');
+var ActionTypes = CRMConstants.ActionTypes;
 
 module.exports = {
     getAll: function(success, failure) {
@@ -18,6 +20,11 @@ module.exports = {
                 if (res.ok) {
                     obj = _.assign(obj, res.body);
                     success(obj);
+
+                    // notification
+                    var author_id = obj.author_id,
+                        extra = {'filter_title': obj.title};
+                    SignalManager.send(ActionTypes.CREATE_FILTER_SUCCESS, author_id, extra);
                 } else {
                     failure(obj);
                 }
@@ -30,6 +37,11 @@ module.exports = {
                 if (res.ok) {
                     obj = _.assign(obj, res.body);
                     success(obj);
+
+                    // notification
+                    var author_id = obj.author_id,
+                        extra = {'filter_title': obj.title};
+                    SignalManager.send(ActionTypes.EDIT_FILTER_SUCCESS, author_id, extra);
                 } else {
                     failure(obj);
                 }

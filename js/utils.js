@@ -5,7 +5,6 @@
 
 var _ = require('lodash');
 var Fuse = require('./libs/fuse');
-var CREATION_STATUS = require('./constants/CRMConstants').CREATION_STATUS;
 var cookie_tool = require('cookie');
 var superagent = require('superagent');
 
@@ -102,11 +101,6 @@ function fuzzySearch(collection, search_str, options) {
   return collection;
 };
 
-function isNewObject(object) {
-  // determines whether object is new using duck typing
-  return CREATION_STATUS.HOT === object.new_status;
-};
-
 function isCompany(object) {
   return (object.tp == CONTACT_TYPES.CO);
 };
@@ -150,7 +144,6 @@ module.exports = {
   capitalize: capitalize,
   timeToSeconds: timeToSeconds,
   fuzzySearch: fuzzySearch,
-  isNewObject: isNewObject,
   request: request,
   requestPost: requestPost,
   requestPatch: requestPatch,

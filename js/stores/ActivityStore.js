@@ -6,7 +6,6 @@ var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
 var SessionStore = require('./SessionStore');
 var ContactStore = require('./ContactStore');
 var ActionTypes = CRMConstants.ActionTypes;
-var utils = require('../utils');
 
 var CHANGE_EVENT = 'change';
 var _activities = {};
@@ -55,7 +54,7 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
     },
 
     getNew: function(user) {
-        return _.filter(this.myFeed(user), utils.isNewObject)
+        return _.filter(this.myFeed(user), function(a) { return !a.has_read })
     },
 
     hasNew: function(user) {
@@ -63,8 +62,8 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
         user = (typeof user === "undefined") ? false : user;
         // if user is passed so it implies that we need only activities in myFeed
         if(user)
-            return _.any(this.myFeed(user), function(activity){ return utils.isNewObject(activity) })
-        return _.any(this.getAll(), function(activity){ return utils.isNewObject(activity) })
+            return _.any(this.myFeed(user), function(activity){ return !activity.has_read })
+        return _.any(this.getAll(), function(activity){ return !activity.has_read })
     },
 
     getAll: function() {
@@ -121,11 +120,10 @@ ActivityStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             ActivityStore.set(a);
             ActivityStore.emitChange();
             break;
-        case ActionTypes.ACTIVITY_UPDATE_NEW_STATUS:
-            var update_info = action.object['update_info'];
-            for(var i = 0; i<update_info.length; i++) {
-                var act_id = update_info[i][0], newStatus = update_info[i][1];
-                _activities[act_id].new_status = newStatus;
+        case ActionTypes.ACTIVITY_MARK_AS_READ:
+            var ids = action.object;
+            for(var i = 0; i<ids.length; i++) {
+                _activities[ids[i]].has_read = true;
             }
             ActivityStore.emitChange();
             break;

@@ -16,14 +16,13 @@ module.exports = {
         MARK_CONTACTS_AS_LEAD: null,
         MARK_CONTACTS_AS_LEAD_SUCCESS: null,
         MARK_CONTACTS_AS_LEAD_FAIL: null,
-        CONTACT_UPDATE_NEW_STATUS: null,
         CREATE_SHARE: null,
         CREATE_SHARE_SUCCESS: null,
         CREATE_SHARE_FAIL: null,
         CREATE_ACTIVITY : null,
         CREATE_ACTIVITY_SUCCESS : null,
         CREATE_ACTIVITY_FAIL: null,
-        ACTIVITY_UPDATE_NEW_STATUS: null,
+        ACTIVITY_MARK_AS_READ: null,
         MARK_SHARES_READ: null,
         MARK_SHARES_READ_SUCCESS: null,
         MARK_SHARES_READ_FAIL: null,
@@ -93,13 +92,12 @@ module.exports = {
     },
     NotifTypes: keyMirror({
         CONTACT_CREATE: null,
-        CONTACT_UPDATE: null,
+        CONTACT_EDIT: null,
         CONTACT_SHARE: null,
-        ACTIVITY_CREATE: null
-    }),
-    CREATION_STATUS: keyMirror({
-        HOT: null,
-        COLD: null
+        ACTIVITY_CREATE: null,
+        FILTER_CREATE: null,
+        FILTER_EDIT: null,
+        IMPORT_CONTACTS: null,
     }),
     SERVICES: keyMirror({
         crm: null

@@ -107,13 +107,87 @@ var NotificationActivityCreateView = React.createClass({
 
 });
 
+var NotificationFilterCreateView = React.createClass({
+
+    mixins : [AppContextMixin],
+
+    propTypes: {
+        n: React.PropTypes.object
+    },
+
+    render: function() {
+        var n = this.props.n,
+            author = UserStore.get(n.author_id),
+            filter_title = n.extra.filter_title;
+
+        return (
+            <div key={n.id} className="notificationCenter-item">
+                <div className="notificationCenter-item-meta">
+                    {moment(n.at).fromNow()}
+                </div>
+                Пользователь {utils.capitalize(author.vcard.fn)} добавил новый фильтр - {filter_title}.
+            </div>
+        );
+    }
+
+});
+
+var NotificationFilterEditView = React.createClass({
+
+    mixins : [AppContextMixin],
+
+    propTypes: {
+        n: React.PropTypes.object
+    },
+
+    render: function() {
+        var n = this.props.n,
+            author = UserStore.get(n.author_id),
+            filter_title = n.extra.filter_title;
+
+        return (
+            <div key={n.id} className="notificationCenter-item">
+                <div className="notificationCenter-item-meta">
+                    {moment(n.at).fromNow()}
+                </div>
+                Пользователь {utils.capitalize(author.vcard.fn)} изменил фильтр - {filter_title}.
+            </div>
+        );
+    }
+
+});
+
+var NotificationImportContactsView = React.createClass({
+
+    mixins : [AppContextMixin],
+
+    propTypes: {
+        n: React.PropTypes.object
+    },
+
+    render: function() {
+        var n = this.props.n,
+            count = n.extra.count;
+
+        return (
+            <div key={n.id} className="notificationCenter-item">
+                <div className="notificationCenter-item-meta">
+                    {moment(n.at).fromNow()}
+                </div>
+                Успешно импортировано: {count} {count == 1 ? 'контакт' : 'контактов'}.
+            </div>
+        );
+    }
+
+});
+
 function renderNotification(n) {
     var tp = n.type, TPL = null;
     switch(tp) {
         case NotifTypes.CONTACT_CREATE:
             TPL = NotificationContactCreateView;
             break;
-        case NotifTypes.CONTACT_UPDATE:
+        case NotifTypes.CONTACT_EDIT:
             TPL = NotificationContactUpdateView;
             break;
         case NotifTypes.CONTACT_SHARE:
@@ -121,6 +195,15 @@ function renderNotification(n) {
             break;
         case NotifTypes.ACTIVITY_CREATE:
             TPL = NotificationActivityCreateView;
+            break;
+        case NotifTypes.FILTER_CREATE:
+            TPL = NotificationFilterCreateView;
+            break;
+        case NotifTypes.FILTER_EDIT:
+            TPL = NotificationFilterEditView;
+            break;
+        case NotifTypes.IMPORT_CONTACTS:
+            TPL = NotificationImportContactsView;
             break;
         default:
             // do nothing
