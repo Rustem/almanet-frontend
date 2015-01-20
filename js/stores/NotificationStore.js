@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var assign = require('object-assign');
+var moment = require('moment');
 var EventEmitter = require('events').EventEmitter;
 var dispatcher = require('../dispatcher/CRMAppDispatcher');
 var CRMConstants = require('../constants/CRMConstants');
@@ -27,7 +28,7 @@ var NotificationStore = assign({}, EventEmitter.prototype, {
         var limit = options.limit || 10;
         var notifs = _(_notifications)
             .map(function(n){ return n })
-            .sortBy(function(n){ return n.at })
+            .sortBy(function(n){ return moment(n.date_created) })
             .reverse()
             .first(limit)
             .value();
@@ -38,7 +39,7 @@ var NotificationStore = assign({}, EventEmitter.prototype, {
         return _(_notifications)
             .map(function(n) { return n })
             .filter(function(n) { return n.is_new })
-            .sortBy(function(n) { return n.at })
+            .sortBy(function(n) { return moment(n.date_created) })
             .reverse()
             .value();
     }

@@ -24,12 +24,14 @@ var AddActivityMiniForm = require('../../forms/AddActivityMiniForm.react');
 var AddProductMiniForm = require('../../forms/AddProductMiniForm.react');
 var CRMConstants = require('../../constants/CRMConstants');
 var AppCommonStore = require('../../stores/AppCommonStore');
+var utils = require('../../utils');
 
 var ACTIONS = keyMirror({
     ADD_ACTIVITY: null,
     ADD_PRODUCT: null,
     CLOSE_SC: null,
 });
+
 
 var SalesCycleControlBar = React.createClass({
     propTypes: {
@@ -479,7 +481,7 @@ var ActivityListView = React.createClass({
                   <div className="row-body">
                     <div className="row">
                       <div className="row-body-primary text-caption text-secondary">
-                        <a href="#" className="text-secondary">{author.vcard.fn}</a> в {act.at}
+                        <a href="#" className="text-secondary">{author.vcard.fn}</a> в {utils.formatTime(act)}
                       </div>
                       <div className="row-body-secondary">
                         <a href="#" className="link-inline">

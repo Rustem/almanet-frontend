@@ -1,6 +1,7 @@
 var _ = require('lodash');
 var Fuse = require('../libs/fuse');
 var assign = require('object-assign');
+var moment = require('moment');
 var EventEmitter = require('events').EventEmitter;
 var ContactWebAPI = require('../api/ContactWebAPI');
 
@@ -33,7 +34,7 @@ var ContactStore = assign({}, EventEmitter.prototype, {
 
     getByDate: function(reversed) {
         var contacts = this.getAll();
-        contacts = _.sortBy(contacts, function(contact){ return contact.date_created });
+        contacts = _.sortBy(contacts, function(contact){ return moment(contact.date_created) });
         if(reversed) {
             contacts = contacts.reverse();
         }
@@ -41,21 +42,17 @@ var ContactStore = assign({}, EventEmitter.prototype, {
     },
 
     getColdByDate: function(reversed) {
-        return _.filter(this.getByDate(true), function(c){
-            return c.is_cold;
-        });
+        return _.filter(this.getByDate(true), utils.isCold);
     },
 
     getLeads: function(reversed) {
-        return _.filter(this.getByDate(true), function(c){
-            return !c.is_cold;
-        });
+        return _.reject(this.getByDate(true), utils.isCold);
     },
 
     getRecent: function() {
         var recent_acts = ActivityStore.getByDate(true);
         return _.chain(recent_acts)
-                .map(function(act){ return act.contact_id; })
+                .map(function(act){ return SalesCycleStore.get(act.sales_cycle_id).contact_id; })
                 .compact()
                 .uniq()
                 .map(this.get)

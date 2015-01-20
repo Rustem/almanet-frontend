@@ -7,9 +7,17 @@ var _ = require('lodash');
 var Fuse = require('./libs/fuse');
 var cookie_tool = require('cookie');
 var superagent = require('superagent');
+var moment = require('moment-timezone');
 
-var CONTACT_TYPES   = require('./constants/CRMConstants').CONTACT_TYPES;
-var URL_PREFIX   = require('./constants/CRMConstants').URL_PREFIX;
+var CONTACT_TYPES = require('./constants/CRMConstants').CONTACT_TYPES;
+var URL_PREFIX = require('./constants/CRMConstants').URL_PREFIX;
+
+
+
+function get_constants(object_name) {
+  var AppCommonStore = require('./stores/AppCommonStore');
+  return AppCommonStore.get_constants(object_name);
+}
 
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -22,6 +30,11 @@ function timeToSeconds(time) {
   var parts = time.split(':');
   return (+parts[0]) * 3600 + (+parts[1]) * 60;
 }
+
+function formatTime(object) {
+  // TODO get tz from AppCommonStore
+  return moment(object.date_created).tz('Asia/Almaty').format('h:mm, D MMM YY');
+};
 
 function extractIds(object_list) {
 
@@ -105,6 +118,12 @@ function isCompany(object) {
   return (object.tp == CONTACT_TYPES.CO);
 };
 
+function isCold(contact) {
+  var AppCommonStore = require('./stores/AppCommonStore'),
+      CONTACT_STATUSES = AppCommonStore.get_constants('contact').statuses_hash;
+  return (contact.status == CONTACT_STATUSES.NEW_CONTACT);
+};
+
 function request(method, url) {
   var _request = superagent(method.toUpperCase(), url)
       .use(URL_PREFIX)
@@ -135,6 +154,7 @@ function requestDelete(url) {
 };
 
 module.exports = {
+  get_constants: get_constants,
   extractIds: extractIds,
   mergeInto: mergeInto,
   merge: merge,
@@ -143,6 +163,7 @@ module.exports = {
   isString: isString,
   capitalize: capitalize,
   timeToSeconds: timeToSeconds,
+  formatTime: formatTime,
   fuzzySearch: fuzzySearch,
   request: request,
   requestPost: requestPost,
@@ -150,4 +171,5 @@ module.exports = {
   requestGet: requestGet,
   requestDelete: requestDelete,
   isCompany: isCompany,
+  isCold: isCold,
 };

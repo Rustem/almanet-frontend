@@ -1,5 +1,6 @@
 var React = require('react/addons');
 var UserStore = require('../../stores/UserStore');
+var utils = require('../../utils');
 
 var CommentListItem = React.createClass({
     propTypes: {
@@ -33,7 +34,7 @@ var CommentListItem = React.createClass({
 		          </a>
 		          <div className="row-body row-body--no-trailer">
 		            <div className="text-caption text-secondary">
-		              <a href="#" className="text-secondary">{author.vcard.fn}</a> в {comment.at}
+		              <a href="#" className="text-secondary">{author.vcard.fn}</a> в {utils.formatTime(comment)}
 		            </div>
 		            <div className="row-body-message">
 		              {comment.comment}

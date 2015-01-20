@@ -32,16 +32,23 @@ var AppCommonStore = assign({}, EventEmitter.prototype, {
         return _constants;
     },
 
+    _genHash: function(optionsList) {
+        return _.reduce(optionsList, function(acc, x) { acc[x[1].toUpperCase()] = x[0]; return acc; }, {});
+    },
+
     genSalesCycleStatusesHash: function() {
-        var statuses_hash = _.reduce(_constants['sales_cycle']['statuses'],
-            function(acc, x) { acc[x[1].toUpperCase()] = x[0]; return acc; }, {});
-        _constants['sales_cycle'] = {'statuses_hash': statuses_hash};
+        var statuses_hash = this._genHash(_constants['sales_cycle']['statuses']);
+        _constants['sales_cycle']['statuses_hash'] = statuses_hash;
     },
 
     genActivityFeedbackHash: function() {
-        var statuses_hash = _.reduce(_constants['activity']['feedback'],
-            function(acc, x) { var t = (x[1][0]==='C' ? x[1].split('Client is ')[1] : x[1]).toUpperCase(); acc[t] = x[0]; return acc; }, {});
+        var statuses_hash = this._genHash(_constants['activity']['feedback']);
         _constants['activity']['feedback_hash'] = statuses_hash;
+    },
+
+    genContactStatusesHash: function() {
+        var statuses_hash = this._genHash(_constants['contact']['statuses']);
+        _constants['contact']['statuses_hash'] = statuses_hash;
     },
 
     setAll: function(obj) {
@@ -49,6 +56,7 @@ var AppCommonStore = assign({}, EventEmitter.prototype, {
 
         this.genSalesCycleStatusesHash();
         this.genActivityFeedbackHash();
+        this.genContactStatusesHash();
 
         this.emitChange();
     }
