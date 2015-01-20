@@ -20,7 +20,8 @@ var InputWithDropDown = React.createClass({
     },
 
     onUpdate: function(val) {
-        this.updateValue(this.prepValue(this.props.name, val));
+        var value = val[this.props.name];
+        this.updateValue(this.prepValue(this.props.name, value));
     },
 
     render: function() {
