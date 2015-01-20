@@ -127,7 +127,6 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
     set: function(sales_cycle) {
         _salescycles[sales_cycle.id] = sales_cycle;
         _salescycles[sales_cycle.id].activities = [];
-        // TODO fetch Products on create
         _salescycles[sales_cycle.id].product_ids = [];
         this.emitChange();
     },
