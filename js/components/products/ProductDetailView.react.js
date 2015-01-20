@@ -75,7 +75,7 @@ var ProductDetailView = React.createClass({
                       </div>
                     </div>
                     <div className="inputLine-div">
-                      {this.product.current_value} KZT
+                      {this.product.stat_value} KZT
                     </div>
                   </div>
                 </div>
