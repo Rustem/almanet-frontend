@@ -7,6 +7,8 @@ var RemoveableDropDownListWidget = inputs.RemoveableDropDownListWidget;
 var FormElementMixin = require('../FormElementMixin.react');
 var UserStore = require('../../stores/UserStore');
 
+var URL_PREFIX   = require('../../constants/CRMConstants').URL_PREFIX;
+
 var ParticipantRemoveableDropDownList = React.createClass({
     mixins : [FormElementMixin],
 
@@ -29,7 +31,7 @@ var ParticipantRemoveableDropDownList = React.createClass({
             <div className="row-body">
                 <div className="row-icon">
                     <figure className="icon-userpic">
-                        <img src={"img/userpics/" + object.userpic} />
+                        <img src={URL_PREFIX + object.userpic} />
                     </figure>
                 </div>
                 <div className="row-body">{object.vcard.fn}</div>

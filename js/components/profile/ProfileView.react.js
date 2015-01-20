@@ -17,8 +17,10 @@ var UserStore = require('../../stores/UserStore');
 var fuzzySearch = require('../../utils').fuzzySearch;
 var UserVCard = require('../common/VCard.react').UserVCard;
 var UserActionCreators = require('../../actions/UserActionCreators');
+var UserpicUploadForm = require('../../forms/UserpicUploadForm.react');
 
 var VIEW_MODE = require('../../constants/CRMConstants').CONTACT_VIEW_MODE;
+var URL_PREFIX   = require('../../constants/CRMConstants').URL_PREFIX;
 
 var ProfileInformation = React.createClass({
     getInitialState: function() {
@@ -36,6 +38,10 @@ var ProfileInformation = React.createClass({
     onUserUpdate: function(updUser) {
         var user_id = this.props.user.id;
         UserActionCreators.editUser(user_id, updUser);
+    },
+
+    onUserpicUploadSubmit: function(object) {
+        UserActionCreators.uploadUserpic(object);
     },
 
     getVCardMode: function() {
@@ -73,9 +79,12 @@ var ProfileInformation = React.createClass({
                 <div className="page-body">
 
                   <div className="userProfile">
-                    <figure className="userProfile-pic">
-                      <img src={"img/userpics/"+user.userpic} className="userProfile-pic-img" alt="" />
-                    </figure>
+                    <div className="userProfile-header">
+                        <figure className="userProfile-pic">
+                          <img src={URL_PREFIX + user.userpic} className="userProfile-pic-img" alt="" />
+                        </figure>
+                        <UserpicUploadForm user={user} onHandleSubmit={this.onUserpicUploadSubmit} />
+                    </div>
                   </div>
 
                   <UserVCard ref="vcard_widget"

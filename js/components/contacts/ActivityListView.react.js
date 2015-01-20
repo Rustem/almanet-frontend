@@ -26,6 +26,8 @@ var CRMConstants = require('../../constants/CRMConstants');
 var AppCommonStore = require('../../stores/AppCommonStore');
 var utils = require('../../utils');
 
+var URL_PREFIX   = require('../../constants/CRMConstants').URL_PREFIX;
+
 var ACTIONS = keyMirror({
     ADD_ACTIVITY: null,
     ADD_PRODUCT: null,
@@ -475,7 +477,7 @@ var ActivityListView = React.createClass({
                 <div className="row">
                   <a href="#" className="row-icon">
                     <figure className="icon-userpic">
-                          <img src={"img/userpics/" + author.userpic} />
+                          <img src={URL_PREFIX + author.userpic} />
                     </figure>
                   </a>
                   <div className="row-body">

@@ -93,9 +93,9 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
     },
 
     getOpenedCyclesNumber: function(user) {
-        var SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash;
+        var SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash,
             salescycles = this.getAll();
-        return (_.filter(salescycles, function(c){ return c.author_id == user.id && c.status != SALES_CYCLE_STATUS.FINISHED })).length;
+        return (_.filter(salescycles, function(c){ return c.author_id == user.id && c.status != SALES_CYCLE_STATUS.COMPLETED })).length;
     },
 
     setAll: function(obj) {

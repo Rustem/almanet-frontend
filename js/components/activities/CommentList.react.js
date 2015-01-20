@@ -2,6 +2,8 @@ var React = require('react/addons');
 var UserStore = require('../../stores/UserStore');
 var utils = require('../../utils');
 
+var URL_PREFIX   = require('../../constants/CRMConstants').URL_PREFIX;
+
 var CommentListItem = React.createClass({
     propTypes: {
         comment: React.PropTypes.object,
@@ -29,7 +31,7 @@ var CommentListItem = React.createClass({
 		        <div className="row">
 		          <a href="#" className="row-icon">
 		            <figure className="icon-userpic">
-		  				<img src={"img/userpics/" + author.userpic} />
+		  				<img src={URL_PREFIX + author.userpic} />
 		            </figure>
 		          </a>
 		          <div className="row-body row-body--no-trailer">

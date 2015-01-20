@@ -9,9 +9,8 @@ var cookie_tool = require('cookie');
 var superagent = require('superagent');
 var moment = require('moment-timezone');
 
-var CONTACT_TYPES = require('./constants/CRMConstants').CONTACT_TYPES;
-var URL_PREFIX = require('./constants/CRMConstants').URL_PREFIX;
-
+var CONTACT_TYPES   = require('./constants/CRMConstants').CONTACT_TYPES;
+var SA_URL_PREFIX   = require('./constants/CRMConstants').SA_URL_PREFIX;
 
 
 function get_constants(object_name) {
@@ -126,7 +125,7 @@ function isCold(contact) {
 
 function request(method, url) {
   var _request = superagent(method.toUpperCase(), url)
-      .use(URL_PREFIX)
+      .use(SA_URL_PREFIX)
       .type('json')
       .withCredentials();
 

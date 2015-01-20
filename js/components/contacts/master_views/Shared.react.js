@@ -26,6 +26,8 @@ var Div = require('../../../forms/Fieldset.react').Div;
 var Crumb = require('../../common/BreadCrumb.react').Crumb;
 var CommonFilterBar = require('../FilterComposer.react').CommonFilterBar;
 
+var URL_PREFIX   = require('../../../constants/CRMConstants').URL_PREFIX;
+
 var SharedContactLink = React.createClass({
     mixins: [AppContextMixin, Router.State],
 
@@ -139,7 +141,7 @@ var ShareListItem = React.createClass({
                 <div className="stream-item-extra row">
                     <a href="#" className="row-icon">
                       <figure className="icon-userpic">
-                        <img src={"img/userpics/" + author.userpic} />
+                        <img src={URL_PREFIX + author.userpic} />
                       </figure>
                     </a>
                     <div className="row-body">

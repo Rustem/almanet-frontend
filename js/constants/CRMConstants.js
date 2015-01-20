@@ -69,6 +69,10 @@ module.exports = {
         DELETE_FILTER_FAIL: null,
         EDIT_USER: null,
         EDIT_USER_SUCCESS: null,
+        EDIT_USER_FAIL: null,
+        UPLOAD_USERPIC: null,
+        UPLOAD_USERPIC_SUCCESS: null,
+        UPLOAD_USERPIC_FAIL: null,
         LOGOUT: null,
     }),
     PayloadSources: keyMirror({
@@ -104,6 +108,6 @@ module.exports = {
     })
 }
 
-console.log(config)
-module.exports.URL_PREFIX = require('superagent-prefix')(config['URL_PREFIX']);
-module.exports.LOGOUT_URL = config['URL_PREFIX'] + '/auth/logout/'
+module.exports.URL_PREFIX = 'http://alma.net:8000'
+module.exports.SA_URL_PREFIX = require('superagent-prefix')('http://alma.net:8000');
+module.exports.LOGOUT_URL = 'http://alma.net:8000' + '/auth/logout/'

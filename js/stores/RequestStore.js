@@ -27,6 +27,7 @@ LOADING_ACTIONS = [
     ActionTypes.EDIT_FILTER,
     ActionTypes.DELETE_FILTER,
     ActionTypes.EDIT_USER,
+    ActionTypes.UPLOAD_USERPIC,
 ]
 
 UNLOADING_ACTIONS = [
@@ -67,6 +68,8 @@ UNLOADING_ACTIONS = [
     ActionTypes.DELETE_FILTER_FAIL,
     ActionTypes.EDIT_USER_SUCCESS,
     ActionTypes.EDIT_USER_FAIL,
+    ActionTypes.UPLOAD_USERPIC_SUCCESS,
+    ActionTypes.UPLOAD_USERPIC_FAIL,
 ]
 
 var RequestStore = assign({}, EventEmitter.prototype, {

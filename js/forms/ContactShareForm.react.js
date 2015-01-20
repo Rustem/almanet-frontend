@@ -11,6 +11,8 @@ var ContentEditableInput = inputs.ContentEditableInput;
 var ContactStore = require('../stores/ContactStore');
 var UserStore = require('../stores/UserStore');
 
+var URL_PREFIX   = require('../constants/CRMConstants').URL_PREFIX;
+
 var DEFAULT_SHARE = {
     note: 'краткое сообщение',
     participants: [],
@@ -39,7 +41,7 @@ var ColleaguesRemoveableDropDownList = React.createClass({
             <div className="row-body">
                 <div className="row-icon">
                     <figure className="icon-userpic">
-                        <img src={"img/userpics/" + object.userpic} />
+                        <img src={URL_PREFIX + object.userpic} />
                     </figure>
                 </div>
                 <div className="row-body">{object.vcard.fn}</div>

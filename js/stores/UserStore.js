@@ -77,6 +77,10 @@ UserStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             // _users[action.object.id] = action.object;
             UserStore.emitChange();
             break;
+        case ActionTypes.UPLOAD_USERPIC_SUCCESS:
+            _users[action.object.id] = action.object;
+            UserStore.emitChange();
+            break;
         default:
             // do nothing
     }
