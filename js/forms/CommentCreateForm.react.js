@@ -15,6 +15,8 @@ var Fieldset = require('./Fieldset.react');
 
 var PLACEHOLDER = 'Напишите коммент здесь';
 
+var URL_PREFIX   = require('../constants/CRMConstants').URL_PREFIX;
+
 var CommentCreateForm = React.createClass({
   mixins: [FormMixin],
 
@@ -39,7 +41,7 @@ var CommentCreateForm = React.createClass({
               <Fieldset className="row">
                 <a href="#" className="row-icon">
                   <figure className="icon-userpic">
-                    <img src={"img/userpics/" + author.userpic} />
+                    <img src={URL_PREFIX + author.userpic} />
                   </figure>
                 </a>
                 <Fieldset className="row-body row-body--no-trailer">

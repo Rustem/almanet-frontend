@@ -9,7 +9,9 @@ var Link = Router.Link;
 var AppContextMixin = require('../../mixins/AppContextMixin');
 var IconSvg = require('../common/IconSvg.react');
 var UserStore = require('../../stores/UserStore');
+
 var LOGOUT_URL = require('../../constants/CRMConstants').LOGOUT_URL;
+var URL_PREFIX   = require('../../constants/CRMConstants').URL_PREFIX;
 
 var ProfileNavigator = React.createClass({
     mixins: [AppContextMixin],
@@ -49,7 +51,7 @@ var ProfileNavigator = React.createClass({
                     </div>
                     <div className="row-body-primary">
                       <figure className="icon-userpic">
-                        <img src={"img/userpics/"+user.userpic} />
+                        <img src={URL_PREFIX + user.userpic} />
                       </figure>
                       {user.first_name}
                     </div>

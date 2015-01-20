@@ -55,4 +55,21 @@ module.exports = {
         });
     }.bind(this));
   },
+
+  uploadUserpic: function(object) {
+    dispatcher.handleViewAction({
+        type: ActionTypes.UPLOAD_USERPIC
+    });
+    UserWebAPI.uploadUserpic(object, function(object){
+        dispatcher.handleServerAction({
+            type: ActionTypes.UPLOAD_USERPIC_SUCCESS,
+            object: object
+        });
+    }.bind(this), function(error){
+        dispatcher.handleServerAction({
+            type: ActionTypes.UPLOAD_USERPIC_FAIL,
+            object: error
+        });
+    }.bind(this));
+  },
 };

@@ -47,16 +47,17 @@ module.exports = {
                     failure(res.body);
                 }
             });
-        // var rawUsers = JSON.parse(localStorage.getItem('users')) || [],
-        //     user = null;
-        // for(var i = 0; i<rawUsers.length; i++) {
-        //     var cur = rawUsers[i];
-        //     if(cur.id === user_id) {
-        //         rawUsers[i] = object;
-        //         user = rawUsers[i];
-        //         break;
-        //     }
-        // }
-        // localStorage.setItem('users', JSON.stringify(rawUsers));
+    },
+
+    uploadUserpic: function(object, success, failure) {
+        requestPost('/api/v1/user/upload_userpic/')
+            .send(object)
+            .end(function(res) {
+                if (res.ok) {
+                    success(res.body);
+                } else {
+                    failure(res.body);
+                }
+            });
     },
 };

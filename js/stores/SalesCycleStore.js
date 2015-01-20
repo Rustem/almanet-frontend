@@ -92,7 +92,8 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
     },
 
     getClosedCyclesNumber: function(user) {
-        var FEEDBACK_STATUSES = AppCommonStore.get('activity').feedback_hash;
+        var AppCommonStore = require('./AppCommonStore'),
+            FEEDBACK_STATUSES = AppCommonStore.get_constants('activity').feedback_hash;
         var closing_actvs = _.filter(ActivityStore.byUser(user),
             function(a){ return a.feedback_status == FEEDBACK_STATUSES.OUTCOME });
         var salescycles = _.map(closing_actvs, function(a){ return this.get(a.sales_cycle_id)}.bind(this));
@@ -106,7 +107,8 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
     },
 
     getOpenedCyclesNumber: function(user) {
-        var SALES_CYCLE_STATUS = AppCommonStore.get('sales_cycle').statuses_hash;
+        var AppCommonStore = require('./AppCommonStore'),
+            SALES_CYCLE_STATUS = AppCommonStore.get_constants('sales_cycle').statuses_hash;
             salescycles = this.getAll();
         return (_.filter(salescycles, function(c){ return c.author_id == user.id && c.status != SALES_CYCLE_STATUS.FINISHED })).length;
     },

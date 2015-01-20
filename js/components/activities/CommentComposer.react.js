@@ -13,6 +13,7 @@ var CommentStore = require('../../stores/CommentStore');
 var AppContextMixin = require('../../mixins/AppContextMixin');
 
 var ESCAPE_KEY_CODE = 27;
+var URL_PREFIX   = require('../../constants/CRMConstants').URL_PREFIX;
 
 var LeaveCommentButton = React.createClass({
 
@@ -30,7 +31,7 @@ var LeaveCommentButton = React.createClass({
 		        <div className="row">
 		          <a href="#" className="row-icon">
 		            <figure className="icon-userpic">
-		  				<img src={"img/userpics/" + author.userpic} />
+		  				<img src={URL_PREFIX + author.userpic} />
 		            </figure>
 		          </a>
 		          <div className="row-body row-body--no-trailer">

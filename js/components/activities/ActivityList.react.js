@@ -10,6 +10,8 @@ var Router = require('react-router');
 var Link = Router.Link;
 var IconSvg = require('../common/IconSvg.react');
 
+var URL_PREFIX  = require('../../constants/CRMConstants').URL_PREFIX;
+
 var ActivityListItem = React.createClass({
     mixins: [Router.State, AppContextMixin],
     propTypes: {
@@ -64,7 +66,7 @@ var ActivityListItem = React.createClass({
                     <div className="row">
                       <a href="#" className="row-icon">
                         <figure className="icon-userpic">
-                            <img src={"img/userpics/" + author.userpic} />
+                            <img src={URL_PREFIX + author.userpic} />
                         </figure>
                       </a>
                       <div className="row-body">
