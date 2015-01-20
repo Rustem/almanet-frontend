@@ -32,9 +32,10 @@ var relationships = require('./router').relationships;
 
 
 AuthWebAPI.loadCurrentUser(function(user){
-    AppWebAPI.getAll(user, function(appState, appConstants){
+    AppWebAPI.getAll(function(appState, appConstants){
         CommentWebAPI.getAll(function(comments){
                 NotificationWebAPI.getAll(function(notifications){
+
                   appState = _.assign(appState, {
                     user: user,
                     comments: comments,

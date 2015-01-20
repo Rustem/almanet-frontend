@@ -6,7 +6,6 @@ module.exports = {
     loadCurrentUser: function(success, failure) {
         requestGet('/api/v1/user/current/')
             .end(function (res) {
-                console.log(res)
                 if(res.ok)
                     success(res.body);
                 else

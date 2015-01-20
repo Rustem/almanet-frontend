@@ -1,5 +1,5 @@
 var keyMirror = require('react/lib/keyMirror');
-
+var config = require('../../config');
 
 module.exports = {
     ActionTypes: keyMirror({
