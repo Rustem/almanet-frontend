@@ -46,7 +46,7 @@ var ControlBar = React.createClass({
                 <IconSvg iconKey='add' />
             </div>
             <div className="row-body">
-              Добавить событие
+              Добавить взаимодействие
             </div>
         </a>
         <a onClick={this.props.onUserAction.bind(null, ACTIONS.SHARE)} className="row row--oneliner row--link" href="#">
