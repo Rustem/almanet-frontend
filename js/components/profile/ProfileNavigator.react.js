@@ -16,6 +16,12 @@ var URL_PREFIX   = require('../../constants/CRMConstants').URL_PREFIX;
 var ProfileNavigator = React.createClass({
     mixins: [AppContextMixin],
 
+    getInitialState: function() {
+        return {
+            user: UserStore.get(this.getUser().id)
+        }
+    },
+
     componentWillMount: function() {
       this.opened = false;
     },
@@ -35,7 +41,7 @@ var ProfileNavigator = React.createClass({
     },
 
     render: function() {
-        var user = this.getUser();
+        var user = this.state.user;
         var classes = cx({
             'dropdown': true,
             'dropdown--inline': true,
@@ -73,7 +79,7 @@ var ProfileNavigator = React.createClass({
 
     _onChange: function() {
       this.opened = false;
-      this.forceUpdate();
+      this.setState(this.getInitialState());
     }
 });
 
