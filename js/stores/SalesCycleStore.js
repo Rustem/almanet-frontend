@@ -83,10 +83,13 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
         var closing_actvs = _.filter(ActivityStore.byUser(user),
             function(a){ return a.feedback_status == FEEDBACK_STATUSES.OUTCOME });
         var salescycles = _.map(closing_actvs, function(a){ return this.get(a.sales_cycle_id)}.bind(this));
+        console.log(salescycles);
         var rv = {
             'number': salescycles.length,
             'money': _.reduce(salescycles, function(sum, s) {
-                      return sum + parseInt(s.real_value);
+                        return sum + _.reduce(s.stat, function(s1, prod) {
+                            return s1 + parseInt(prod.value)
+                        }, 0);
                     }, 0)
         }
         return rv;
