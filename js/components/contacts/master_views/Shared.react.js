@@ -146,7 +146,7 @@ var ShareListItem = React.createClass({
                     </a>
                     <div className="row-body">
                       <div className="text-caption text-secondary">
-                        <a href="#" className="text-secondary">{author.vcard.fn}</a>
+                        <a href="#" className="text-secondary">{author.vcard.fn}</a> в {utils.formatTime(share)}
                       </div>
                       <div className="row-body-message">
                         {this.getNote()}
