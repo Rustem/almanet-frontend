@@ -32,12 +32,12 @@ var SalesCycleCreateForm = React.createClass({
             ref='sales_cycle_create_form'
             onSubmit={this.handleSubmit}
             onBlur={this.onBlur}
-            onKeyDown={this.onKeyDown}
-            value={default_form_state} >
+            onKeyDown={this.onKeyDown}>
           <ContentEditableInput ref='sales_cycle_name' 
                                 name='sales_cycle_name' 
                                 className='input-div input-div--newCycle' 
-                                onFocus={this.onFocus} />
+                                onFocus={this.onFocus} 
+                                placeholder={CYCLE_NAME_PLACEHOLDER} />
           
       </Form>
     )
