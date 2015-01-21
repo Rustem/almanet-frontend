@@ -23,13 +23,17 @@ var BreadcrumbStore = require('./stores/BreadcrumbStore');
 var routes = require('./router').routes;
 var NODES = require('./router').NODES;
 var relationships = require('./router').relationships;
-
+var moment = require('moment');
 //var Fixtures = require('./fixtures');
 //Fixtures.init();
 
 // TODO: use promises
 // load initial data to services
 
+
+function configure() {
+  moment.locale('ru-RU');
+};
 
 AuthWebAPI.loadCurrentUser(function(user){
     AppWebAPI.getAll(function(appState, appConstants){
@@ -47,6 +51,8 @@ AuthWebAPI.loadCurrentUser(function(user){
                   // breadcrumb store is mutable store but the logic remaining as flux
                   BreadcrumbStore.initialize(NODES, relationships);
                   // render app
+
+                  configure();
                   Router.run(routes, function(Handler, state){
                       // create the promises hash
                       var promises = state.routes.filter(function (route) {
