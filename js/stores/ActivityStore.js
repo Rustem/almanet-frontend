@@ -28,13 +28,10 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
         return _activities[id];
     },
 
-    getByDate: function(reversed) {
+    getByDate: function() {
         var activities = this.getAll();
         activities = _.sortBy(activities, function(activity){ return moment(activity.date_created) });
-        if(reversed) {
-            activities = activities.reverse();
-        }
-        return activities;
+        return activities.reverse();
     },
 
     byUser: function(user) {

@@ -17,7 +17,6 @@ var ContactStore = require('../../stores/ContactStore');
 var SalesCycleStore = require('../../stores/SalesCycleStore');
 var ProductStore = require('../../stores/ProductStore');
 // var Modal = require('./common/Modal.react');
-var SalesCycleCloser = require('./SalesCycleCloser.react');
 var SalesCycleCreateForm = require('../../forms/SalesCycleCreateForm.react');
 var SalesCycleCloseForm = require('../../forms/SalesCycleCloseForm.react');
 var AddActivityMiniForm = require('../../forms/AddActivityMiniForm.react');

@@ -534,7 +534,7 @@ var SharedBaseSelectedView = React.createClass({
 
     getInitialState: function() {
         var contacts = [], contact_ids = [], selection_map = {}, cnt = 0;
-        var shares = ShareStore.sortedByDate(true);
+        var shares = ShareStore.sortedByDate();
         _selected_contacts = this.getQuery()['ids'] || [];
         contact_ids = shares.map(function(share){ return share.contact });
         contacts = ContactStore.getByIds(contact_ids);
@@ -561,7 +561,7 @@ var SharedBaseSelectedView = React.createClass({
         if(value.filter_text) {
             shares = ShareStore.fuzzySearch(value.filter_text, {'asc': false});
         } else {
-            shares = ShareStore.sortedByDate(true);
+            shares = ShareStore.sortedByDate();
         }
         var contact_ids = shares.map(function(share){ return share.contact });
         contacts = ContactStore.getByIds(contact_ids);
@@ -603,7 +603,7 @@ var SharedBaseSelectedView = React.createClass({
         var shares = null,
             newSelectionItems = {};
 
-        shares = ShareStore.sortedByDate(true);
+        shares = ShareStore.sortedByDate();
         var contact_ids = shares.map(function(share){ return share.contact });
         contacts = ContactStore.getByIds(contact_ids);
         for(var i = 0; i<contacts.length; i++) {

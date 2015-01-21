@@ -93,10 +93,12 @@ var FilterList = React.createClass({
 
     componentDidMount: function() {
         FilterStore.addChangeListener(this._onChange);
+        ContactStore.addChangeListener(this._onChange);
     },
 
     componentWillUnMount: function() {
         FilterStore.removeChangeListener(this._onChange);
+        ContactStore.removeChangeListener(this._onChange);
     },
 
     getFilters: function() {

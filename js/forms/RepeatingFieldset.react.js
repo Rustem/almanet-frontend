@@ -12,10 +12,9 @@ var ContentEditableInput = require('./input').ContentEditableInput;
 var _ = require('lodash');
 Object.assign = _.extend;
 var ItemMixin = {
-
-    onRemove: function() {
+    onRemove: function(idx) {
         if(this.props.onRemove) {
-            this.props.onRemove(this.props.name)
+            this.props.onRemove(idx);
         }
     }
 };

@@ -187,13 +187,19 @@ var ProfileView = React.createClass({
         UserStore.removeChangeListener(this._onChange);
     },
 
+    getInitialState: function() {
+        return {
+            user: UserStore.get(this.getUser().id)
+        }
+    },
+
     render: function() {
         return (
             <div>
                 <Header />
                 <div>
-                    <ProfileInformation user={this.getUser()} />
-                    <ProfileFeed user={this.getUser()} />
+                    <ProfileInformation user={this.state.user} />
+                    <ProfileFeed user={this.state.user} />
                 </div>
                 <Footer />
             </div>
@@ -201,7 +207,7 @@ var ProfileView = React.createClass({
     },
 
     _onChange: function() {
-        this.forceUpdate();
+        this.setState(this.getInitialState());
     }
 });
 
