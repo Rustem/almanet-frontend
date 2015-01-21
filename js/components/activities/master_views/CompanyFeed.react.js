@@ -98,7 +98,7 @@ var CompanyFeedDetailView = React.createClass({
     },
 
     getInitialState: function() {
-        activities = ActivityStore.getByDate(true);
+        activities = ActivityStore.getByDate();
         return {
             activities: activities,
             search_bar: {filter_text: ''}
@@ -129,7 +129,7 @@ var CompanyFeedDetailView = React.createClass({
             activities = fuzzySearch(this.getActivities(), value.filter_text, {
                 'keys': ['description']});
         } else {
-            activities = ActivityStore.getByDate(true);
+            activities = ActivityStore.getByDate();
         }
 
         var newState = React.addons.update(this.state, {

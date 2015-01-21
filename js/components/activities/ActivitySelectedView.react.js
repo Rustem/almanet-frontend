@@ -65,7 +65,7 @@ var ActivitySelectedView = React.createClass({
                 activities = ActivityStore.myFeed(this.getUser());
                 break;
             case 'company_feed':
-                activities = ActivityStore.getByDate(true);
+                activities = ActivityStore.getByDate();
                 break;
             case 'profile':
                 activities = ActivityStore.profileFeed(this.getUser());

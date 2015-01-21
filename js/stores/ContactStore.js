@@ -50,7 +50,7 @@ var ContactStore = assign({}, EventEmitter.prototype, {
     },
 
     getRecent: function() {
-        var recent_acts = ActivityStore.getByDate(true);
+        var recent_acts = ActivityStore.getByDate();
         return _.chain(recent_acts)
                 .map(function(act){ return SalesCycleStore.get(act.sales_cycle_id).contact_id; })
                 .compact()

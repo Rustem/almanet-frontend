@@ -259,7 +259,7 @@ var SharedContactDetailView = React.createClass({
     },
 
     getInitialState: function() {
-        var shares = ShareStore.sortedByDate(true);
+        var shares = ShareStore.sortedByDate();
         var contacts = [], contact_ids = [], selection_map = {};
         contact_ids = shares.map(function(share){ return share.contact });
         contacts = ContactStore.getByIds(contact_ids);
