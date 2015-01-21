@@ -105,7 +105,7 @@ var EmailVCardComponentItem = React.createClass({
     propTypes:  {
         index: React.PropTypes.number,
         options: React.PropTypes.array,
-        onFocus: React.PropTypes.func,
+        onAddItem: React.PropTypes.func,
         onTypeChange: React.PropTypes.func,
         onValueChange: React.PropTypes.func
     },
@@ -122,7 +122,7 @@ var EmailVCardComponentItem = React.createClass({
                         </button>
                     </div>
                     <div className="row-body">
-                        <div className="inputLine-negativeTrail row-body--aligned">
+                        <div onFocus={this.props.onAddItem.bind(null, this.props.index)} className="inputLine-negativeTrail row-body--aligned">
                             <SimpleSelect
                                 name="type"
                                 options={options}
@@ -134,7 +134,6 @@ var EmailVCardComponentItem = React.createClass({
                                     value={value.value}
                                     name="value"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    onFocus={this.props.onFocus.bind(null, this.props.index)}
                                     className='input-div' data-placeholder="Телефон" />
                             </div>
                         </div>
@@ -163,7 +162,7 @@ var EmailVCardComponent = React.createClass({
     render: function() {
         var self = this;
         var extraOptions = {
-            'onFocus': self.onAddItem,
+            'onAddItem': self.onAddItem,
             'options': self.props.options,
             'onTypeChange': self.onChange,
             'onValueChange': self.onChange};
@@ -205,7 +204,7 @@ var TelVCardComponentItem = React.createClass({
                         </button>
                     </div>
                     <div className="row-body">
-                        <div className="inputLine-negativeTrail row-body--aligned">
+                        <div onFocus={this.props.onAddItem.bind(null, this.props.index)} className="inputLine-negativeTrail row-body--aligned">
                             <SimpleSelect
                                 name="type"
                                 options={options}
@@ -217,7 +216,6 @@ var TelVCardComponentItem = React.createClass({
                                     value={value.value}
                                     name="value"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    onFocus={this.props.onFocus.bind(null, this.props.index)}
                                     className='input-div' data-placeholder="Телефон" />
                             </div>
                         </div>
@@ -246,7 +244,7 @@ var TelVCardComponent = React.createClass({
     render: function() {
         var self = this;
         var extraOptions = {
-            'onFocus': self.onAddItem,
+            'onAddItem': self.onAddItem,
             'options': self.props.options,
             'onTypeChange': self.onChange,
             'onValueChange': self.onChange};
@@ -287,7 +285,7 @@ var UrlVCardComponentItem = React.createClass({
                         </button>
                     </div>
                     <div className="row-body">
-                        <div className="inputLine-negativeTrail row-body--aligned">
+                        <div onFocus={this.props.onAddItem.bind(null, this.props.index)} className="inputLine-negativeTrail row-body--aligned">
                             <SimpleSelect
                                 name="type"
                                 options={options}
@@ -299,7 +297,6 @@ var UrlVCardComponentItem = React.createClass({
                                     value={value.value}
                                     name="value"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    onFocus={this.props.onFocus.bind(null, this.props.index)}
                                     className='input-div' data-placeholder="Телефон" />
                             </div>
                         </div>
@@ -328,7 +325,7 @@ var UrlVCardComponent = React.createClass({
     render: function() {
         var self = this;
         var extraOptions = {
-            'onFocus': self.onAddItem,
+            'onAddItem': self.onAddItem,
             'options': self.props.options,
             'onTypeChange': self.onChange,
             'onValueChange': self.onChange};
@@ -369,7 +366,7 @@ var AddressVCardComponentItem = React.createClass({
                         </button>
                     </div>
                     <div className="row-body">
-                        <div className="inputLine-negativeTrail row-body--aligned">
+                        <div onFocus={this.props.onAddItem.bind(null, this.props.index)} className="inputLine-negativeTrail row-body--aligned">
                             <SimpleSelect
                                 name="type"
                                 options={options}
@@ -408,7 +405,6 @@ var AddressVCardComponentItem = React.createClass({
                                     value={value.postal_code}
                                     name="postal_code"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    onFocus={this.props.onFocus.bind(null, this.props.index)}
                                     className='input-div' data-placeholder="Postal code" />
                             </div>
                         </div>
@@ -438,7 +434,7 @@ var AddressVCardComponent = React.createClass({
     render: function() {
         var self = this;
         var extraOptions = {
-            'onFocus': self.onAddItem,
+            'onAddItem': self.onAddItem,
             'options': self.props.options,
             'onTypeChange': self.onChange,
             'onValueChange': self.onChange};

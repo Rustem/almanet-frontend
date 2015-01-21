@@ -17,7 +17,6 @@ var ContentEditableInput = React.createClass({
     componentWillMount: function() {
         this.isOnceFocused = false;
         this.isOnceTyped = false;
-        this.defaultValue = this.value() || this.props.placeholder;
         this.is_placeholder = !this.value();
     },
 
@@ -72,6 +71,9 @@ var ContentEditableInput = React.createClass({
                 target: {value: ''}
             });
         }
+        if(this.props.onFocus) {
+            this.props.onFocus.call(arguments)
+        }
     },
 
     onBlur: function(e) {
@@ -101,7 +103,7 @@ var ContentEditableInput = React.createClass({
             contentEditable: true,
             className: className
         });
-        var value = this.defaultValue;
+        var value = this.value() || this.props.value || this.props.placeholder;
         return Component(props, value);
 
     },
