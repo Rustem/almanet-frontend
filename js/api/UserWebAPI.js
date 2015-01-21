@@ -36,7 +36,7 @@ module.exports = {
     },
 
     editUser: function(user_id, object, success, failure) {
-        requestPatch('/api/v1/user/'+user_id)
+        requestPatch('/api/v1/user/'+ user_id + '/')
             .send(object)
             .end(function(res) {
                 if (res.ok) {

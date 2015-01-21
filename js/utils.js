@@ -129,7 +129,7 @@ function request(method, url) {
       .type('json')
       .withCredentials();
 
-  if ('POST PUT PATCH'.indexOf(method.toUpperCase()) != -1)
+  if ('POST PUT DELETE PATCH'.indexOf(method.toUpperCase()) != -1)
     return _request
       .set('X-CSRFToken', cookie_tool.parse(document.cookie).csrftoken);
   else
