@@ -44,10 +44,18 @@ var ProductStore = assign({}, EventEmitter.prototype, {
         return _.filter(products, function(p){ return _.indexOf(ids, p.id) !== -1 });
     },
 
-    // TODO: delete this
-    fakeGet: function(id) {
-        return _products['prod_1'];
-    }
+    updateStatValue: function(id) {
+        var inStat = function(stat, product_id) {
+                return _.filter(stat, function(st){ return st.product_id === product_id; });
+            },
+            stats = _.pluck(SalesCycleStore.getAll(), 'stat'),
+            stat_value = _.reduce(stats, function(acc, stat) {
+                var t = inStat(stat, id);
+                return acc + (t.length>0 ? t[0].value : 0);
+            }, 0);
+
+        _products[id].stat_value = stat_value;
+    },
 
 });
 
@@ -57,15 +65,18 @@ ProductStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
-            CRMAppDispatcher.waitFor([SessionStore.dispatchToken]);
+            CRMAppDispatcher.waitFor([SessionStore.dispatchToken, SalesCycleStore.dispatchToken]);
+
             _.forEach(action.object.products, function(product){
                 _products[product.id] = product;
+                ProductStore.updateStatValue(product.id);
             });
             ProductStore.emitChange();
             break;
         case ActionTypes.CREATE_PRODUCT_SUCCESS:
             var product = action.object;
             _products[product.id] = product;
+            _products[product.id].stat_value = 0;
             ProductStore.emitChange();
             break;
         case ActionTypes.EDIT_PRODUCT_SUCCESS:
@@ -73,17 +84,12 @@ ProductStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             _products[product.id] = product;
             ProductStore.emitChange();
             break;
-        case ActionTypes.CLOSE_SALES_CYCLE:
+        case ActionTypes.CLOSE_SALES_CYCLE_SUCCESS:
             CRMAppDispatcher.waitFor([SalesCycleStore.dispatchToken]);
-            var value = action.object.real_value,
-                prod_ids = action.object.product_ids;
-            if(!prod_ids) break;
 
-            // TODO
-
-            for(var i=0; i<prod_ids.length; i++) {
-                _products[prod_ids[i]].current_value += (value * 1. / prod_ids.length);
-            }
+            _(ProductStore.getAll()).forEach(function (product) {
+                ProductStore.updateStatValue(product.id);
+            });
             ProductStore.emitChange();
             break;
         default:

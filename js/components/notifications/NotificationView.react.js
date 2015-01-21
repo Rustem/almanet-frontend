@@ -25,7 +25,7 @@ var NotificationContactCreateView = React.createClass({
         return (
             <div className="notificationCenter-item">
                 <div className="notificationCenter-item-meta">
-                    {moment(n.at).fromNow()}
+                    {moment(utils.formatTime(n)).fromNow()}
                 </div>
                 Пользователь {utils.capitalize(author.vcard.fn)} создал новый контакт - {createdContact.vcard.fn}.
             </div>
@@ -49,7 +49,7 @@ var NotificationContactUpdateView = React.createClass({
         return (
             <div key={n.id} className="notificationCenter-item">
                 <div className="notificationCenter-item-meta">
-                    {moment(n.at).fromNow()}
+                    {moment(utils.formatTime(n)).fromNow()}
                 </div>
                 Пользователь {utils.capitalize(author.vcard.fn)} изменил контакт {createdContact.vcard.fn}.
             </div>
@@ -74,7 +74,7 @@ var NotificationContactShareView = React.createClass({
         return (
             <div key={n.id} className="notificationCenter-item">
                 <div className="notificationCenter-item-meta">
-                    {moment(n.at).fromNow()}
+                    {moment(utils.formatTime(n)).fromNow()}
                 </div>
                 Пользователь {utils.capitalize(author.vcard.fn)} поделился {sharedContacts.length == 1 ? 'контактом' : 'контактами'} {_.map(sharedContacts, function(c) { return c.vcard.fn}).join(', ')} с {receivers.length == 1 ? 'пользователем' : 'пользователями'} {_.map(receivers, function(r) { return r.vcard.fn}).join(', ')}.
             </div>
@@ -98,7 +98,7 @@ var NotificationActivityCreateView = React.createClass({
         return (
             <div key={n.id} className="notificationCenter-item">
                 <div className="notificationCenter-item-meta">
-                    {moment(n.at).fromNow()}
+                    {moment(utils.formatTime(n)).fromNow()}
                 </div>
                 Пользователь {utils.capitalize(author.vcard.fn)} добавил новое взаимодействие.
             </div>
@@ -123,7 +123,7 @@ var NotificationFilterCreateView = React.createClass({
         return (
             <div key={n.id} className="notificationCenter-item">
                 <div className="notificationCenter-item-meta">
-                    {moment(n.at).fromNow()}
+                    {moment(utils.formatTime(n)).fromNow()}
                 </div>
                 Пользователь {utils.capitalize(author.vcard.fn)} добавил новый фильтр - {filter_title}.
             </div>
@@ -148,7 +148,7 @@ var NotificationFilterEditView = React.createClass({
         return (
             <div key={n.id} className="notificationCenter-item">
                 <div className="notificationCenter-item-meta">
-                    {moment(n.at).fromNow()}
+                    {moment(utils.formatTime(n)).fromNow()}
                 </div>
                 Пользователь {utils.capitalize(author.vcard.fn)} изменил фильтр - {filter_title}.
             </div>
@@ -172,7 +172,7 @@ var NotificationImportContactsView = React.createClass({
         return (
             <div key={n.id} className="notificationCenter-item">
                 <div className="notificationCenter-item-meta">
-                    {moment(n.at).fromNow()}
+                    {moment(utils.formatTime(n)).fromNow()}
                 </div>
                 Успешно импортировано: {count} {count == 1 ? 'контакт' : 'контактов'}.
             </div>

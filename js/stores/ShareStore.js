@@ -1,6 +1,7 @@
 var _ = require('lodash');
 var Fuse = require('../libs/fuse');
 var assign = require('object-assign');
+var moment = require('moment');
 var EventEmitter = require('events').EventEmitter;
 var CRMConstants = require('../constants/CRMConstants');
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
@@ -41,7 +42,7 @@ var ShareStore = assign({}, EventEmitter.prototype, {
     sortedByDate: function(reversed) {
         var reversed = reversed && true || false;
         var shares = this.getAll();
-        shares = _.sortBy(shares, function(share){ return share.date_created });
+        shares = _.sortBy(shares, function(share){ return moment(share.date_created) });
         return shares.reverse();
     },
 

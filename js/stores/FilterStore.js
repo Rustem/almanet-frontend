@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var assign = require('object-assign');
+var moment = require('moment');
 var EventEmitter = require('events').EventEmitter;
 var CRMConstants = require('../constants/CRMConstants');
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
@@ -31,7 +32,7 @@ var FilterStore = assign({}, EventEmitter.prototype, {
 
     getLatestOne: function() {
         var filters = _.sortBy(this.getAll(), function(f) {
-            f.date_created
+            return moment(f.date_created);
         }.bind(this)).reverse();
         if(filters.length == 0) return null;
         return filters[0];

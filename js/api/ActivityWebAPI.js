@@ -5,13 +5,6 @@ var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
 
 module.exports = {
-    getAll: function(success, failure) {
-        var activities = JSON.parse(localStorage.getItem('activities'));
-        setTimeout(function(){
-            success(activities);
-        }, 0);
-    },
-
     create: function(activityObject, success, failure) {
         var object = _.omit(activityObject, 'contact_id');
         request('POST','/api/v1/activity/')

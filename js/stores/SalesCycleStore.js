@@ -1,8 +1,8 @@
 var _ = require('lodash');
 var assign = require('object-assign');
+var moment = require('moment');
 var EventEmitter = require('events').EventEmitter;
 var CRMConstants = require('../constants/CRMConstants');
-var AppCommonStore = require('../stores/AppCommonStore');
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
 var SessionStore = require('./SessionStore');
 var ActivityStore = require('./ActivityStore');
@@ -34,7 +34,7 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
 
     getLatestOne: function() {
         var scycles = _.sortBy(this.getAll(), function(sc) {
-            sc.date_created
+            moment(sc.date_created)
         }.bind(this)).reverse();
         if(!scycles) return null;
         return scycles[0];
@@ -78,22 +78,8 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
         return obj;
     },
 
-    setAll: function(obj) {
-        _.forEach(obj.sales_cycles, function (sc){
-            _salescycles[sc.id] = sc;
-            _salescycles[sc.id].activities = [];
-            _salescycles[sc.id].product_ids = sc.product_ids;
-        });
-        _.forEach(obj.activities, function (actv){
-            if(actv.salescycle_id in _salescycles)
-                _salescycles[actv.salescycle_id].activities.push(actv.id);
-        });
-        this.emitChange();
-    },
-
     getClosedCyclesNumber: function(user) {
-        var AppCommonStore = require('./AppCommonStore'),
-            FEEDBACK_STATUSES = AppCommonStore.get_constants('activity').feedback_hash;
+        var FEEDBACK_STATUSES = utils.get_constants('activity').feedback_hash;
         var closing_actvs = _.filter(ActivityStore.byUser(user),
             function(a){ return a.feedback_status == FEEDBACK_STATUSES.OUTCOME });
         var salescycles = _.map(closing_actvs, function(a){ return this.get(a.sales_cycle_id)}.bind(this));
@@ -107,10 +93,9 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
     },
 
     getOpenedCyclesNumber: function(user) {
-        var AppCommonStore = require('./AppCommonStore'),
-            SALES_CYCLE_STATUS = AppCommonStore.get_constants('sales_cycle').statuses_hash;
+        var SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash,
             salescycles = this.getAll();
-        return (_.filter(salescycles, function(c){ return c.author_id == user.id && c.status != SALES_CYCLE_STATUS.FINISHED })).length;
+        return (_.filter(salescycles, function(c){ return c.author_id == user.id && c.status != SALES_CYCLE_STATUS.COMPLETED })).length;
     },
 
     setAll: function(obj) {
@@ -129,14 +114,12 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
     set: function(sales_cycle) {
         _salescycles[sales_cycle.id] = sales_cycle;
         _salescycles[sales_cycle.id].activities = [];
-        // TODO fetch Products on create
         _salescycles[sales_cycle.id].product_ids = [];
         this.emitChange();
     },
 
     updateStatusToPending: function(sales_cycle_id) {
-        var AppCommonStore = require('./AppCommonStore'),
-            SALES_CYCLE_STATUS = AppCommonStore.get_constants('sales_cycle').statuses_hash;
+        var SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash;
         sc = _salescycles[sales_cycle_id];
         if (sc.status == SALES_CYCLE_STATUS.NEW)
             sc.status = SALES_CYCLE_STATUS.PENDING;

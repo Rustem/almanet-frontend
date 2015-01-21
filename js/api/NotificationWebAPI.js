@@ -18,7 +18,7 @@ module.exports = api = {
         var timeNow = Date.now();
         var obj = _.extend({}, details, {
             id: 'n_' + timeNow,
-            at: timeNow,
+            date_created: timeNow,
             is_new: true
         });
         var rawNotifs = JSON.parse(localStorage.getItem('notifications')) || [];

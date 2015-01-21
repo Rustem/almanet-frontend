@@ -11,7 +11,10 @@ var FormElementMixin = require('../FormElementMixin.react');
 var FeedbackDropDown = React.createClass({
     mixins: [FormElementMixin],
     componentWillMount: function() {
-        this.STATUSES = AppCommonStore.get_constants('activity').feedback;
+        this.STATUSES = _.filter(
+            AppCommonStore.get_constants('activity').feedback,
+            function(c) { return c[0] !== '$'; }
+            );
     },
     propTypes: {
         simple: React.PropTypes.bool

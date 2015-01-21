@@ -6,6 +6,7 @@ var ActivityStore = require('../../stores/ActivityStore');
 var ContactStore = require('../../stores/ContactStore');
 var SalesCycleStore = require('../../stores/SalesCycleStore');
 var UserStore = require('../../stores/UserStore');
+var utils = require('../../utils');
 var Router = require('react-router');
 var Link = Router.Link;
 var IconSvg = require('../common/IconSvg.react');
@@ -72,7 +73,7 @@ var ActivityListItem = React.createClass({
                       <div className="row-body">
                         <div className="row">
                           <div className="row-body-primary text-caption text-secondary">
-                            <a href="#" className="text-secondary">{author.vcard.fn}</a> в {activity.at}
+                            <a href="#" className="text-secondary">{author.vcard.fn}</a> в {utils.formatTime(activity)}
                           </div>
                           <div className="row-body-secondary">
                             <Link to='activity_selected'

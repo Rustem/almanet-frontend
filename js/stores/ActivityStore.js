@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var assign = require('object-assign');
+var moment = require('moment');
 var EventEmitter = require('events').EventEmitter;
 var CRMConstants = require('../constants/CRMConstants');
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
@@ -29,8 +30,11 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
 
     getByDate: function(reversed) {
         var activities = this.getAll();
-        activities = _.sortBy(activities, function(activity){ return activity.date_created });
-        return activities.reverse();
+        activities = _.sortBy(activities, function(activity){ return moment(activity.date_created) });
+        if(reversed) {
+            activities = activities.reverse();
+        }
+        return activities;
     },
 
     byUser: function(user) {

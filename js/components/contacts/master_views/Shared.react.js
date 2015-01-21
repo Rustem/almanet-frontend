@@ -10,6 +10,7 @@ var Router = require('react-router');
 var ActiveState = Router.ActiveState;
 var Navigation = Router.Navigation;
 var Link = Router.Link;
+var moment = require('moment');
 var utils = require('../../../utils');
 var IconSvg = require('../../common/IconSvg.react');
 var ContactActionCreators = require('../../../actions/ContactActionCreators');
@@ -205,7 +206,7 @@ var SharesList = React.createClass({
 
     filterShares: function() {
         // by all contacts and notes
-        var shares = _.sortBy(this.props.shares, 'at').reverse(),
+        var shares = _.sortBy(this.props.shares, function(s) { return moment(s.date_created); }).reverse(),
             filter_text = this.props.filter_text;
         if(!filter_text) {
             return shares;
