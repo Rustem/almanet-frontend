@@ -193,15 +193,7 @@ var FilterList = React.createClass({
     },
 
     _onChange: function() {
-        this.setState(this.getInitialState(), function(prev_state) {
-            if(prev_state.filters.length > this.state.filters.length) {
-                var f = FilterStore.getLatestOne();
-                if(f == null)
-                    this.transitionTo('new_filter');
-                else
-                    this.transitionTo('filtered', {'id': f.id});
-            }
-        }.bind(this, this.state));
+        this.setState(this.getInitialState());
     },
 
 });

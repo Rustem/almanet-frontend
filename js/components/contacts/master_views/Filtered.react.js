@@ -13,6 +13,7 @@ var capitalize = require('../../../utils').capitalize;
 var fuzzySearch = require('../../../utils').fuzzySearch;
 var IconSvg = require('../../common/IconSvg.react');
 var Modal = require('../../common/Modal.react');
+var EmptyView = require('../../common/EmptyView.react');
 var FilterActionCreators = require('../../../actions/FilterActionCreators');
 var ContactStore = require('../../../stores/ContactStore');
 var ShareStore = require('../../../stores/ShareStore');
@@ -356,10 +357,6 @@ var FilteredDetailView = React.createClass({
         this._onChange();
     },
 
-    shouldComponentUpdate: function(nextProps, nextState) {
-        return this.state.filter_cnt <= nextState.filter_cnt
-    },
-
     onEditClick: function(e) {
         e.preventDefault();
         this.mode = VIEW_MODES.EDIT;
@@ -402,6 +399,8 @@ var FilteredDetailView = React.createClass({
     },
 
     render: function() {
+        if(!this.state.filter)
+            return (<EmptyView />)
         var cids = this.getSelectedContacts();
         return (
         <div className="page">
