@@ -127,25 +127,37 @@ var FilterList = React.createClass({
     },
 
     renderFilter: function(f) {
-        return <div className="row row--oneliner row--link">
+        var Component = this.state.isEdit ? 
+            (<div className="row row--oneliner row--link">
                 <div className="row-icon">
-                    {this.state.isEdit ?
-                        <button onClick={this.deleteFilter.bind(null, f.id)} >
-                            <IconSvg iconKey="remove" />
-                        </button>
-                    : null }
+                    <button onClick={this.deleteFilter.bind(null, f.id)} >
+                        <IconSvg iconKey="remove" />
+                    </button>
                 </div>
-                <Link to="filtered" params={{id: f.id}} >
-                    <div className="row-body">
-                      <div className="row-body-primary">
-                        {f.title}
-                      </div>
-                      <div className="row-body-secondary">
-                        {this.applyFilter(f).length}
-                      </div>
-                    </div>
-                </Link>
-              </div>
+                <div className="row-body">
+                  <div className="row-body-primary">
+                    {f.title}
+                  </div>
+                  <div className="row-body-secondary">
+                    {this.applyFilter(f).length}
+                  </div>
+                </div>
+            </div>) :
+            (<Link to="filtered" params={{id: f.id}} className="row row--oneliner row--link">
+                <div className="row-icon">
+                </div>
+                <div className="row-body">
+                  <div className="row-body-primary">
+                    {f.title}
+                  </div>
+                  <div className="row-body-secondary">
+                    {this.applyFilter(f).length}
+                  </div>
+                </div>
+            </Link>
+            )
+        return Component
+              
     },
 
     renderEditButton: function() {
