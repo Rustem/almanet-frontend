@@ -114,7 +114,7 @@ var FilteredList = React.createClass({
                 <div className="space-vertical"></div>
                 <div className="row row--oneliner row--letter">
                     <div className="row-icon">
-                        {letter.toUpperCase()}
+                        {letter && letter.toUpperCase() || 'Неизвестно'}
                     </div>
                 </div>
             </div>
@@ -271,7 +271,7 @@ var FilteredViewMixin = {
         var _map = {}, changed = value.select_all,
             contacts = null;
         contacts = this.applyFilter(value);
-        
+
         for(var contact_id in this.state.selection_map) {
             _map[contact_id] = false;
         }
@@ -361,7 +361,7 @@ var FilteredDetailView = React.createClass({
         this.mode = VIEW_MODES.EDIT;
         this.forceUpdate();
     },
-    
+
     onCancelClick: function(e) {
         e.preventDefault();
         this.mode = VIEW_MODES.READ;
@@ -376,7 +376,7 @@ var FilteredDetailView = React.createClass({
                         ref="filter_bar"
                         value={this.state.filter}
                         onHandleUserInput={this.onFilterBarUpdate}
-                        onUserAction={this.onUserAction} 
+                        onUserAction={this.onUserAction}
                         onEditClick={this.onEditClick} />
             </div>
         )
@@ -387,8 +387,8 @@ var FilteredDetailView = React.createClass({
             <FilterForm
                     ref="filter_bar"
                     onHandleUserInput={this.onFilterBarUpdate}
-                    onHandleSubmit={this.onHandleSubmit} 
-                    onCancelClick={this.onCancelClick} 
+                    onHandleSubmit={this.onHandleSubmit}
+                    onCancelClick={this.onCancelClick}
                     value={this.state.filter} />
         )
     },
@@ -461,7 +461,7 @@ var FilteredNewView = React.createClass({
                 <FilterForm
                     ref="filter_bar"
                     onHandleUserInput={this.onFilterBarUpdate}
-                    onHandleSubmit={this.onHandleSubmit} 
+                    onHandleSubmit={this.onHandleSubmit}
                     onCancelClick={this.onCancelClick} />
             </div>
             <FilteredList
