@@ -25,12 +25,12 @@ require('../utils');
 var default_form_state = {
   'tp': CONTACT_TYPES.CO,
   'vcard': {
-    'fn': 'Аман Куратов',
-    'orgs': [{'organization_name': 'ТОО "Массив Динамик"'}],
-    'emails': [{'idx': 0, 'type': 'internet', 'value': 'amangeldy@gmail.com'}],
-    'tels': [{'idx': 0, 'type': 'work', 'value': '+7 777 7777777'}],
-    'urls': [{'idx': 0, 'type': 'website', 'value': 'http://massive-dyn.com'}],
-    'adrs': [{'idx': 0, 'type': 'home', 'street_address': 'Zharokov, 11', 'region': 'Almaty', 'locality': 'Almaty', 'country_name': 'Kazakhstan', 'postal_code': '00012'}],
+    'fn': undefined,
+    'orgs': [{'organization_name': undefined}],
+    'emails': [{'idx': 0, 'type': 'internet', 'value': undefined}],
+    'tels': [{'idx': 0, 'type': 'work', 'value': undefined}],
+    'urls': [{'idx': 0, 'type': 'website', 'value': undefined}],
+    'adrs': [{'idx': 0, 'type': 'home', 'street_address': undefined, 'region': undefined, 'locality': undefined, 'country_name': undefined, 'postal_code': undefined}],
   },
   'note': 'Нужно сюда съездить на встречу а то я не успеваю, подмени меня пожалуйста.'
 };
