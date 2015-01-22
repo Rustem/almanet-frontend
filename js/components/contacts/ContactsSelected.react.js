@@ -23,16 +23,9 @@ var Filtered = require('./master_views').Filtered;
 var SingleSelectedDetailView = require('./SingleSelectedDetailView.react');
 var MultipleSelectedDetailView = require('./MultipleSelectedDetailView.react');
 var CommonFilterBar = require('./FilterComposer.react').CommonFilterBar;
+var EmptyView = require('../common/EmptyView.react');
 
 var _selected_contacts = [];
-
-var EmptySelectedDetailView = React.createClass({
-
-    render: function() {
-        return <div />
-    }
-
-});
 
 var ContactsSelectedViewMixin = {
 
@@ -95,7 +88,7 @@ var ContactsSelectedViewMixin = {
             if(this.state.selection_map[contact_id])
                 contact_ids.push(contact_id);
         if(contact_ids.length === 0) {
-            DetailView = (<EmptySelectedDetailView />);
+            DetailView = (<EmptyView />);
         } else if(contact_ids.length === 1) {
             DetailView = (
                 <SingleSelectedDetailView contact_id={contact_ids[0]}
