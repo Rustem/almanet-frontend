@@ -158,11 +158,12 @@ var SingleSelectedDetailView = React.createClass({
                 {this.render_body()}
                 <Modal isOpen={this.getAddEventModalState()}
                        onRequestClose={this.resetState}
-                       modalTitle='ДОБАВЛЕНИЕ СОБЫТИЯ'>
+                       modalTitle='ДОБАВЛЕНИЕ ВЗАИМОДЕЙСТВИЯ'>
                     <AddActivityForm
                         contact_ids={[this.props.contact_id]}
                         current_user={this.getUser()}
-                        onHandleSubmit={this.onAddEvent} />
+                        onHandleSubmit={this.onAddEvent} 
+                        onCancel={this.resetState} />
                 </Modal>
                 <Modal isOpen={this.isShareFormActive()}
                    modalTitle='ПОДЕЛИТЬСЯ СПИСКОМ'
@@ -170,7 +171,8 @@ var SingleSelectedDetailView = React.createClass({
                     <ContactShareForm
                         contact_ids={[this.props.contact_id]}
                         current_user={this.getUser()}
-                        onHandleSubmit={this.onShareSubmit} />
+                        onHandleSubmit={this.onShareSubmit}
+                        onCancel={this.resetState} />
                 </Modal>
             </div>
         )
