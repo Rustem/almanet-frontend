@@ -71,7 +71,7 @@ var FilterList = React.createClass({
     mixins: [AppContextMixin, Router.State, Router.Navigation],
 
     getInitialState: function() {
-        var user_id = this.getUser().id;
+        var user_id = this.getUser().crm_user_id;
         return {
             filters: FilterStore.getByUser(user_id),
             isEdit: false,
@@ -88,7 +88,7 @@ var FilterList = React.createClass({
     componentWillReceiveProps: function(nextProps) {
         if(this.getRouteName() != 'edit_filter') {
             this.setState(this.getInitialState());
-        }   
+        }
     },
 
     componentDidMount: function() {
@@ -117,7 +117,7 @@ var FilterList = React.createClass({
                 return ContactStore.getLeads(true);
         }
     },
-    
+
     applyFilter: function(filter) {
         var contacts = this.getDefaultContacts(filter);
         if(filter.filter_text)
@@ -129,7 +129,7 @@ var FilterList = React.createClass({
     renderFilter: function(f) {
         return <div className="row row--oneliner row--link">
                 <div className="row-icon">
-                    {this.state.isEdit ? 
+                    {this.state.isEdit ?
                         <button onClick={this.deleteFilter.bind(null, f.id)} >
                             <IconSvg iconKey="remove" />
                         </button>

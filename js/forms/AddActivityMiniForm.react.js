@@ -50,7 +50,7 @@ var AddActivityMiniForm = React.createClass({
         var errors = form.validate();
         if(!errors) {
             var object = {}, formValue = form.value();
-            object.author_id = this.props.current_user.id;
+            object.author_id = this.props.current_user.crm_user_id;
             object.sales_cycle_id = this.props.sales_cycle_id;
             object.description = formValue.description;
             object.feedback_status = formValue.feedback_status;

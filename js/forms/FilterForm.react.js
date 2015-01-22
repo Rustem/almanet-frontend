@@ -16,9 +16,9 @@ var FormMixin = require('./FormMixin.react');
 var Fieldset = require('./Fieldset.react');
 
 var BASE_OPTIONS = [
-  ['all', 'Все'], 
+  ['all', 'Все'],
   ['recent', 'Недавние'],
-  ['cold', 'Холодная база'], 
+  ['cold', 'Холодная база'],
   ['lead', 'Контакты в обработке'],
 ]
 
@@ -39,8 +39,8 @@ var FilterForm = React.createClass({
             <Fieldset className="page-header-filterContainer">
               <Fieldset className="page-header-controls row">
                 <Fieldset className="row-body-primary">
-                  <ContentEditableInput ref='name' 
-                              name='title' 
+                  <ContentEditableInput ref='name'
+                              name='title'
                               className='input-div input-div--block' placeholder="New filter"/>
                 </Fieldset>
               </Fieldset>
@@ -88,14 +88,14 @@ var FilterForm = React.createClass({
           alert(errors);
       }
   },
-  
+
   onHandleSubmit: function(e) {
     e.preventDefault();
     var form = this.refs.filter_form;
     var errors = form.validate();
     if(!errors) {
       var value = form.value();
-      value.author_id = this.getUser().id;
+      value.author_id = this.getUser().crm_user_id;
       this.props.onHandleSubmit(value);
     } else{
         alert(errors);

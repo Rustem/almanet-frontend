@@ -121,9 +121,8 @@ var ContactShareForm = React.createClass({
                 shares = [];
             for(var i = 0; i<share.participants.length; i++) {
                 for(var j = 0; j<share.contacts.length; j++) {
-
                     shares.push({
-                        'share_from': this.props.current_user.id,
+                        'share_from': this.props.current_user.crm_user_id,
                         'share_to': share.participants[i],
                         'contact': share.contacts[j],
                         'note': share.note});

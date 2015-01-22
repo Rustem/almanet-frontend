@@ -30,7 +30,7 @@ var default_form_state = {
     'emails': [{'idx': 0, 'type': 'internet', 'value': 'amangeldy@gmail.com'}],
     'tels': [{'idx': 0, 'type': 'work', 'value': '+7 777 7777777'}],
     'urls': [{'idx': 0, 'type': 'website', 'value': 'http://massive-dyn.com'}],
-    'adrs': [{'idx': 0, 'type': 'home', 'street_address': 'Zharokov, 11', 'region': 'Almaty', 'locality': 'Almaty', 'country_name': 'Kazakhstan', 'postal_code': '00012'}], 
+    'adrs': [{'idx': 0, 'type': 'home', 'street_address': 'Zharokov, 11', 'region': 'Almaty', 'locality': 'Almaty', 'country_name': 'Kazakhstan', 'postal_code': '00012'}],
   },
   'note': 'Нужно сюда съездить на встречу а то я не успеваю, подмени меня пожалуйста.'
 };
@@ -48,7 +48,7 @@ var ContactCreateForm = React.createClass({
     return (
       <Form {...this.props} ref='contact_form' value={value} onSubmit={this.onHandleSubmit}>
         <VCardElement name="vcard" fields={fields} />
-        
+
         <VCardRow name='note' label='Заметка' />
         <div className="inputLine text-right">
             <button className="btn btn--save" type="submit">Сохранить</button>
@@ -65,7 +65,7 @@ var ContactCreateForm = React.createClass({
   postValue: function(value) {
     value.tp = value.vcard.tp;
     value.vcard = _.omit(value.vcard, 'tp');
-    value.user_id = this.getUser().id;
+    value.user_id = this.getUser().crm_user_id;
     return value;
   },
 

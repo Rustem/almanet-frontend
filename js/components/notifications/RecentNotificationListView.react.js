@@ -28,7 +28,7 @@ var RecentNotificationListView = React.createClass({
     onNotifRead: function(n_id) {
         // @askhat note that in future when we plug our backend,
         // we should mark only current user copy of notification
-        NotificationActionCreators.userRead(n_id, this.getUser().id);
+        NotificationActionCreators.userRead(n_id, this.getUser().crm_user_id);
     },
 
     render: function() {
