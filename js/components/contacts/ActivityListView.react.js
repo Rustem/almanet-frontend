@@ -206,8 +206,11 @@ var CloseCycleWidget = React.createClass({
     },
 
     shouldRenderComponent: function(products) {
-        if(_.contains([null, undefined, CRMConstants.GLOBAL_SALES_CYCLE_ID], this.props.current_cycle_id))
-          return false;
+        var cycle = this.getSalesCycle()
+        if(_.contains([null, undefined], this.props.current_cycle_id))
+            return false;
+        if(cycle.is_global)
+            return false;
         if(products.length <= 0)
             return false;
         return !(this.getCycleStatus() == this.SALES_CYCLE_STATUS.COMPLETED) &&
@@ -286,7 +289,7 @@ var SalesCycleDropDownList = React.createClass({
                             <div className="inputLine inputLine--newCycle">
                                 <SalesCycleCreateForm onCycleCreated={this.props.onCycleCreated} />
                                 <div className="inputLine-caption">
-                                  Type a name for cycle and press enter.
+                                  Введите название цикла и нажмите Enter.
                                 </div>
                             </div>
                         </li>
