@@ -356,6 +356,10 @@ var FilteredDetailView = React.createClass({
         this._onChange();
     },
 
+    shouldComponentUpdate: function(nextProps, nextState) {
+        return this.state.filter_cnt <= nextState.filter_cnt
+    },
+
     onEditClick: function(e) {
         e.preventDefault();
         this.mode = VIEW_MODES.EDIT;

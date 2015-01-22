@@ -105,11 +105,9 @@ RequestStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
 
     var action = payload.action;
     if(_.contains(LOADING_ACTIONS, action.type)) {
-        console.log(1)
         RequestStore.set_loading();
     }
     if(_.contains(UNLOADING_ACTIONS, action.type)) {
-        console.log(2)
         RequestStore.unset_loading();
     }
 

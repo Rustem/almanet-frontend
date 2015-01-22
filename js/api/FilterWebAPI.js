@@ -52,6 +52,7 @@ module.exports = {
             .end(function(res) {
                 if (res.ok) {
                     success(id);
+                    SignalManager.send(ActionTypes.DELETE_FILTER_SUCCESS, null, null);
                 } else {
                     failure(id);
                 }

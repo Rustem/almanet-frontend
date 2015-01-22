@@ -157,6 +157,29 @@ var NotificationFilterEditView = React.createClass({
 
 });
 
+var NotificationFilterDeleteView = React.createClass({
+
+    mixins : [AppContextMixin],
+
+    propTypes: {
+        n: React.PropTypes.object
+    },
+
+    render: function() {
+        var n = this.props.n;
+
+        return (
+            <div key={n.id} className="notificationCenter-item">
+                <div className="notificationCenter-item-meta">
+                    {moment(utils.formatTime(n)).fromNow()}
+                </div>
+                Фильтр успешно удален.
+            </div>
+        );
+    }
+
+});
+
 var NotificationImportContactsView = React.createClass({
 
     mixins : [AppContextMixin],
@@ -201,6 +224,9 @@ function renderNotification(n) {
             break;
         case NotifTypes.FILTER_EDIT:
             TPL = NotificationFilterEditView;
+            break;
+        case NotifTypes.FILTER_DELETE:
+            TPL = NotificationFilterDeleteView;
             break;
         case NotifTypes.IMPORT_CONTACTS:
             TPL = NotificationImportContactsView;

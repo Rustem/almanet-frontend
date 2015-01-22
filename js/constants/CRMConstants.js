@@ -101,6 +101,7 @@ module.exports = {
         ACTIVITY_CREATE: null,
         FILTER_CREATE: null,
         FILTER_EDIT: null,
+        FILTER_DELETE: null,
         IMPORT_CONTACTS: null,
     }),
     SERVICES: keyMirror({
