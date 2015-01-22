@@ -17,7 +17,7 @@ var ContentEditableInput = React.createClass({
     componentWillMount: function() {
         this.isOnceFocused = false;
         this.isOnceTyped = false;
-        this.is_placeholder = !this.value();
+        this.is_placeholder = !this.value() && !this.props.value;
     },
 
     getDefaultProps: function() {
@@ -30,7 +30,7 @@ var ContentEditableInput = React.createClass({
         this.isOnceFocused = false;
         this.isOnceTyped = false;
         this.onChange({
-            target: {value: this.defaultValue}
+            target: {value: this.value() || this.props.value || this.props.placeholder}
         });
     },
 
