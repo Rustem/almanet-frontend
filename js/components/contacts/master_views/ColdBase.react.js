@@ -167,7 +167,7 @@ var ColdBaseList = React.createClass({
                 <div className="space-vertical"></div>
                 <div className="row row--oneliner row--letter">
                     <div className="row-icon">
-                        {letter.toUpperCase()}
+                        {letter && letter.toUpperCase() || 'Неизвестно'}
                     </div>
                 </div>
             </div>
