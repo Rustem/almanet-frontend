@@ -186,6 +186,9 @@ var ContactVCard = React.createClass({
                       <div className="inputLine-negativeTrail text-secondary">
                         {contact.vcard.orgs.map(this.renderOrg)}
                       </div>
+                      <div className="inputLine-negativeTrail text-secondary">
+                        {contact.vcard.titles.map(this.renderTitle)}
+                      </div>
                     </div>
                   </div>
                 </div>
