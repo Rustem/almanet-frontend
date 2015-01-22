@@ -136,7 +136,7 @@ var AddActivityForm = React.createClass({
     render: function() {
         var form_value = _.extend({}, DEFAULT_ACTIVITY, {
             'contacts': this.props.contact_ids,
-            'participants': [this.props.current_user.id],
+            'participants': [this.props.current_user.crm_user_id],
             'sales_cycle_id': this.props.sales_cycle_id});
         return (
             <Form {...this.props} value={form_value}
@@ -194,7 +194,7 @@ var AddActivityForm = React.createClass({
         var errors = form.validate();
         if(!errors) {
             var object = {}, formValue = form.value();
-            object.author_id = this.props.current_user.id;
+            object.author_id = this.props.current_user.crm_user_id;
             object.description = formValue.description;
             object.feedback_status = formValue.feedback_status;
             object.sales_cycle_id = formValue.sales_cycle_id;
