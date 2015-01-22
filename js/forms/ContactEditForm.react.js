@@ -61,7 +61,7 @@ var ContactEditForm = React.createClass({
   postValue: function(value) {
     value.tp = value.vcard.tp;
     value.vcard = _.omit(value.vcard, 'tp');
-    value.user_id = this.getUser().id;
+    value.user_id = this.getUser().crm_user_id;
     return value;
   },
 

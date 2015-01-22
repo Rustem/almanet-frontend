@@ -189,7 +189,7 @@ var ProfileView = React.createClass({
 
     getInitialState: function() {
         return {
-            user: UserStore.get(this.getUser().id)
+            user: UserStore.get(this.getUser().crm_user_id)
         }
     },
 
