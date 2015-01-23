@@ -667,7 +667,7 @@ var FilteredSelectedView = React.createClass({
         var cnt = 0;
         for(var i = 0; i<contacts.length; i++) {
             selection_map[contacts[i].id] = false;
-            if(_selected_contacts.indexOf(contacts[i].id) > -1) {
+            if(_.find(_selected_contacts, function (x){ return x == contacts[i].id })) {
                 selection_map[contacts[i].id] = true;
                 cnt += 1
             }
