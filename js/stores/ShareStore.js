@@ -113,7 +113,7 @@ ShareStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
         case ActionTypes.CREATE_SHARE_SUCCESS:
             var share_objects = action.object;
             _.forEach(share_objects.objects, function(share){
-                if(SessionStore.current_user().id == share.share_to)
+                if(SessionStore.current_user().crm_user_id == share.share_to)
                     _shares[share.id] = share;
             });
             ShareStore.emitChange();
