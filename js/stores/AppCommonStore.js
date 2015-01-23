@@ -32,20 +32,6 @@ var AppCommonStore = assign({}, EventEmitter.prototype, {
         return _constants;
     },
 
-    _genHash: function(optionsList) {
-        return _.reduce(optionsList, function(acc, x) { acc[x[1].toUpperCase()] = x[0]; return acc; }, {});
-    },
-
-    genSalesCycleStatusesHash: function() {
-        var statuses_hash = this._genHash(_constants['sales_cycle']['statuses']);
-        _constants['sales_cycle']['statuses_hash'] = statuses_hash;
-    },
-
-    genContactStatusesHash: function() {
-        var statuses_hash = this._genHash(_constants['contact']['statuses']);
-        _constants['contact']['statuses_hash'] = statuses_hash;
-    },
-
     filterActivityFeedbackOptions: function() {
         var options = _constants['activity']['feedback_options'];
         _constants['activity']['feedback_options'] = _.filter(options, function(o) {
@@ -57,8 +43,6 @@ var AppCommonStore = assign({}, EventEmitter.prototype, {
         _constants = obj;
 
         this.filterActivityFeedbackOptions();
-        this.genSalesCycleStatusesHash();
-        this.genContactStatusesHash();
 
         this.emitChange();
     }
