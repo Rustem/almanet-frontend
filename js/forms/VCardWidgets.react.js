@@ -31,6 +31,10 @@ var SVGCheckbox = inputs.SVGCheckbox;
 
 var CONTACT_TYPES = require('../constants/CRMConstants').CONTACT_TYPES;
 
+var getDefaultVCardValue = function() {
+    return true;
+};
+
 var getDefaultEmailValue = function() {
     return {
         type: 'home',
@@ -508,16 +512,16 @@ var VCardElement = React.createClass({
 
             'tp': <SVGCheckbox name="tp" label="Компания" className="row input-checkboxCompact" value={this.tpUnConverter(value.tp)} onValueUpdate={this.onTPChange} />,
 
-            'emails': (<div><EmailVCardComponent name="emails" value={value.emails} options={[['internet', 'адрес в формате интернета'], ['pref', 'предпочитаемый']]} onValueUpdate={this.onEmailsChange} />
+            'emails': (<div><EmailVCardComponent name="emails" value={this.emailValue(value.emails)} options={[['internet', 'адрес в формате интернета'], ['pref', 'предпочитаемый']]} onValueUpdate={this.onEmailsChange} />
                      <div className="space-verticalBorder"></div></div>),
 
-            'tels': (<div><TelVCardComponent name="tels" value={value.tels} options={[['home', 'по месту проживания'], ['work', 'по месту работы']]} onValueUpdate={this.onTelsChange} />
+            'tels': (<div><TelVCardComponent name="tels" value={this.telValue(value.tels)} options={[['home', 'по месту проживания'], ['work', 'по месту работы']]} onValueUpdate={this.onTelsChange} />
                    <div className="space-verticalBorder"></div></div>),
 
-            'urls': (<div><UrlVCardComponent name="urls" value={value.urls} options={[['website', 'website'], ['github', 'github']]} onValueUpdate={this.onUrlsChange} />
+            'urls': (<div><UrlVCardComponent name="urls" value={this.urlValue(value.urls)} options={[['website', 'website'], ['github', 'github']]} onValueUpdate={this.onUrlsChange} />
                    <div className="space-verticalBorder"></div></div>),
 
-            'adrs': <AddressVCardComponent name="adrs" value={value.adrs} options={[['home', 'место проживания'], ['work', 'место работы']]} onValueUpdate={this.onAdrsChange} />,
+            'adrs': <AddressVCardComponent name="adrs" value={this.adrValue(value.adrs)} options={[['home', 'место проживания'], ['work', 'место работы']]} onValueUpdate={this.onAdrsChange} />,
         }
         var rv = _.map(this.props.fields, function(f){
             return Components[f];
@@ -543,6 +547,30 @@ var VCardElement = React.createClass({
         if(titles == undefined || titles.length == 0)
             return ''
         return titles[0].data
+    },
+
+    emailValue: function(emails) {
+        if(emails == undefined || emails.length == 0)
+            return [getDefaultEmailValue()]
+        return emails
+    },
+
+    telValue: function(tels) {
+        if(tels == undefined || tels.length == 0)
+            return [getDefaultTelValue()]
+        return tels
+    },
+
+    urlValue: function(urls) {
+        if(urls == undefined || urls.length == 0)
+            return [getDefaultUrlValue()]
+        return urls
+    },
+
+    adrValue: function(adrs) {
+        if(adrs == undefined || adrs.length == 0)
+            return [getDefaultAddressValue()]
+        return adrs
     },
 
     tpUnConverter: function(v) {
