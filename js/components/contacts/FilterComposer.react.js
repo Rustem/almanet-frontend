@@ -78,17 +78,8 @@ var FilterList = React.createClass({
         }
     },
 
-    getRouteName: function() {
-        var routes = this.getRoutes();
-        var route = routes[routes.length - 1];
-        if(!route) { return false; }
-        return route.name;
-    },
-
     componentWillReceiveProps: function(nextProps) {
-        if(this.getRouteName() != 'edit_filter') {
-            this.setState(this.getInitialState());
-        }
+        this.setState(this.getInitialState());
     },
 
     componentDidMount: function() {
@@ -96,7 +87,7 @@ var FilterList = React.createClass({
         ContactStore.addChangeListener(this._onChange);
     },
 
-    componentWillUnMount: function() {
+    componentWillUnmount: function() {
         FilterStore.removeChangeListener(this._onChange);
         ContactStore.removeChangeListener(this._onChange);
     },
