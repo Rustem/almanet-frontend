@@ -31,7 +31,7 @@ var ContactEditForm = React.createClass({
   render: function() {
     var CRDDL = null ;
     var value = this.preValue(this.props.value);
-    var fields = ['fn', 'orgs', 'tp', 'tels', 'emails', 'urls', 'adrs'];
+    var fields = ['fn', 'orgs', 'titles', 'tp', 'tels', 'emails', 'urls', 'adrs'];
 
     if (value.vcard.tp == CONTACT_TYPES.CO) {
       CRDDL = <ContactRemoveableDropDownList

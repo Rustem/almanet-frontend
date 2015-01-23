@@ -78,17 +78,8 @@ var FilterList = React.createClass({
         }
     },
 
-    getRouteName: function() {
-        var routes = this.getRoutes();
-        var route = routes[routes.length - 1];
-        if(!route) { return false; }
-        return route.name;
-    },
-
     componentWillReceiveProps: function(nextProps) {
-        if(this.getRouteName() != 'edit_filter') {
-            this.setState(this.getInitialState());
-        }
+        this.setState(this.getInitialState());
     },
 
     componentDidMount: function() {
@@ -96,7 +87,7 @@ var FilterList = React.createClass({
         ContactStore.addChangeListener(this._onChange);
     },
 
-    componentWillUnMount: function() {
+    componentWillUnmount: function() {
         FilterStore.removeChangeListener(this._onChange);
         ContactStore.removeChangeListener(this._onChange);
     },
@@ -127,25 +118,37 @@ var FilterList = React.createClass({
     },
 
     renderFilter: function(f) {
-        return <div className="row row--oneliner row--link">
+        var Component = this.state.isEdit ? 
+            (<div className="row row--oneliner row--link">
                 <div className="row-icon">
-                    {this.state.isEdit ?
-                        <button onClick={this.deleteFilter.bind(null, f.id)} >
-                            <IconSvg iconKey="remove" />
-                        </button>
-                    : null }
+                    <button onClick={this.deleteFilter.bind(null, f.id)} >
+                        <IconSvg iconKey="remove" />
+                    </button>
                 </div>
-                <Link to="filtered" params={{id: f.id}} >
-                    <div className="row-body">
-                      <div className="row-body-primary">
-                        {f.title}
-                      </div>
-                      <div className="row-body-secondary">
-                        {this.applyFilter(f).length}
-                      </div>
-                    </div>
-                </Link>
-              </div>
+                <div className="row-body">
+                  <div className="row-body-primary">
+                    {f.title}
+                  </div>
+                  <div className="row-body-secondary">
+                    {this.applyFilter(f).length}
+                  </div>
+                </div>
+            </div>) :
+            (<Link to="filtered" params={{id: f.id}} className="row row--oneliner row--link">
+                <div className="row-icon">
+                </div>
+                <div className="row-body">
+                  <div className="row-body-primary">
+                    {f.title}
+                  </div>
+                  <div className="row-body-secondary">
+                    {this.applyFilter(f).length}
+                  </div>
+                </div>
+            </Link>
+            )
+        return Component
+              
     },
 
     renderEditButton: function() {
@@ -193,15 +196,7 @@ var FilterList = React.createClass({
     },
 
     _onChange: function() {
-        this.setState(this.getInitialState(), function(prev_state) {
-            if(prev_state.filters.length > this.state.filters.length) {
-                var f = FilterStore.getLatestOne();
-                if(f == null)
-                    this.transitionTo('new_filter');
-                else
-                    this.transitionTo('filtered', {'id': f.id});
-            }
-        }.bind(this, this.state));
+        this.setState(this.getInitialState());
     },
 
 });

@@ -31,36 +31,40 @@ var SVGCheckbox = inputs.SVGCheckbox;
 
 var CONTACT_TYPES = require('../constants/CRMConstants').CONTACT_TYPES;
 
-function getDefaultEmailValue() {
+var getDefaultVCardValue = function() {
+    return true;
+};
+
+var getDefaultEmailValue = function() {
     return {
         type: 'home',
-        value: 'vasya.pupkin@gmail.com'
+        value: undefined
     }
 };
 
 
-function getDefaultTelValue() {
+var getDefaultTelValue = function() {
     return {
         type: 'mobile',
-        value: '+7 777 7777777'
+        value: undefined
     }
 };
 
-function getDefaultUrlValue() {
+var getDefaultUrlValue = function() {
     return {
         type: 'website',
-        value: 'http://alma.net'
+        value: undefined
     }
 };
 
-function getDefaultAddressValue() {
+var getDefaultAddressValue = function() {
     return {
         type: 'work',
-        street_address: 'your street address',
-        region: 'your region',
-        locality: 'city name',
-        country_name: 'country name',
-        postal_code: 'postal code'
+        street_address: undefined,
+        region: undefined,
+        locality: undefined,
+        country_name: undefined,
+        postal_code: undefined
     }
 }
 
@@ -83,7 +87,7 @@ var VCardRow = React.createClass({
                     </div>
                 </div>
                 <div className="inputLine-div">
-                    <ContentEditableInput {...this.props} className='input-div input-div--area' isStrong={false} />
+                    <ContentEditableInput {...this.props} className='input-div input-div--area' isStrong={false} placeholder="Заметка"/>
                 </div>
             </div>
         )
@@ -134,7 +138,7 @@ var EmailVCardComponentItem = React.createClass({
                                     value={value.value}
                                     name="value"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' data-placeholder="Телефон" />
+                                    className='input-div' placeholder="E-mail" />
                             </div>
                         </div>
                     </div>
@@ -216,7 +220,7 @@ var TelVCardComponentItem = React.createClass({
                                     value={value.value}
                                     name="value"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' data-placeholder="Телефон" />
+                                    className='input-div' placeholder="Телефон" />
                             </div>
                         </div>
                     </div>
@@ -297,7 +301,7 @@ var UrlVCardComponentItem = React.createClass({
                                     value={value.value}
                                     name="value"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' data-placeholder="Телефон" />
+                                    className='input-div' placeholder="URL" />
                             </div>
                         </div>
                     </div>
@@ -378,34 +382,34 @@ var AddressVCardComponentItem = React.createClass({
                                     value={value.street_address}
                                     name="street_address"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' data-placeholder="Street address" />
+                                    className='input-div' placeholder="Улица" />
                             </div>
                             <div className="inputLine-div">
                                 <ContentEditableInput
                                     value={value.region}
                                     name="region"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' data-placeholder="Region" />
+                                    className='input-div' placeholder="Город" />
 
                                 <ContentEditableInput
                                     value={value.locality}
                                     name="locality"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' data-placeholder="Locality" />
+                                    className='input-div' placeholder="Район" />
                             </div>
                             <div className="inputLine-div">
                                 <ContentEditableInput
                                     value={value.country_name}
                                     name="country_name"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' data-placeholder="Country" />
+                                    className='input-div' placeholder="Страна" />
                             </div>
                             <div className="inputLine-div">
                                 <ContentEditableInput
                                     value={value.postal_code}
                                     name="postal_code"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' data-placeholder="Postal code" />
+                                    className='input-div' placeholder="Почтовый индекс" />
                             </div>
                         </div>
                     </div>
@@ -457,7 +461,7 @@ var FNVCardComponent = React.createClass({
     render: function() {
         return (
             <Fieldset className="inputLine-negativeTrail">
-              <ContentEditableInput className="input-div input-div--strong" name='fn' {...this.props} />
+              <ContentEditableInput className="input-div input-div--strong" name='fn' {...this.props} placeholder="Имя Фамилия" />
             </Fieldset>
         )
     },
@@ -468,7 +472,7 @@ var OrgsVCardComponent = React.createClass({
     render: function() {
         return (
             <Fieldset className="inputLine-negativeTrail">
-              <ContentEditableInput className="input-div text-secondary" name='orgs' {...this.props} />
+              <ContentEditableInput className="input-div text-secondary" name='orgs' {...this.props} placeholder="Организация" />
             </Fieldset>
         )
     },
@@ -479,7 +483,7 @@ var TitlesVCardComponent = React.createClass({
     render: function() {
         return (
             <Fieldset className="inputLine-negativeTrail">
-              <ContentEditableInput className="input-div text-secondary" name='titles' {...this.props} />
+              <ContentEditableInput className="input-div text-secondary" name='titles' {...this.props} placeholder="Должность" />
             </Fieldset>
         )
     },
@@ -506,18 +510,18 @@ var VCardElement = React.createClass({
             'orgs': <OrgsVCardComponent value={this.orgValue(value.orgs)} onValueUpdate={this.onOrgChange} />,
             'titles': <TitlesVCardComponent value={this.titleValue(value.titles)} onValueUpdate={this.onTitlesChange} />,
 
-            'tp': <SVGCheckbox name="tp" label="Company" className="row input-checkboxCompact" value={this.tpUnConverter(value.tp)} onValueUpdate={this.onTPChange} />,
+            'tp': <SVGCheckbox name="tp" label="Компания" className="row input-checkboxCompact" value={this.tpUnConverter(value.tp)} onValueUpdate={this.onTPChange} />,
 
-            'emails': (<div><EmailVCardComponent name="emails" value={value.emails} options={[['internet', 'адрес в формате интернета'], ['pref', 'предпочитаемый']]} onValueUpdate={this.onEmailsChange} />
+            'emails': (<div><EmailVCardComponent name="emails" value={this.emailValue(value.emails)} options={[['internet', 'адрес в формате интернета'], ['pref', 'предпочитаемый']]} onValueUpdate={this.onEmailsChange} />
                      <div className="space-verticalBorder"></div></div>),
 
-            'tels': (<div><TelVCardComponent name="tels" value={value.tels} options={[['home', 'по месту проживания'], ['work', 'по месту работы']]} onValueUpdate={this.onTelsChange} />
+            'tels': (<div><TelVCardComponent name="tels" value={this.telValue(value.tels)} options={[['home', 'по месту проживания'], ['work', 'по месту работы']]} onValueUpdate={this.onTelsChange} />
                    <div className="space-verticalBorder"></div></div>),
 
-            'urls': (<div><UrlVCardComponent name="urls" value={value.urls} options={[['website', 'website'], ['github', 'github']]} onValueUpdate={this.onUrlsChange} />
+            'urls': (<div><UrlVCardComponent name="urls" value={this.urlValue(value.urls)} options={[['website', 'website'], ['github', 'github']]} onValueUpdate={this.onUrlsChange} />
                    <div className="space-verticalBorder"></div></div>),
 
-            'adrs': <AddressVCardComponent name="adrs" value={value.adrs} options={[['home', 'место проживания'], ['work', 'место работы']]} onValueUpdate={this.onAdrsChange} />,
+            'adrs': <AddressVCardComponent name="adrs" value={this.adrValue(value.adrs)} options={[['home', 'место проживания'], ['work', 'место работы']]} onValueUpdate={this.onAdrsChange} />,
         }
         var rv = _.map(this.props.fields, function(f){
             return Components[f];
@@ -543,6 +547,30 @@ var VCardElement = React.createClass({
         if(titles == undefined || titles.length == 0)
             return ''
         return titles[0].data
+    },
+
+    emailValue: function(emails) {
+        if(emails == undefined || emails.length == 0)
+            return [getDefaultEmailValue()]
+        return emails
+    },
+
+    telValue: function(tels) {
+        if(tels == undefined || tels.length == 0)
+            return [getDefaultTelValue()]
+        return tels
+    },
+
+    urlValue: function(urls) {
+        if(urls == undefined || urls.length == 0)
+            return [getDefaultUrlValue()]
+        return urls
+    },
+
+    adrValue: function(adrs) {
+        if(adrs == undefined || adrs.length == 0)
+            return [getDefaultAddressValue()]
+        return adrs
     },
 
     tpUnConverter: function(v) {

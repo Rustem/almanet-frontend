@@ -106,10 +106,15 @@ var ContactShareForm = React.createClass({
                 <div className="modal-inputLine text-center">
                   <button type="submit" className="text-good">СОХРАНИТЬ</button>
                   <div className="space-horizontal"></div>
-                  <button type="cancel" className="text-bad">ОТМЕНА</button>
+                  <button onClick={this.onHandleCancel} type="cancel" className="text-bad">ОТМЕНА</button>
                 </div>
             </Form>
         );
+    },
+
+    onHandleCancel: function(e) {
+        e.preventDefault();
+        this.props.onCancel.call(this);
     },
 
     onHandleSubmit: function(e) {

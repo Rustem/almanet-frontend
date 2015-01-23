@@ -200,7 +200,8 @@ var ContactProfileView = React.createClass({
                         <ContactShareForm
                             contact_ids={[this.getParams().id]}
                             current_user={this.getUser()}
-                            onHandleSubmit={this.onShareSubmit} />
+                            onHandleSubmit={this.onShareSubmit} 
+                            onCancel={this.resetState} />
                     </Modal>
                 </div>
                 <div className="body-detail">

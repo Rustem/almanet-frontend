@@ -35,7 +35,7 @@ var RepeatingFieldsetMixin = {
    * @returns {Array.<ReactComponent>}
    */
     renderFields: function(extraOptions) {
-        var value = this.value();
+        var value = (this.value() && this.value().length > 0) ? this.value() : [this.props.getDefaultItemValue()];
         var ItemComponent = this.props.item;
         var self = this;
         var children = value.map(function(itemValue, idx){
@@ -60,7 +60,7 @@ var RepeatingFieldsetMixin = {
     */
 
     onRemoveItem: function(idx) {
-        var value = this.value();
+        var value = (this.value() && this.value().length > 0) ? this.value() : [this.props.getDefaultItemValue()];
         var upd = {};
         if(idx === 0 && value.length === 1) {
             var defaultItem = this.props.getDefaultItemValue();
@@ -77,7 +77,8 @@ var RepeatingFieldsetMixin = {
        * Add new value to fieldset's value.
        */
     onAddItem: function(index) {
-        var value = this.value();
+        var value = (this.value() && this.value().length > 0) ? this.value() : [this.props.getDefaultItemValue()];
+
         if(value.length - 1 === index) {
             var itemValue = this.props.getDefaultItemValue();
             // itemValue['idx'] = value.length;
