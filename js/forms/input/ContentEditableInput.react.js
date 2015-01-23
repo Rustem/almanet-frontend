@@ -63,6 +63,7 @@ var ContentEditableInput = React.createClass({
     },
 
     onFocus: function(e) {
+        e.preventDefault();
         if(!this.is_placeholder)
             return;
         this.isOnceFocused = true;
