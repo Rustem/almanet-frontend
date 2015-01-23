@@ -11,8 +11,9 @@ var keyMirror = require('react/lib/keyMirror');
 var ContactStore = require('../../stores/ContactStore');
 
 VCardFields = {
-  renderTel: function(tel, idx) {
-        return (
+  renderTels: function(tels) {
+    var renderer = function(tel, idx) {
+      return (
         <div key={'tel--' + idx} className="inputLine inputLine--vcardRow">
           <div className="row">
             <div className="row-icon">
@@ -29,31 +30,48 @@ VCardFields = {
             </div>
           </div>
         </div>
-        )
-    },
-    renderEmail: function(email, idx) {
-        return (
-        <div key={'email--' + idx} className="inputLine inputLine--vcardRow">
-          <div className="row">
-            <div className="row-icon">
+      )
+    }
+
+    return (
+      <div>
+        {tels.map(renderer)}
+        {tels.length > 0 ? <div className="space-verticalBorder"></div> : null}
+      </div>
+    )
+  },
+  renderEmails: function(emails) {
+    var renderer = function(email, idx) {
+      return (<div key={'email--' + idx} className="inputLine inputLine--vcardRow">
+        <div className="row">
+          <div className="row-icon">
+          </div>
+          <div className="row-body">
+            <div className="inputLine-negativeTrail">
+              <div className="text-caption text-secondary">
+                {email.type}
+              </div>
             </div>
-            <div className="row-body">
-              <div className="inputLine-negativeTrail">
-                <div className="text-caption text-secondary">
-                  {email.type}
-                </div>
-              </div>
-              <div className="inputLine-div">
-                {email.value}
-              </div>
+            <div className="inputLine-div">
+              {email.value}
             </div>
           </div>
-        </div>)
-    },
+        </div>
+      </div>)
+    }
+                    
+    return (
+      <div>
+        {emails.map(renderer)}
+        {emails.length > 0 ? <div className="space-verticalBorder"></div> : null}
+      </div>
+    )
+  },
 
-    renderUrl: function(url, idx) {
-        return (
-        <div key={'email--' + idx} className="inputLine inputLine--vcardRow">
+  renderUrls: function(urls) {
+    var renderer = function(url, idx) {
+      return (
+        <div key={'url--' + idx} className="inputLine inputLine--vcardRow">
           <div className="row">
             <div className="row-icon">
             </div>
@@ -69,95 +87,103 @@ VCardFields = {
             </div>
           </div>
         </div>)
-    },
+      }
 
-    renderContacts: function(contact) {
-      if(contact.children == undefined || contact.children.length == 0)
-          return null;
       return (
-        <div className="inputLine inputLine--vcardRow">
-          <div className="row">
-            <div className="row-icon">
-            </div>
-            <div className="row-body">
-              <div className="inputLine-negativeTrail">
-                <div className="text-caption text-secondary">
-                  Работники в этой компании
-                </div>
-              </div>
-              {contact.children.map(function(c_id){
-                var c = ContactStore.get(c_id);
-                return <div className="inputLine-div">
-                        <Link to='contact_profile' params={{id: c.id}}>{c.vcard.fn}</Link>
-                       </div>
-              })}
-            </div>
-          </div>
-        </div>
-      )
-    },
+      <div>
+        {urls.map(renderer)}
+        {urls.length > 0 ? <div className="space-verticalBorder"></div> : null}
+      </div>
+    )
+  },
 
-    renderOrg: function(org) {
-      return (
-        org.organization_name
-      )
-    },
-
-    renderTitle: function(title) {
-      return (
-        title.data
-      )
-    },
-
-    renderCompany: function(c_id) {
-      company = ContactStore.inCompany(c_id);
-      if(company == null)
+  renderContacts: function(contact) {
+    if(contact.children == undefined || contact.children.length == 0)
         return null;
-      return (
-        <div className="inputLine inputLine--vcardRow">
-          <div className="row">
-            <div className="row-icon">
-            </div>
-            <div className="row-body">
-              <div className="inputLine-negativeTrail">
-                <div className="text-caption text-secondary">
-                  Компания
-                </div>
+    return (
+      <div className="inputLine inputLine--vcardRow">
+        <div className="row">
+          <div className="row-icon">
+          </div>
+          <div className="row-body">
+            <div className="inputLine-negativeTrail">
+              <div className="text-caption text-secondary">
+                Работники в этой компании
               </div>
-                <div className="inputLine-div">
-                  <Link to='contact_profile' params={{id: company.id}}>{company.vcard.fn}</Link>
-                </div>
             </div>
+            {contact.children.map(function(c_id){
+              var c = ContactStore.get(c_id);
+              return <div className="inputLine-div">
+                      <Link to='contact_profile' params={{id: c.id}}>{c.vcard.fn}</Link>
+                     </div>
+            })}
           </div>
         </div>
-      )
-    },
+      </div>
+    )
+  },
 
-    renderNote: function(share) {
-      if(share == undefined)
-        return null;
-      return (
-        <div className="inputLine inputLine--vcardRow">
-          <div className="row">
-            <div className="row-icon">
-            </div>
-            <div className="row-body">
-              <div className="inputLine-negativeTrail">
-                <div className="text-caption text-secondary">
-                  Заметка
-                </div>
+  renderOrg: function(org) {
+    return (
+      org.organization_name
+    )
+  },
+
+  renderTitle: function(title) {
+    return (
+      title.data
+    )
+  },
+
+  renderCompany: function(c_id) {
+    company = ContactStore.inCompany(c_id);
+    if(company == null)
+      return null;
+    return (
+      <div className="inputLine inputLine--vcardRow">
+        <div className="row">
+          <div className="row-icon">
+          </div>
+          <div className="row-body">
+            <div className="inputLine-negativeTrail">
+              <div className="text-caption text-secondary">
+                Компания
               </div>
-              <div className="inputLine-div">{share.note}</div>
             </div>
+              <div className="inputLine-div">
+                <Link to='contact_profile' params={{id: company.id}}>{company.vcard.fn}</Link>
+              </div>
           </div>
         </div>
-      )
-    },
+      </div>
+    )
+  },
 
-    render: function() {
-        var mode = this.props.mode;
-        return mode === VIEW_MODES_MAP.EDIT && this.render_edit() || this.render_read();
-    },
+  renderNote: function(share) {
+    if(share == undefined)
+      return null;
+    return (
+      <div className="inputLine inputLine--vcardRow">
+        <div className="row">
+          <div className="row-icon">
+          </div>
+          <div className="row-body">
+            <div className="inputLine-negativeTrail">
+              <div className="text-caption text-secondary">
+                Заметка
+              </div>
+            </div>
+            <div className="inputLine-div">{share.note}</div>
+          </div>
+        </div>
+      </div>
+    )
+  },
+
+  render: function() {
+      var mode = this.props.mode;
+      return mode === VIEW_MODES_MAP.EDIT && this.render_edit() || this.render_read();
+  },
 
 }
 
@@ -194,14 +220,11 @@ var ContactVCard = React.createClass({
                 </div>
                 <div className="space-vertical space-vertical--compact"></div>
 
-                {contact.vcard.emails.map(this.renderEmail)}
-                <div className="space-verticalBorder"></div>
+                {this.renderEmails(contact.vcard.emails)}
 
-                {contact.vcard.tels.map(this.renderTel)}
-                <div className="space-verticalBorder"></div>
+                {this.renderTels(contact.vcard.tels)}
 
-                {contact.vcard.urls.map(this.renderUrl)}
-                <div className="space-verticalBorder"></div>
+                {this.renderUrls(contact.vcard.urls)}
 
                 {this.renderNote(contact.share)}
 
@@ -259,14 +282,12 @@ var UserVCard = React.createClass({
 
               <div className="space-vertical space-vertical--compact"></div>
 
-              {user.vcard.tels.map(this.renderTel)}
-              <div className="space-verticalBorder"></div>
+              {this.renderEmails(user.vcard.emails)}
 
-              {user.vcard.emails.map(this.renderEmail)}
-              <div className="space-verticalBorder"></div>
+              {this.renderTels(user.vcard.tels)}
 
-              {user.vcard.urls.map(this.renderUrl)}
-              <div className="space-verticalBorder"></div>
+              {this.renderUrls(user.vcard.urls)}
+
 
             </div>
         );
