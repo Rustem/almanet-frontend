@@ -10,14 +10,21 @@ var FeedbackDropDownWidget = React.createClass({
 
     propTypes: {
         choices: React.PropTypes.array.isRequired,
+        choices_hash: React.PropTypes.object.isRequired,
         onChange: React.PropTypes.func.isRequired
+    },
+
+    getIconName: function(choice) {
+        return _.findKey(this.props.choices_hash, function(val) {
+            return val==choice[0];
+        }).toLowerCase();
     },
 
     renderChoice: function(choice, idx) {
         return (
             <a key={'choice__' + idx} ref={'fb_choice__' + choice[0]} onClick={this.onChoice.bind(null, idx)}  className="row row--oneliner row--link">
                 <div className="row-icon text-good">
-                    <IconSvg iconKey={choice[0]} />
+                    <IconSvg iconKey={this.getIconName(choice)} />
                 </div>
                 <div className="row-body text-secondary">
                   {choice[1]}
@@ -49,7 +56,7 @@ var FeedbackDropDownWidget = React.createClass({
         return (
             <a key={'choice__' + idx} className="row row--oneliner row--link">
                 <div className="row-icon text-good">
-                    <IconSvg iconKey={choice[0]} />
+                    <IconSvg iconKey={this.getIconName(choice)} />
                 </div>
                 <div className="row-body text-secondary">
                   {choice[1]}
