@@ -8,9 +8,10 @@ var Form = require('./Form.react');
 
 var VCardElement = require('./VCardWidgets.react').VCardElement;
 var AppContextMixin = require('../mixins/AppContextMixin');
+var VCardProcessingBehaviour = require('./behaviours/VCardProcessingBehaviour');
 
 var UserEditForm = React.createClass({
-  mixins : [AppContextMixin],
+  mixins : [AppContextMixin, VCardProcessingBehaviour],
 
   propTypes: {
     onHandleSubmit: React.PropTypes.func,
@@ -31,7 +32,7 @@ var UserEditForm = React.createClass({
     var form = this.refs.user_edit_form;
     var errors = form.validate();
     if(!errors) {
-      var value = form.value();
+      var value = this.removeEmpty(form.value());
       this.props.onHandleSubmit(value);
     } else{
         alert(errors);

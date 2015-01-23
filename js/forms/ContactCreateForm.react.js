@@ -14,6 +14,7 @@ var VCardWidgets = require('./VCardWidgets.react');
 var VCardElement = VCardWidgets.VCardElement;
 var VCardRow = VCardWidgets.VCardRow;
 var AppContextMixin = require('../mixins/AppContextMixin');
+var VCardProcessingBehaviour = require('./behaviours/VCardProcessingBehaviour');
 
 var CONTACT_TYPES = require('../constants/CRMConstants').CONTACT_TYPES;
 
@@ -36,7 +37,7 @@ var default_form_state = {
 };
 
 var ContactCreateForm = React.createClass({
-  mixins : [AppContextMixin],
+  mixins : [AppContextMixin, VCardProcessingBehaviour],
 
   propTypes: {
     onHandleSubmit: React.PropTypes.func,
@@ -57,24 +58,12 @@ var ContactCreateForm = React.createClass({
     )
   },
 
-  preValue: function(value) {
-    value.vcard.tp = value.tp;
-    return _.omit(value, 'tp');
-  },
-
-  postValue: function(value) {
-    value.tp = value.vcard.tp;
-    value.vcard = _.omit(value.vcard, 'tp');
-    value.user_id = this.getUser().crm_user_id;
-    return value;
-  },
-
   onHandleSubmit: function(e) {
     e.preventDefault();
     var form = this.refs.contact_form;
     var errors = form.validate();
     if(!errors) {
-      var value = this.postValue(form.value());
+      var value = this.removeEmpty(this.postValue(form.value()));
       this.props.onHandleSubmit(value);
     } else{
         alert(errors);

@@ -31,10 +31,6 @@ var SVGCheckbox = inputs.SVGCheckbox;
 
 var CONTACT_TYPES = require('../constants/CRMConstants').CONTACT_TYPES;
 
-var getDefaultVCardValue = function() {
-    return true;
-};
-
 var getDefaultEmailValue = function() {
     return {
         type: 'home',
