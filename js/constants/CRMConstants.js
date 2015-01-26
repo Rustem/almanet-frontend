@@ -90,10 +90,6 @@ module.exports = {
     GLOBAL_SALES_CYCLE_ID: null,
     GLOBAL_SALES_CYCLE: null,
     // TODO: should be retrived from server
-    CONTACT_TYPES: {
-        CO: 'co',
-        USER: 'user',
-    },
     NotifTypes: keyMirror({
         CONTACT_CREATE: null,
         CONTACT_EDIT: null,

@@ -15,11 +15,10 @@ var VCardElement = require('./VCardWidgets.react').VCardElement;
 var AppContextMixin = require('../mixins/AppContextMixin');
 var VCardProcessingBehaviour = require('./behaviours/VCardProcessingBehaviour');
 
-var CONTACT_TYPES = require('../constants/CRMConstants').CONTACT_TYPES;
-
 var _ = require('lodash');
 Object.assign = _.extend;
 
+var AppCommonStore = require('../stores/AppCommonStore');
 require('../utils');
 
 var ContactEditForm = React.createClass({
@@ -30,11 +29,12 @@ var ContactEditForm = React.createClass({
   },
 
   render: function() {
-    var CRDDL = null ;
-    var value = this.preValue(this.props.value);
-    var fields = ['fn', 'orgs', 'titles', 'tp', 'tels', 'emails', 'urls', 'adrs'];
+    var CRDDL = null,
+        value = this.preValue(this.props.value),
+        fields = ['fn', 'orgs', 'titles', 'tp', 'tels', 'emails', 'urls', 'adrs'],
+        CONTACT_TYPES = AppCommonStore.get_constants('contact').tp_hash;
 
-    if (value.vcard.tp == CONTACT_TYPES.CO) {
+    if (value.vcard.tp == CONTACT_TYPES.COMPANY) {
       CRDDL = <ContactRemoveableDropDownList
                     excludeCompanies={true}
                     name="children"

@@ -9,7 +9,6 @@ var cookie_tool = require('cookie');
 var superagent = require('superagent');
 var moment = require('moment-timezone');
 
-var CONTACT_TYPES   = require('./constants/CRMConstants').CONTACT_TYPES;
 var SA_URL_PREFIX   = require('./constants/CRMConstants').SA_URL_PREFIX;
 
 
@@ -114,13 +113,15 @@ function fuzzySearch(collection, search_str, options) {
 };
 
 function isCompany(object) {
-  return (object.tp == CONTACT_TYPES.CO);
+  var AppCommonStore = require('./stores/AppCommonStore'),
+      CONTACT_TYPES = AppCommonStore.get_constants('contact').tp_hash;
+  return (object.tp == CONTACT_TYPES.COMPANY);
 };
 
 function isCold(contact) {
   var AppCommonStore = require('./stores/AppCommonStore'),
       CONTACT_STATUSES = AppCommonStore.get_constants('contact').statuses_hash;
-  return (contact.status == CONTACT_STATUSES.NEW_CONTACT);
+  return (contact.status == CONTACT_STATUSES.NEW);
 };
 
 function request(method, url) {

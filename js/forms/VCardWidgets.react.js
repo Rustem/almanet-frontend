@@ -29,7 +29,8 @@ var SimpleSelect = inputs.SimpleSelect;
 var ContentEditableInput = inputs.ContentEditableInput;
 var SVGCheckbox = inputs.SVGCheckbox;
 
-var CONTACT_TYPES = require('../constants/CRMConstants').CONTACT_TYPES;
+var AppCommonStore = require('../stores/AppCommonStore');
+
 
 var getDefaultEmailValue = function() {
     return {
@@ -487,7 +488,6 @@ var TitlesVCardComponent = React.createClass({
 
 var VCardElement = React.createClass({
     mixins: [FormElementMixin],
-
     propTypes: {
         fields: React.PropTypes.array.isRequired,
     },
@@ -497,6 +497,8 @@ var VCardElement = React.createClass({
         _.forEach(this.props.fields, function(f){
             this[f] = value[f];
         }.bind(this));
+
+        this.CONTACT_TYPES = AppCommonStore.get_constants('contact').tp_hash;
     },
 
     renderFields: function() {
@@ -570,13 +572,13 @@ var VCardElement = React.createClass({
     },
 
     tpUnConverter: function(v) {
-        return (v == CONTACT_TYPES.CO);
+        return (v == this.CONTACT_TYPES.COMPANY);
     },
 
     tpConverter: function(v) {
         if(v)
-            return CONTACT_TYPES.CO;
-        return CONTACT_TYPES.USER;
+            return this.CONTACT_TYPES.COMPANY;
+        return this.CONTACT_TYPES.USER;
     },
 
     onFnChange: function(value) {
