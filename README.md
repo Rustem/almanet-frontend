@@ -1,3 +1,3 @@
 almanet-frontend
 ================
-This is our frontend. Yo
+This is our frontend. Yo!
