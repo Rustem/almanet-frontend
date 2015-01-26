@@ -108,6 +108,11 @@ var ContactStore = assign({}, EventEmitter.prototype, {
         return obj;
     },
 
+    set: function(contact) {
+        _contacts[contact.id] = contact;
+        this.emitChange();
+    },
+
 });
 
 
@@ -143,15 +148,9 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             break;
         case ActionTypes.CREATE_ACTIVITY_SUCCESS:
             CRMAppDispatcher.waitFor([ActivityStore.dispatchToken]);
-            var contact_id = action.object.contact_id;
-            if(contact_id) {
-                _contacts[contact_id].is_cold = false;
-                ContactWebAPI.setLeads([contact_id], function(result){
-                    _.forEach(result, function(cid){
-                        _contacts[cid].is_cold = false;
-                    });
-                    ContactStore.emitChange();
-                });
+            if( _.isObject(action.object.contact) ) {
+                var c = ContactStore.getCreatedContact(action.object.contact);
+                ContactStore.set(c);
             }
             break;
         case ActionTypes.IMPORT_CONTACTS_SUCCESS:

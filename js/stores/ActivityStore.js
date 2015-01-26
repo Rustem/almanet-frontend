@@ -93,7 +93,7 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
     },
 
     getCreatedActivity: function(obj) {
-        return obj;
+        return _.omit(obj, 'contact')
     },
 
     set: function(activity) {
