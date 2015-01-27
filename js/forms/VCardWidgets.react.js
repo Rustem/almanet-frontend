@@ -135,7 +135,8 @@ var EmailVCardComponentItem = React.createClass({
                                     value={value.value}
                                     name="value"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' placeholder="E-mail" />
+                                    className='input-div'
+                                    placeholder="E-mail" />
                             </div>
                         </div>
                     </div>
@@ -217,7 +218,8 @@ var TelVCardComponentItem = React.createClass({
                                     value={value.value}
                                     name="value"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' placeholder="Телефон" />
+                                    className='input-div'
+                                    placeholder="Телефон" />
                             </div>
                         </div>
                     </div>
@@ -298,7 +300,8 @@ var UrlVCardComponentItem = React.createClass({
                                     value={value.value}
                                     name="value"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' placeholder="URL" />
+                                    className='input-div'
+                                    placeholder="URL" />
                             </div>
                         </div>
                     </div>
@@ -379,34 +382,39 @@ var AddressVCardComponentItem = React.createClass({
                                     value={value.street_address}
                                     name="street_address"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' placeholder="Улица" />
+                                    className='input-div'
+                                    placeholder="Улица" />
                             </div>
                             <div className="inputLine-div">
                                 <ContentEditableInput
                                     value={value.region}
                                     name="region"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' placeholder="Город" />
+                                    className='input-div'
+                                    placeholder="Город" />
 
                                 <ContentEditableInput
                                     value={value.locality}
                                     name="locality"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' placeholder="Район" />
+                                    className='input-div'
+                                    placeholder="Район" />
                             </div>
                             <div className="inputLine-div">
                                 <ContentEditableInput
                                     value={value.country_name}
                                     name="country_name"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' placeholder="Страна" />
+                                    className='input-div'
+                                    placeholder="Страна" />
                             </div>
                             <div className="inputLine-div">
                                 <ContentEditableInput
                                     value={value.postal_code}
                                     name="postal_code"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' placeholder="Почтовый индекс" />
+                                    className='input-div'
+                                    placeholder="Почтовый индекс" />
                             </div>
                         </div>
                     </div>

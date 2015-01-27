@@ -47,7 +47,7 @@ var CommentCreateForm = React.createClass({
                 <Fieldset className="row-body row-body--no-trailer">
                   <ContentEditableInput ref='comment'
                                 name='comment'
-                                className='input-div input-div--block' placeholder="placeholder" />
+                                className='input-div input-div--block' placeholder="Комментарий .." />
                   <button type="submit" className="text-strong text-primary">Написать</button><span> • </span><button onClick={this.onCancelClick} className="text-secondary">Отмена</button>
                 </Fieldset>
               </Fieldset>

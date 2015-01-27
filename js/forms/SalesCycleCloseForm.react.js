@@ -32,7 +32,9 @@ var SalesCycleCloseForm = React.createClass({
     return (
       <Fieldset className="text-center inputLine">
         <span>{product.name}</span>
-        <ContentEditableInput className='input-div input-div--closeCycle' name={'real_value__' + product.id} placeholder='Enter monetary value'/>
+        <ContentEditableInput className='input-div input-div--closeCycle'
+            name={'real_value__' + product.id}
+            placeholder='Введите денежное значение'/>
       </Fieldset>
     )
   },

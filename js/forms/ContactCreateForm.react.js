@@ -5,7 +5,6 @@
 var _ = require('lodash');
 var React = require('react');
 var inputs = require('./input');
-var ContentEditableInput = inputs.ContentEditableInput;
 var SVGCheckbox = inputs.SVGCheckbox;
 var Form = require('./Form.react');
 var FormMixin = require('./FormMixin.react');

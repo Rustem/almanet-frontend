@@ -16,10 +16,14 @@ var ProductCreateForm = React.createClass({
         return (
             <Form {...this.props} className="row-body" ref="product_form" onSubmit={this.onHandleSubmit}>
                 <Fieldset className="inputLine-negativeTrail">
-                  <ContentEditableInput className="input-div input-div--strong" name='name' />
+                  <ContentEditableInput className="input-div input-div--strong"
+                        name='name'
+                        placeholder='Введите название продукта' />
                 </Fieldset>
                 <Fieldset className="inputLine-negativeTrail">
-                  <ContentEditableInput className='input-div text-secondary' name='description' />
+                  <ContentEditableInput className='input-div text-secondary'
+                        name='description'
+                        placeholder='Описание продукта ..' />
                 </Fieldset>
                 <div className="inputLine text-left">
                     <button className="btn btn--save" type="submit">Сохранить</button>

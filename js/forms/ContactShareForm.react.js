@@ -87,7 +87,7 @@ var ContactShareForm = React.createClass({
         var form_value = _.extend({}, DEFAULT_SHARE, {
             'contacts': this.props.contact_ids,
             'participants': [],
-            'note': 'причина'
+            'note': ''
         });
         return (
             <Form ref="contact_share_form"
@@ -96,6 +96,7 @@ var ContactShareForm = React.createClass({
                 <Fieldset className="input-addComment">
                     <ContentEditableInput
                         name='note'
+                        placeholder='Заметка ..'
                         className="input-div input-div--addComment" />
                 </Fieldset>
                 <ColleaguesRemoveableDropDownList

@@ -4,7 +4,6 @@
 
 var React = require('react');
 var inputs = require('./input');
-var ContentEditableInput = inputs.ContentEditableInput;
 var SVGCheckbox = inputs.SVGCheckbox;
 var Form = require('./Form.react');
 var Fieldset = require('./Fieldset.react');

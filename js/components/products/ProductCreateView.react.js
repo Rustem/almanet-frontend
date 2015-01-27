@@ -6,11 +6,6 @@ var ProductActionCreators = require('../../actions/ProductActionCreators');
 var ProductCreateForm = require('../../forms/ProductCreateForm.react');
 var ProductStore = require('../../stores/ProductStore');
 
-var default_product = {
-    name: 'Новый продукт',
-    description: 'Краткое описание продукта'
-};
-
 var ProductCreateView = React.createClass({
 
     mixins: [Router.Navigation],
@@ -53,7 +48,7 @@ var ProductCreateView = React.createClass({
                     <div className="inputLine">
                         <div className="row">
                             <div className="row-icon"></div>
-                            <ProductCreateForm value={default_product} onHandleSubmit={this.onProductCreate} />
+                            <ProductCreateForm onHandleSubmit={this.onProductCreate} />
                         </div>
                     </div>
                 </div>

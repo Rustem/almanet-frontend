@@ -41,6 +41,7 @@ var FilterForm = React.createClass({
                 <Fieldset className="row-body-primary">
                   <ContentEditableInput ref='name'
                               name='title'
+                              placeholder='Название фильтра ..'
                               className='input-div input-div--block' placeholder="New filter"/>
                 </Fieldset>
               </Fieldset>

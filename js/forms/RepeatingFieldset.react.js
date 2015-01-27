@@ -8,7 +8,6 @@ var FormElementMixin = require('./FormElementMixin.react');
 var FormContextMixin = require('./FormElementMixin.react').FormContextMixin;
 var IconSvg = require('../components/common/IconSvg.react');
 var SimpleSelect = require('./input').SimpleSelect;
-var ContentEditableInput = require('./input').ContentEditableInput;
 var _ = require('lodash');
 Object.assign = _.extend;
 var ItemMixin = {
