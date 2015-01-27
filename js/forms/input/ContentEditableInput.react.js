@@ -104,7 +104,7 @@ var ContentEditableInput = React.createClass({
             contentEditable: true,
             className: className
         });
-        var value = this.value() || this.props.value || this.props.placeholder;
+        var value = this.value() || this.props.value || (!this.isOnceTyped && this.props.placeholder);
         return Component(props, value);
 
     },
