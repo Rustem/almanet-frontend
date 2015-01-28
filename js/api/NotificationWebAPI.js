@@ -96,3 +96,6 @@ SignalManager.connect(ActionTypes.DELETE_FILTER_SUCCESS,
 
 SignalManager.connect(ActionTypes.IMPORT_CONTACTS_SUCCESS,
                       new_notification.bind(null, NotifTypes.IMPORT_CONTACTS));
+
+SignalManager.connect(ActionTypes.CLOSE_SALES_CYCLE_SUCCESS,
+                      new_notification.bind(null, NotifTypes.SALES_CYCLE_CLOSE));

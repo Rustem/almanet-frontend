@@ -91,7 +91,6 @@ module.exports = {
     }),
     GLOBAL_SALES_CYCLE_ID: null,
     GLOBAL_SALES_CYCLE: null,
-    // TODO: should be retrived from server
     NotifTypes: keyMirror({
         CONTACT_CREATE: null,
         CONTACT_EDIT: null,
@@ -101,6 +100,7 @@ module.exports = {
         FILTER_EDIT: null,
         FILTER_DELETE: null,
         IMPORT_CONTACTS: null,
+        SALES_CYCLE_CLOSE: null,
     }),
     SERVICES: keyMirror({
         crm: null

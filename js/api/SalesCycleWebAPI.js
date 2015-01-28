@@ -19,7 +19,9 @@ module.exports = api = {
             .send(salesCycleObject.closing_stats)
             .end(function(res) {
                 if (res.ok) {
-                    SignalManager.send(ActionTypes.CLOSE_SALES_CYCLE_SUCCESS, salesCycleObject);
+                    var author_id = salesCycleObject.owner_id,
+                        extra = {'sales_cycle': salesCycleObject};
+                    SignalManager.send(ActionTypes.CLOSE_SALES_CYCLE_SUCCESS, author_id, extra);
                     success(res.body);
                 } else {
                     failure(res);

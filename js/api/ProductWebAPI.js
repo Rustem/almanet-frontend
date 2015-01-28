@@ -31,20 +31,3 @@ module.exports = {
             });
     }
 };
-
-
-// TODO
-function update_current_value(cycle) {
-    if(!cycle.products || !cycle.closing_stats) { return; }
-    var products = JSON.parse(localStorage.getItem('products'));
-    for(var product_id in cycle.closing_stats){
-        _.forEach(products, function(product) {
-            if(product.id === product_id) {
-                product.current_value += cycle.closing_stats[product_id];
-            }
-        });
-    }
-    localStorage.setItem('products', JSON.stringify(products));
-};
-
-SignalManager.connect(ActionTypes.CLOSE_SALES_CYCLE_SUCCESS, update_current_value);

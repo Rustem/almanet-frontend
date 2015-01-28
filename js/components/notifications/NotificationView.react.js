@@ -204,6 +204,30 @@ var NotificationImportContactsView = React.createClass({
 
 });
 
+var NotificationSalesCycleCloseView = React.createClass({
+
+    mixins : [AppContextMixin],
+
+    propTypes: {
+        n: React.PropTypes.object
+    },
+
+    render: function() {
+        var n = this.props.n,
+            sc = n.extra.sales_cycle;
+
+        return (
+            <div key={n.id} className="notificationCenter-item">
+                <div className="notificationCenter-item-meta">
+                    {moment(n.date_created).fromNow()}
+                </div>
+                Цикл {sc.title} успешно закрыт.
+            </div>
+        );
+    }
+
+});
+
 function renderNotification(n) {
     var tp = n.type, TPL = null;
     switch(tp) {
@@ -230,6 +254,9 @@ function renderNotification(n) {
             break;
         case NotifTypes.IMPORT_CONTACTS:
             TPL = NotificationImportContactsView;
+            break;
+        case NotifTypes.SALES_CYCLE_CLOSE:
+            TPL = NotificationSalesCycleCloseView;
             break;
         default:
             // do nothing
