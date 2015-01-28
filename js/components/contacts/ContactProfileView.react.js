@@ -56,7 +56,10 @@ var DropdownControlBar = React.createClass({
         });
         return (
             <div className={className}>
-                <button ref='menuToggler' onKeyDown={this.onKeyDown} onClick={this.onMenuToggle} type="button" className="row row--oneliner row--link">
+                <button ref='menuToggler' type="button" className="row row--oneliner row--link"
+                                          onKeyDown={this.onKeyDown}
+                                          onClick={this.onMenuToggle}
+                                          onBlur={this.onMenuTogglerBlur}>
                     <div className="row-icon">
                         <IconSvg iconKey="more" />
                     </div>
@@ -200,7 +203,7 @@ var ContactProfileView = React.createClass({
                         <ContactShareForm
                             contact_ids={[this.getParams().id]}
                             current_user={this.getUser()}
-                            onHandleSubmit={this.onShareSubmit} 
+                            onHandleSubmit={this.onShareSubmit}
                             onCancel={this.resetState} />
                     </Modal>
                 </div>

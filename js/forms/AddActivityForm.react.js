@@ -77,7 +77,10 @@ var SalesCycleDropDownWidget = React.createClass({
         }
         return (
             <div className={className}>
-                <button ref="menuToggler" onKeyDown={this.onKeyDown} onClick={this.onMenuToggle} type="button" className="row row--oneliner row--dropdown">
+                <button ref="menuToggler" type="button" className="row row--oneliner row--dropdown"
+                                          onKeyDown={this.onKeyDown}
+                                          onClick={this.onMenuToggle}
+                                          onBlur={this.onMenuTogglerBlur}>
                     <div className="row-body-primary">{salesCycle || "Выберите цикл продаж"}</div>
                     <div className="row-body-secondary">
                         <div className="row-icon">

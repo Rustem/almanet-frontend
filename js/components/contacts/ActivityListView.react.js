@@ -269,7 +269,10 @@ var SalesCycleDropDownList = React.createClass({
 
         return (
         <div className={className}>
-            <button ref='menuToggler' onKeyDown={this.onKeyDown} onClick={this.onMenuToggle} type="button"type="button" className="page-header-filterContainer">
+            <button ref='menuToggler' type="button" className="page-header-filterContainer"
+                                      onKeyDown={this.onKeyDown}
+                                      onClick={this.onMenuToggle}
+                                      >
                 <div className="page-header-filter row">
                     <div className="row-body row-body--inverted">
                       <div className="row-body-secondary">
