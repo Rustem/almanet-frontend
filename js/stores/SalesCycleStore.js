@@ -78,7 +78,20 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
         return obj;
     },
 
+    getClosed: function() {
+        var SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash,
+            sales_cycles = this.getAll();
+        return _.filter(sales_cycles, function(c){ return c.status === SALES_CYCLE_STATUS.COMPLETED })
+    },
+
+    getNonClosed: function() {
+        var SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash,
+            sales_cycles = this.getAll();
+        return _.filter(sales_cycles, function(c){ return c.status !== SALES_CYCLE_STATUS.COMPLETED })
+    },
+
     getClosedCyclesNumber: function(user) {
+        // TODO maybe use there this.getClosed()
         var FEEDBACK_STATUSES = utils.get_constants('activity').feedback_hash;
         var closing_actvs = _.filter(ActivityStore.byUser(user),
             function(a){ return a.feedback_status == FEEDBACK_STATUSES.OUTCOME });
@@ -95,9 +108,8 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
     },
 
     getOpenedCyclesNumber: function(user) {
-        var SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash,
-            salescycles = this.getAll();
-        return (_.filter(salescycles, function(c){ return c.author_id == user.id && c.status != SALES_CYCLE_STATUS.COMPLETED })).length;
+        var sales_cycles = this.getNonClosed();
+        return (_.filter(sales_cycles, function(c){ return c.author_id == user.id })).length;
     },
 
     setAll: function(obj) {

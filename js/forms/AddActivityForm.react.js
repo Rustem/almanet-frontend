@@ -104,7 +104,7 @@ var SalesCycleDropDownList = React.createClass({
     },
 
     buildChoices: function() {
-        var rv = [], cycles = SalesCycleStore.getAll();
+        var rv = [], cycles = SalesCycleStore.getNonClosed();
         for(var i = 0; i<cycles.length; i++) {
             rv.push([cycles[i].id, cycles[i].title]);
         }
