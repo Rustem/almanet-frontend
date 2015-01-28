@@ -42,7 +42,7 @@ module.exports = {
     mark_as_read: function(ids) {
         dispatcher.handleViewAction({
           type: ActionTypes.ACTIVITY_MARK_AS_READ,
-          object: object
+          object: ids
         });
         ActivityWebAPI.mark_as_read(ids, function(ids){
           dispatcher.handleViewAction({
