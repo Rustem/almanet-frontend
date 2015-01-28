@@ -2,7 +2,7 @@ var _ = require('lodash');
 var request = require('../utils').request;
 var SignalManager = require('./utils');
 var CRMConstants = require('../constants/CRMConstants');
-var AppCommonStore = require('../stores/AppCommonStore');
+var utils = require('../utils');
 
 var ActionTypes = CRMConstants.ActionTypes;
 
@@ -29,7 +29,7 @@ module.exports = api = {
             });
     },
     create: function(salesCycleObject, success, failure) {
-        var SALES_CYCLE_STATUS = AppCommonStore.get_constants('sales_cycle').statuses_hash;
+        var SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash;
             object = _.assign(salesCycleObject, {
                 status: SALES_CYCLE_STATUS.NEW
             });

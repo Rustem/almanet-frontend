@@ -89,8 +89,6 @@ module.exports = {
         EDIT: null,
         READ: null
     }),
-    GLOBAL_SALES_CYCLE_ID: null,
-    GLOBAL_SALES_CYCLE: null,
     NotifTypes: keyMirror({
         CONTACT_CREATE: null,
         CONTACT_EDIT: null,
