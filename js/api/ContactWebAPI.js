@@ -17,6 +17,7 @@ module.exports = {
         var obj = obj;
         requestPost('/api/v1/contact/')
             .send(obj)
+            .on('error', failure.bind(null, obj))
             .end(function(res) {
                 if (res.ok) {
                     obj = _.assign(obj, res.body);
@@ -35,6 +36,7 @@ module.exports = {
     importContacts: function(vcard_file, success, failure) {
         requestPost('/api/v1/contact/import/')
             .send({'uploaded_file': vcard_file[1]})
+            .on('error', failure.bind(null, {'uploaded_file': vcard_file[1]}))
             .end(function(error, res){
                 if(res.ok) {
                     success(res.body.success)
@@ -49,6 +51,7 @@ module.exports = {
     editContact: function(edit_details, success, failure) {
         requestPatch('/api/v1/contact/'+edit_details.contact_id + '/')
             .send(edit_details.contact)
+            .on('error', failure.bind(null, edit_details))
             .end(function(res) {
                 if (res.ok) {
                     edit_details.contact = _.assign(edit_details.contact, res.body);
@@ -86,6 +89,7 @@ module.exports = {
     createShare: function(shareObject, success, failure) {
         requestPost('/api/v1/share/share_multiple/')
             .send(shareObject)
+            .on('error', failure.bind(null, shareObject))
             .end(function(res) {
                 if (res.ok) {
                     obj = res.body;
@@ -108,6 +112,7 @@ module.exports = {
         var obj;
         requestPost('/api/v1/share/read/')
             .send(JSON.stringify({share_ids: share_ids}))
+            .on('error', failure.bind(null, obj))
             .end(function(res) {
                 if (res.ok) {
                     obj = res.body;

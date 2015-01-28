@@ -10,6 +10,7 @@ module.exports = {
 
         request('POST', '/api/v1/product/')
             .send(product)
+            .on('error', failure.bind(null, product))
             .end(function(res) {
                 if (res.ok)
                     success(res.body)
@@ -21,6 +22,7 @@ module.exports = {
     editProduct: function(edit_details, success, failure) {
         request('PUT', '/api/v1/product/'+edit_details.product_id+'/')
             .send(edit_details.product)
+            .on('error', failure.bind(null, edit_details))
             .end(function(res) {
                 if (res.ok)
                     success(res.body)

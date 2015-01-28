@@ -18,6 +18,7 @@ module.exports = {
             contact_ids: [object.id]});
         requestPost('/api/v1/crmuser/follow_unfollow/')
             .send(obj)
+            .on('error', failure.bind(null, object))
             .end(function(res) {
                 if (res.ok) {
                     success(res.body);
@@ -38,6 +39,7 @@ module.exports = {
     editUser: function(user_id, object, success, failure) {
         requestPatch('/api/v1/user/'+ user_id + '/')
             .send(object)
+            .on('error', failure.bind(null, user_id))
             .end(function(res) {
                 if (res.ok) {
                     success(res.body);
@@ -50,6 +52,7 @@ module.exports = {
     uploadUserpic: function(object, success, failure) {
         requestPost('/api/v1/user/upload_userpic/')
             .send(object)
+            .on('error', failure.bind(null, object))
             .end(function(res) {
                 if (res.ok) {
                     success(res.body);

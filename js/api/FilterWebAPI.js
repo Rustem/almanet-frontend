@@ -16,6 +16,7 @@ module.exports = {
     create: function(obj, success, failure) {
         requestPost('/api/v1/filter/')
             .send(obj)
+            .on('error', failure.bind(null, obj))
             .end(function(res) {
                 if (res.ok) {
                     obj = _.assign(obj, res.body);
@@ -33,6 +34,7 @@ module.exports = {
     edit: function(obj, success, failure) {
         requestPatch('/api/v1/filter/'+obj.id + '/')
             .send(obj)
+            .on('error', failure.bind(null, obj))
             .end(function(res) {
                 if (res.ok) {
                     obj = _.assign(obj, res.body);
@@ -49,6 +51,7 @@ module.exports = {
     },
     delete: function(id, success, failure) {
         requestDelete('/api/v1/filter/'+id + '/')
+            .on('error', failure.bind(null, id))
             .end(function(res) {
                 if (res.ok) {
                     success(id);

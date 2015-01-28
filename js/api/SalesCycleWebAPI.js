@@ -15,6 +15,7 @@ module.exports = api = {
     },
     close: function(salesCycleObject, success, failure) {
         request('put', '/api/v1/sales_cycle/'+salesCycleObject.id+'/close/')
+            .on('error', failure.bind(null, salesCycleObject))
             .send(salesCycleObject.closing_stats)
             .end(function(res) {
                 if (res.ok) {
@@ -33,6 +34,7 @@ module.exports = api = {
 
         request('POST', '/api/v1/sales_cycle/')
             .send(object)
+            .on('error', failure.bind(null, object))
             .end(function(res) {
                 if (res.ok) {
                     object = _.assign(object, res.body);
@@ -49,6 +51,7 @@ module.exports = api = {
 
         request('put', '/api/v1/sales_cycle/'+salesCycleData.sales_cycle_id+'/products/')
             .send(put_object)
+            .on('error', failure.bind(null, put_object))
             .end(function(res) {
                 if (res.ok) {
                     salesCycleData.product_ids = res.body.object_ids;

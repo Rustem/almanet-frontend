@@ -23,6 +23,8 @@ module.exports = {
         CREATE_ACTIVITY_SUCCESS : null,
         CREATE_ACTIVITY_FAIL: null,
         ACTIVITY_MARK_AS_READ: null,
+        ACTIVITY_MARK_AS_READ_SUCCESS: null,
+        ACTIVITY_MARK_AS_READ_FAIL: null,
         MARK_SHARES_READ: null,
         MARK_SHARES_READ_SUCCESS: null,
         MARK_SHARES_READ_FAIL: null,
