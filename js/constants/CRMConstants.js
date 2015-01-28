@@ -87,8 +87,6 @@ module.exports = {
         EDIT: null,
         READ: null
     }),
-    GLOBAL_SALES_CYCLE_ID: null,
-    GLOBAL_SALES_CYCLE: null,
     // TODO: should be retrived from server
     NotifTypes: keyMirror({
         CONTACT_CREATE: null,

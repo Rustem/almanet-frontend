@@ -16,7 +16,6 @@ var utils = require('../utils');
 
 var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
-var GLOBAL_SALES_CYCLE_ID = CRMConstants.GLOBAL_SALES_CYCLE_ID;
 
 var NOTE_TEMPLATES = [
     ['Написал клиенту по почте', 'Пример 1: Написал клиенту по почте'],
@@ -193,15 +192,17 @@ var AddActivityForm = React.createClass({
 
     onHandleSubmit: function(e) {
         e.preventDefault();
-        var form = this.refs.add_event_form;
-        var errors = form.validate();
+        var GLOBAL_SALES_CYCLE_ID = utils.get_constants('global_sales_cycle_id'),
+            form = this.refs.add_event_form,
+            errors = form.validate();
         if(!errors) {
             var object = {}, formValue = form.value();
             object.author_id = this.props.current_user.crm_user_id;
             object.description = formValue.description;
             object.feedback_status = formValue.feedback_status;
             object.sales_cycle_id = formValue.sales_cycle_id;
-            if(object.sales_cycle_id != GLOBAL_SALES_CYCLE_ID) {
+
+            if(object.sales_cycle_id && object.sales_cycle_id != GLOBAL_SALES_CYCLE_ID) {
                 object.contact_id = SalesCycleStore.get(formValue.sales_cycle_id).contact_id;
             }
             else {
