@@ -1,4 +1,5 @@
 var React = require('react');
+var Router = require('react-router');
 var Form = require('./Form.react');
 var inputs = require('./input');
 var ContentEditableInput = inputs.ContentEditableInput;
@@ -8,12 +9,14 @@ var ProductActionCreators = require('../actions/ProductActionCreators');
 
 
 var ProductDeleteBtn = React.createClass({
+    mixins: [Router.Navigation],
     propTypes: {
         product_id: React.PropTypes.number.isRequired
     },
 
     onClick: function(evt) {
         ProductActionCreators.deleteProduct(this.props.product_id);
+        this.transitionTo('products');
     },
 
     render: function() {
