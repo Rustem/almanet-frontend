@@ -573,15 +573,6 @@ var ActivityListView = React.createClass({
     },
 
     onCycleClosed: function(sales_cycle_closing) {
-        var close_activity = {
-            author_id: this.getUser().crm_user_id,
-            description: "Цикл закрыт. Сумма: " + sales_cycle_closing.real_value,
-            feedback: 'outcome',
-            participant_ids: [this.getUser().crm_user_id],
-            salescycle_id: sales_cycle_closing.id,
-            duration: null
-        }
-        ActivityActionCreators.createActivity(close_activity);
         var sales_cycle = _.extend(
             {},
             SalesCycleStore.get(sales_cycle_closing.id),
