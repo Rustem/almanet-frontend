@@ -4,27 +4,24 @@ var React = require('react/addons');
 var cx = React.addons.classSet;
 var DropDownBehaviour = require('../behaviours/DropDownBehaviour');
 var IconSvg = require('../../components/common/IconSvg.react');
+var utils = require('../../utils');
 
 var FeedbackDropDownWidget = React.createClass({
     mixins: [DropDownBehaviour],
-
     propTypes: {
         choices: React.PropTypes.array.isRequired,
         choices_hash: React.PropTypes.object.isRequired,
         onChange: React.PropTypes.func.isRequired
     },
-
-    getIconName: function(choice) {
-        return _.findKey(this.props.choices_hash, function(val) {
-            return val==choice[0];
-        }).toLowerCase();
+    componentWillMount: function() {
+        this.FEEDBACK_ICONS = utils.get_constants('activity').feedback_icons;
     },
 
     renderChoice: function(choice, idx) {
         return (
             <a key={'choice__' + idx} ref={'fb_choice__' + choice[0]} onClick={this.onChoice.bind(null, idx)}  className="row row--oneliner row--link">
                 <div className="row-icon text-good">
-                    <IconSvg iconKey={this.getIconName(choice)} />
+                    <IconSvg iconKey={this.FEEDBACK_ICONS[choice[0]]} />
                 </div>
                 <div className="row-body text-secondary">
                   {choice[1]}
@@ -60,7 +57,7 @@ var FeedbackDropDownWidget = React.createClass({
         return (
             <a key={'choice__' + idx} className="row row--oneliner row--link">
                 <div className="row-icon text-good">
-                    <IconSvg iconKey={this.getIconName(choice)} />
+                    <IconSvg iconKey={this.FEEDBACK_ICONS[choice[0]]} />
                 </div>
                 <div className="row-body text-secondary">
                   {choice[1]}

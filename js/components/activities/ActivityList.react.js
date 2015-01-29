@@ -19,6 +19,9 @@ var ActivityListItem = React.createClass({
         activity: React.PropTypes.object,
         onCommentLinkClick: React.PropTypes.func,
     },
+    componentWillMount: function() {
+        this.FEEDBACK_ICONS = utils.get_constants('activity').feedback_icons;
+    },
 
     isItemSelected: function(act_id) {
         var id = this.getParams().id;
@@ -61,7 +64,7 @@ var ActivityListItem = React.createClass({
             <div className={classNames}>
                 <div className="row">
                     <div className="row-icon">
-                        <IconSvg iconKey={activity.feedback_status} />
+                        <IconSvg iconKey={this.FEEDBACK_ICONS[activity.feedback_status]} />
                   </div>
                   <div className="row-body row-body--no-trailer">
                     <div className="row">

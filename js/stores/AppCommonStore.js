@@ -39,10 +39,17 @@ var AppCommonStore = assign({}, EventEmitter.prototype, {
             });
     },
 
+    genActivityFeedbackIcons: function() {
+        _constants['activity']['feedback_icons'] = _.reduce(
+            _constants['activity']['feedback_hash'],
+            function(acc, val, key){ acc[val] = key.toLowerCase(); return acc; }, {});
+    },
+
     setAll: function(obj) {
         _constants = obj;
 
         this.filterActivityFeedbackOptions();
+        this.genActivityFeedbackIcons();
 
         this.emitChange();
     }

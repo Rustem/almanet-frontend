@@ -440,12 +440,14 @@ var SalesCycleSummary = React.createClass({
 
 var ActivityListView = React.createClass({
     mixins : [AppContextMixin, Router.State, Router.Navigation],
-
     getInitialState: function() {
         return {
             action: ACTIONS.ADD_ACTIVITY,
             sc_cnt: this.getCyclesForCurrentContact().length  // DONE: number of sales cycles for current contact
         }
+    },
+    componentWillMount: function() {
+        this.FEEDBACK_ICONS = utils.get_constants('activity').feedback_icons;
     },
 
     // getAddEventModalState: function() {
@@ -476,7 +478,7 @@ var ActivityListView = React.createClass({
             <div key={'activity__' + idx} className="stream-item">
             <div className="row">
               <div className="row-icon">
-                <IconSvg iconKey={act.feedback_status} />
+                <IconSvg iconKey={this.FEEDBACK_ICONS[act.feedback_status]} />
               </div>
               <div className="row-body row-body--no-trailer">
                 <div className="row">
