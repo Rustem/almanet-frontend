@@ -21,11 +21,9 @@ var SalesCycleCreateForm = require('../../forms/SalesCycleCreateForm.react');
 var SalesCycleCloseForm = require('../../forms/SalesCycleCloseForm.react');
 var AddActivityMiniForm = require('../../forms/AddActivityMiniForm.react');
 var AddProductMiniForm = require('../../forms/AddProductMiniForm.react');
-var CRMConstants = require('../../constants/CRMConstants');
-var AppCommonStore = require('../../stores/AppCommonStore');
 var utils = require('../../utils');
 
-var URL_PREFIX   = require('../../constants/CRMConstants').URL_PREFIX;
+var URL_PREFIX = require('../../constants/CRMConstants').URL_PREFIX;
 
 var ACTIONS = keyMirror({
     ADD_ACTIVITY: null,
@@ -40,7 +38,7 @@ var SalesCycleControlBar = React.createClass({
         current_cycle_id: React.PropTypes.number.isRequired,
     },
     componentWillMount: function() {
-        this.STATUSES = AppCommonStore.get_constants('sales_cycle').statuses_hash;
+        this.STATUSES = utils.get_constants('sales_cycle').statuses_hash;
     },
 
     get_current_action: function() {
@@ -60,8 +58,8 @@ var SalesCycleControlBar = React.createClass({
     },
 
     shouldRenderControlBar: function() {
-        // TODO: make something with 'sales_0'
-        if(_.contains([null, undefined, CRMConstants.GLOBAL_SALES_CYCLE_ID], this.props.current_cycle_id))
+        var GLOBAL_SALES_CYCLE_ID = utils.get_constants('global_sales_cycle_id');
+        if(_.contains([null, undefined, GLOBAL_SALES_CYCLE_ID], this.props.current_cycle_id))
           return false;
         return !(this.getCycleStatus() == this.STATUSES.COMPLETED);
     },
@@ -107,7 +105,7 @@ var AddActivityWidget = React.createClass({
         current_cycle_id: React.PropTypes.number.isRequired,
     },
     componentWillMount: function() {
-        this.SALES_CYCLE_STATUS = AppCommonStore.get_constants('sales_cycle').statuses_hash;
+        this.SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash;
     },
 
     get_current_action: function() {
@@ -146,7 +144,7 @@ var AddProductWidget = React.createClass({
         current_cycle_id: React.PropTypes.number.isRequired,
     },
     componentWillMount: function() {
-        this.SALES_CYCLE_STATUS = AppCommonStore.get_constants('sales_cycle').statuses_hash;
+        this.SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash;
     },
 
     get_current_action: function() {
@@ -162,8 +160,8 @@ var AddProductWidget = React.createClass({
     },
 
     shouldRenderComponent: function() {
-        // TODO: make something with 'sales_0'
-        if(_.contains([null, undefined, CRMConstants.GLOBAL_SALES_CYCLE_ID], this.props.current_cycle_id))
+        var GLOBAL_SALES_CYCLE_ID = utils.get_constants('global_sales_cycle_id');
+        if(_.contains([null, undefined, GLOBAL_SALES_CYCLE_ID], this.props.current_cycle_id))
           return false;
         return !(this.getCycleStatus() == this.SALES_CYCLE_STATUS.COMPLETED) &&
                this.get_current_action() == ACTIONS.ADD_PRODUCT;
@@ -185,7 +183,7 @@ var CloseCycleWidget = React.createClass({
         current_cycle_id: React.PropTypes.number.isRequired,
     },
     componentWillMount: function() {
-        this.SALES_CYCLE_STATUS = AppCommonStore.get_constants('sales_cycle').statuses_hash;
+        this.SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash;
     },
 
     get_current_action: function() {
@@ -218,11 +216,13 @@ var CloseCycleWidget = React.createClass({
     },
 
     render: function(){
-        var Component = null, products=this.getCycleProducts();
+        var GLOBAL_SALES_CYCLE_ID = utils.get_constants('global_sales_cycle_id'),
+            Component = null,
+            products=this.getCycleProducts();
         if(this.shouldRenderComponent(products))
             Component = (
                 <div>
-                    {this.props.current_cycle_id === CRMConstants.GLOBAL_SALES_CYCLE_ID && (<SalesCycleByAllSummary />) || (<SalesCycleSummary cycle_id={this.props.current_cycle_id} />)}
+                    {this.props.current_cycle_id === GLOBAL_SALES_CYCLE_ID && (<SalesCycleByAllSummary />) || (<SalesCycleSummary cycle_id={this.props.current_cycle_id} />)}
                     <SalesCycleCloseForm
                     products={products}
                     salesCycleID={this.props.current_cycle_id}
@@ -588,8 +588,9 @@ var ActivityListView = React.createClass({
     },
 
     navigateToSalesCycle: function(cycle_id) {
-        var params = this.getParams();
-        params.sales_cycle_id = cycle_id === CRMConstants.GLOBAL_SALES_CYCLE_ID ? null : cycle_id;
+        var GLOBAL_SALES_CYCLE_ID = utils.get_constants('global_sales_cycle_id'),
+            params = this.getParams();
+        params.sales_cycle_id = cycle_id === GLOBAL_SALES_CYCLE_ID ? null : cycle_id;
         this.transitionTo('activities_by', params);
         return false;
     },
@@ -605,12 +606,13 @@ var ActivityListView = React.createClass({
     },
 
     render: function() {
-        var cycle_id = ('sales_cycle_id' in this.getParams()) && parseInt(this.getParams()['sales_cycle_id'], 10) || CRMConstants.GLOBAL_SALES_CYCLE_ID;
+        var GLOBAL_SALES_CYCLE_ID = utils.get_constants('global_sales_cycle_id'),
+            cycle_id = ('sales_cycle_id' in this.getParams()) && parseInt(this.getParams()['sales_cycle_id'], 10) || GLOBAL_SALES_CYCLE_ID;
         if( !cycle_id ) { // monkey patching
             cycle_id = SalesCycleStore.getGlobal().id
         }
 
-        if(cycle_id === CRMConstants.GLOBAL_SALES_CYCLE_ID) {
+        if(cycle_id === GLOBAL_SALES_CYCLE_ID) {
             var activities = ActivityStore.bySalesCycles(
                 _.map(this.getCyclesForCurrentContact(),function(sc){
                     return sc.id

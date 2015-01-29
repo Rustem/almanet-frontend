@@ -17,7 +17,7 @@ var VCardProcessingBehaviour = require('./behaviours/VCardProcessingBehaviour');
 var _ = require('lodash');
 Object.assign = _.extend;
 
-var AppCommonStore = require('../stores/AppCommonStore');
+var utils = require('../utils');
 require('../utils');
 
 var ContactEditForm = React.createClass({
@@ -31,7 +31,7 @@ var ContactEditForm = React.createClass({
     var CRDDL = null,
         value = this.preValue(this.props.value),
         fields = ['fn', 'orgs', 'titles', 'tp', 'tels', 'emails', 'urls', 'adrs'],
-        CONTACT_TYPES = AppCommonStore.get_constants('contact').tp_hash;
+        CONTACT_TYPES = utils.get_constants('contact').tp_hash;
 
     if (value.vcard.tp == CONTACT_TYPES.COMPANY) {
       CRDDL = <ContactRemoveableDropDownList

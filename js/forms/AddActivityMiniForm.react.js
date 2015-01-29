@@ -7,11 +7,10 @@ var elements = require('./elements');
 var Fieldset = require('./Fieldset.react');
 var InputWithDropDown = elements.InputWithDropDown;
 var FeedbackDropDown = elements.FeedbackDropDown;
-
+var utils = require('../utils');
 
 var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
-var GLOBAL_SALES_CYCLE_ID = CRMConstants.GLOBAL_SALES_CYCLE_ID;
 
 
 // TODO: probably replace it to constants or get remotely (repeat in forms/AddActivityForm)
@@ -46,8 +45,9 @@ var AddActivityMiniForm = React.createClass({
 
     onHandleSubmit: function(e) {
         e.preventDefault();
-        var form = this.refs.add_activity_form;
-        var errors = form.validate();
+        var GLOBAL_SALES_CYCLE_ID = utils.get_constants('global_sales_cycle_id'),
+            form = this.refs.add_activity_form,
+            errors = form.validate();
         if(!errors) {
             var object = {}, formValue = form.value();
             object.author_id = this.props.current_user.crm_user_id;

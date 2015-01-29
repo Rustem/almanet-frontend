@@ -2,15 +2,14 @@ var _ = require('lodash');
 var assign = require('object-assign');
 var moment = require('moment');
 var EventEmitter = require('events').EventEmitter;
-var CRMConstants = require('../constants/CRMConstants');
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
 var SessionStore = require('./SessionStore');
 var ActivityStore = require('./ActivityStore');
 var ContactStore = require('./ContactStore');
 var utils = require('../utils');
 
+var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
-var GLOBAL_SALES_CYCLE_ID = CRMConstants.GLOBAL_SALES_CYCLE_ID;
 var CHANGE_EVENT = 'change';
 
 var _salescycles = {};
@@ -56,9 +55,8 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
     },
 
     getGlobal: function() {
-        // TODO on BACKEND!
-        // return _salescycles[GLOBAL_SALES_CYCLE_ID];
-        return _.values(_salescycles)[0]; // monkey patching
+        var GLOBAL_SALES_CYCLE_ID = utils.get_constants('global_sales_cycle_id');
+        return this.get(GLOBAL_SALES_CYCLE_ID);
     },
 
     getCyclesForCurrentContact: function(contact_id) {
@@ -133,7 +131,7 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
     },
 
     set: function(sales_cycle) {
-        _salescycles[sales_cycle.id] = sales_cycle;
+        _salescycles[sales_cycle.id] = this.getCreatedSalesCycle(sales_cycle);
         _salescycles[sales_cycle.id].activities = [];
         _salescycles[sales_cycle.id].product_ids = [];
         this.emitChange();

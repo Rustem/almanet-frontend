@@ -21,6 +21,7 @@ var FieldsetMixin = require('./FieldsetMixin.react');
 var RepeatedFieldsetModule = require('./RepeatingFieldset.react');
 var ItemMixin = RepeatedFieldsetModule.ItemMixin;
 var RepeatingFieldsetMixin = RepeatedFieldsetModule.RepeatingFieldsetMixin;
+var utils = require('../utils');
 
 var IconSvg = require('../components/common/IconSvg.react');
 var Fieldset = require('./Fieldset.react');
@@ -28,8 +29,6 @@ var inputs = require('./input');
 var SimpleSelect = inputs.SimpleSelect;
 var ContentEditableInput = inputs.ContentEditableInput;
 var SVGCheckbox = inputs.SVGCheckbox;
-
-var AppCommonStore = require('../stores/AppCommonStore');
 
 
 var getDefaultEmailValue = function() {
@@ -506,7 +505,7 @@ var VCardElement = React.createClass({
             this[f] = value[f];
         }.bind(this));
 
-        this.CONTACT_TYPES = AppCommonStore.get_constants('contact').tp_hash;
+        this.CONTACT_TYPES = utils.get_constants('contact').tp_hash;
     },
 
     renderFields: function() {

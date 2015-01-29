@@ -19,7 +19,6 @@ var AppCommonStore = require('../stores/AppCommonStore');
 var _ = require('lodash');
 Object.assign = _.extend;
 
-require('../utils');
 
 var ContactCreateForm = React.createClass({
   mixins : [AppContextMixin, VCardProcessingBehaviour],
