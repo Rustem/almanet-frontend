@@ -3,6 +3,8 @@ var request = require('../utils').request;
 var SignalManager = require('./utils');
 var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
+var ProductStore = require('../stores/ProductStore');
+
 
 module.exports = {
     createProduct: function(product, success, failure) {
@@ -27,6 +29,19 @@ module.exports = {
                 if (res.ok)
                     success(res.body)
                 else
+                    failure(res);
+            });
+    },
+
+    deleteProduct: function(product_id, success, failure) {
+        var product = ProductStore.get(product_id);
+        request('DELETE', '/api/v1/product/'+product.id+'/')
+            .send(product)
+            .on('error', failure.bind(null, product))
+            .end(function(res) {
+                if (res.ok) {
+                    success(product);
+                } else
                     failure(res);
             });
     }

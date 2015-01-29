@@ -39,5 +39,23 @@ module.exports = {
           error: error
         });
       }.bind(this));
+    },
+
+    deleteProduct: function(product_id) {
+      dispatcher.handleViewAction({
+        type: ActionTypes.DELETE_PRODUCT,
+        object: product_id
+      });
+      ProductWebAPI.deleteProduct(product_id, function(deletedProduct){
+        dispatcher.handleServerAction({
+          type: ActionTypes.DELETE_PRODUCT_SUCCESS,
+          object: deletedProduct
+        });
+      }.bind(this), function(error){
+        dispatcher.handleServerAction({
+          type: ActionTypes.DELETE_PRODUCT_FAIL,
+          error: error
+        });
+      }.bind(this));
     }
 }
