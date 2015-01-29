@@ -7,12 +7,6 @@ var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
 
 module.exports = {
-    getAllContacts: function(success, failure) {
-        var rawContacts = JSON.parse(localStorage.getItem('contacts'));
-        setTimeout(function(){
-            success(rawContacts);
-        }, 0);
-    },
     createContact: function(obj, success, failure) {
         var obj = obj;
         requestPost('/api/v1/contact/')
@@ -66,27 +60,8 @@ module.exports = {
                 }
             });
     },
-    setLeads: function(contact_ids, success, failure) {
-        var rawContacts = JSON.parse(localStorage.getItem('contacts')) || [];
-        for(var i = 0; i<rawContacts.length; i++) {
-            var cur = rawContacts[i];
-            if(contact_ids.indexOf(cur.id) > -1) {
-                cur.is_cold = false;
-            }
-        }
-
-        localStorage.setItem('contacts', JSON.stringify(rawContacts));
-        setTimeout(function(){
-            success(contact_ids);
-        }, 0);
-    },
-    getAllShares: function(success, failure) {
-        var rawShares = JSON.parse(localStorage.getItem('shares'));
-        setTimeout(function(){
-            success(rawShares);
-        }, 0);
-    },
-    createShare: function(shareObject, success, failure) {
+    
+    createShares: function(shareObject, success, failure) {
         requestPost('/api/v1/share/share_multiple/')
             .send(shareObject)
             .on('error', failure.bind(null, shareObject))
@@ -108,6 +83,7 @@ module.exports = {
                 }
             });
     },
+
     markSharesAsRead: function(share_ids, success, failure) {
         var obj;
         requestPost('/api/v1/share/read/')
@@ -121,19 +97,6 @@ module.exports = {
                     failure(obj);
                 }
             });
-        // var rawShares = JSON.parse(localStorage.getItem('shares'));
-
-        // _.forEach(rawShares, function(share){
-        //     _.forEach(share_ids, function(share_id){
-        //         if(share.id === share_id){
-        //             share.isNew = false;
-        //         }
-        //     });
-        // });
-        // localStorage.setItem('shares', JSON.stringify(rawShares)) || [];
-        // setTimeout(function() {
-        //     success(share_ids);
-        // }, 0);
     },
 
 };
