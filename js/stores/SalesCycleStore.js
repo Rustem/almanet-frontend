@@ -5,7 +5,6 @@ var EventEmitter = require('events').EventEmitter;
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
 var SessionStore = require('./SessionStore');
 var ActivityStore = require('./ActivityStore');
-var ContactStore = require('./ContactStore');
 var utils = require('../utils');
 
 var CRMConstants = require('../constants/CRMConstants');
@@ -60,10 +59,9 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
     },
 
     getCyclesForCurrentContact: function(contact_id) {
-        // strange: without this ContactStore is empty object and .get function is undefined
-        var ContactStore = require('./ContactStore');
-        var contact = ContactStore.get(contact_id);
-        var cycles = [this.getGlobal()].concat(this.byContact(contact_id));
+        var ContactStore = require('./ContactStore'),
+            contact = ContactStore.get(contact_id),
+            cycles = [this.getGlobal()].concat(this.byContact(contact_id));
         if (!contact || !utils.isCompany(contact))
             return _.compact(cycles);
         _.forEach(contact.contacts, function(c_id){
@@ -140,8 +138,9 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
 
 
 SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
-
+    var ProductStore = require('./ProductStore');
     var action = payload.action;
+
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
             SalesCycleStore.setAll(action.object);
@@ -177,6 +176,12 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             break;
         case ActionTypes.ADD_PRODUCT_TO_SALES_CYCLE_SUCCESS:
             _salescycles[action.object.sales_cycle_id].product_ids = action.object.product_ids;
+            SalesCycleStore.emitChange();
+            break;
+        case ActionTypes.DELETE_PRODUCT_SUCCESS:
+            CRMAppDispatcher.waitFor([ProductStore.dispatchToken]);
+            var deleted_product = action.object;
+            _(_salescycles).forEach(function(val, key) { _salescycles[key].product_ids = _.pull(val.product_ids, deleted_product.id); }).value();
             SalesCycleStore.emitChange();
             break;
         default:

@@ -4,6 +4,27 @@ var inputs = require('./input');
 var ContentEditableInput = inputs.ContentEditableInput;
 var Fieldset = require('./Fieldset.react');
 var AppContextMixin = require('../mixins/AppContextMixin');
+var ProductActionCreators = require('../actions/ProductActionCreators');
+
+
+var ProductDeleteBtn = React.createClass({
+    propTypes: {
+        product_id: React.PropTypes.number.isRequired
+    },
+
+    onClick: function(evt) {
+        ProductActionCreators.deleteProduct(this.props.product_id);
+    },
+
+    render: function() {
+        return (
+            <div className="inputLine text-left">
+                <button onClick={this.onClick} className="btn btn--save">Удалить</button>
+            </div>
+        )
+    }
+});
+
 
 var ProductEditForm = React.createClass({
     mixins : [AppContextMixin],
@@ -14,21 +35,24 @@ var ProductEditForm = React.createClass({
 
     render: function() {
         return (
-            <Form {...this.props} className="row-body" ref="product_form" onSubmit={this.onHandleSubmit}>
-                <Fieldset className="inputLine-negativeTrail">
-                  <ContentEditableInput className="input-div input-div--strong"
-                        name='name'
-                        placeholder='Введите название продукта' />
-                </Fieldset>
-                <Fieldset className="inputLine-negativeTrail">
-                  <ContentEditableInput className='input-div text-secondary'
-                        name='description'
-                        placeholder='Описание продукта ..' />
-                </Fieldset>
-                <div className="inputLine text-left">
-                    <button className="btn btn--save" type="submit">Сохранить</button>
-                </div>
-            </Form>
+            <div>
+                <Form {...this.props} className="row-body" ref="product_form" onSubmit={this.onHandleSubmit}>
+                    <Fieldset className="inputLine-negativeTrail">
+                      <ContentEditableInput className="input-div input-div--strong"
+                            name='name'
+                            placeholder='Введите название продукта' />
+                    </Fieldset>
+                    <Fieldset className="inputLine-negativeTrail">
+                      <ContentEditableInput className='input-div text-secondary'
+                            name='description'
+                            placeholder='Описание продукта ..' />
+                    </Fieldset>
+                    <div className="inputLine text-left">
+                        <button className="btn btn--save" type="submit">Сохранить</button>
+                    </div>
+                </Form>
+                <ProductDeleteBtn product_id={this.props.value.id} />
+            </div>
         );
     },
     onHandleSubmit: function(e) {
