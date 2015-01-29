@@ -90,6 +90,13 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
 
     getClosedCyclesNumber: function(user) {
         // TODO maybe use there this.getClosed()
+
+        // by Askhat:
+        // this function is used in profile view
+        // here we should consider only cycles closed by this person
+        // on cycle we do not mark who closed it and the only way is to find Activities with status = OUTCOME
+        // by this information we could determine who closed the cycle
+        // that's why user cannot manually create activity with status = OUTCOME
         var FEEDBACK_STATUSES = utils.get_constants('activity').feedback_hash;
         var closing_actvs = _.filter(ActivityStore.byUser(user),
             function(a){ return a.feedback_status == FEEDBACK_STATUSES.OUTCOME });

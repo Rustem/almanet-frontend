@@ -6,12 +6,6 @@ var requestPost = require('../utils').requestPost;
 var requestPatch = require('../utils').requestPatch;
 
 module.exports = {
-    getAll: function(success, failure) {
-        var users = JSON.parse(localStorage.getItem('users'));
-        setTimeout(function(){
-            success(users);
-        }, 0);
-    },
 
     toggleFollowing: function(object, success, failure) {
         obj = _.extend({}, {
