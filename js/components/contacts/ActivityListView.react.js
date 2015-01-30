@@ -1,6 +1,8 @@
 var _ = require('lodash');
+var moment = require('moment');
 var React = require('react/addons');
 var Router = require('react-router');
+var Link = Router.Link;
 var keyMirror = require('react/lib/keyMirror');
 var cx            = React.addons.classSet;
 var IconSvg = require('../common/IconSvg.react');
@@ -467,13 +469,10 @@ var ActivityListView = React.createClass({
         return UserStore.get(user_id);
     },
 
-    getContacts: function(contact_ids) {
-        return _.map(contact_ids, ContactStore.get)
-    },
-
     renderActivity: function(act, idx) {
         var author = this.getAuthor(act.author_id),
-            contacts = this.getContacts(act.contact_ids);
+            contact = ContactStore.byActivity(act);
+
         return (
             <div key={'activity__' + idx} className="stream-item">
             <div className="row">
@@ -502,13 +501,11 @@ var ActivityListView = React.createClass({
                       {act.description}
                     </div>
                     <ul className="stream-breadcrumbs">
-                        {contacts.map(function(c) {
-                            return (
-                                <li>
-                                    <a href="#" className="stream-breadcrumbs">{c.vcard.fn}</a>
-                                </li>
-                            )
-                        }.bind(this))}
+                        <li>
+                            <Link to='contact_profile' params={{id: contact.id}} className="stream-breadcrumbs">{contact.vcard.fn}</Link>
+                        </li>
+                        <li>→</li>
+                        <li><a href="#" className="stream-breadcrumbs">{SalesCycleStore.get(act.sales_cycle_id).title}</a></li>
                     </ul>
                   </div>
                 </div>
@@ -592,9 +589,27 @@ var ActivityListView = React.createClass({
         }.bind(this, this.state));
     },
 
+    buildActivities: function() {
+        var cycle_id = parseInt(this.getParams()['sales_cycle_id'], 10),
+            contact_id = parseInt(this.getParams()['id'], 10)
+
+        var sales_cycle = SalesCycleStore.get(cycle_id),
+            contact = ContactStore.get(sales_cycle.contact_id);
+
+        if(utils.isCompany(contact) && sales_cycle.is_global) {
+            var activities = _.reduce(SalesCycleStore.getCyclesForContact(contact_id), function(rv, sc) {
+                    rv.push(ActivityStore.bySalesCycle(sc.id));
+                    return _.compact(_.flatten(rv));
+                }, []);
+            return (_.sortBy(activities, function(a){ return moment(a.date_created) })).reverse()
+        }
+
+        return ActivityStore.bySalesCycle(cycle_id)
+    },
+
     render: function() {
-        var cycle_id = parseInt(this.getParams()['sales_cycle_id'], 10)
-        var activities = ActivityStore.bySalesCycle(cycle_id);
+        var cycle_id = parseInt(this.getParams()['sales_cycle_id'], 10),
+            activities = this.buildActivities();
 
         return (
             <div className="page">

@@ -89,7 +89,6 @@ var ActivityListItem = React.createClass({
                         <div className="row-body-message">
                             {activity.description}
                         </div>
-                        {contact ?
                         <ul className="stream-breadcrumbs">
                             <li>
                                 <Link to='contact_profile' params={{id: contact.id}} className="stream-breadcrumbs">{contact.vcard.fn}</Link>
@@ -97,7 +96,6 @@ var ActivityListItem = React.createClass({
                             <li>→</li>
                             <li><a href="#" className="stream-breadcrumbs">{this.getSalesCycle(activity).title}</a></li>
                         </ul>
-                        : null}
                       </div>
                     </div>
                   </div>

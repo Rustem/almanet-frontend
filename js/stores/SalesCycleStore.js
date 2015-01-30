@@ -70,7 +70,7 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
         var cycles = this.byContact(contact_id);
         if (!contact || !utils.isCompany(contact))
             return _.compact(cycles);
-        _.forEach(contact.contacts, function(c_id){
+        _.forEach(contact.children, function(c_id){
             cycles.push(this.byContact(c_id));
         }.bind(this));
         return _.flatten(cycles);
