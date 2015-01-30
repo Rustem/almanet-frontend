@@ -126,7 +126,7 @@ var ContactProfileView = React.createClass({
 
     getProducts: function() {
         var cid = this.getParams().id;
-        return _.uniq(_.reduce(SalesCycleStore.getCyclesForCurrentContact(cid), function(rv, sc) {
+        return _.uniq(_.reduce(SalesCycleStore.getCyclesForContact(cid), function(rv, sc) {
                     rv.push(sc.product_ids);
                     return _.compact(_.flatten(rv));
                 }, []));

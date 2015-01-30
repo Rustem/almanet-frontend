@@ -192,8 +192,7 @@ var AddActivityForm = React.createClass({
 
     onHandleSubmit: function(e) {
         e.preventDefault();
-        var GLOBAL_SALES_CYCLE_ID = utils.get_constants('global_sales_cycle_id'),
-            form = this.refs.add_event_form,
+        var form = this.refs.add_event_form,
             errors = form.validate();
         if(!errors) {
             var object = {}, formValue = form.value();
@@ -201,13 +200,8 @@ var AddActivityForm = React.createClass({
             object.description = formValue.description;
             object.feedback_status = formValue.feedback_status;
             object.sales_cycle_id = formValue.sales_cycle_id;
-
-            if(object.sales_cycle_id && object.sales_cycle_id != GLOBAL_SALES_CYCLE_ID) {
-                object.contact_id = SalesCycleStore.get(formValue.sales_cycle_id).contact_id;
-            }
-            else {
-                object.contact_id = null;
-            }
+            object.contact_id = SalesCycleStore.get(formValue.sales_cycle_id).contact_id;
+            
             this.props.onHandleSubmit(object);
         } else{
             alert(errors);

@@ -58,9 +58,10 @@ var SalesCycleControlBar = React.createClass({
     },
 
     shouldRenderControlBar: function() {
-        var GLOBAL_SALES_CYCLE_ID = utils.get_constants('global_sales_cycle_id');
-        if(_.contains([null, undefined, GLOBAL_SALES_CYCLE_ID], this.props.current_cycle_id))
-          return false;
+        if(_.contains([null, undefined], this.props.current_cycle_id))
+            return false;
+        if(SalesCycleStore.get(this.props.current_cycle_id).is_global)
+            return false;
         return !(this.getCycleStatus() == this.STATUSES.COMPLETED);
     },
 
@@ -121,7 +122,6 @@ var AddActivityWidget = React.createClass({
     },
 
     shouldRenderComponent: function() {
-        // TODO: make something with 'sales_0'
         if(_.contains([null, undefined], this.props.current_cycle_id))
           return false;
         return !(this.getCycleStatus() == this.SALES_CYCLE_STATUS.COMPLETED) &&
@@ -160,9 +160,10 @@ var AddProductWidget = React.createClass({
     },
 
     shouldRenderComponent: function() {
-        var GLOBAL_SALES_CYCLE_ID = utils.get_constants('global_sales_cycle_id');
-        if(_.contains([null, undefined, GLOBAL_SALES_CYCLE_ID], this.props.current_cycle_id))
-          return false;
+        if(_.contains([null, undefined], this.props.current_cycle_id))
+            return false;
+        if(this.getSalesCycle().is_global)
+            return false;
         return !(this.getCycleStatus() == this.SALES_CYCLE_STATUS.COMPLETED) &&
                this.get_current_action() == ACTIONS.ADD_PRODUCT;
     },
@@ -204,10 +205,9 @@ var CloseCycleWidget = React.createClass({
     },
 
     shouldRenderComponent: function(products) {
-        var cycle = this.getSalesCycle()
         if(_.contains([null, undefined], this.props.current_cycle_id))
             return false;
-        if(cycle.is_global)
+        if(this.getSalesCycle().is_global)
             return false;
         if(products.length <= 0)
             return false;
@@ -216,13 +216,13 @@ var CloseCycleWidget = React.createClass({
     },
 
     render: function(){
-        var GLOBAL_SALES_CYCLE_ID = utils.get_constants('global_sales_cycle_id'),
-            Component = null,
+        var Component = null,
             products=this.getCycleProducts();
+            sales_cycle = this.getSalesCycle()
         if(this.shouldRenderComponent(products))
             Component = (
                 <div>
-                    {this.props.current_cycle_id === GLOBAL_SALES_CYCLE_ID && (<SalesCycleByAllSummary />) || (<SalesCycleSummary cycle_id={this.props.current_cycle_id} />)}
+                    {sales_cycle.is_global && (<SalesCycleByAllSummary />) || (<SalesCycleSummary cycle_id={this.props.current_cycle_id} />)}
                     <SalesCycleCloseForm
                     products={products}
                     salesCycleID={this.props.current_cycle_id}
@@ -443,7 +443,7 @@ var ActivityListView = React.createClass({
     getInitialState: function() {
         return {
             action: ACTIONS.ADD_ACTIVITY,
-            sc_cnt: this.getCyclesForCurrentContact().length  // DONE: number of sales cycles for current contact
+            sc_cnt: this.getCyclesForContact().length  // DONE: number of sales cycles for current contact
         }
     },
     componentWillMount: function() {
@@ -518,18 +518,13 @@ var ActivityListView = React.createClass({
         )
     },
 
-    getCyclesForCurrentContact: function() {
+    getCyclesForContact: function() {
         var contact_id = parseInt(this.getParams().id, 10);
-        return SalesCycleStore.getCyclesForCurrentContact(contact_id);
+        return SalesCycleStore.getCyclesForContact(contact_id);
     },
 
     buildChoices: function(){
-        var cycles = this.getCyclesForCurrentContact();
-        // cycles.push({
-        //     'id': 'sales_0',
-        //     'title': 'Все события',
-        //     'status': false
-        // });
+        var cycles = this.getCyclesForContact();
         return _.map(cycles, function(c){
             return [c.id, c.title, c.status];
         });
@@ -581,9 +576,8 @@ var ActivityListView = React.createClass({
     },
 
     navigateToSalesCycle: function(cycle_id) {
-        var GLOBAL_SALES_CYCLE_ID = utils.get_constants('global_sales_cycle_id'),
-            params = this.getParams();
-        params.sales_cycle_id = cycle_id === GLOBAL_SALES_CYCLE_ID ? null : cycle_id;
+        var params = this.getParams();
+        params.sales_cycle_id = cycle_id;
         this.transitionTo('activities_by', params);
         return false;
     },
@@ -599,20 +593,8 @@ var ActivityListView = React.createClass({
     },
 
     render: function() {
-        var GLOBAL_SALES_CYCLE_ID = utils.get_constants('global_sales_cycle_id'),
-            cycle_id = ('sales_cycle_id' in this.getParams()) && parseInt(this.getParams()['sales_cycle_id'], 10) || GLOBAL_SALES_CYCLE_ID;
-        if( !cycle_id ) { // monkey patching
-            cycle_id = SalesCycleStore.getGlobal().id
-        }
-
-        if(cycle_id === GLOBAL_SALES_CYCLE_ID) {
-            var activities = ActivityStore.bySalesCycles(
-                _.map(this.getCyclesForCurrentContact(),function(sc){
-                    return sc.id
-                }));
-        } else{
-            var activities = ActivityStore.bySalesCycle(cycle_id);
-        }
+        var cycle_id = parseInt(this.getParams()['sales_cycle_id'], 10)
+        var activities = ActivityStore.bySalesCycle(cycle_id);
 
         return (
             <div className="page">
@@ -651,4 +633,21 @@ var ActivityListView = React.createClass({
 
 });
 
-module.exports = ActivityListView;
+var DefaultProfileView = React.createClass({
+    statics: {
+        willTransitionTo: function (transition, params) {
+            var sales_cycle = SalesCycleStore.getGlobalForContact(params.id)
+            transition.redirect('activities_by', {id: params.id, sales_cycle_id: sales_cycle.id}, {})
+        },
+
+    },
+
+    render: function() {
+        return null
+    }
+});
+
+module.exports = {
+    ActivityListView: ActivityListView,
+    DefaultProfileView: DefaultProfileView,
+}

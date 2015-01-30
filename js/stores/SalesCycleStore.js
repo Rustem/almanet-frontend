@@ -5,7 +5,6 @@ var EventEmitter = require('events').EventEmitter;
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
 var SessionStore = require('./SessionStore');
 var ActivityStore = require('./ActivityStore');
-var ContactStore = require('./ContactStore');
 var utils = require('../utils');
 
 var CRMConstants = require('../constants/CRMConstants');
@@ -50,20 +49,19 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
     },
 
     getByIds: function(ids) {
-        var salescycles = this.getAll();
-        return _.filter(salescycles, function(c){ return _.indexOf(ids, c.id) !== -1 });
+        var sales_cycles = this.getAll();
+        return _.filter(sales_cycles, function(c){ return _.indexOf(ids, c.id) !== -1 });
     },
 
-    getGlobal: function() {
-        var GLOBAL_SALES_CYCLE_ID = utils.get_constants('global_sales_cycle_id');
-        return this.get(GLOBAL_SALES_CYCLE_ID);
+    getGlobalForContact: function(contact_id) {
+        var sales_cycles = this.byContact(contact_id);
+        return _.find(sales_cycles, function(sc) { return sc.is_global })
     },
 
-    getCyclesForCurrentContact: function(contact_id) {
-        // strange: without this ContactStore is empty object and .get function is undefined
+    getCyclesForContact: function(contact_id) {
         var ContactStore = require('./ContactStore');
         var contact = ContactStore.get(contact_id);
-        var cycles = [this.getGlobal()].concat(this.byContact(contact_id));
+        var cycles = this.byContact(contact_id);
         if (!contact || !utils.isCompany(contact))
             return _.compact(cycles);
         _.forEach(contact.contacts, function(c_id){
@@ -100,10 +98,10 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
         var FEEDBACK_STATUSES = utils.get_constants('activity').feedback_hash;
         var closing_actvs = _.filter(ActivityStore.byUser(user),
             function(a){ return a.feedback_status == FEEDBACK_STATUSES.OUTCOME });
-        var salescycles = _.map(closing_actvs, function(a){ return this.get(a.sales_cycle_id)}.bind(this));
+        var sales_cycles = _.map(closing_actvs, function(a){ return this.get(a.sales_cycle_id)}.bind(this));
         var rv = {
-            'number': salescycles.length,
-            'money': _.reduce(salescycles, function(sum, s) {
+            'number': sales_cycles.length,
+            'money': _.reduce(sales_cycles, function(sum, s) {
                         return sum + _.reduce(s.stat, function(s1, prod) {
                             return s1 + parseInt(prod.value)
                         }, 0);
@@ -185,6 +183,14 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
         case ActionTypes.ADD_PRODUCT_TO_SALES_CYCLE_SUCCESS:
             _salescycles[action.object.sales_cycle_id].product_ids = action.object.product_ids;
             SalesCycleStore.emitChange();
+            break;
+        case ActionTypes.CREATE_CONTACT_SUCCESS:
+            var ContactStore = require('./ContactStore');
+            CRMAppDispatcher.waitFor([ContactStore.dispatchToken]);
+            if( _.isObject(action.object.global_sales_cycle) ) {
+                var sc = SalesCycleStore.getCreatedSalesCycle(action.object.global_sales_cycle);
+                SalesCycleStore.set(sc);
+            }
             break;
         default:
             // do nothing
