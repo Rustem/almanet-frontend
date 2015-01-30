@@ -44,6 +44,12 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
         });
     },
 
+    openedByContact: function(contact_id) {
+        var SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash,
+            sales_cycles = this.byContact(contact_id);
+        return _.filter(sales_cycles, function(c){ return c.status !== SALES_CYCLE_STATUS.COMPLETED })
+    },
+
     getAll: function() {
         return _.map(_salescycles, function(c) { return c });
     },
@@ -74,17 +80,17 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
         return obj;
     },
 
-    getClosed: function() {
-        var SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash,
-            sales_cycles = this.getAll();
-        return _.filter(sales_cycles, function(c){ return c.status === SALES_CYCLE_STATUS.COMPLETED })
-    },
+    // getClosed: function() {
+    //     var SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash,
+    //         sales_cycles = this.getAll();
+    //     return _.filter(sales_cycles, function(c){ return c.status === SALES_CYCLE_STATUS.COMPLETED })
+    // },
 
-    getNonClosed: function() {
-        var SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash,
-            sales_cycles = this.getAll();
-        return _.filter(sales_cycles, function(c){ return c.status !== SALES_CYCLE_STATUS.COMPLETED })
-    },
+    // getNonClosed: function() {
+    //     var SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash,
+    //         sales_cycles = this.getAll();
+    //     return _.filter(sales_cycles, function(c){ return c.status !== SALES_CYCLE_STATUS.COMPLETED })
+    // },
 
     getClosedCyclesNumber: function(user) {
         // TODO maybe use there this.getClosed()
