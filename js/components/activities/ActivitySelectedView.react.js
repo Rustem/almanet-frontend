@@ -60,6 +60,13 @@ var ActivitySelectedView = React.createClass({
     getDefaultActivities: function() {
         var activities = null;
         var menu = this.getParams().menu;
+
+        // if from profile view
+        var sc_id = this.getQuery()['sc_id'],
+            c_id = this.getQuery()['c_id'];
+        if(sc_id && c_id)
+            return ActivityStore.bySalesCycleAndContact(sc_id, c_id)
+
         switch(menu) {
             case 'my_feed':
                 activities = ActivityStore.myFeed(this.getUser());

@@ -1,5 +1,4 @@
 var _ = require('lodash');
-var moment = require('moment');
 var React = require('react/addons');
 var Router = require('react-router');
 var Link = Router.Link;
@@ -492,9 +491,12 @@ var ActivityListView = React.createClass({
                         <a href="#" className="text-secondary">{author.vcard.fn}</a> в {utils.formatTime(act)}
                       </div>
                       <div className="row-body-secondary">
-                        <a href="#" className="link-inline">
-                          [c]
-                        </a>
+                            <Link to='activity_selected'
+                                  params={{menu: 'allbase', id: act.id}}
+                                  query={{sc_id: this.getParams().sales_cycle_id, c_id: this.getParams().id}}
+                                  className="stream-breadcrumbs">
+                                  <IconSvg iconKey="comment" />
+                            </Link>
                       </div>
                     </div>
                     <div className="row-body-message">
@@ -593,18 +595,7 @@ var ActivityListView = React.createClass({
         var cycle_id = parseInt(this.getParams()['sales_cycle_id'], 10),
             contact_id = parseInt(this.getParams()['id'], 10)
 
-        var sales_cycle = SalesCycleStore.get(cycle_id),
-            contact = ContactStore.get(sales_cycle.contact_id);
-
-        if(utils.isCompany(contact) && sales_cycle.is_global) {
-            var activities = _.reduce(SalesCycleStore.getCyclesForContact(contact_id), function(rv, sc) {
-                    rv.push(ActivityStore.bySalesCycle(sc.id));
-                    return _.compact(_.flatten(rv));
-                }, []);
-            return (_.sortBy(activities, function(a){ return moment(a.date_created) })).reverse()
-        }
-
-        return ActivityStore.bySalesCycle(cycle_id)
+        return ActivityStore.bySalesCycleAndContact(cycle_id, contact_id)
     },
 
     render: function() {
