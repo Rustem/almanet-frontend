@@ -91,10 +91,20 @@ var ActivityListItem = React.createClass({
                         </div>
                         <ul className="stream-breadcrumbs">
                             <li>
-                                <Link to='contact_profile' params={{id: contact.id}} className="stream-breadcrumbs">{contact.vcard.fn}</Link>
+                                <Link to='contact_profile' 
+                                      params={{id: contact.id}} 
+                                      className="stream-breadcrumbs">
+                                      {contact.vcard.fn}
+                                </Link>
                             </li>
                             <li>→</li>
-                            <li><a href="#" className="stream-breadcrumbs">{this.getSalesCycle(activity).title}</a></li>
+                            <li>
+                                <Link to='activities_by' 
+                                      params={{id: contact.id, sales_cycle_id: this.getSalesCycle(activity).id}} 
+                                      className="stream-breadcrumbs">
+                                      {this.getSalesCycle(activity).title}
+                                </Link>
+                            </li>
                         </ul>
                       </div>
                     </div>
