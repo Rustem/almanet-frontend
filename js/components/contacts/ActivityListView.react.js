@@ -459,12 +459,16 @@ var IncludeEmployeesButton = React.createClass({
         if(!utils.isCompany(this.getContact()) || !this.props.is_all)
             return null
         return (
-            <SVGCheckbox
-                name='include_employees'
-                label='Показать взаимодействия по сотрудникам'
-                className='row row--oneliner'
-                value={this.props.is_selected}
-                onValueUpdate={this.props.onItemToggle} />
+            <div className="page-header-controls row">
+                <div className="row-body-primary">
+                    <SVGCheckbox
+                        name='include_employees'
+                        label='Показать взаимодействия по сотрудникам'
+                        className='text-secondary'
+                        value={this.props.is_selected}
+                        onValueUpdate={this.props.onItemToggle} />
+                </div>
+            </div>
         )
     }
 });
