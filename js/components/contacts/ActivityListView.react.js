@@ -7,6 +7,8 @@ var cx            = React.addons.classSet;
 var IconSvg = require('../common/IconSvg.react');
 var Crumb = require('../common/BreadCrumb.react').Crumb;
 var DropDownBehaviour = require('../../forms/behaviours/DropDownBehaviour');
+var inputs = require('../../forms/input');
+var SVGCheckbox = inputs.SVGCheckbox;
 
 var AppContextMixin = require('../../mixins/AppContextMixin');
 // var AddActivityForm = require('../forms/AddActivityForm.react');
@@ -442,12 +444,38 @@ var SalesCycleSummary = React.createClass({
 
 });
 
+var IncludeEmployeesButton = React.createClass({
+    propTypes: {
+        contact_id: React.PropTypes.number.isRequired,
+        is_all: React.PropTypes.bool.isRequired, // whether 'all' option is selected in sales_cycles dropdown menu
+        onItemToggle: React.PropTypes.func.isRequired,
+    },
+
+    getContact: function(){
+        return ContactStore.get(this.props.contact_id)
+    },
+
+    render: function() {
+        if(!utils.isCompany(this.getContact()) || !this.props.is_all)
+            return null
+        return (
+            <SVGCheckbox
+                name='include_employees'
+                label='Показать взаимодействия по сотрудникам'
+                className='row row--oneliner'
+                value={this.props.is_selected}
+                onValueUpdate={this.props.onItemToggle} />
+        )
+    }
+});
+
 var ActivityListView = React.createClass({
     mixins : [AppContextMixin, Router.State, Router.Navigation],
     getInitialState: function() {
         return {
             action: ACTIONS.ADD_ACTIVITY,
-            sc_cnt: this.getCycles().length  // DONE: number of sales cycles for current contact
+            sc_cnt: this.getCycles().length,  // DONE: number of sales cycles for current contact
+            include_employees: false, // this option defines whether include activities for contact-company's employees or not
         }
     },
     componentWillMount: function() {
@@ -587,6 +615,11 @@ var ActivityListView = React.createClass({
         SalesCycleActionCreators.close(sales_cycle);
     },
 
+    onIncludeEmployeeChange: function(value) {
+        this.setState(React.addons.update(
+            this.state, {include_employees: {$set: value['include_employees']}}));
+    },
+
     navigateToSalesCycle: function(cycle_id) {
         var params = this.getParams();
         params.sales_cycle_id = cycle_id;
@@ -604,12 +637,9 @@ var ActivityListView = React.createClass({
         }.bind(this, this.state));
     },
 
-    buildActivities: function() {
-        var cycle_id = this.getParams()['sales_cycle_id'],
-            contact_id = this.getParams()['id']
-
+    buildActivities: function(cycle_id, contact_id) {
         if(cycle_id == 'all')
-            return ActivityStore.byContact(contact_id, true)
+            return ActivityStore.byContact(contact_id, this.state.include_employees)
         else
             return ActivityStore.bySalesCycle(cycle_id)
 
@@ -617,7 +647,8 @@ var ActivityListView = React.createClass({
 
     render: function() {
         var cycle_id = this.getParams()['sales_cycle_id'],
-            activities = this.buildActivities();
+            contact_id = this.getParams()['id'],
+            activities = this.buildActivities(cycle_id, contact_id);
 
         return (
             <div className="page">
@@ -632,6 +663,9 @@ var ActivityListView = React.createClass({
                                           onActionCycle={this.onActionCycle}
                                           action_type={this.state.action}
                                           current_cycle_id={cycle_id} />
+                    <IncludeEmployeesButton contact_id={contact_id}
+                                            is_all={cycle_id == 'all'}
+                                            onItemToggle={this.onIncludeEmployeeChange} />
                 </div>
 
                 <div className="page-body">
