@@ -52,25 +52,22 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
         rv = _.map(ids, function(id){
             return this.bySalesCycle(id);
         }.bind(this));
-        return _.sortBy(_.flatten(rv), 'at').reverse();
+        return _.sortBy(_.flatten(rv), function(activity){ return moment(activity.date_created) }).reverse();
     },
 
-    bySalesCycleAndContact: function(sc_id, c_id) {
+    byContact: function(c_id, include_employees) {
+        include_employees = (typeof include_employees === "undefined") ? false : include_employees;
         var SalesCycleStore = require('./SalesCycleStore');
-        var ContactStore = require('./ContactStore');
+        var sales_cycles = [];
 
-        var sales_cycle = SalesCycleStore.get(sc_id),
-            contact = ContactStore.get(sales_cycle.contact_id);
+        if(include_employees) 
+            sales_cycles = SalesCycleStore.getCyclesForContact(c_id)
+        else
+            sales_cycles = SalesCycleStore.byContact(c_id)
 
-        if(utils.isCompany(contact) && sales_cycle.is_global) {
-            var activities = _.reduce(SalesCycleStore.getCyclesForContact(c_id), function(rv, sc) {
-                    rv.push(this.bySalesCycle(sc.id));
-                    return _.compact(_.flatten(rv));
-                }.bind(this), []);
-            return (_.sortBy(activities, function(a){ return moment(a.date_created) })).reverse()
-        }
+        sales_cycles = _.map(sales_cycles, 'id');
 
-        return this.bySalesCycle(sc_id)
+        return this.bySalesCycles(sales_cycles)
     },
 
     getNew: function(user) {

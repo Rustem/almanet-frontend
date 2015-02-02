@@ -59,7 +59,7 @@ var SalesCycleControlBar = React.createClass({
     },
 
     shouldRenderControlBar: function() {
-        if(_.contains([null, undefined], this.props.current_cycle_id))
+        if(_.contains([null, undefined], this.getSalesCycle()))
             return false;
         if(SalesCycleStore.get(this.props.current_cycle_id).is_global)
             return false;
@@ -123,7 +123,7 @@ var AddActivityWidget = React.createClass({
     },
 
     shouldRenderComponent: function() {
-        if(_.contains([null, undefined], this.props.current_cycle_id))
+        if(_.contains([null, undefined], this.getSalesCycle()))
           return false;
         return !(this.getCycleStatus() == this.SALES_CYCLE_STATUS.COMPLETED) &&
                this.get_current_action() == ACTIONS.ADD_ACTIVITY;
@@ -161,7 +161,7 @@ var AddProductWidget = React.createClass({
     },
 
     shouldRenderComponent: function() {
-        if(_.contains([null, undefined], this.props.current_cycle_id))
+        if(_.contains([null, undefined], this.getSalesCycle()))
             return false;
         if(this.getSalesCycle().is_global)
             return false;
@@ -201,12 +201,15 @@ var CloseCycleWidget = React.createClass({
     },
 
     getCycleProducts: function() {
-        var product_ids = this.getSalesCycle().product_ids;
+        var sales_cycle = this.getSalesCycle()
+        if(!sales_cycle)
+            return []
+        var product_ids = sales_cycle.product_ids;
         return ProductStore.getByIds(product_ids);
     },
 
     shouldRenderComponent: function(products) {
-        if(_.contains([null, undefined], this.props.current_cycle_id))
+        if(_.contains([null, undefined], this.getSalesCycle()))
             return false;
         if(this.getSalesCycle().is_global)
             return false;
@@ -239,7 +242,7 @@ var SalesCycleDropDownList = React.createClass({
     mixins: [DropDownBehaviour],
 
     propTypes: {
-        current_cycle_id: React.PropTypes.number.isRequired
+        current_cycle_id: React.PropTypes.string.isRequired
     },
 
     renderChoice: function(choice, idx) {
@@ -444,7 +447,7 @@ var ActivityListView = React.createClass({
     getInitialState: function() {
         return {
             action: ACTIONS.ADD_ACTIVITY,
-            sc_cnt: this.getCyclesForContact().length  // DONE: number of sales cycles for current contact
+            sc_cnt: this.getCycles().length  // DONE: number of sales cycles for current contact
         }
     },
     componentWillMount: function() {
@@ -527,16 +530,16 @@ var ActivityListView = React.createClass({
         )
     },
 
-    getCyclesForContact: function() {
+    getCycles: function() {
         var contact_id = parseInt(this.getParams().id, 10);
-        return SalesCycleStore.getCyclesForContact(contact_id);
+        return SalesCycleStore.byContact(contact_id);
     },
 
     buildChoices: function(){
-        var cycles = this.getCyclesForContact();
-        return _.map(cycles, function(c){
+        var cycles = this.getCycles();
+        return [['all', 'Все', '']].concat(_.map(cycles, function(c){
             return [c.id, c.title, c.status];
-        });
+        }));
     },
 
     onActionActivity: function(evt) {
@@ -602,14 +605,18 @@ var ActivityListView = React.createClass({
     },
 
     buildActivities: function() {
-        var cycle_id = parseInt(this.getParams()['sales_cycle_id'], 10),
-            contact_id = parseInt(this.getParams()['id'], 10)
+        var cycle_id = this.getParams()['sales_cycle_id'],
+            contact_id = this.getParams()['id']
 
-        return ActivityStore.bySalesCycleAndContact(cycle_id, contact_id)
+        if(cycle_id == 'all')
+            return ActivityStore.byContact(contact_id, true)
+        else
+            return ActivityStore.bySalesCycle(cycle_id)
+
     },
 
     render: function() {
-        var cycle_id = parseInt(this.getParams()['sales_cycle_id'], 10),
+        var cycle_id = this.getParams()['sales_cycle_id'],
             activities = this.buildActivities();
 
         return (
