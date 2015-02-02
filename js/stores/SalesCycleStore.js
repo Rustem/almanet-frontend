@@ -86,11 +86,11 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
     //     return _.filter(sales_cycles, function(c){ return c.status === SALES_CYCLE_STATUS.COMPLETED })
     // },
 
-    // getNonClosed: function() {
-    //     var SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash,
-    //         sales_cycles = this.getAll();
-    //     return _.filter(sales_cycles, function(c){ return c.status !== SALES_CYCLE_STATUS.COMPLETED })
-    // },
+    getNonClosed: function() {
+        var SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash,
+            sales_cycles = this.getAll();
+        return _.filter(sales_cycles, function(c){ return c.status !== SALES_CYCLE_STATUS.COMPLETED })
+    },
 
     getClosedCyclesNumber: function(user) {
         // TODO maybe use there this.getClosed()
