@@ -524,7 +524,7 @@ var ActivityListView = React.createClass({
                       <div className="row-body-secondary">
                             <Link to='activity_selected'
                                   params={{menu: 'allbase', id: act.id}}
-                                  query={{sc_id: this.getParams().sales_cycle_id, c_id: this.getParams().id}}
+                                  query={{sc_id: this.getParams().sales_cycle_id, c_id: this.getParams().id, i_e: this.state.include_employees}}
                                   className="stream-breadcrumbs">
                                   <IconSvg iconKey="comment" />
                             </Link>

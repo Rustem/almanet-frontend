@@ -81,6 +81,7 @@ var ActivityListItem = React.createClass({
                           <div className="row-body-secondary">
                             <Link to='activity_selected'
                                   params={{menu: menu, id: activity.id}}
+                                  query={this.getQuery()}
                                   className="stream-breadcrumbs">
                                   <IconSvg iconKey="comment" />
                             </Link>

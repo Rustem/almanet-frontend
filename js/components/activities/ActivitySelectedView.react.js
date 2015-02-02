@@ -63,9 +63,13 @@ var ActivitySelectedView = React.createClass({
 
         // if from profile view
         var sc_id = this.getQuery()['sc_id'],
-            c_id = this.getQuery()['c_id'];
+            c_id = this.getQuery()['c_id'],
+            i_e = this.getQuery()['i_e']; // include_employees
         if(sc_id && c_id)
-            return ActivityStore.bySalesCycleAndContact(sc_id, c_id)
+            if(sc_id == 'all')
+                return ActivityStore.byContact(c_id, i_e == 'true')
+            else
+                return ActivityStore.bySalesCycle(sc_id)
 
         switch(menu) {
             case 'my_feed':
