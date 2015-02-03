@@ -145,4 +145,22 @@ module.exports = {
     }.bind(this));
   },
 
+  delete: function(contact) {
+    dispatcher.handleViewAction({
+      type: ActionTypes.DELETE_CONTACT,
+      object: contact
+    });
+    ContactWebAPI.deleteContact(contact, function(deleted_contact){
+      dispatcher.handleServerAction({
+        type: ActionTypes.DELETE_CONTACT_SUCCESS,
+        object: deleted_contact
+      });
+    }.bind(this), function(error){
+      dispatcher.handleServerAction({
+        type: ActionTypes.DELETE_CONTACT_FAIL,
+        error: error
+      });
+    }.bind(this));
+  },
+
 };

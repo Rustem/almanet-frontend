@@ -114,6 +114,11 @@ var ContactStore = assign({}, EventEmitter.prototype, {
         this.emitChange();
     },
 
+    delete: function(contact) {
+        delete _contacts[contact.id];
+        this.emitChange();
+    },
+
 });
 
 
@@ -146,6 +151,9 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
                 });
             _contacts[contact_id] = contact;
             ContactStore.emitChange();
+            break;
+        case ActionTypes.DELETE_CONTACT_SUCCESS:
+            ContactStore.delete(action.object);
             break;
         case ActionTypes.CREATE_ACTIVITY_SUCCESS:
             CRMAppDispatcher.waitFor([ActivityStore.dispatchToken]);
