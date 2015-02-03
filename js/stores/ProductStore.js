@@ -58,7 +58,7 @@ var ProductStore = assign({}, EventEmitter.prototype, {
     },
 
     delete: function(product) {
-        _products = _.omit(_products, function(val, key) { return val.id == product.id; });
+        delete _products[product.id];
         this.emitChange();
     },
 
