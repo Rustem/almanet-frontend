@@ -2,6 +2,7 @@ var _ = require('lodash');
 var SignalManager = require('./utils');
 var requestPost = require('../utils').requestPost;
 var requestPatch = require('../utils').requestPatch;
+var requestPut = require('../utils').requestPut;
 var waitUntil = require('../libs/wait');
 var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
@@ -43,7 +44,7 @@ module.exports = {
     },
 
     editContact: function(edit_details, success, failure) {
-        requestPatch('/api/v1/contact/'+edit_details.contact_id + '/')
+        requestPut('/api/v1/contact/'+edit_details.contact_id + '/')
             .send(edit_details.contact)
             .on('error', failure.bind(null, edit_details))
             .end(function(res) {
