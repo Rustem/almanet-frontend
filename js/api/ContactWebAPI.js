@@ -28,9 +28,10 @@ module.exports = {
     },
 
     importContacts: function(vcard_file, success, failure) {
+        var obj = {'filename': vcard_file[0], 'uploaded_file': vcard_file[1]};
         requestPost('/api/v1/contact/import/')
-            .send({'uploaded_file': vcard_file[1]})
-            .on('error', failure.bind(null, {'uploaded_file': vcard_file[1]}))
+            .send(obj)
+            .on('error', failure.bind(null, obj))
             .end(function(error, res){
                 if(res.ok) {
                     success(res.body.success)
