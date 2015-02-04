@@ -13,9 +13,8 @@ module.exports = {
             .end(function(res) {
                 if (res.ok) {
                     success(res.body);
-                    var author_id = res.body.author_id,
-                        extra = {};
-                    SignalManager.send(ActionTypes.CREATE_ACTIVITY_SUCCESS, author_id, extra);
+                    var extra = {};
+                    SignalManager.send(ActionTypes.CREATE_ACTIVITY_SUCCESS, extra);
                 } else {
                     failure(res);
                 }

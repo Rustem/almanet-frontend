@@ -23,9 +23,8 @@ module.exports = {
                     success(obj);
 
                     // notification
-                    var author_id = obj.author_id,
-                        extra = {'filter_title': obj.title};
-                    SignalManager.send(ActionTypes.CREATE_FILTER_SUCCESS, author_id, extra);
+                    var extra = {'filter_title': obj.title};
+                    SignalManager.send(ActionTypes.CREATE_FILTER_SUCCESS, extra);
                 } else {
                     failure(obj);
                 }
@@ -41,9 +40,8 @@ module.exports = {
                     success(obj);
 
                     // notification
-                    var author_id = obj.author_id,
-                        extra = {'filter_title': obj.title};
-                    SignalManager.send(ActionTypes.EDIT_FILTER_SUCCESS, author_id, extra);
+                    var extra = {'filter_title': obj.title};
+                    SignalManager.send(ActionTypes.EDIT_FILTER_SUCCESS, extra);
                 } else {
                     failure(obj);
                 }
@@ -55,7 +53,7 @@ module.exports = {
             .end(function(res) {
                 if (res.ok) {
                     success(id);
-                    SignalManager.send(ActionTypes.DELETE_FILTER_SUCCESS, null, null);
+                    SignalManager.send(ActionTypes.DELETE_FILTER_SUCCESS, null);
                 } else {
                     failure(id);
                 }

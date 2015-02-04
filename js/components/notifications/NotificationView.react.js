@@ -20,14 +20,13 @@ var NotificationContactCreateView = React.createClass({
 
     render: function() {
         var n = this.props.n,
-            author = UserStore.get(n.author_id),
-            createdContact = ContactStore.get(n.extra.contact_id);
+            fn = n.extra.fn;
         return (
             <div className="notificationCenter-item">
                 <div className="notificationCenter-item-meta">
                     {moment(n.date_created).fromNow()}
                 </div>
-                Пользователь {utils.capitalize(author.vcard.fn)} создал новый контакт - {createdContact.vcard.fn}.
+                Новый контакт {fn} успешно создан.
             </div>
         );
     }
@@ -44,14 +43,13 @@ var NotificationContactUpdateView = React.createClass({
 
     render: function() {
         var n = this.props.n,
-            author = UserStore.get(n.author_id),
-            createdContact = ContactStore.get(n.extra.contact_id);
+            fn = n.extra.fn;
         return (
             <div key={n.id} className="notificationCenter-item">
                 <div className="notificationCenter-item-meta">
                     {moment(n.date_created).fromNow()}
                 </div>
-                Пользователь {utils.capitalize(author.vcard.fn)} изменил контакт {createdContact.vcard.fn}.
+                Контакт {fn} успешно изменён.
             </div>
         );
     }
@@ -68,15 +66,14 @@ var NotificationContactShareView = React.createClass({
 
     render: function() {
         var n = this.props.n,
-            author = UserStore.get(n.author_id),
-            receivers = _.uniq(_.map(n.extra.receivers, function(id){ return UserStore.get(id)})),
-            sharedContacts = _.uniq(_.map(n.extra.contacts, function(id){ return ContactStore.get(id)}));
+            contacts = n.extra.contacts;
+
         return (
             <div key={n.id} className="notificationCenter-item">
                 <div className="notificationCenter-item-meta">
                     {moment(n.date_created).fromNow()}
                 </div>
-                Пользователь {utils.capitalize(author.vcard.fn)} поделился {sharedContacts.length == 1 ? 'контактом' : 'контактами'} {_.map(sharedContacts, function(c) { return c.vcard.fn}).join(', ')} с {receivers.length == 1 ? 'пользователем' : 'пользователями'} {_.map(receivers, function(r) { return r.vcard.fn}).join(', ')}.
+                Вы успешно поделились {contacts} {contacts == 1 ? 'контактом' : 'контактами'}.
             </div>
         );
     }
@@ -92,15 +89,14 @@ var NotificationActivityCreateView = React.createClass({
     },
 
     render: function() {
-        var n = this.props.n,
-            author = UserStore.get(n.author_id);
+        var n = this.props.n;
 
         return (
             <div key={n.id} className="notificationCenter-item">
                 <div className="notificationCenter-item-meta">
                     {moment(n.date_created).fromNow()}
                 </div>
-                Пользователь {utils.capitalize(author.vcard.fn)} добавил новое взаимодействие.
+                Новое взаимодействие успешно добавлено.
             </div>
         );
     }
@@ -117,7 +113,6 @@ var NotificationFilterCreateView = React.createClass({
 
     render: function() {
         var n = this.props.n,
-            author = UserStore.get(n.author_id),
             filter_title = n.extra.filter_title;
 
         return (
@@ -125,7 +120,7 @@ var NotificationFilterCreateView = React.createClass({
                 <div className="notificationCenter-item-meta">
                     {moment(n.date_created).fromNow()}
                 </div>
-                Пользователь {utils.capitalize(author.vcard.fn)} добавил новый фильтр - {filter_title}.
+                Новый фильтр {filter_title} успешно добавлен
             </div>
         );
     }
@@ -142,7 +137,6 @@ var NotificationFilterEditView = React.createClass({
 
     render: function() {
         var n = this.props.n,
-            author = UserStore.get(n.author_id),
             filter_title = n.extra.filter_title;
 
         return (
@@ -150,7 +144,7 @@ var NotificationFilterEditView = React.createClass({
                 <div className="notificationCenter-item-meta">
                     {moment(n.date_created).fromNow()}
                 </div>
-                Пользователь {utils.capitalize(author.vcard.fn)} изменил фильтр - {filter_title}.
+                Фильтр {filter_title} успешно изменён.
             </div>
         );
     }
@@ -214,14 +208,14 @@ var NotificationSalesCycleCloseView = React.createClass({
 
     render: function() {
         var n = this.props.n,
-            sc = n.extra.sales_cycle;
+            sales_cycle_title = n.extra.sales_cycle_title;
 
         return (
             <div key={n.id} className="notificationCenter-item">
                 <div className="notificationCenter-item-meta">
                     {moment(n.date_created).fromNow()}
                 </div>
-                Цикл {sc.title} успешно закрыт.
+                Цикл {sales_cycle_title} успешно закрыт.
             </div>
         );
     }

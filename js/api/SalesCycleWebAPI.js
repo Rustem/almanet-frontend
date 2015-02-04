@@ -19,9 +19,8 @@ module.exports = api = {
             .send(salesCycleObject.closing_stats)
             .end(function(res) {
                 if (res.ok) {
-                    var author_id = salesCycleObject.owner_id,
-                        extra = {'sales_cycle': salesCycleObject};
-                    SignalManager.send(ActionTypes.CLOSE_SALES_CYCLE_SUCCESS, author_id, extra);
+                    var extra = {'sales_cycle_title': salesCycleObject.title};
+                    SignalManager.send(ActionTypes.CLOSE_SALES_CYCLE_SUCCESS, extra);
                     success(res.body);
                 } else {
                     failure(res);
