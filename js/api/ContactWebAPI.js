@@ -2,6 +2,7 @@ var _ = require('lodash');
 var SignalManager = require('./utils');
 var requestPost = require('../utils').requestPost;
 var requestPatch = require('../utils').requestPatch;
+var request = require('../utils').request;
 var waitUntil = require('../libs/wait');
 var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
@@ -61,7 +62,21 @@ module.exports = {
                 }
             });
     },
-    
+
+    deleteContact: function(contact, success, failure) {
+        request('DELETE', '/api/v1/contact/'+contact.id+'/')
+            .on('error', failure.bind(null, contact))
+            .end(function(res) {
+                if (res.ok) {
+                    success(contact);
+
+                    // var extra = {'count': res.body.success.length};
+                    // SignalManager.send(ActionTypes.DELETE_CONTACT_SUCCESS, null, extra);
+                } else
+                    failure(res);
+            });
+    },
+
     createShares: function(shareObject, success, failure) {
         requestPost('/api/v1/share/share_multiple/')
             .send(shareObject)

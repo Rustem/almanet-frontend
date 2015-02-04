@@ -24,13 +24,31 @@ var FollowButton = require('../common/FollowButton.react');
 
 var VIEW_MODE = require('../../constants/CRMConstants').CONTACT_VIEW_MODE;
 
-
-
 var ACTIONS = keyMirror({
     NO_ACTION: null,
     SHARE: null,
     EDIT: null,
 });
+
+
+var ContactDeleteButton = React.createClass({
+    mixins: [Router.Navigation],
+    propTypes: {
+        contact: React.PropTypes.object.isRequired
+    },
+
+    onClick: function() {
+        ContactActionCreators.delete(this.props.contact);
+        this.transitionTo('contacts');
+    },
+
+    render: function() {
+        return (
+            <button className="btn btn--save" onClick={this.onClick}>Удалить</button>
+        );
+    }
+});
+
 
 var DropdownControlBar = React.createClass({
 
@@ -193,7 +211,7 @@ var ContactProfileView = React.createClass({
                             <div className="space-verticalBorder"></div>
                             <FollowButton contact={this.getContact()} />
 
-
+                            <ContactDeleteButton contact={this.getContact()} />
                         </div>
 
                     </div>

@@ -57,6 +57,11 @@ var ProductStore = assign({}, EventEmitter.prototype, {
         _products[id].stat_value = stat_value;
     },
 
+    delete: function(product) {
+        delete _products[product.id];
+        this.emitChange();
+    },
+
 });
 
 
@@ -91,6 +96,9 @@ ProductStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
                 ProductStore.updateStatValue(product.id);
             });
             ProductStore.emitChange();
+            break;
+        case ActionTypes.DELETE_PRODUCT_SUCCESS:
+            ProductStore.delete(action.object);
             break;
         default:
             // do nothing
