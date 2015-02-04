@@ -149,6 +149,10 @@ function requestPatch(url) {
   return request('PATCH', url);
 };
 
+function requestPut(url) {
+  return request('PUT', url);
+};
+
 function requestDelete(url) {
   return request('DELETE', url);
 };
@@ -168,6 +172,7 @@ module.exports = {
   request: request,
   requestPost: requestPost,
   requestPatch: requestPatch,
+  requestPut: requestPut,
   requestGet: requestGet,
   requestDelete: requestDelete,
   isCompany: isCompany,

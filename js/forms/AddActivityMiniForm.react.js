@@ -45,8 +45,7 @@ var AddActivityMiniForm = React.createClass({
 
     onHandleSubmit: function(e) {
         e.preventDefault();
-        var GLOBAL_SALES_CYCLE_ID = utils.get_constants('global_sales_cycle_id'),
-            form = this.refs.add_activity_form,
+        var form = this.refs.add_activity_form,
             errors = form.validate();
         if(!errors) {
             var object = {}, formValue = form.value();
@@ -54,13 +53,9 @@ var AddActivityMiniForm = React.createClass({
             object.sales_cycle_id = this.props.sales_cycle_id;
             object.description = formValue.description;
             object.feedback_status = formValue.feedback_status;
-            if(object.sales_cycle_id != GLOBAL_SALES_CYCLE_ID) {
-                object.contact_id = SalesCycleStore.get(this.props.sales_cycle_id).contact_id;
-            }
-            else {
-                object.contact_id = null;
-            }
-          this.props.onHandleSubmit(object);
+            object.contact_id = SalesCycleStore.get(this.props.sales_cycle_id).contact_id;
+            
+            this.props.onHandleSubmit(object);
         } else{
             alert(errors);
         }

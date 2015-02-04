@@ -124,10 +124,12 @@ var SingleSelectedDetailView = React.createClass({
         this.props.onHandleEditContact.apply(this, arguments)
     },
     onAddEvent: function(newEvent) {
+        this.resetState();
         ActivityActionCreators.createActivity(newEvent);
     },
 
     onShareSubmit: function(shares){
+        this.resetState();
         ContactActionCreators.createShares(shares);
     },
 

@@ -99,14 +99,11 @@ var ContactStore = assign({}, EventEmitter.prototype, {
     },
 
     byActivity: function(a) {
-        var GLOBAL_SALES_CYCLE_ID = utils.get_constants('global_sales_cycle_id');
-        if(a.sales_cycle_id == GLOBAL_SALES_CYCLE_ID)
-            return null;
         return this.get(SalesCycleStore.get(a.sales_cycle_id).contact_id);
     },
 
     getCreatedContact: function(obj) {
-        return obj;
+        return _.omit(obj, 'global_sales_cycle');
     },
 
     set: function(contact) {

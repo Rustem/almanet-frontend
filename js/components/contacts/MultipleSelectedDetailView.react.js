@@ -10,6 +10,7 @@ var ShareStore = require('../../stores/ShareStore');
 var ContactStore = require('../../stores/ContactStore');
 var BreadcrumbStore = require('../../stores/BreadcrumbStore');
 var ContactActionCreators = require('../../actions/ContactActionCreators');
+var ActivityActionCreators = require('../../actions/ActivityActionCreators');
 var UserActionCreators = require('../../actions/UserActionCreators');
 var BreadCrumb = require('../common/BreadCrumb.react');
 var Crumb = require('../common/BreadCrumb.react').Crumb;
@@ -94,13 +95,13 @@ var MultipleSelectedDetailView = React.createClass({
     },
 
     onAddEvent: function(newEvent) {
-        // this.setState({mode: VIEW_MODE.READ});
         this.resetState();
+        ActivityActionCreators.createActivity(newEvent);
     },
 
     onShareSubmit: function(shares){
+        this.resetState();
         ContactActionCreators.createShares(shares);
-        // this.resetState();
     },
 
     onUserAction: function(actionType, evt) {
