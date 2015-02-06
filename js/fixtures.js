@@ -13,8 +13,6 @@
 var moment = require('moment');
 var CRMConstants = require('./constants/CRMConstants');
 NotifTypes = CRMConstants.NotifTypes;
-GLOBAL_SALES_CYCLE_ID = CRMConstants.GLOBAL_SALES_CYCLE_ID;
-GLOBAL_SALES_CYCLE = CRMConstants.GLOBAL_SALES_CYCLE;
 
 module.exports = {
 
@@ -92,11 +90,11 @@ module.exports = {
     //   },
     // ]));
 
-    var cycles = JSON.parse(localStorage.getItem('salescycles')) || [];
-    if(cycles.length <= 0 || cycles[0].id !== GLOBAL_SALES_CYCLE_ID) {
-      cycles.unshift(GLOBAL_SALES_CYCLE);
-      localStorage.setItem('salescycles', JSON.stringify(cycles));
-    }
+    // var cycles = JSON.parse(localStorage.getItem('salescycles')) || [];
+    // if(cycles.length <= 0 || cycles[0].id !== GLOBAL_SALES_CYCLE_ID) {
+    //   cycles.unshift(GLOBAL_SALES_CYCLE);
+    //   localStorage.setItem('salescycles', JSON.stringify(cycles));
+    // }
 
     // localStorage.setItem('notifications', JSON.stringify([
     //   {

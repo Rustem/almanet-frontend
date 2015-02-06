@@ -39,7 +39,7 @@ var ProductRemoveableDropDownList = React.createClass({
     onAdd: function(product_id) {
         var selected_products = this.value() || [];
         selected_products.push(product_id);
-        var updValue = this.prepValue(this.props.name, _.unique(selected_products));
+        var updValue = this.prepValue(this.props.name, _.uniq(selected_products));
         return this.updateValue(updValue);
     },
 

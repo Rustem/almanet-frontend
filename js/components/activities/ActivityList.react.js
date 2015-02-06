@@ -81,6 +81,7 @@ var ActivityListItem = React.createClass({
                           <div className="row-body-secondary">
                             <Link to='activity_selected'
                                   params={{menu: menu, id: activity.id}}
+                                  query={this.getQuery()}
                                   className="stream-breadcrumbs">
                                   <IconSvg iconKey="comment" />
                             </Link>
@@ -89,15 +90,23 @@ var ActivityListItem = React.createClass({
                         <div className="row-body-message">
                             {activity.description}
                         </div>
-                        {contact ?
                         <ul className="stream-breadcrumbs">
                             <li>
-                                <Link to='contact_profile' params={{id: contact.id}} className="stream-breadcrumbs">{contact.vcard.fn}</Link>
+                                <Link to='contact_profile' 
+                                      params={{id: contact.id}} 
+                                      className="stream-breadcrumbs">
+                                      {contact.vcard.fn}
+                                </Link>
                             </li>
                             <li>→</li>
-                            <li><a href="#" className="stream-breadcrumbs">{this.getSalesCycle(activity).title}</a></li>
+                            <li>
+                                <Link to='activities_by' 
+                                      params={{id: contact.id, sales_cycle_id: this.getSalesCycle(activity).id}} 
+                                      className="stream-breadcrumbs">
+                                      {this.getSalesCycle(activity).title}
+                                </Link>
+                            </li>
                         </ul>
-                        : null}
                       </div>
                     </div>
                   </div>

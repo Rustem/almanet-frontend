@@ -3,6 +3,7 @@ var SignalManager = require('./utils');
 var requestPost = require('../utils').requestPost;
 var requestPatch = require('../utils').requestPatch;
 var request = require('../utils').request;
+var requestPut = require('../utils').requestPut;
 var waitUntil = require('../libs/wait');
 var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
@@ -19,9 +20,8 @@ module.exports = {
                     success(obj);
 
                     // for notifications
-                    var author_id = obj.user_id,
-                        extra = {'contact_id': obj.id};
-                    SignalManager.send(ActionTypes.CREATE_CONTACT_SUCCESS, author_id, extra);
+                    var extra = {'fn': obj.vcard.fn};
+                    SignalManager.send(ActionTypes.CREATE_CONTACT_SUCCESS, extra);
                 } else {
                     failure(obj);
                 }
@@ -29,14 +29,15 @@ module.exports = {
     },
 
     importContacts: function(vcard_file, success, failure) {
+        var obj = {'filename': vcard_file[0], 'uploaded_file': vcard_file[1]};
         requestPost('/api/v1/contact/import/')
-            .send({'uploaded_file': vcard_file[1]})
-            .on('error', failure.bind(null, {'uploaded_file': vcard_file[1]}))
+            .send(obj)
+            .on('error', failure.bind(null, obj))
             .end(function(error, res){
                 if(res.ok) {
                     success(res.body.success)
                     var extra = {'count': res.body.success.length};
-                    SignalManager.send(ActionTypes.IMPORT_CONTACTS_SUCCESS, null, extra);
+                    SignalManager.send(ActionTypes.IMPORT_CONTACTS_SUCCESS, extra);
                 } else {
                     failure();
                 }
@@ -44,7 +45,7 @@ module.exports = {
     },
 
     editContact: function(edit_details, success, failure) {
-        requestPatch('/api/v1/contact/'+edit_details.contact_id + '/')
+        requestPut('/api/v1/contact/'+edit_details.contact_id + '/')
             .send(edit_details.contact)
             .on('error', failure.bind(null, edit_details))
             .end(function(res) {
@@ -53,9 +54,8 @@ module.exports = {
                     success(edit_details);
 
                     // for notifications
-                    var author_id = edit_details.contact.user_id,
-                        extra = {'contact_id': edit_details.contact.id};
-                    SignalManager.send(ActionTypes.EDIT_CONTACT_SUCCESS, author_id, extra);
+                    var extra = {'fn': edit_details.contact.vcard.fn};
+                    SignalManager.send(ActionTypes.EDIT_CONTACT_SUCCESS, extra);
                 } else {
                     failure(edit_details);
                 }
@@ -86,12 +86,10 @@ module.exports = {
                     success(obj);
                     if(obj.objects.length > 0) {
                         shares = obj.objects;
-                        var author_id = shares[0].share_from,
-                            extra = {
-                                'shares': _.map(shares, function(s){ return s.id }),
-                                'contacts': _.map(shares, function(s){ return s.contact }),
-                                'receivers': _.map(shares, function(s){ return s.share_to })};
-                        SignalManager.send(ActionTypes.CREATE_SHARE_SUCCESS, author_id, extra);
+                        var extra = {
+                            'contacts': _.uniq(_.map(shares, function(s){ return s.contact })).length
+                        };
+                        SignalManager.send(ActionTypes.CREATE_SHARE_SUCCESS, extra);
                     }
                 } else {
                     failure(obj);

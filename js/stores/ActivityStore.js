@@ -1,6 +1,7 @@
 var _ = require('lodash');
 var assign = require('object-assign');
 var moment = require('moment');
+var utils = require('../utils');
 var EventEmitter = require('events').EventEmitter;
 var CRMConstants = require('../constants/CRMConstants');
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
@@ -50,7 +51,22 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
         rv = _.map(ids, function(id){
             return this.bySalesCycle(id);
         }.bind(this));
-        return _.sortBy(_.flatten(rv), 'at').reverse();
+        return _.sortBy(_.flatten(rv), function(activity){ return moment(activity.date_created) }).reverse();
+    },
+
+    byContact: function(c_id, include_employees) {
+        include_employees = (typeof include_employees === "undefined") ? false : include_employees;
+        var SalesCycleStore = require('./SalesCycleStore');
+        var sales_cycles = [];
+
+        if(include_employees) 
+            sales_cycles = SalesCycleStore.getCyclesForContact(c_id)
+        else
+            sales_cycles = SalesCycleStore.byContact(c_id)
+
+        sales_cycles = _.map(sales_cycles, 'id');
+
+        return this.bySalesCycles(sales_cycles)
     },
 
     getNew: function(user) {

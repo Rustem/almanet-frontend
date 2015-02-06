@@ -44,27 +44,33 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
         });
     },
 
+    openedByContact: function(contact_id) {
+        var SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash,
+            sales_cycles = this.byContact(contact_id);
+        return _.filter(sales_cycles, function(c){ return c.status !== SALES_CYCLE_STATUS.COMPLETED })
+    },
+
     getAll: function() {
         return _.map(_salescycles, function(c) { return c });
     },
 
     getByIds: function(ids) {
-        var salescycles = this.getAll();
-        return _.filter(salescycles, function(c){ return _.indexOf(ids, c.id) !== -1 });
+        var sales_cycles = this.getAll();
+        return _.filter(sales_cycles, function(c){ return _.indexOf(ids, c.id) !== -1 });
     },
 
-    getGlobal: function() {
-        var GLOBAL_SALES_CYCLE_ID = utils.get_constants('global_sales_cycle_id');
-        return this.get(GLOBAL_SALES_CYCLE_ID);
+    getGlobalForContact: function(contact_id) {
+        var sales_cycles = this.byContact(contact_id);
+        return _.find(sales_cycles, function(sc) { return sc.is_global })
     },
 
-    getCyclesForCurrentContact: function(contact_id) {
-        var ContactStore = require('./ContactStore'),
-            contact = ContactStore.get(contact_id),
-            cycles = [this.getGlobal()].concat(this.byContact(contact_id));
+    getCyclesForContact: function(contact_id) {
+        var ContactStore = require('./ContactStore');
+        var contact = ContactStore.get(contact_id);
+        var cycles = this.byContact(contact_id);
         if (!contact || !utils.isCompany(contact))
             return _.compact(cycles);
-        _.forEach(contact.contacts, function(c_id){
+        _.forEach(contact.children, function(c_id){
             cycles.push(this.byContact(c_id));
         }.bind(this));
         return _.flatten(cycles);
@@ -74,11 +80,11 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
         return obj;
     },
 
-    getClosed: function() {
-        var SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash,
-            sales_cycles = this.getAll();
-        return _.filter(sales_cycles, function(c){ return c.status === SALES_CYCLE_STATUS.COMPLETED })
-    },
+    // getClosed: function() {
+    //     var SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash,
+    //         sales_cycles = this.getAll();
+    //     return _.filter(sales_cycles, function(c){ return c.status === SALES_CYCLE_STATUS.COMPLETED })
+    // },
 
     getNonClosed: function() {
         var SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash,
@@ -98,10 +104,10 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
         var FEEDBACK_STATUSES = utils.get_constants('activity').feedback_hash;
         var closing_actvs = _.filter(ActivityStore.byUser(user),
             function(a){ return a.feedback_status == FEEDBACK_STATUSES.OUTCOME });
-        var salescycles = _.map(closing_actvs, function(a){ return this.get(a.sales_cycle_id)}.bind(this));
+        var sales_cycles = _.map(closing_actvs, function(a){ return this.get(a.sales_cycle_id)}.bind(this));
         var rv = {
-            'number': salescycles.length,
-            'money': _.reduce(salescycles, function(sum, s) {
+            'number': sales_cycles.length,
+            'money': _.reduce(sales_cycles, function(sum, s) {
                         return sum + _.reduce(s.stat, function(s1, prod) {
                             return s1 + parseInt(prod.value)
                         }, 0);
@@ -190,6 +196,13 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             var deleted_product = action.object;
             _(_salescycles).forEach(function(val, key) { _salescycles[key].product_ids = _.pull(val.product_ids, deleted_product.id); }).value();
             SalesCycleStore.emitChange();
+        case ActionTypes.CREATE_CONTACT_SUCCESS:
+            var ContactStore = require('./ContactStore');
+            CRMAppDispatcher.waitFor([ContactStore.dispatchToken]);
+            if( _.isObject(action.object.global_sales_cycle) ) {
+                var sc = SalesCycleStore.getCreatedSalesCycle(action.object.global_sales_cycle);
+                SalesCycleStore.set(sc);
+            }
             break;
         default:
             // do nothing
