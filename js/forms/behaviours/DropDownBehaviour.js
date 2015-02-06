@@ -33,7 +33,9 @@ var DropDownBehaviour = {
     onMenuTogglerBlur: function(evt) {
         // to fix problem when DropDown doesn't close on blur
         // there is setTimeout, because Blur happens first than Click on the Menu
-        setTimeout(function(){ this.setState({isOpen: false}) }.bind(this), 100);
+        setTimeout(
+           function(){ this.isMounted() && this.setState({isOpen: false}); }.bind(this),
+           100);
     },
 
     onChoice: function(choice_idx) {
