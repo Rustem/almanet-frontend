@@ -60,10 +60,10 @@ var CommentList = React.createClass({
     },
 
     render: function() {
-        var commentListItems = this.props.comments.map(function(comment) {
+        var commentListItems = this.props.comments.map(function(comment, index) {
             return(
                 <CommentListItem
-                    comment={comment} onReply={this.onReply} />
+                    key={index} comment={comment} onReply={this.onReply} />
             )
         }.bind(this));
 

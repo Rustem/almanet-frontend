@@ -15,8 +15,8 @@ var FilterableDropDownWidget = React.createClass({
 
     renderChoice: function(choice, idx) {
         return (
-            <li>
-                <a key={'choice__' + idx} onClick={this.onChoice.bind(null, idx)} className="dropdown-menu-link">
+            <li key={'choice__' + idx}>
+                <a onClick={this.onChoice.bind(null, idx)} className="dropdown-menu-link">
                    {choice[1]}
                 </a>
             </li>
@@ -46,7 +46,7 @@ var FilterableDropDownWidget = React.createClass({
                             </div>
                         </div>
                         <div className="row-body-primary row-body-primary--nopad row-body-primary--extraOffset">
-                            <div className="input-div input-div--block" contenteditable>{this.props.filter_placeholder}</div>
+                            <div className="input-div input-div--block" contentEditable>{this.props.filter_placeholder}</div>
                         </div>
                     </div>
                 </div>

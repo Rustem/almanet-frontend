@@ -114,10 +114,9 @@ var ActivityList = React.createClass({
     },
 
     render: function() {
-        var activityListItems = this.props.activities.map(function(activity) {
+        var activityListItems = this.props.activities.map(function(activity, index) {
             return(
-                <ActivityListItem
-                    activity={activity} />
+                <ActivityListItem key={index} activity={activity} />
             )
         }.bind(this));
 

@@ -176,7 +176,7 @@ var AllBaseList = React.createClass({
 
     render: function() {
         var prevContact = null;
-        var contactListItems = this.filterContacts().map(function(contact) {
+        var contactListItems = this.filterContacts().map(function(contact, index) {
             var GroupContent = null;
 
             if(prevContact == null || prevContact.vcard.fn[0] !== contact.vcard.fn[0] ) {
@@ -185,7 +185,7 @@ var AllBaseList = React.createClass({
             var is_selected = this.props.selection_map[contact.id];
             prevContact = contact;
             return(
-                <div>
+                <div key={index}>
                 {GroupContent ? GroupContent : null}
                 <ContactListItem
                     key={'contact__' + contact.id}

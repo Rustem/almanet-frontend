@@ -117,9 +117,9 @@ var FilterList = React.createClass({
         return contacts;
     },
 
-    renderFilter: function(f) {
-        var Component = this.state.isEdit ? 
-            (<div className="row row--oneliner row--link">
+    renderFilter: function(f, index) {
+        var Component = this.state.isEdit ?
+            (<div key={index} className="row row--oneliner row--link">
                 <div className="row-icon">
                     <button onClick={this.deleteFilter.bind(null, f.id)} >
                         <IconSvg iconKey="remove" />
@@ -134,7 +134,7 @@ var FilterList = React.createClass({
                   </div>
                 </div>
             </div>) :
-            (<Link to="filtered" params={{id: f.id}} className="row row--oneliner row--link">
+            (<Link key={index} to="filtered" params={{id: f.id}} className="row row--oneliner row--link">
                 <div className="row-icon">
                 </div>
                 <div className="row-body">
@@ -148,7 +148,7 @@ var FilterList = React.createClass({
             </Link>
             )
         return Component
-              
+
     },
 
     renderEditButton: function() {

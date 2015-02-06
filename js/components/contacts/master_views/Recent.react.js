@@ -176,11 +176,11 @@ var RecentList = React.createClass({
 
     render: function() {
         var prevContact = null;
-        var contactListItems = this.filterContacts().map(function(contact) {
+        var contactListItems = this.filterContacts().map(function(contact, index) {
             var is_selected = this.props.selection_map[contact.id];
             prevContact = contact;
             return(
-                <div>
+                <div key={index}>
                 <ContactListItem
                     key={'contact__' + contact.id}
                     contact={contact}
