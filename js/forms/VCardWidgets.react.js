@@ -528,8 +528,9 @@ var VCardElement = React.createClass({
 
             'adrs': <AddressVCardComponent name="adrs" value={this.adrValue(value.adrs)} options={[['home', 'место проживания'], ['work', 'место работы']]} onValueUpdate={this.onAdrsChange} />,
         }
-        var rv = _.map(this.props.fields, function(f){
-            return Components[f];
+        var rv = {};
+        this.props.fields.forEach(function(f, index){
+            rv['key_'+index] = Components[f];
         });
         return rv;
     },

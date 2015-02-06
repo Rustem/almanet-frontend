@@ -14,8 +14,8 @@ var DescriptionDropDownWidget = React.createClass({
 
     renderChoice: function(choice, idx) {
         return (
-            <li>
-                <a key={'choice__' + idx} onClick={this.onChoice.bind(null, idx)} className="dropdown-menu-link">
+            <li key={'choice__' + idx}>
+                <a onClick={this.onChoice.bind(null, idx)} className="dropdown-menu-link">
                    {choice[1]}
                 </a>
             </li>
