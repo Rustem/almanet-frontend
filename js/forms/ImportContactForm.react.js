@@ -16,7 +16,7 @@ var ImportContactForm = React.createClass({
     handleFileDialogChange: function(evt) {
         var files = evt.target.files, formData = new FormData();
         var reader = new FileReader(), file = files[0];
-        reader.readAsText(files[0]);
+        reader.readAsBinaryString(files[0]);
         waitUntil()
             .interval(50)
             .times(20)
@@ -25,7 +25,7 @@ var ImportContactForm = React.createClass({
             }.bind(reader))
             .done(function(result) {
                 if(result) {
-                    this.props.handleChoice([file.name, reader.result]);
+                    this.props.handleChoice([file.name, btoa(reader.result)]);
                 }
             }.bind(this))
 
