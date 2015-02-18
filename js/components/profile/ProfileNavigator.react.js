@@ -59,7 +59,7 @@ var ProfileNavigator = React.createClass({
                       <figure className="icon-userpic">
                         <img src={URL_PREFIX + user.userpic} />
                       </figure>
-                      {user.first_name}
+                      {user.vcard.fn}
                     </div>
                   </div>
                 </a>

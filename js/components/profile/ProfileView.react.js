@@ -36,7 +36,7 @@ var ProfileInformation = React.createClass({
     },
 
     onUserUpdate: function(updUser) {
-        var user_id = this.props.user.id;
+        var user_id = this.props.user.user_id;
         UserActionCreators.editUser(user_id, updUser);
     },
 
