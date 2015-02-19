@@ -53,7 +53,8 @@ CommentStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
-            CommentStore.setAll(action.object)
+            if(action.object.comments !== undefined)
+                CommentStore.setAll(action.object)
             break;
         case ActionTypes.CREATE_COMMENT:
             // var comment = CommentStore.getCreatedComment(action.object);

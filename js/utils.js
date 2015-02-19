@@ -152,6 +152,35 @@ function requestDelete(url) {
   return request('DELETE', url);
 };
 
+function initial_load(callback) {
+  var AppActionCreators = require('./actions/AppActionCreators');
+  var AuthWebAPI = require('./api/AuthWebAPI');
+  var AppWebAPI = require('./api/AppWebAPI');
+  var CommentWebAPI = require('./api/CommentWebAPI');
+  var NotificationWebAPI = require('./api/NotificationWebAPI');
+
+  AuthWebAPI.loadCurrentUser(function(user){
+    AppWebAPI.getAll(function(appState, appConstants){
+        CommentWebAPI.getAll(function(comments){
+              NotificationWebAPI.getAll(function(notifications){
+
+                appState = _.assign(appState, {
+                  user: user,
+                  comments: comments,
+                  notifications: notifications,
+                  constants: appConstants,
+                });
+
+                AppActionCreators.load(appState);
+                
+                callback();
+                
+              });
+          });
+      });
+  });
+};
+
 module.exports = {
   get_constants: get_constants,
   extractIds: extractIds,
@@ -171,4 +200,5 @@ module.exports = {
   requestDelete: requestDelete,
   isCompany: isCompany,
   isCold: isCold,
+  initial_load: initial_load,
 };

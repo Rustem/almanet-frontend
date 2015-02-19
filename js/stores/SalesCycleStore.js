@@ -134,7 +134,10 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
-            SalesCycleStore.setAll(action.object);
+            var ContactStore = require('./ContactStore');
+            CRMAppDispatcher.waitFor([ContactStore.dispatchToken]);
+            if(action.object.sales_cycles !== undefined)
+                SalesCycleStore.setAll(action.object);
             break;
         case ActionTypes.CREATE_ACTIVITY_SUCCESS:
             CRMAppDispatcher.waitFor([ActivityStore.dispatchToken]);

@@ -14,7 +14,8 @@ var _anonymous_user = {
         first_name: '',
         last_name: '',
         userpic: 'sanzhar.png',
-        unfollow_list: []
+        unfollow_list: [],
+        vcard: {}
     },
     _empty_session = {
         id: null,

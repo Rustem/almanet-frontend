@@ -42,7 +42,15 @@ var NotificationStore = assign({}, EventEmitter.prototype, {
             .sortBy(function(n) { return moment(n.date_created) })
             .reverse()
             .value();
-    }
+    },
+
+    setAll: function(obj) {
+        _.forEach(obj.notifications, function(notification){
+            _notifications[notification.id] = notification;
+        });
+        this.emitChange();
+    },
+
 
 });
 
@@ -53,10 +61,8 @@ NotificationStore.dispatchToken = dispatcher.register(function(payload) {
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
             dispatcher.waitFor([SessionStore.dispatchToken]);
-            _.forEach(action.object.notifications, function(notification){
-                _notifications[notification.id] = notification;
-            });
-            NotificationStore.emitChange();
+            if(action.object.notifications !== undefined)
+                NotificationStore.setAll(action.object)
             break;
         case ActionTypes.CREATE_NOTIFICATION_SUCCESS:
             _notifications[action.object.id] = action.object;
