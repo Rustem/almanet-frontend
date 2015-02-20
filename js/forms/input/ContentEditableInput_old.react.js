@@ -90,6 +90,8 @@ var ContentEditableInput = React.createClass({
     },
 
     render: function() {
+        console.log('here')
+
         var Component = React.createFactory(this.props.Component);
         var raw_classNames = this.props.className ? this.props.className.split(" ") : [];
         var classNames = {}

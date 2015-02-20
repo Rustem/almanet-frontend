@@ -6,7 +6,7 @@ var Fieldset = require('./Fieldset.react');
 
 var inputs = require('./input');
 var RemoveableDropDownListWidget = inputs.RemoveableDropDownListWidget;
-var ContentEditableInput = inputs.ContentEditableInput;
+var InputTextarea = inputs.InputTextarea;
 
 var ContactStore = require('../stores/ContactStore');
 var UserStore = require('../stores/UserStore');
@@ -94,7 +94,7 @@ var ContactShareForm = React.createClass({
                   value={form_value}
                   onSubmit={this.onHandleSubmit}>
                 <Fieldset className="input-addComment">
-                    <ContentEditableInput
+                    <InputTextarea
                         name='note'
                         placeholder='Заметка ..'
                         className="input-div input-div--addComment" />

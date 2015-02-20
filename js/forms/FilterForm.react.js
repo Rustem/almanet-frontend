@@ -6,10 +6,10 @@ var _ = require('lodash');
 var React = require('react');
 var Router = require('react-router');
 var inputs = require('./input');
-var Input = inputs.Input;
+var SimpleInput = inputs.SimpleInput;
 var SimpleSelect = inputs.SimpleSelect;
+var InputText = inputs.InputText;
 var IconSvg = require('../components/common/IconSvg.react');
-var ContentEditableInput = inputs.ContentEditableInput;
 var AppContextMixin = require('../mixins/AppContextMixin');
 var Form = require('./Form.react');
 var FormMixin = require('./FormMixin.react');
@@ -39,10 +39,10 @@ var FilterForm = React.createClass({
             <Fieldset className="page-header-filterContainer">
               <Fieldset className="page-header-controls row">
                 <Fieldset className="row-body-primary">
-                  <ContentEditableInput ref='name'
+                  <InputText ref='name'
                               name='title'
-                              placeholder='Название фильтра ..'
-                              className='input-div input-div--block' placeholder="New filter"/>
+                              placeholder='Название фильтра'
+                              className='input-div input-div--block'/>
                 </Fieldset>
               </Fieldset>
               <Fieldset className="page-header-filter row">
@@ -54,7 +54,7 @@ var FilterForm = React.createClass({
                     <IconSvg iconKey="arrow-down" />
                   </Fieldset>
                   <Fieldset className="row-body-primary">
-                    <Input name="filter_text" type="text" className="input-filter" placeholder="Фильтр" />
+                    <SimpleInput name="filter_text" type="text" className="input-filter" placeholder="Фильтр" />
                   </Fieldset>
                 </Fieldset>
               </Fieldset>

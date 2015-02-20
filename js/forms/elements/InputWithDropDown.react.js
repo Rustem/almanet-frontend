@@ -2,7 +2,7 @@ var _ = require('lodash');
 
 var React = require('react/addons');
 var inputs = require('../input');
-var ContentEditableInput = inputs.ContentEditableInput;
+var InputText = inputs.InputText;
 var DescriptionDropDownWidget = inputs.DescriptionDropDownWidget;
 
 var FormElementMixin = require('../FormElementMixin.react');
@@ -29,7 +29,7 @@ var InputWithDropDown = React.createClass({
 
         return (
             <div className="input-addComment">
-                <ContentEditableInput
+                <InputText
                     ref="target_input"
                     name={this.props.name}
                     onValueUpdate={this.onUpdate}
