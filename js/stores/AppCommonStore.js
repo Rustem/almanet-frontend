@@ -69,7 +69,8 @@ AppCommonStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
-            AppCommonStore.setAll(action.object.constants);
+            if(action.object.constants !== undefined)
+                AppCommonStore.setAll(action.object.constants);
             break;
         default:
             // do nothing

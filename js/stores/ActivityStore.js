@@ -80,6 +80,8 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
         // strange 2
         var ContactStore = require('./ContactStore');
         var activities = this.getByDate();
+        if(activities.length == 0)
+            return []
         return _.filter(activities, function(a){ return !(ContactStore.byActivity(a) && _.contains(user.unfollow_list, ContactStore.byActivity(a).id)) });
     },
 
@@ -113,8 +115,11 @@ ActivityStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
-            CRMAppDispatcher.waitFor([SessionStore.dispatchToken]);
-            ActivityStore.setAll(action.object);
+            var SalesCycleStore = require('./SalesCycleStore');
+            var ContactStore = require('./ContactStore');
+            CRMAppDispatcher.waitFor([ContactStore.dispatchToken, SalesCycleStore.dispatchToken]);
+            if(action.object.activities !== undefined)
+                ActivityStore.setAll(action.object);
             break;
         case ActionTypes.CREATE_ACTIVITY_SUCCESS:
             var a = ActivityStore.getCreatedActivity(action.object);

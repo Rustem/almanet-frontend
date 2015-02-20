@@ -85,6 +85,13 @@ var ShareStore = assign({}, EventEmitter.prototype, {
             _shares[share.id] = share;
         }
         return true;
+    },
+
+    setAll: function(obj) {
+        _.forEach(obj.shares, function(share){
+            _shares[share.id] = share;
+        });
+        this.emitChange();
     }
 
 });
@@ -95,10 +102,9 @@ ShareStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
-            _.forEach(action.object.shares, function(share){
-                _shares[share.id] = share;
-            });
-            ShareStore.emitChange();
+            CRMAppDispatcher.waitFor([ContactStore.dispatchToken]);
+            if(action.object.shares !== undefined)
+                ShareStore.setAll(action.object);
             break;
         case ActionTypes.CREATE_CONTACT_SUCCESS:
             CRMAppDispatcher.waitFor([ContactStore.dispatchToken]);

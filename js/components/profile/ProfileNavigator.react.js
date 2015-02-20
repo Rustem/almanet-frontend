@@ -18,7 +18,7 @@ var ProfileNavigator = React.createClass({
 
     getInitialState: function() {
         return {
-            user: UserStore.get(this.getUser().crm_user_id)
+            user: UserStore.get(this.getUser().crm_user_id) || this.getUser()
         }
     },
 

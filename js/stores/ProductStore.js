@@ -57,6 +57,14 @@ var ProductStore = assign({}, EventEmitter.prototype, {
         _products[id].stat_value = stat_value;
     },
 
+    setAll: function(obj) {
+        _.forEach(obj.products, function(product){
+            _products[product.id] = product;
+            this.updateStatValue(product.id);
+        }.bind(this));
+        this.emitChange();
+    },
+
 });
 
 
@@ -66,12 +74,8 @@ ProductStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
             CRMAppDispatcher.waitFor([SessionStore.dispatchToken, SalesCycleStore.dispatchToken]);
-
-            _.forEach(action.object.products, function(product){
-                _products[product.id] = product;
-                ProductStore.updateStatValue(product.id);
-            });
-            ProductStore.emitChange();
+            if(action.object.products !== undefined)
+                ProductStore.setAll(action.object)
             break;
         case ActionTypes.CREATE_PRODUCT_SUCCESS:
             var product = action.object;

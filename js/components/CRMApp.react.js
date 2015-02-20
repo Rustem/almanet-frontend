@@ -10,13 +10,16 @@ var RequestStore = require('../stores/RequestStore');
 var n = require('./notifications');
 var NotificationCenterView = n.NotificationCenterView;
 var RecentNotificationListView = n.RecentNotificationListView;
+var Shutter = require('./common/Shutter.react');
+var utils = require('../utils');
 
 
 function getAppState() {
     return {
         current_user: SessionStore.current_user(),
         isAuth: SessionStore.loggedIn(),
-        notif_center_is_active: false
+        notif_center_is_active: false,
+        appStateLoaded: RequestStore.is_app_state_loaded()
     }
 };
 
@@ -73,11 +76,16 @@ var CRMApp = React.createClass({
     },
 
     componentDidMount: function() {
-        SessionStore.addChangeListener(this._onChange);
+        utils.initial_load(function() {
+            this.appStateLoaded = true;
+            this.forceUpdate();
+        }.bind(this));
+
+        RequestStore.addChangeListener(this._onChange);
     },
 
     componentWillUnmount: function() {
-        SessionStore.removeChangeListener(this._onChange);
+        RequestStore.removeChangeListener(this._onChange);
     },
 
     _onChange: function() {
@@ -92,12 +100,17 @@ var CRMApp = React.createClass({
     },
 
     render: function() {
+        var classes = cx({
+            'body-container': true,
+            'display-shutter': !this.appStateLoaded,
+        });
         return (
-            <div className="body-container">
+            <div className={classes}>
                 <Preloader />
                 <RouteHandler />
                 <RecentNotificationListView />
                 <NotificationCenterView isActive={this.state.notif_center_is_active} />
+                <Shutter />
             </div>
         )
     }
