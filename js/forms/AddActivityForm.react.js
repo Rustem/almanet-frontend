@@ -6,7 +6,7 @@ var Form = require('./Form.react');
 var FormElementMixin = require('./FormElementMixin.react');
 var inputs = require('./input');
 var elements = require('./elements');
-var InputWithDropDown = elements.InputWithDropDown;
+var InputTextareaWithDropDown = elements.InputTextareaWithDropDown;
 var FeedbackDropDown = elements.FeedbackDropDown;
 var DropDownBehaviour = require('./behaviours').DropDownBehaviour;
 var IconSvg = require('../components/common/IconSvg.react');
@@ -169,7 +169,7 @@ var AddActivityForm = React.createClass({
             <Form {...this.props} value={form_value}
                                   ref="add_event_form"
                                   onSubmit={this.onHandleSubmit}>
-                <InputWithDropDown name="description" choices={NOTE_TEMPLATES} />
+                <InputTextareaWithDropDown name="description" choices={NOTE_TEMPLATES} placeholder="Кратко опишите произошедшее"/>
                 <FeedbackDropDown name="feedback_status" />
                 <hr className="text-neutral" />
                 <SalesCycleDropDownList name="sales_cycle_id" sales_cycles={this.buildSalesCycleChoices()} />
@@ -183,7 +183,7 @@ var AddActivityForm = React.createClass({
             // <Form {...this.props} value={form_value}
             //                       ref="add_event_form"
             //                       onSubmit={this.onHandleSubmit}>
-            //     <InputWithDropDown name="description" choices={NOTE_TEMPLATES} />
+            //     <InputTextareaWithDropDown name="description" choices={NOTE_TEMPLATES} />
             //     <FeedbackDropDown name="feedback_status" />
             //     <hr className="text-neutral" />
             //     <ContactRemoveableDropDownList

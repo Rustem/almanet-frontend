@@ -5,7 +5,7 @@ var FormMixin = require('./FormMixin.react');
 var SalesCycleStore = require('../stores/SalesCycleStore');
 var elements = require('./elements');
 var Fieldset = require('./Fieldset.react');
-var InputWithDropDown = elements.InputWithDropDown;
+var InputTextareaWithDropDown = elements.InputTextareaWithDropDown;
 var FeedbackDropDown = elements.FeedbackDropDown;
 var utils = require('../utils');
 
@@ -32,7 +32,7 @@ var AddActivityMiniForm = React.createClass({
         return (
             <Form ref="add_activity_form"
                                   onSubmit={this.onHandleSubmit}>
-                <InputWithDropDown name="description" choices={NOTE_TEMPLATES} placeholder="Кратко опишите произошедшее" />
+                <InputTextareaWithDropDown name="description" choices={NOTE_TEMPLATES} placeholder="Кратко опишите произошедшее" />
                 <Fieldset className="inputLine-submitComment">
                     <FeedbackDropDown name="feedback_status" simple={true} />
                     <div className="inputLine-submitComment-submit">
@@ -54,7 +54,7 @@ var AddActivityMiniForm = React.createClass({
             object.description = formValue.description;
             object.feedback_status = formValue.feedback_status;
             object.contact_id = SalesCycleStore.get(this.props.sales_cycle_id).contact_id;
-            
+
             this.props.onHandleSubmit(object);
         } else{
             alert(errors);

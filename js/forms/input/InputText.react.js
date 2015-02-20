@@ -14,16 +14,14 @@ var InputText = React.createClass({
     mixins : [FormElementMixin],
     propTypes: {
         value: React.PropTypes.string
-        // isStrong: React.PropTypes.bool,
-        // Component: React.PropTypes.constructor
     },
 
     getInitialState: function() {
-        return { inputValue: this.props.value || '' };
+        return { inputValue: this.value() || '' };
     },
 
     shouldComponentUpdate: function(nextProps, nextState) {
-        return nextState.inputValue !== this.state.inputValue;
+        return nextProps.value !== this.props.value || nextState.inputValue !== this.state.inputValue;
     },
 
 
@@ -62,8 +60,6 @@ var InputText = React.createClass({
         });
         inputClasses['input-field'] = true;
         inputClasses = cx(inputClasses);
-
-        console.log('here', this.state.inputValue, inputClasses);
 
         return (
             <div className={classes}>

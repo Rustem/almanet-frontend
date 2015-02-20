@@ -1,7 +1,7 @@
 module.exports = {
   ContactRemoveableDropDownList: require('./ContactRemoveableDropDownList.react'),
   ParticipantRemoveableDropDownList: require('./ParticipantRemoveableDropDownList.react'),
-  InputWithDropDown: require('./InputWithDropDown.react'),
+  InputTextareaWithDropDown: require('./InputTextareaWithDropDown.react'),
   FeedbackDropDown: require('./FeedbackDropDown.react'),
   ProductRemoveableDropDownList: require('./ProductRemoveableDropDownList.react'),
 };

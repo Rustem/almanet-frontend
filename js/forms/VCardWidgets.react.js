@@ -28,6 +28,7 @@ var Fieldset = require('./Fieldset.react');
 var inputs = require('./input');
 var SimpleSelect = inputs.SimpleSelect;
 var InputText = inputs.InputText;
+var InputTextarea = inputs.InputTextarea;
 var SVGCheckbox = inputs.SVGCheckbox;
 
 
@@ -83,7 +84,7 @@ var VCardRow = React.createClass({
                     </div>
                 </div>
                 <div className="inputLine-div">
-                    <InputText {...this.props} className='input-div input-div--area' isStrong={false} placeholder="Заметка"/>
+                    <InputTextarea {...this.props} className='input-div input-div--area'/>
                 </div>
             </div>
         )

@@ -13,19 +13,22 @@ var ENTER_KEY_CODE = 13;
 var InputTextarea = React.createClass({
     mixins : [FormElementMixin],
     propTypes: {
-        value: React.PropTypes.string,
-        // isStrong: React.PropTypes.bool,
-        // Component: React.PropTypes.constructor
+        value: React.PropTypes.string
     },
 
     getInitialState: function() {
-        return { inputValue: this.props.value || '' };
+        return { inputValue: this.value() || '' };
     },
 
     shouldComponentUpdate: function(nextProps, nextState) {
-        return nextState.inputValue !== this.state.inputValue;
+        return nextProps.value !== this.props.value || nextState.inputValue !== this.state.inputValue;
     },
 
+    componentWillReceiveProps: function(nextProps) {
+        if (nextProps.value !== this.props.value && nextProps.value) {
+            this.setState({ inputValue: nextProps.value });
+        }
+    },
 
     emitChange: function(value) {
         this.updateValue(this.prepValue(this.props.name, value));
@@ -50,8 +53,6 @@ var InputTextarea = React.createClass({
     },
 
     render: function() {
-        console.log('there!', this.props.className)
-
         return (
             <div className='input input--textarea'>
                 <div className='input-shadow'>
