@@ -14,6 +14,7 @@ var Link = Router.Link;
 var IconSvg = require('../../common/IconSvg.react');
 var Modal = require('../../common/Modal.react');
 var ContactActionCreators = require('../../../actions/ContactActionCreators');
+var ActivityStore = require('../../../stores/ActivityStore');
 var ContactStore = require('../../../stores/ContactStore');
 var ShareStore = require('../../../stores/ShareStore');
 var AppContextMixin = require('../../../mixins/AppContextMixin');
@@ -41,10 +42,12 @@ var RecentLink = React.createClass({
     },
 
     componentDidMount: function() {
+        ActivityStore.addChangeListener(this._onChange);
         ContactStore.addChangeListener(this._onChange);
     },
 
     componentWillUnmount: function() {
+        ActivityStore.removeChangeListener(this._onChange);
         ContactStore.removeChangeListener(this._onChange);
     },
 

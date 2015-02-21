@@ -7,6 +7,7 @@ var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
 
 var CHANGE_EVENT = 'change';
 var _is_loading = false;
+var _app_state_loaded = false;
 
 LOADING_ACTIONS = [
     ActionTypes.CREATE_CONTACT,
@@ -32,7 +33,6 @@ LOADING_ACTIONS = [
 ]
 
 UNLOADING_ACTIONS = [
-    ActionTypes.APP_LOAD_SUCCESS,
     ActionTypes.CREATE_CONTACT_SUCCESS,
     ActionTypes.CREATE_CONTACT_FAIL,
     ActionTypes.EDIT_CONTACT_SUCCESS,
@@ -101,12 +101,27 @@ var RequestStore = assign({}, EventEmitter.prototype, {
         _is_loading = false;
         this.emitChange();
     },
+
+    is_app_state_loaded: function() {
+        return _app_state_loaded;
+    },
+
+    app_state_loaded: function() {
+        _app_state_loaded = true;
+        this.emitChange();
+    },  
+
+
 });
 
 
 RequestStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
 
     var action = payload.action;
+    if(action.type == ActionTypes.APP_LOAD_SUCCESS) {
+        CRMAppDispatcher.waitFor(_.omit(_.keys(CRMAppDispatcher.$Dispatcher_callbacks), RequestStore.dispatchToken));
+        RequestStore.app_state_loaded();
+    }
     if(_.contains(LOADING_ACTIONS, action.type)) {
         RequestStore.set_loading();
     }

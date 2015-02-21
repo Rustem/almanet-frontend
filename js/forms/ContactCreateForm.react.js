@@ -14,7 +14,7 @@ var VCardElement = VCardWidgets.VCardElement;
 var VCardRow = VCardWidgets.VCardRow;
 var AppContextMixin = require('../mixins/AppContextMixin');
 var VCardProcessingBehaviour = require('./behaviours/VCardProcessingBehaviour');
-var AppCommonStore = require('../stores/AppCommonStore');
+var utils = require('../utils');
 
 var _ = require('lodash');
 Object.assign = _.extend;
@@ -55,10 +55,10 @@ var ContactCreateForm = React.createClass({
   },
 
   getDefaultFormState: function() {
-    var CONTACT_TYPES = AppCommonStore.get_constants('contact').tp_hash;
+    var CONTACT_TYPES = utils.get_constants('contact') && utils.get_constants('contact').tp_hash;
 
     return {
-      'tp': CONTACT_TYPES.COMPANY,
+      'tp': CONTACT_TYPES && CONTACT_TYPES.COMPANY,
       'vcard': {
         'fn': undefined,
         'orgs': [{'organization_name': undefined}],
@@ -67,7 +67,7 @@ var ContactCreateForm = React.createClass({
         'urls': [{'idx': 0, 'type': 'website', 'value': undefined}],
         'adrs': [{'idx': 0, 'type': 'home', 'street_address': undefined, 'region': undefined, 'locality': undefined, 'country_name': undefined, 'postal_code': undefined}],
       },
-      'note': 'Нужно сюда съездить на встречу а то я не успеваю, подмени меня пожалуйста.'
+      'note': undefined
     };
   },
 

@@ -47,6 +47,13 @@ var FilterStore = assign({}, EventEmitter.prototype, {
         return obj;
     },
 
+    setAll: function(obj) {
+        _.forEach(obj.filters, function(filter){
+            _filters[filter.id] = filter;
+        });
+        this.emitChange();
+    },
+
 });
 
 
@@ -55,10 +62,10 @@ FilterStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
-            _.forEach(action.object.filters, function(filter){
-                _filters[filter.id] = filter;
-            });
-            FilterStore.emitChange();
+            var ContactStore = require('./ContactStore');
+            CRMAppDispatcher.waitFor([ContactStore.dispatchToken]);
+            if(action.object.filters !== undefined)
+                FilterStore.setAll(action.object)
             break;
         case ActionTypes.CREATE_FILTER:
             // var filter = FilterStore.getCreatedfilter(action.object);

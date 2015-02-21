@@ -249,7 +249,8 @@ var SharedContactDetailView = React.createClass({
 
     statics: {
         willTransitionFrom: function (transition, component) {
-            ContactActionCreators.markSharesAsRead(ShareStore.getNew());
+            if(ShareStore.getNew().length > 0)
+                ContactActionCreators.markSharesAsRead(ShareStore.getNew());
         }
     },
 

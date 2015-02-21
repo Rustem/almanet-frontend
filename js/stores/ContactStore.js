@@ -116,6 +116,13 @@ var ContactStore = assign({}, EventEmitter.prototype, {
         this.emitChange();
     },
 
+    setAll: function(obj) {
+        _.forEach(obj.contacts, function(contact){
+            _contacts[contact.id] = contact;
+        });
+        this.emitChange();
+    },
+
 });
 
 
@@ -124,10 +131,10 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
-            _.forEach(action.object.contacts, function(contact){
-                _contacts[contact.id] = contact;
-            });
-            ContactStore.emitChange();
+            var AppCommonStore = require('./AppCommonStore')
+            CRMAppDispatcher.waitFor([AppCommonStore.dispatchToken]);
+            if(action.object.contacts !== undefined)
+                ContactStore.setAll(action.object)
             break;
         case ActionTypes.CREATE_CONTACT:
             var contact = ContactStore.getCreatedContact(action.object);

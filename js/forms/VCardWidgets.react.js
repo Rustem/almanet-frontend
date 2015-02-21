@@ -506,7 +506,7 @@ var VCardElement = React.createClass({
             this[f] = value[f];
         }.bind(this));
 
-        this.CONTACT_TYPES = utils.get_constants('contact').tp_hash;
+        this.CONTACT_TYPES = utils.get_constants('contact') && utils.get_constants('contact').tp_hash;
     },
 
     renderFields: function() {
@@ -581,13 +581,15 @@ var VCardElement = React.createClass({
     },
 
     tpUnConverter: function(v) {
+        if(!this.CONTACT_TYPES)
+            return false;
         return (v == this.CONTACT_TYPES.COMPANY);
     },
 
     tpConverter: function(v) {
         if(v)
-            return this.CONTACT_TYPES.COMPANY;
-        return this.CONTACT_TYPES.USER;
+            return this.CONTACT_TYPES && this.CONTACT_TYPES.COMPANY;
+        return this.CONTACT_TYPES && this.CONTACT_TYPES.USER;
     },
 
     onFnChange: function(value) {
