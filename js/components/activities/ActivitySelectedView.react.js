@@ -86,7 +86,7 @@ var ActivitySelectedView = React.createClass({
     },
 
     getActivityID: function() {
-        return this.getParams().id;
+        return parseInt(this.getParams().id, 10);
     },
 
     getFilterText: function() {
