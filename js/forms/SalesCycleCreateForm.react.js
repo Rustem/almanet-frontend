@@ -4,8 +4,7 @@
 
 var React = require('react');
 var inputs = require('./input');
-var Input = inputs.Input;
-var ContentEditableInput = inputs.ContentEditableInput;
+var InputText = inputs.InputText;
 var Form = require('./Form.react');
 var FormMixin = require('./FormMixin.react');
 var SalesCycleStore = require('../stores/SalesCycleStore');
@@ -33,12 +32,12 @@ var SalesCycleCreateForm = React.createClass({
             onSubmit={this.handleSubmit}
             onBlur={this.onBlur}
             onKeyDown={this.onKeyDown}>
-          <ContentEditableInput ref='sales_cycle_name' 
-                                name='sales_cycle_name' 
-                                className='input-div input-div--newCycle' 
-                                onFocus={this.onFocus} 
+          <InputText ref='sales_cycle_name'
+                                name='sales_cycle_name'
+                                className='input-div input-div--newCycle'
+                                onFocus={this.onFocus}
                                 placeholder={CYCLE_NAME_PLACEHOLDER} />
-          
+
       </Form>
     )
   },

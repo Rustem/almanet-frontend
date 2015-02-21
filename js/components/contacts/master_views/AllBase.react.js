@@ -22,7 +22,6 @@ var ContactShareForm = require('../../../forms/ContactShareForm.react');
 var Form = require('../../../forms/Form.react');
 var inputs = require('../../../forms/input');
 var SVGCheckbox = inputs.SVGCheckbox;
-var Input = inputs.Input;
 var Div = require('../../../forms/Fieldset.react').Div;
 var Crumb = require('../../common/BreadCrumb.react').Crumb;
 var CommonFilterBar = require('../FilterComposer.react').CommonFilterBar;

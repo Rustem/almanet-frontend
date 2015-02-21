@@ -33,7 +33,7 @@ var ContactCreateForm = React.createClass({
       <Form {...this.props} ref='contact_form' value={value} onSubmit={this.onHandleSubmit}>
         <VCardElement name="vcard" fields={fields} />
 
-        <VCardRow name='note' label='Заметка' />
+        <VCardRow name='note' label='Заметка' placeholder='Заметка' />
         <div className="inputLine text-right">
             <button className="btn btn--save" type="submit">Сохранить</button>
         </div>

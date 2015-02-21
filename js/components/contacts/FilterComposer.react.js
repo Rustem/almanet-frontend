@@ -14,7 +14,7 @@ var FilterActionCreators = require('../../actions/FilterActionCreators');
 var AppContextMixin = require('../../mixins/AppContextMixin');
 var inputs = require('../../forms/input');
 var SVGCheckbox = inputs.SVGCheckbox;
-var Input = inputs.Input;
+var SimpleInput = inputs.SimpleInput;
 var Div = require('../../forms/Fieldset.react').Div;
 
 var CommonFilterBar = React.createClass({
@@ -37,7 +37,7 @@ var CommonFilterBar = React.createClass({
                                 <IconSvg iconKey='arrow-down' />
                             </Div>
                             <Div className="row-body-primary">
-                                <Input name="filter_text" type="text" className="input-filter" placeholder="Фильтр" />
+                                <SimpleInput name="filter_text" type="text" className="input-filter" placeholder="Фильтр" />
                             </Div>
                         </Div>
                     </Div>

@@ -6,7 +6,7 @@ var Form = require('./Form.react');
 var FormElementMixin = require('./FormElementMixin.react');
 var inputs = require('./input');
 var elements = require('./elements');
-var InputWithDropDown = elements.InputWithDropDown;
+var InputTextareaWithDropDown = elements.InputTextareaWithDropDown;
 var FeedbackDropDown = elements.FeedbackDropDown;
 var DropDownBehaviour = require('./behaviours').DropDownBehaviour;
 var IconSvg = require('../components/common/IconSvg.react');
@@ -109,16 +109,16 @@ var SalesCycleDropDownList = React.createClass({
     render: function() {
         return (
             <div className="modal-inputLine">
-                {this.props.sales_cycles.length > 0 
+                {this.props.sales_cycles.length > 0
                     ? <SalesCycleDropDownWidget
                         value={this.value()}
                         choices={this.props.sales_cycles}
                         onChange={this.onChange} />
                     : null
                 }
-                
+
                 <div className="inputLine-caption">
-                {this.props.sales_cycles.length > 0 
+                {this.props.sales_cycles.length > 0
                     ? "Если не изменять значение, событие попадет в основной поток"
                     : "Взаимодействие попадет в основной поток всем выбранным контактам"
                 }
@@ -141,7 +141,7 @@ var AddActivityForm = React.createClass({
     getSalesCycles: function() {
         // we need cycles such that:
         // 1) they are open
-        // 2) by contact_ids (if several so render nothing in SalesCycleDropDownList, 
+        // 2) by contact_ids (if several so render nothing in SalesCycleDropDownList,
         //    but form should distibute activity to their global cycles)
 
         var cycles = _.flatten(_.map(this.props.contact_ids, function(c_id) {
@@ -169,7 +169,7 @@ var AddActivityForm = React.createClass({
             <Form {...this.props} value={form_value}
                                   ref="add_event_form"
                                   onSubmit={this.onHandleSubmit}>
-                <InputWithDropDown name="description" choices={NOTE_TEMPLATES} />
+                <InputTextareaWithDropDown name="description" choices={NOTE_TEMPLATES} placeholder="Кратко опишите произошедшее"/>
                 <FeedbackDropDown name="feedback_status" />
                 <hr className="text-neutral" />
                 <SalesCycleDropDownList name="sales_cycle_id" sales_cycles={this.buildSalesCycleChoices()} />
@@ -183,7 +183,7 @@ var AddActivityForm = React.createClass({
             // <Form {...this.props} value={form_value}
             //                       ref="add_event_form"
             //                       onSubmit={this.onHandleSubmit}>
-            //     <InputWithDropDown name="description" choices={NOTE_TEMPLATES} />
+            //     <InputTextareaWithDropDown name="description" choices={NOTE_TEMPLATES} />
             //     <FeedbackDropDown name="feedback_status" />
             //     <hr className="text-neutral" />
             //     <ContactRemoveableDropDownList
@@ -200,7 +200,7 @@ var AddActivityForm = React.createClass({
             //     <hr className="text-neutral" />
             //     <Fieldset className="modal-inputLine">
             //       <strong>Длительность</strong>
-            //       <ContentEditableInput {...this.props} name="duration" />
+            //       <InputText {...this.props} name="duration" />
             //     </Fieldset>
             //     <div className="modal-inputLine text-center">
             //       <button type="submit" className="text-good">СОХРАНИТЬ</button>
@@ -227,7 +227,7 @@ var AddActivityForm = React.createClass({
                 object.feedback_status = formValue.feedback_status;
                 object.sales_cycle_id = formValue.sales_cycle_id || SalesCycleStore.getGlobalForContact(c_id).id;
                 object.contact_id = c_id;
-                
+
                 this.props.onHandleSubmit(object);
             }.bind(this));
         } else{

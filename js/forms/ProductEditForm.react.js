@@ -2,7 +2,8 @@ var React = require('react');
 var Router = require('react-router');
 var Form = require('./Form.react');
 var inputs = require('./input');
-var ContentEditableInput = inputs.ContentEditableInput;
+var InputText = inputs.InputText;
+var InputTextarea = inputs.InputTextarea;
 var Fieldset = require('./Fieldset.react');
 var AppContextMixin = require('../mixins/AppContextMixin');
 var ProductActionCreators = require('../actions/ProductActionCreators');
@@ -41,12 +42,14 @@ var ProductEditForm = React.createClass({
             <div>
                 <Form {...this.props} className="row-body" ref="product_form" onSubmit={this.onHandleSubmit}>
                     <Fieldset className="inputLine-negativeTrail">
-                      <ContentEditableInput className="input-div input-div--strong"
+                      <InputText className="input-div input-div--strong"
+                            value={this.props.value.name}
                             name='name'
                             placeholder='Введите название продукта' />
                     </Fieldset>
                     <Fieldset className="inputLine-negativeTrail">
-                      <ContentEditableInput className='input-div text-secondary'
+                      <InputTextarea className='input-div text-secondary'
+                            value={this.props.value.description}
                             name='description'
                             placeholder='Описание продукта ..' />
                     </Fieldset>

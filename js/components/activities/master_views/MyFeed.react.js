@@ -85,7 +85,7 @@ var MyFeedLink = React.createClass({
 
 var MyFeedDetailView = React.createClass({
     mixins: [Router.Navigation, AppContextMixin],
-    
+
     statics: {
         willTransitionFrom: function (transition, component) {
             var ids = _.map(_.filter(component.state.activities, function(a) {
@@ -167,4 +167,3 @@ var MyFeedDetailView = React.createClass({
 
 module.exports.DetailView = MyFeedDetailView;
 module.exports.Link = MyFeedLink;
-module.exports.FilterBar = FilterBar;
