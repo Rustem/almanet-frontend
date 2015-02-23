@@ -21,7 +21,8 @@ var FormElementMixin = {
     value: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.number,
-      React.PropTypes.bool]),
+      React.PropTypes.bool,
+      React.PropTypes.array]),
     onValueUpdate: React.PropTypes.func,
     name: React.PropTypes.oneOfType([
       React.PropTypes.string,

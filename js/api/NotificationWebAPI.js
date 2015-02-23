@@ -51,10 +51,9 @@ module.exports = api = {
 // @askhat, right now I am just take into account notifications that triggered
 // by contact module. However, in future, second argument must be extra params.
 
-function new_notification(notif_tp, author_id, extra) {
+function new_notification(notif_tp, extra) {
     var details = {
         type: notif_tp,
-        author_id: author_id,
         extra: extra
     };
     dispatcher.handleViewAction({
@@ -96,3 +95,6 @@ SignalManager.connect(ActionTypes.DELETE_FILTER_SUCCESS,
 
 SignalManager.connect(ActionTypes.IMPORT_CONTACTS_SUCCESS,
                       new_notification.bind(null, NotifTypes.IMPORT_CONTACTS));
+
+SignalManager.connect(ActionTypes.CLOSE_SALES_CYCLE_SUCCESS,
+                      new_notification.bind(null, NotifTypes.SALES_CYCLE_CLOSE));

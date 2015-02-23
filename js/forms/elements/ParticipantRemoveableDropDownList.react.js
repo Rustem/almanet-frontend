@@ -46,7 +46,7 @@ var ParticipantRemoveableDropDownList = React.createClass({
     onAdd: function(user_id) {
         var selected_users = this.value();
         selected_users.push(user_id);
-        var updValue = this.prepValue(this.props.name, _.unique(selected_users));
+        var updValue = this.prepValue(this.props.name, _.uniq(selected_users));
         return this.updateValue(updValue);
     },
 

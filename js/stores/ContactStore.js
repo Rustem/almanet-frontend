@@ -99,13 +99,28 @@ var ContactStore = assign({}, EventEmitter.prototype, {
     },
 
     byActivity: function(a) {
-        if(a.sales_cycle_id == CRMConstants.GLOBAL_SALES_CYCLE_ID)
-            return null;
         return this.get(SalesCycleStore.get(a.sales_cycle_id).contact_id);
     },
 
     getCreatedContact: function(obj) {
-        return obj;
+        return _.omit(obj, 'global_sales_cycle');
+    },
+
+    set: function(contact) {
+        _contacts[contact.id] = contact;
+        this.emitChange();
+    },
+
+    delete: function(contact) {
+        delete _contacts[contact.id];
+        this.emitChange();
+    },
+
+    setAll: function(obj) {
+        _.forEach(obj.contacts, function(contact){
+            _contacts[contact.id] = contact;
+        });
+        this.emitChange();
     },
 
 });
@@ -116,10 +131,10 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
-            _.forEach(action.object.contacts, function(contact){
-                _contacts[contact.id] = contact;
-            });
-            ContactStore.emitChange();
+            var AppCommonStore = require('./AppCommonStore')
+            CRMAppDispatcher.waitFor([AppCommonStore.dispatchToken]);
+            if(action.object.contacts !== undefined)
+                ContactStore.setAll(action.object)
             break;
         case ActionTypes.CREATE_CONTACT:
             var contact = ContactStore.getCreatedContact(action.object);
@@ -141,17 +156,14 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             _contacts[contact_id] = contact;
             ContactStore.emitChange();
             break;
+        case ActionTypes.DELETE_CONTACT_SUCCESS:
+            ContactStore.delete(action.object);
+            break;
         case ActionTypes.CREATE_ACTIVITY_SUCCESS:
             CRMAppDispatcher.waitFor([ActivityStore.dispatchToken]);
-            var contact_id = action.object.contact_id;
-            if(contact_id) {
-                _contacts[contact_id].is_cold = false;
-                ContactWebAPI.setLeads([contact_id], function(result){
-                    _.forEach(result, function(cid){
-                        _contacts[cid].is_cold = false;
-                    });
-                    ContactStore.emitChange();
-                });
+            if( _.isObject(action.object.contact) ) {
+                var c = ContactStore.getCreatedContact(action.object.contact);
+                ContactStore.set(c);
             }
             break;
         case ActionTypes.IMPORT_CONTACTS_SUCCESS:

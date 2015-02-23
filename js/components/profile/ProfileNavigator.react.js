@@ -18,7 +18,7 @@ var ProfileNavigator = React.createClass({
 
     getInitialState: function() {
         return {
-            user: UserStore.get(this.getUser().crm_user_id)
+            user: UserStore.get(this.getUser().crm_user_id) || this.getUser()
         }
     },
 
@@ -59,7 +59,7 @@ var ProfileNavigator = React.createClass({
                       <figure className="icon-userpic">
                         <img src={URL_PREFIX + user.userpic} />
                       </figure>
-                      {user.first_name}
+                      {user.vcard.fn}
                     </div>
                   </div>
                 </a>
@@ -67,8 +67,6 @@ var ProfileNavigator = React.createClass({
                   <div className="dropdown-menu-body">
                     <ul className="dropdown-menu-list">
                       <li><Link className="dropdown-menu-link" to="profile">Профиль</Link></li>
-                      <li><a href="#" className="dropdown-menu-link">Настройки</a></li>
-                      <li><a href="#" className="dropdown-menu-link">Администрирование</a></li>
                       <li><a href={LOGOUT_URL} className="dropdown-menu-link">Выход</a></li>
                     </ul>
                   </div>

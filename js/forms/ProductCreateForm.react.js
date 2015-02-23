@@ -1,7 +1,8 @@
 var React = require('react');
 var Form = require('./Form.react');
 var inputs = require('./input');
-var ContentEditableInput = inputs.ContentEditableInput;
+var InputText = inputs.InputText;
+var InputTextarea = inputs.InputTextarea;
 var Fieldset = require('./Fieldset.react');
 var AppContextMixin = require('../mixins/AppContextMixin');
 
@@ -16,10 +17,14 @@ var ProductCreateForm = React.createClass({
         return (
             <Form {...this.props} className="row-body" ref="product_form" onSubmit={this.onHandleSubmit}>
                 <Fieldset className="inputLine-negativeTrail">
-                  <ContentEditableInput className="input-div input-div--strong" name='name' />
+                  <InputText className="input-div input-div--strong"
+                        name='name'
+                        placeholder='Введите название продукта' />
                 </Fieldset>
                 <Fieldset className="inputLine-negativeTrail">
-                  <ContentEditableInput className='input-div text-secondary' name='description' />
+                  <InputTextarea className='input-div text-secondary'
+                        name='description'
+                        placeholder='Описание продукта ..' />
                 </Fieldset>
                 <div className="inputLine text-left">
                     <button className="btn btn--save" type="submit">Сохранить</button>

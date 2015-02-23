@@ -1,11 +1,14 @@
 var _ = require('lodash');
 var React = require('react/addons');
 var Router = require('react-router');
+var Link = Router.Link;
 var keyMirror = require('react/lib/keyMirror');
 var cx            = React.addons.classSet;
 var IconSvg = require('../common/IconSvg.react');
 var Crumb = require('../common/BreadCrumb.react').Crumb;
 var DropDownBehaviour = require('../../forms/behaviours/DropDownBehaviour');
+var inputs = require('../../forms/input');
+var SVGCheckbox = inputs.SVGCheckbox;
 
 var AppContextMixin = require('../../mixins/AppContextMixin');
 // var AddActivityForm = require('../forms/AddActivityForm.react');
@@ -21,11 +24,9 @@ var SalesCycleCreateForm = require('../../forms/SalesCycleCreateForm.react');
 var SalesCycleCloseForm = require('../../forms/SalesCycleCloseForm.react');
 var AddActivityMiniForm = require('../../forms/AddActivityMiniForm.react');
 var AddProductMiniForm = require('../../forms/AddProductMiniForm.react');
-var CRMConstants = require('../../constants/CRMConstants');
-var AppCommonStore = require('../../stores/AppCommonStore');
 var utils = require('../../utils');
 
-var URL_PREFIX   = require('../../constants/CRMConstants').URL_PREFIX;
+var URL_PREFIX = require('../../constants/CRMConstants').URL_PREFIX;
 
 var ACTIONS = keyMirror({
     ADD_ACTIVITY: null,
@@ -40,7 +41,7 @@ var SalesCycleControlBar = React.createClass({
         current_cycle_id: React.PropTypes.number.isRequired,
     },
     componentWillMount: function() {
-        this.STATUSES = AppCommonStore.get_constants('sales_cycle').statuses_hash;
+        this.STATUSES = utils.get_constants('sales_cycle').statuses_hash;
     },
 
     get_current_action: function() {
@@ -60,9 +61,10 @@ var SalesCycleControlBar = React.createClass({
     },
 
     shouldRenderControlBar: function() {
-        // TODO: make something with 'sales_0'
-        if(_.contains([null, undefined, CRMConstants.GLOBAL_SALES_CYCLE_ID], this.props.current_cycle_id))
-          return false;
+        if(_.contains([null, undefined], this.getSalesCycle()))
+            return false;
+        if(SalesCycleStore.get(this.props.current_cycle_id).is_global)
+            return false;
         return !(this.getCycleStatus() == this.STATUSES.COMPLETED);
     },
 
@@ -107,7 +109,7 @@ var AddActivityWidget = React.createClass({
         current_cycle_id: React.PropTypes.number.isRequired,
     },
     componentWillMount: function() {
-        this.SALES_CYCLE_STATUS = AppCommonStore.get_constants('sales_cycle').statuses_hash;
+        this.SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash;
     },
 
     get_current_action: function() {
@@ -123,8 +125,7 @@ var AddActivityWidget = React.createClass({
     },
 
     shouldRenderComponent: function() {
-        // TODO: make something with 'sales_0'
-        if(_.contains([null, undefined], this.props.current_cycle_id))
+        if(_.contains([null, undefined], this.getSalesCycle()))
           return false;
         return !(this.getCycleStatus() == this.SALES_CYCLE_STATUS.COMPLETED) &&
                this.get_current_action() == ACTIONS.ADD_ACTIVITY;
@@ -146,7 +147,7 @@ var AddProductWidget = React.createClass({
         current_cycle_id: React.PropTypes.number.isRequired,
     },
     componentWillMount: function() {
-        this.SALES_CYCLE_STATUS = AppCommonStore.get_constants('sales_cycle').statuses_hash;
+        this.SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash;
     },
 
     get_current_action: function() {
@@ -162,9 +163,10 @@ var AddProductWidget = React.createClass({
     },
 
     shouldRenderComponent: function() {
-        // TODO: make something with 'sales_0'
-        if(_.contains([null, undefined, CRMConstants.GLOBAL_SALES_CYCLE_ID], this.props.current_cycle_id))
-          return false;
+        if(_.contains([null, undefined], this.getSalesCycle()))
+            return false;
+        if(this.getSalesCycle().is_global)
+            return false;
         return !(this.getCycleStatus() == this.SALES_CYCLE_STATUS.COMPLETED) &&
                this.get_current_action() == ACTIONS.ADD_PRODUCT;
     },
@@ -185,7 +187,7 @@ var CloseCycleWidget = React.createClass({
         current_cycle_id: React.PropTypes.number.isRequired,
     },
     componentWillMount: function() {
-        this.SALES_CYCLE_STATUS = AppCommonStore.get_constants('sales_cycle').statuses_hash;
+        this.SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash;
     },
 
     get_current_action: function() {
@@ -201,15 +203,17 @@ var CloseCycleWidget = React.createClass({
     },
 
     getCycleProducts: function() {
-        var product_ids = this.getSalesCycle().product_ids;
+        var sales_cycle = this.getSalesCycle()
+        if(!sales_cycle)
+            return []
+        var product_ids = sales_cycle.product_ids;
         return ProductStore.getByIds(product_ids);
     },
 
     shouldRenderComponent: function(products) {
-        var cycle = this.getSalesCycle()
-        if(_.contains([null, undefined], this.props.current_cycle_id))
+        if(_.contains([null, undefined], this.getSalesCycle()))
             return false;
-        if(cycle.is_global)
+        if(this.getSalesCycle().is_global)
             return false;
         if(products.length <= 0)
             return false;
@@ -218,11 +222,13 @@ var CloseCycleWidget = React.createClass({
     },
 
     render: function(){
-        var Component = null, products=this.getCycleProducts();
+        var Component = null,
+            products=this.getCycleProducts();
+            sales_cycle = this.getSalesCycle()
         if(this.shouldRenderComponent(products))
             Component = (
                 <div>
-                    {this.props.current_cycle_id === CRMConstants.GLOBAL_SALES_CYCLE_ID && (<SalesCycleByAllSummary />) || (<SalesCycleSummary cycle_id={this.props.current_cycle_id} />)}
+                    {sales_cycle.is_global && (<SalesCycleByAllSummary />) || (<SalesCycleSummary cycle_id={this.props.current_cycle_id} />)}
                     <SalesCycleCloseForm
                     products={products}
                     salesCycleID={this.props.current_cycle_id}
@@ -238,13 +244,13 @@ var SalesCycleDropDownList = React.createClass({
     mixins: [DropDownBehaviour],
 
     propTypes: {
-        current_cycle_id: React.PropTypes.number.isRequired
+        current_cycle_id: React.PropTypes.string.isRequired
     },
 
     renderChoice: function(choice, idx) {
         return (
-            <li>
-                <a key={'choice__' + idx} onClick={this.onChoice.bind(null, idx)} className="dropdown-menu-link">
+            <li key={'choice__' + idx}>
+                <a onClick={this.onChoice.bind(null, idx)} className="dropdown-menu-link">
                    {choice[1] + " - "} {choice[2]}
                 </a>
             </li>
@@ -269,7 +275,10 @@ var SalesCycleDropDownList = React.createClass({
 
         return (
         <div className={className}>
-            <button ref='menuToggler' onKeyDown={this.onKeyDown} onClick={this.onMenuToggle} type="button"type="button" className="page-header-filterContainer">
+            <button ref='menuToggler' type="button" className="page-header-filterContainer"
+                                      onKeyDown={this.onKeyDown}
+                                      onClick={this.onMenuToggle}
+                                      >
                 <div className="page-header-filter row">
                     <div className="row-body row-body--inverted">
                       <div className="row-body-secondary">
@@ -435,14 +444,46 @@ var SalesCycleSummary = React.createClass({
 
 });
 
+var IncludeEmployeesButton = React.createClass({
+    propTypes: {
+        contact_id: React.PropTypes.number.isRequired,
+        is_all: React.PropTypes.bool.isRequired, // whether 'all' option is selected in sales_cycles dropdown menu
+        onItemToggle: React.PropTypes.func.isRequired,
+    },
+
+    getContact: function(){
+        return ContactStore.get(this.props.contact_id)
+    },
+
+    render: function() {
+        if(!utils.isCompany(this.getContact()) || !this.props.is_all)
+            return null
+        return (
+            <div className="page-header-controls row">
+                <div className="row-body-primary">
+                    <SVGCheckbox
+                        name='include_employees'
+                        label='Показать взаимодействия по сотрудникам'
+                        className='text-secondary'
+                        value={this.props.is_selected}
+                        onValueUpdate={this.props.onItemToggle} />
+                </div>
+            </div>
+        )
+    }
+});
+
 var ActivityListView = React.createClass({
     mixins : [AppContextMixin, Router.State, Router.Navigation],
-
     getInitialState: function() {
         return {
             action: ACTIONS.ADD_ACTIVITY,
-            sc_cnt: this.getCyclesForCurrentContact().length  // DONE: number of sales cycles for current contact
+            sc_cnt: this.getCycles().length,  // DONE: number of sales cycles for current contact
+            include_employees: false, // this option defines whether include activities for contact-company's employees or not
         }
+    },
+    componentWillMount: function() {
+        this.FEEDBACK_ICONS = utils.get_constants('activity').feedback_icons;
     },
 
     // getAddEventModalState: function() {
@@ -462,18 +503,15 @@ var ActivityListView = React.createClass({
         return UserStore.get(user_id);
     },
 
-    getContacts: function(contact_ids) {
-        return _.map(contact_ids, ContactStore.get)
-    },
-
     renderActivity: function(act, idx) {
         var author = this.getAuthor(act.author_id),
-            contacts = this.getContacts(act.contact_ids);
+            contact = ContactStore.byActivity(act);
+
         return (
             <div key={'activity__' + idx} className="stream-item">
             <div className="row">
               <div className="row-icon">
-                <IconSvg iconKey={act.feedback_status} />
+                <IconSvg iconKey={this.FEEDBACK_ICONS[act.feedback_status]} />
               </div>
               <div className="row-body row-body--no-trailer">
                 <div className="row">
@@ -488,22 +526,33 @@ var ActivityListView = React.createClass({
                         <a href="#" className="text-secondary">{author.vcard.fn}</a> в {utils.formatTime(act)}
                       </div>
                       <div className="row-body-secondary">
-                        <a href="#" className="link-inline">
-                          [c]
-                        </a>
+                            <Link to='activity_selected'
+                                  params={{menu: 'allbase', id: act.id}}
+                                  query={{sc_id: this.getParams().sales_cycle_id, c_id: this.getParams().id, i_e: this.state.include_employees}}
+                                  className="stream-breadcrumbs">
+                                  <IconSvg iconKey="comment" />
+                            </Link>
                       </div>
                     </div>
                     <div className="row-body-message">
                       {act.description}
                     </div>
                     <ul className="stream-breadcrumbs">
-                        {contacts.map(function(c) {
-                            return (
-                                <li>
-                                    <a href="#" className="stream-breadcrumbs">{c.vcard.fn}</a>
-                                </li>
-                            )
-                        }.bind(this))}
+                        <li>
+                            <Link to='contact_profile' 
+                                  params={{id: contact.id}} 
+                                  className="stream-breadcrumbs">
+                                  {contact.vcard.fn}
+                            </Link>
+                        </li>
+                        <li>→</li>
+                        <li>
+                            <Link to='activities_by' 
+                                  params={{id: contact.id, sales_cycle_id: act.sales_cycle_id}} 
+                                  className="stream-breadcrumbs">
+                                  {SalesCycleStore.get(act.sales_cycle_id).title}
+                            </Link>
+                        </li>
                     </ul>
                   </div>
                 </div>
@@ -513,21 +562,16 @@ var ActivityListView = React.createClass({
         )
     },
 
-    getCyclesForCurrentContact: function() {
+    getCycles: function() {
         var contact_id = parseInt(this.getParams().id, 10);
-        return SalesCycleStore.getCyclesForCurrentContact(contact_id);
+        return SalesCycleStore.byContact(contact_id);
     },
 
     buildChoices: function(){
-        var cycles = this.getCyclesForCurrentContact();
-        // cycles.push({
-        //     'id': 'sales_0',
-        //     'title': 'Все события',
-        //     'status': false
-        // });
-        return _.map(cycles, function(c){
+        var cycles = this.getCycles();
+        return [['all', 'Все', '']].concat(_.map(cycles, function(c){
             return [c.id, c.title, c.status];
-        });
+        }));
     },
 
     onActionActivity: function(evt) {
@@ -568,15 +612,6 @@ var ActivityListView = React.createClass({
     },
 
     onCycleClosed: function(sales_cycle_closing) {
-        var close_activity = {
-            author_id: this.getUser().crm_user_id,
-            description: "Цикл закрыт. Сумма: " + sales_cycle_closing.real_value,
-            feedback: 'outcome',
-            participant_ids: [this.getUser().crm_user_id],
-            salescycle_id: sales_cycle_closing.id,
-            duration: null
-        }
-        ActivityActionCreators.createActivity(close_activity);
         var sales_cycle = _.extend(
             {},
             SalesCycleStore.get(sales_cycle_closing.id),
@@ -584,9 +619,14 @@ var ActivityListView = React.createClass({
         SalesCycleActionCreators.close(sales_cycle);
     },
 
+    onIncludeEmployeeChange: function(value) {
+        this.setState(React.addons.update(
+            this.state, {include_employees: {$set: value['include_employees']}}));
+    },
+
     navigateToSalesCycle: function(cycle_id) {
         var params = this.getParams();
-        params.sales_cycle_id = cycle_id === CRMConstants.GLOBAL_SALES_CYCLE_ID ? null : cycle_id;
+        params.sales_cycle_id = cycle_id;
         this.transitionTo('activities_by', params);
         return false;
     },
@@ -601,20 +641,18 @@ var ActivityListView = React.createClass({
         }.bind(this, this.state));
     },
 
-    render: function() {
-        var cycle_id = ('sales_cycle_id' in this.getParams()) && parseInt(this.getParams()['sales_cycle_id'], 10) || CRMConstants.GLOBAL_SALES_CYCLE_ID;
-        if( !cycle_id ) { // monkey patching
-            cycle_id = SalesCycleStore.getGlobal().id
-        }
+    buildActivities: function(cycle_id, contact_id) {
+        if(cycle_id == 'all')
+            return ActivityStore.byContact(contact_id, this.state.include_employees)
+        else
+            return ActivityStore.bySalesCycle(cycle_id)
 
-        if(cycle_id === CRMConstants.GLOBAL_SALES_CYCLE_ID) {
-            var activities = ActivityStore.bySalesCycles(
-                _.map(this.getCyclesForCurrentContact(),function(sc){
-                    return sc.id
-                }));
-        } else{
-            var activities = ActivityStore.bySalesCycle(cycle_id);
-        }
+    },
+
+    render: function() {
+        var cycle_id = this.getParams()['sales_cycle_id'],
+            contact_id = this.getParams()['id'],
+            activities = this.buildActivities(cycle_id, contact_id);
 
         return (
             <div className="page">
@@ -629,6 +667,9 @@ var ActivityListView = React.createClass({
                                           onActionCycle={this.onActionCycle}
                                           action_type={this.state.action}
                                           current_cycle_id={cycle_id} />
+                    <IncludeEmployeesButton contact_id={contact_id}
+                                            is_all={cycle_id == 'all'}
+                                            onItemToggle={this.onIncludeEmployeeChange} />
                 </div>
 
                 <div className="page-body">
@@ -653,4 +694,21 @@ var ActivityListView = React.createClass({
 
 });
 
-module.exports = ActivityListView;
+var DefaultProfileView = React.createClass({
+    statics: {
+        willTransitionTo: function (transition, params) {
+            var sales_cycle = SalesCycleStore.getGlobalForContact(params.id)
+            transition.redirect('activities_by', {id: params.id, sales_cycle_id: sales_cycle.id}, {})
+        },
+
+    },
+
+    render: function() {
+        return null
+    }
+});
+
+module.exports = {
+    ActivityListView: ActivityListView,
+    DefaultProfileView: DefaultProfileView,
+}

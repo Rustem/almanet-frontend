@@ -89,7 +89,8 @@ var CompanyFeedDetailView = React.createClass({
             var ids = _.map(_.filter(component.state.activities, function(a) {
                     return !a.has_read;
                 }), function(a){ return a.id });
-            ActivityActionCreators.mark_as_read(ids);
+            if(ids.length > 0)
+                ActivityActionCreators.mark_as_read(ids);
         }
     },
 

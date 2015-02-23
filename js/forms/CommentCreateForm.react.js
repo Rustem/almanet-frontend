@@ -7,8 +7,7 @@ var keyMirror = require('react/lib/keyMirror');
 Object.assign = _.extend;
 var React = require('react');
 var inputs = require('./input');
-var Input = inputs.Input;
-var ContentEditableInput = inputs.ContentEditableInput;
+var InputTextarea = inputs.InputTextarea;
 var Form = require('./Form.react');
 var FormMixin = require('./FormMixin.react');
 var Fieldset = require('./Fieldset.react');
@@ -45,9 +44,9 @@ var CommentCreateForm = React.createClass({
                   </figure>
                 </a>
                 <Fieldset className="row-body row-body--no-trailer">
-                  <ContentEditableInput ref='comment'
+                  <InputTextarea ref='comment'
                                 name='comment'
-                                className='input-div input-div--block' placeholder="placeholder" />
+                                className='input-div input-div--block' placeholder="Комментарий .." />
                   <button type="submit" className="text-strong text-primary">Написать</button><span> • </span><button onClick={this.onCancelClick} className="text-secondary">Отмена</button>
                 </Fieldset>
               </Fieldset>
@@ -62,7 +61,7 @@ var CommentCreateForm = React.createClass({
     var errors = form.validate();
     if(!errors) {
       var value = form.value();
-      value.author_id = this.props.author.id;
+      value.author_id = this.props.author.crm_user_id;
       value.activity_id = this.props.activity_id;
       this.props.onHandleSubmit(value);
     } else{

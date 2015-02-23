@@ -21,15 +21,16 @@ var FieldsetMixin = require('./FieldsetMixin.react');
 var RepeatedFieldsetModule = require('./RepeatingFieldset.react');
 var ItemMixin = RepeatedFieldsetModule.ItemMixin;
 var RepeatingFieldsetMixin = RepeatedFieldsetModule.RepeatingFieldsetMixin;
+var utils = require('../utils');
 
 var IconSvg = require('../components/common/IconSvg.react');
 var Fieldset = require('./Fieldset.react');
 var inputs = require('./input');
 var SimpleSelect = inputs.SimpleSelect;
-var ContentEditableInput = inputs.ContentEditableInput;
+var InputText = inputs.InputText;
+var InputTextarea = inputs.InputTextarea;
 var SVGCheckbox = inputs.SVGCheckbox;
 
-var CONTACT_TYPES = require('../constants/CRMConstants').CONTACT_TYPES;
 
 var getDefaultEmailValue = function() {
     return {
@@ -83,7 +84,7 @@ var VCardRow = React.createClass({
                     </div>
                 </div>
                 <div className="inputLine-div">
-                    <ContentEditableInput {...this.props} className='input-div input-div--area' isStrong={false} placeholder="Заметка"/>
+                    <InputTextarea {...this.props} className='input-div input-div--area'/>
                 </div>
             </div>
         )
@@ -130,11 +131,12 @@ var EmailVCardComponentItem = React.createClass({
                                 Component='div'
                                 onValueUpdate={this.props.onTypeChange.bind(null, this.props.index)} />
                             <div className="inputLine-div">
-                                <ContentEditableInput
+                                <InputText
                                     value={value.value}
                                     name="value"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' placeholder="E-mail" />
+                                    className='input-div'
+                                    placeholder="E-mail" />
                             </div>
                         </div>
                     </div>
@@ -212,11 +214,12 @@ var TelVCardComponentItem = React.createClass({
                                 Component='div'
                                 onValueUpdate={this.props.onTypeChange.bind(null, this.props.index)} />
                             <div className="inputLine-div">
-                                <ContentEditableInput
+                                <InputText
                                     value={value.value}
                                     name="value"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' placeholder="Телефон" />
+                                    className='input-div'
+                                    placeholder="Телефон" />
                             </div>
                         </div>
                     </div>
@@ -293,11 +296,12 @@ var UrlVCardComponentItem = React.createClass({
                                 Component='div'
                                 onValueUpdate={this.props.onTypeChange.bind(null, this.props.index)} />
                             <div className="inputLine-div">
-                                <ContentEditableInput
+                                <InputText
                                     value={value.value}
                                     name="value"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' placeholder="URL" />
+                                    className='input-div'
+                                    placeholder="URL" />
                             </div>
                         </div>
                     </div>
@@ -374,38 +378,43 @@ var AddressVCardComponentItem = React.createClass({
                                 Component='div'
                                 onValueUpdate={this.props.onTypeChange.bind(null, this.props.index)} />
                             <div className="inputLine-div">
-                                <ContentEditableInput
+                                <InputText
                                     value={value.street_address}
                                     name="street_address"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' placeholder="Улица" />
+                                    className='input-div'
+                                    placeholder="Улица" />
                             </div>
                             <div className="inputLine-div">
-                                <ContentEditableInput
+                                <InputText
                                     value={value.region}
                                     name="region"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' placeholder="Город" />
+                                    className='input-div'
+                                    placeholder="Город" />
 
-                                <ContentEditableInput
+                                <InputText
                                     value={value.locality}
                                     name="locality"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' placeholder="Район" />
+                                    className='input-div'
+                                    placeholder="Район" />
                             </div>
                             <div className="inputLine-div">
-                                <ContentEditableInput
+                                <InputText
                                     value={value.country_name}
                                     name="country_name"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' placeholder="Страна" />
+                                    className='input-div'
+                                    placeholder="Страна" />
                             </div>
                             <div className="inputLine-div">
-                                <ContentEditableInput
+                                <InputText
                                     value={value.postal_code}
                                     name="postal_code"
                                     onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div' placeholder="Почтовый индекс" />
+                                    className='input-div'
+                                    placeholder="Почтовый индекс" />
                             </div>
                         </div>
                     </div>
@@ -457,7 +466,7 @@ var FNVCardComponent = React.createClass({
     render: function() {
         return (
             <Fieldset className="inputLine-negativeTrail">
-              <ContentEditableInput className="input-div input-div--strong" name='fn' {...this.props} placeholder="Имя Фамилия" />
+              <InputText className="input-div input-div--strong" name='fn' {...this.props} placeholder="Имя Фамилия" />
             </Fieldset>
         )
     },
@@ -468,7 +477,7 @@ var OrgsVCardComponent = React.createClass({
     render: function() {
         return (
             <Fieldset className="inputLine-negativeTrail">
-              <ContentEditableInput className="input-div text-secondary" name='orgs' {...this.props} placeholder="Организация" />
+              <InputText className="input-div text-secondary" name='orgs' {...this.props} placeholder="Организация" />
             </Fieldset>
         )
     },
@@ -479,7 +488,7 @@ var TitlesVCardComponent = React.createClass({
     render: function() {
         return (
             <Fieldset className="inputLine-negativeTrail">
-              <ContentEditableInput className="input-div text-secondary" name='titles' {...this.props} placeholder="Должность" />
+              <InputText className="input-div text-secondary" name='titles' {...this.props} placeholder="Должность" />
             </Fieldset>
         )
     },
@@ -487,7 +496,6 @@ var TitlesVCardComponent = React.createClass({
 
 var VCardElement = React.createClass({
     mixins: [FormElementMixin],
-
     propTypes: {
         fields: React.PropTypes.array.isRequired,
     },
@@ -497,6 +505,8 @@ var VCardElement = React.createClass({
         _.forEach(this.props.fields, function(f){
             this[f] = value[f];
         }.bind(this));
+
+        this.CONTACT_TYPES = utils.get_constants('contact') && utils.get_constants('contact').tp_hash;
     },
 
     renderFields: function() {
@@ -519,8 +529,9 @@ var VCardElement = React.createClass({
 
             'adrs': <AddressVCardComponent name="adrs" value={this.adrValue(value.adrs)} options={[['home', 'место проживания'], ['work', 'место работы']]} onValueUpdate={this.onAdrsChange} />,
         }
-        var rv = _.map(this.props.fields, function(f){
-            return Components[f];
+        var rv = {};
+        this.props.fields.forEach(function(f, index){
+            rv['key_'+index] = Components[f];
         });
         return rv;
     },
@@ -570,13 +581,15 @@ var VCardElement = React.createClass({
     },
 
     tpUnConverter: function(v) {
-        return (v == CONTACT_TYPES.CO);
+        if(!this.CONTACT_TYPES)
+            return false;
+        return (v == this.CONTACT_TYPES.COMPANY);
     },
 
     tpConverter: function(v) {
         if(v)
-            return CONTACT_TYPES.CO;
-        return CONTACT_TYPES.USER;
+            return this.CONTACT_TYPES && this.CONTACT_TYPES.COMPANY;
+        return this.CONTACT_TYPES && this.CONTACT_TYPES.USER;
     },
 
     onFnChange: function(value) {

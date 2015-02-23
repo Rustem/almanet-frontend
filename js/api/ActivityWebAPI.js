@@ -9,20 +9,21 @@ module.exports = {
         var object = _.omit(activityObject, 'contact_id');
         request('POST','/api/v1/activity/')
             .send(object)
+            .on('error', failure.bind(null, object))
             .end(function(res) {
                 if (res.ok) {
                     success(res.body);
-                    var author_id = res.body.author_id,
-                        extra = {};
-                    SignalManager.send(ActionTypes.CREATE_ACTIVITY_SUCCESS, author_id, extra);
+                    var extra = {};
+                    SignalManager.send(ActionTypes.CREATE_ACTIVITY_SUCCESS, extra);
                 } else {
                     failure(res);
                 }
             });
     },
-    mark_as_read: function(ids, success) {
+    mark_as_read: function(ids, success, failure) {
         request('POST','/api/v1/activity/read/')
             .send(ids)
+            .on('error', failure.bind(null, ids))
             .end(function(res) {
                 if (res.ok) {
                     success(ids);

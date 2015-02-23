@@ -21,13 +21,12 @@ var NotificationContactCreateView = React.createClass({
 
     render: function() {
         var n = this.props.n,
-            author = UserStore.get(n.author_id),
-            createdContact = ContactStore.get(n.extra.contact_id);
+            fn = n.extra.fn;
         return (
             <div className="notification active">
               <div className="notification-body">
                 <div className="notification-message">
-                  Пользователь {utils.capitalize(author.vcard.fn)} создал новый контакт - {createdContact.vcard.fn}.
+                  Новый контакт {fn} успешно создан.
                 </div>
               </div>
               <button onClick={this.onClick} className="notification-toggle" type="button">
@@ -54,14 +53,13 @@ var NotificationContactUpdateView = React.createClass({
 
     render: function() {
         var n = this.props.n,
-            author = UserStore.get(n.author_id),
-            createdContact = ContactStore.get(n.extra.contact_id);
+            fn = n.extra.fn;
 
         return (
             <div className="notification active">
               <div className="notification-body">
                 <div className="notification-message">
-                  Пользователь {utils.capitalize(author.vcard.fn)} изменил контакт {createdContact.vcard.fn}.
+                  Контакт {fn} успешно изменён.
                 </div>
               </div>
               <button onClick={this.onClick} className="notification-toggle" type="button">
@@ -88,14 +86,13 @@ var NotificationContactShareView = React.createClass({
 
     render: function() {
         var n = this.props.n,
-            author = UserStore.get(n.author_id),
-            receivers = _.uniq(_.map(n.extra.receivers, function(id){ return UserStore.get(id)})),
-            sharedContacts = _.uniq(_.map(n.extra.contacts, function(id){ return ContactStore.get(id)}));
+            contacts = n.extra.contacts;
+
         return (
             <div className="notification active">
               <div className="notification-body">
                 <div className="notification-message">
-                  Пользователь {utils.capitalize(author.vcard.fn)} поделился {sharedContacts.length == 1 ? 'контактом' : 'контактами'} {_.map(sharedContacts, function(c) { return c.vcard.fn}).join(', ')} с {receivers.length == 1 ? 'пользователем' : 'пользователями'} {_.map(receivers, function(r) { return r.vcard.fn}).join(', ')}.
+                  Вы успешно поделились {contacts} {contacts == 1 ? 'контактом' : 'контактами'}.
                 </div>
               </div>
               <button onClick={this.onClick} className="notification-toggle" type="button">
@@ -121,14 +118,13 @@ var NotificationActivityCreateView = React.createClass({
     },
 
     render: function() {
-        var n = this.props.n,
-            author = UserStore.get(n.author_id);
+        var n = this.props.n;
 
         return (
             <div className="notification active">
               <div className="notification-body">
                 <div className="notification-message">
-                  Пользователь {utils.capitalize(author.vcard.fn)} добавил новое взаимодействие.
+                  Новое взаимодействие успешно добавлено.
                 </div>
               </div>
               <button onClick={this.onClick} className="notification-toggle" type="button">
@@ -155,14 +151,13 @@ var NotificationFilterCreateView = React.createClass({
 
     render: function() {
         var n = this.props.n,
-            author = UserStore.get(n.author_id),
             filter_title = n.extra.filter_title;
 
         return (
             <div className="notification active">
               <div className="notification-body">
                 <div className="notification-message">
-                  Пользователь {utils.capitalize(author.vcard.fn)} добавил новый фильтр - {filter_title}.
+                  Новый фильтр {filter_title} успешно добавлен.
                 </div>
               </div>
               <button onClick={this.onClick} className="notification-toggle" type="button">
@@ -188,14 +183,13 @@ var NotificationFilterEditView = React.createClass({
 
     render: function() {
         var n = this.props.n,
-            author = UserStore.get(n.author_id),
             filter_title = n.extra.filter_title;
 
         return (
             <div className="notification active">
               <div className="notification-body">
                 <div className="notification-message">
-                  Пользователь {utils.capitalize(author.vcard.fn)} изменил фильтр - {filter_title}.
+                  Фильтр {filter_title} успешно изменён.
                 </div>
               </div>
               <button onClick={this.onClick} className="notification-toggle" type="button">
@@ -274,6 +268,38 @@ var NotificationImportContactsView = React.createClass({
 
 });
 
+var NotificationSalesCycleCloseView = React.createClass({
+
+    mixins : [AppContextMixin],
+
+    propTypes: {
+        n: React.PropTypes.object
+    },
+
+    render: function() {
+        var n = this.props.n,
+            sales_cycle_title = n.extra.sales_cycle_title;
+
+        return (
+            <div className="notification active">
+              <div className="notification-body">
+                <div className="notification-message">
+                  Цикл {sales_cycle_title} успешно закрыт.
+                </div>
+              </div>
+              <button onClick={this.onClick} className="notification-toggle" type="button">
+                Закрыть
+              </button>
+            </div>
+        );
+    },
+
+    onClick: function(evt) {
+        this.props.onClose(this.props.n.id);
+    }
+
+});
+
 
 function renderNotification(n) {
     var tp = n.type, TPL = null;
@@ -301,6 +327,9 @@ function renderNotification(n) {
             break;
         case NotifTypes.IMPORT_CONTACTS:
             TPL = NotificationImportContactsView;
+            break;
+        case NotifTypes.SALES_CYCLE_CLOSE:
+            TPL = NotificationSalesCycleCloseView;
             break;
         default:
             // do nothing

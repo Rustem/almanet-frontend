@@ -85,14 +85,14 @@ var MyFeedLink = React.createClass({
 
 var MyFeedDetailView = React.createClass({
     mixins: [Router.Navigation, AppContextMixin],
-    
+
     statics: {
         willTransitionFrom: function (transition, component) {
             var ids = _.map(_.filter(component.state.activities, function(a) {
                     return !a.has_read;
                 }), function(a){ return a.id });
-
-            ActivityActionCreators.mark_as_read(ids);
+            if(ids.length > 0)
+                ActivityActionCreators.mark_as_read(ids);
         }
     },
 
@@ -167,4 +167,3 @@ var MyFeedDetailView = React.createClass({
 
 module.exports.DetailView = MyFeedDetailView;
 module.exports.Link = MyFeedLink;
-module.exports.FilterBar = FilterBar;

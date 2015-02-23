@@ -5,13 +5,12 @@ var FormMixin = require('./FormMixin.react');
 var SalesCycleStore = require('../stores/SalesCycleStore');
 var elements = require('./elements');
 var Fieldset = require('./Fieldset.react');
-var InputWithDropDown = elements.InputWithDropDown;
+var InputTextareaWithDropDown = elements.InputTextareaWithDropDown;
 var FeedbackDropDown = elements.FeedbackDropDown;
-
+var utils = require('../utils');
 
 var CRMConstants = require('../constants/CRMConstants');
 var ActionTypes = CRMConstants.ActionTypes;
-var GLOBAL_SALES_CYCLE_ID = CRMConstants.GLOBAL_SALES_CYCLE_ID;
 
 
 // TODO: probably replace it to constants or get remotely (repeat in forms/AddActivityForm)
@@ -33,7 +32,7 @@ var AddActivityMiniForm = React.createClass({
         return (
             <Form ref="add_activity_form"
                                   onSubmit={this.onHandleSubmit}>
-                <InputWithDropDown name="description" choices={NOTE_TEMPLATES} placeholder="Кратко опишите произошедшее" />
+                <InputTextareaWithDropDown name="description" choices={NOTE_TEMPLATES} placeholder="Кратко опишите произошедшее" />
                 <Fieldset className="inputLine-submitComment">
                     <FeedbackDropDown name="feedback_status" simple={true} />
                     <div className="inputLine-submitComment-submit">
@@ -46,21 +45,17 @@ var AddActivityMiniForm = React.createClass({
 
     onHandleSubmit: function(e) {
         e.preventDefault();
-        var form = this.refs.add_activity_form;
-        var errors = form.validate();
+        var form = this.refs.add_activity_form,
+            errors = form.validate();
         if(!errors) {
             var object = {}, formValue = form.value();
             object.author_id = this.props.current_user.crm_user_id;
             object.sales_cycle_id = this.props.sales_cycle_id;
             object.description = formValue.description;
             object.feedback_status = formValue.feedback_status;
-            if(object.sales_cycle_id != GLOBAL_SALES_CYCLE_ID) {
-                object.contact_id = SalesCycleStore.get(this.props.sales_cycle_id).contact_id;
-            }
-            else {
-                object.contact_id = null;
-            }
-          this.props.onHandleSubmit(object);
+            object.contact_id = SalesCycleStore.get(this.props.sales_cycle_id).contact_id;
+
+            this.props.onHandleSubmit(object);
         } else{
             alert(errors);
         }

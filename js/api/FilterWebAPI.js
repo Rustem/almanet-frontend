@@ -16,15 +16,15 @@ module.exports = {
     create: function(obj, success, failure) {
         requestPost('/api/v1/filter/')
             .send(obj)
+            .on('error', failure.bind(null, obj))
             .end(function(res) {
                 if (res.ok) {
                     obj = _.assign(obj, res.body);
                     success(obj);
 
                     // notification
-                    var author_id = obj.author_id,
-                        extra = {'filter_title': obj.title};
-                    SignalManager.send(ActionTypes.CREATE_FILTER_SUCCESS, author_id, extra);
+                    var extra = {'filter_title': obj.title};
+                    SignalManager.send(ActionTypes.CREATE_FILTER_SUCCESS, extra);
                 } else {
                     failure(obj);
                 }
@@ -33,15 +33,15 @@ module.exports = {
     edit: function(obj, success, failure) {
         requestPatch('/api/v1/filter/'+obj.id + '/')
             .send(obj)
+            .on('error', failure.bind(null, obj))
             .end(function(res) {
                 if (res.ok) {
                     obj = _.assign(obj, res.body);
                     success(obj);
 
                     // notification
-                    var author_id = obj.author_id,
-                        extra = {'filter_title': obj.title};
-                    SignalManager.send(ActionTypes.EDIT_FILTER_SUCCESS, author_id, extra);
+                    var extra = {'filter_title': obj.title};
+                    SignalManager.send(ActionTypes.EDIT_FILTER_SUCCESS, extra);
                 } else {
                     failure(obj);
                 }
@@ -49,10 +49,11 @@ module.exports = {
     },
     delete: function(id, success, failure) {
         requestDelete('/api/v1/filter/'+id + '/')
+            .on('error', failure.bind(null, id))
             .end(function(res) {
                 if (res.ok) {
                     success(id);
-                    SignalManager.send(ActionTypes.DELETE_FILTER_SUCCESS, null, null);
+                    SignalManager.send(ActionTypes.DELETE_FILTER_SUCCESS, null);
                 } else {
                     failure(id);
                 }

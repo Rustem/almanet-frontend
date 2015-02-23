@@ -6,7 +6,7 @@ var Fieldset = require('./Fieldset.react');
 
 var inputs = require('./input');
 var RemoveableDropDownListWidget = inputs.RemoveableDropDownListWidget;
-var ContentEditableInput = inputs.ContentEditableInput;
+var InputTextarea = inputs.InputTextarea;
 
 var ContactStore = require('../stores/ContactStore');
 var UserStore = require('../stores/UserStore');
@@ -56,7 +56,7 @@ var ColleaguesRemoveableDropDownList = React.createClass({
     onAdd: function(user_id) {
         var selected_users = this.value();
         selected_users.push(user_id);
-        var updValue = this.prepValue(this.props.name, _.unique(selected_users));
+        var updValue = this.prepValue(this.props.name, _.uniq(selected_users));
         return this.updateValue(updValue);
     },
 
@@ -87,15 +87,16 @@ var ContactShareForm = React.createClass({
         var form_value = _.extend({}, DEFAULT_SHARE, {
             'contacts': this.props.contact_ids,
             'participants': [],
-            'note': 'причина'
+            'note': ''
         });
         return (
             <Form ref="contact_share_form"
                   value={form_value}
                   onSubmit={this.onHandleSubmit}>
                 <Fieldset className="input-addComment">
-                    <ContentEditableInput
+                    <InputTextarea
                         name='note'
+                        placeholder='Заметка ..'
                         className="input-div input-div--addComment" />
                 </Fieldset>
                 <ColleaguesRemoveableDropDownList

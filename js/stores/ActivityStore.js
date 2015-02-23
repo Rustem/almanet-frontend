@@ -1,11 +1,11 @@
 var _ = require('lodash');
 var assign = require('object-assign');
 var moment = require('moment');
+var utils = require('../utils');
 var EventEmitter = require('events').EventEmitter;
 var CRMConstants = require('../constants/CRMConstants');
 var CRMAppDispatcher = require('../dispatcher/CRMAppDispatcher');
 var SessionStore = require('./SessionStore');
-var ContactStore = require('./ContactStore');
 var ActionTypes = CRMConstants.ActionTypes;
 
 var CHANGE_EVENT = 'change';
@@ -51,7 +51,22 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
         rv = _.map(ids, function(id){
             return this.bySalesCycle(id);
         }.bind(this));
-        return _.sortBy(_.flatten(rv), 'at').reverse();
+        return _.sortBy(_.flatten(rv), function(activity){ return moment(activity.date_created) }).reverse();
+    },
+
+    byContact: function(c_id, include_employees) {
+        include_employees = (typeof include_employees === "undefined") ? false : include_employees;
+        var SalesCycleStore = require('./SalesCycleStore');
+        var sales_cycles = [];
+
+        if(include_employees) 
+            sales_cycles = SalesCycleStore.getCyclesForContact(c_id)
+        else
+            sales_cycles = SalesCycleStore.byContact(c_id)
+
+        sales_cycles = _.map(sales_cycles, 'id');
+
+        return this.bySalesCycles(sales_cycles)
     },
 
     getNew: function(user) {
@@ -77,9 +92,10 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
     },
 
     myFeed: function(user) {
-        // strange 2
-        var ContactStore = require('./ContactStore');
-        var activities = this.getByDate();
+        var ContactStore = require('./ContactStore'),
+            activities = this.getByDate();
+        if(activities.length == 0)
+            return []
         return _.filter(activities, function(a){ return !(ContactStore.byActivity(a) && _.contains(user.unfollow_list, ContactStore.byActivity(a).id)) });
     },
 
@@ -93,7 +109,7 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
     },
 
     getCreatedActivity: function(obj) {
-        return obj;
+        return _.omit(obj, 'contact')
     },
 
     set: function(activity) {
@@ -113,8 +129,12 @@ ActivityStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.type) {
         case ActionTypes.APP_LOAD_SUCCESS:
-            CRMAppDispatcher.waitFor([SessionStore.dispatchToken]);
-            ActivityStore.setAll(action.object);
+            var SalesCycleStore = require('./SalesCycleStore');
+            var ContactStore = require('./ContactStore');
+            var UserStore = require('./UserStore');
+            CRMAppDispatcher.waitFor([UserStore.dispatchToken, ContactStore.dispatchToken, SalesCycleStore.dispatchToken]);
+            if(action.object.activities !== undefined)
+                ActivityStore.setAll(action.object);
             break;
         case ActionTypes.CREATE_ACTIVITY_SUCCESS:
             var a = ActivityStore.getCreatedActivity(action.object);

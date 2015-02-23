@@ -12,6 +12,7 @@ module.exports = {
 
     getByActivityID: function(activity_id, success, failure) {
         request('GET', '/api/v1/activity/'+activity_id+'/comments/')
+            .on('error', failure.bind(null, activity_id))
             .end(function(res) {
                 if (res.ok) {
                     success({'comments': res.body.objects});
@@ -22,6 +23,7 @@ module.exports = {
 
     create: function(commentObject, success, failure) {
         request('POST', '/api/v1/comment/')
+            .on('error', failure.bind(null, commentObject))
             .send(commentObject)
             .end(function(res) {
                 if (res.ok) {

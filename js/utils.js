@@ -9,7 +9,6 @@ var cookie_tool = require('cookie');
 var superagent = require('superagent');
 var moment = require('moment-timezone');
 
-var CONTACT_TYPES   = require('./constants/CRMConstants').CONTACT_TYPES;
 var SA_URL_PREFIX   = require('./constants/CRMConstants').SA_URL_PREFIX;
 
 
@@ -114,13 +113,15 @@ function fuzzySearch(collection, search_str, options) {
 };
 
 function isCompany(object) {
-  return (object.tp == CONTACT_TYPES.CO);
+  var AppCommonStore = require('./stores/AppCommonStore'),
+      CONTACT_TYPES = AppCommonStore.get_constants('contact').tp_hash;
+  return (object.tp == CONTACT_TYPES.COMPANY);
 };
 
 function isCold(contact) {
   var AppCommonStore = require('./stores/AppCommonStore'),
       CONTACT_STATUSES = AppCommonStore.get_constants('contact').statuses_hash;
-  return (contact.status == CONTACT_STATUSES.NEW_CONTACT);
+  return (contact.status == CONTACT_STATUSES.NEW);
 };
 
 function request(method, url) {
@@ -148,8 +149,41 @@ function requestPatch(url) {
   return request('PATCH', url);
 };
 
+function requestPut(url) {
+  return request('PUT', url);
+};
+
 function requestDelete(url) {
   return request('DELETE', url);
+};
+
+function initial_load(callback) {
+  var AppActionCreators = require('./actions/AppActionCreators');
+  var AuthWebAPI = require('./api/AuthWebAPI');
+  var AppWebAPI = require('./api/AppWebAPI');
+  var CommentWebAPI = require('./api/CommentWebAPI');
+  var NotificationWebAPI = require('./api/NotificationWebAPI');
+
+  AuthWebAPI.loadCurrentUser(function(user){
+    AppWebAPI.getAll(function(appState, appConstants){
+        CommentWebAPI.getAll(function(comments){
+              NotificationWebAPI.getAll(function(notifications){
+
+                appState = _.assign(appState, {
+                  user: user,
+                  comments: comments,
+                  notifications: notifications,
+                  constants: appConstants,
+                });
+
+                AppActionCreators.load(appState);
+                
+                callback();
+                
+              });
+          });
+      });
+  });
 };
 
 module.exports = {
@@ -167,8 +201,10 @@ module.exports = {
   request: request,
   requestPost: requestPost,
   requestPatch: requestPatch,
+  requestPut: requestPut,
   requestGet: requestGet,
   requestDelete: requestDelete,
   isCompany: isCompany,
   isCold: isCold,
+  initial_load: initial_load,
 };

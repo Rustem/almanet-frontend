@@ -4,8 +4,7 @@
 
 var React = require('react');
 var inputs = require('./input');
-var Input = inputs.Input;
-var ContentEditableInput = inputs.ContentEditableInput;
+var InputText = inputs.InputText;
 var Form = require('./Form.react');
 var FormMixin = require('./FormMixin.react');
 var Fieldset = require('./Fieldset.react');
@@ -32,7 +31,9 @@ var SalesCycleCloseForm = React.createClass({
     return (
       <Fieldset className="text-center inputLine">
         <span>{product.name}</span>
-        <ContentEditableInput className='input-div input-div--closeCycle' name={'real_value__' + product.id} placeholder='Enter monetary value'/>
+        <InputText className='input-div input-div--closeCycle'
+            name={'real_value__' + product.id}
+            placeholder='Введите денежное значение'/>
       </Fieldset>
     )
   },

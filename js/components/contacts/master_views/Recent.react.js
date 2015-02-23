@@ -14,6 +14,7 @@ var Link = Router.Link;
 var IconSvg = require('../../common/IconSvg.react');
 var Modal = require('../../common/Modal.react');
 var ContactActionCreators = require('../../../actions/ContactActionCreators');
+var ActivityStore = require('../../../stores/ActivityStore');
 var ContactStore = require('../../../stores/ContactStore');
 var ShareStore = require('../../../stores/ShareStore');
 var AppContextMixin = require('../../../mixins/AppContextMixin');
@@ -21,7 +22,6 @@ var ContactShareForm = require('../../../forms/ContactShareForm.react');
 var Form = require('../../../forms/Form.react');
 var inputs = require('../../../forms/input');
 var SVGCheckbox = inputs.SVGCheckbox;
-var Input = inputs.Input;
 var Div = require('../../../forms/Fieldset.react').Div;
 var Crumb = require('../../common/BreadCrumb.react').Crumb;
 var CommonFilterBar = require('../FilterComposer.react').CommonFilterBar;
@@ -42,10 +42,12 @@ var RecentLink = React.createClass({
     },
 
     componentDidMount: function() {
+        ActivityStore.addChangeListener(this._onChange);
         ContactStore.addChangeListener(this._onChange);
     },
 
     componentWillUnmount: function() {
+        ActivityStore.removeChangeListener(this._onChange);
         ContactStore.removeChangeListener(this._onChange);
     },
 
@@ -176,11 +178,11 @@ var RecentList = React.createClass({
 
     render: function() {
         var prevContact = null;
-        var contactListItems = this.filterContacts().map(function(contact) {
+        var contactListItems = this.filterContacts().map(function(contact, index) {
             var is_selected = this.props.selection_map[contact.id];
             prevContact = contact;
             return(
-                <div>
+                <div key={index}>
                 <ContactListItem
                     key={'contact__' + contact.id}
                     contact={contact}

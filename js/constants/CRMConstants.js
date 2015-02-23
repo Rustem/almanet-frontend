@@ -10,6 +10,9 @@ module.exports = {
         EDIT_CONTACT: null,
         EDIT_CONTACT_SUCCESS: null,
         EDIT_CONTACT_FAIL: null,
+        DELETE_CONTACT: null,
+        DELETE_CONTACT_SUCCESS: null,
+        DELETE_CONTACT_FAIL: null,
         IMPORT_CONTACTS: null,
         IMPORT_CONTACTS_SUCCESS: null,
         IMPORT_CONTACTS_FAIL: null,
@@ -23,6 +26,8 @@ module.exports = {
         CREATE_ACTIVITY_SUCCESS : null,
         CREATE_ACTIVITY_FAIL: null,
         ACTIVITY_MARK_AS_READ: null,
+        ACTIVITY_MARK_AS_READ_SUCCESS: null,
+        ACTIVITY_MARK_AS_READ_FAIL: null,
         MARK_SHARES_READ: null,
         MARK_SHARES_READ_SUCCESS: null,
         MARK_SHARES_READ_FAIL: null,
@@ -46,6 +51,9 @@ module.exports = {
         EDIT_PRODUCT: null,
         EDIT_PRODUCT_SUCCESS: null,
         EDIT_PRODUCT_FAIL: null,
+        DELETE_PRODUCT: null,
+        DELETE_PRODUCT_SUCCESS: null,
+        DELETE_PRODUCT_FAIL: null,
         CREATE_NOTIFICATION: null,
         CREATE_NOTIFICATION_SUCCESS: null,
         CREATE_NOTIFICATION_FAIL: null,
@@ -87,13 +95,6 @@ module.exports = {
         EDIT: null,
         READ: null
     }),
-    GLOBAL_SALES_CYCLE_ID: null,
-    GLOBAL_SALES_CYCLE: null,
-    // TODO: should be retrived from server
-    CONTACT_TYPES: {
-        CO: 'co',
-        USER: 'user',
-    },
     NotifTypes: keyMirror({
         CONTACT_CREATE: null,
         CONTACT_EDIT: null,
@@ -103,6 +104,7 @@ module.exports = {
         FILTER_EDIT: null,
         FILTER_DELETE: null,
         IMPORT_CONTACTS: null,
+        SALES_CYCLE_CLOSE: null,
     }),
     SERVICES: keyMirror({
         crm: null

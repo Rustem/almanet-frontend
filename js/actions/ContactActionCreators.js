@@ -72,48 +72,12 @@ module.exports = {
     }.bind(this));
   },
 
-  setLeads: function(contact_ids){
-    dispatcher.handleViewAction({
-      type: ActionTypes.MARK_CONTACTS_AS_LEAD,
-      object: contact_ids
-    });
-    ContactWebAPI.setLeads(contact_ids, function(result){
-      dispatcher.handleServerAction({
-        type: ActionTypes.MARK_CONTACTS_AS_LEAD_SUCCESS,
-        object: result
-      });
-    }.bind(this), function(error){
-      dispatcher.handleServerAction({
-        type: ActionTypes.MARK_CONTACTS_AS_LEAD_FAIL,
-        error: error
-      })
-    }.bind(this));
-  },
-
-  createShare: function(shareObj) {
-    dispatcher.handleViewAction({
-      type: ActionTypes.CREATE_SHARE,
-      object: shareObj
-    });
-    ContactWebAPI.createShare(shareObj, function(share){
-      dispatcher.handleServerAction({
-        type: ActionTypes.CREATE_SHARE_SUCCESS,
-        object: share
-      });
-    }.bind(this), function(error){
-      dispatcher.handleServerAction({
-        type: ActionTypes.CREATE_SHARE_FAIL,
-        error: error
-      })
-    }.bind(this));
-  },
-
   createShares: function(shares) {
     dispatcher.handleViewAction({
       type: ActionTypes.CREATE_SHARE,
       object: shares
     });
-    ContactWebAPI.createShare(shares, function(share_objects){
+    ContactWebAPI.createShares(shares, function(share_objects){
       dispatcher.handleServerAction({
         type: ActionTypes.CREATE_SHARE_SUCCESS,
         object: share_objects
@@ -140,6 +104,24 @@ module.exports = {
     }.bind(this), function(error){
       dispatcher.handleServerAction({
         type: ActionTypes.MARK_SHARES_READ_FAIL,
+        error: error
+      });
+    }.bind(this));
+  },
+
+  delete: function(contact) {
+    dispatcher.handleViewAction({
+      type: ActionTypes.DELETE_CONTACT,
+      object: contact
+    });
+    ContactWebAPI.deleteContact(contact, function(deleted_contact){
+      dispatcher.handleServerAction({
+        type: ActionTypes.DELETE_CONTACT_SUCCESS,
+        object: deleted_contact
+      });
+    }.bind(this), function(error){
+      dispatcher.handleServerAction({
+        type: ActionTypes.DELETE_CONTACT_FAIL,
         error: error
       });
     }.bind(this));

@@ -45,7 +45,7 @@ var ContactRemoveableDropDownList = React.createClass({
     onAdd: function(contact_id) {
         var selected_contacts = this.value() || [];
         selected_contacts.push(contact_id);
-        var updValue = this.prepValue(this.props.name, _.unique(selected_contacts));
+        var updValue = this.prepValue(this.props.name, _.uniq(selected_contacts));
         return this.updateValue(updValue);
     },
 

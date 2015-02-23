@@ -24,13 +24,31 @@ var FollowButton = require('../common/FollowButton.react');
 
 var VIEW_MODE = require('../../constants/CRMConstants').CONTACT_VIEW_MODE;
 
-
-
 var ACTIONS = keyMirror({
     NO_ACTION: null,
     SHARE: null,
     EDIT: null,
 });
+
+
+var ContactDeleteButton = React.createClass({
+    mixins: [Router.Navigation],
+    propTypes: {
+        contact: React.PropTypes.object.isRequired
+    },
+
+    onClick: function() {
+        ContactActionCreators.delete(this.props.contact);
+        this.transitionTo('contacts');
+    },
+
+    render: function() {
+        return (
+            <button className="btn btn--save" onClick={this.onClick}>Удалить</button>
+        );
+    }
+});
+
 
 var DropdownControlBar = React.createClass({
 
@@ -56,7 +74,10 @@ var DropdownControlBar = React.createClass({
         });
         return (
             <div className={className}>
-                <button ref='menuToggler' onKeyDown={this.onKeyDown} onClick={this.onMenuToggle} type="button" className="row row--oneliner row--link">
+                <button ref='menuToggler' type="button" className="row row--oneliner row--link"
+                                          onKeyDown={this.onKeyDown}
+                                          onClick={this.onMenuToggle}
+                                          onBlur={this.onMenuTogglerBlur}>
                     <div className="row-icon">
                         <IconSvg iconKey="more" />
                     </div>
@@ -123,7 +144,7 @@ var ContactProfileView = React.createClass({
 
     getProducts: function() {
         var cid = this.getParams().id;
-        return _.uniq(_.reduce(SalesCycleStore.getCyclesForCurrentContact(cid), function(rv, sc) {
+        return _.uniq(_.reduce(SalesCycleStore.getCyclesForContact(cid), function(rv, sc) {
                     rv.push(sc.product_ids);
                     return _.compact(_.flatten(rv));
                 }, []));
@@ -190,7 +211,7 @@ var ContactProfileView = React.createClass({
                             <div className="space-verticalBorder"></div>
                             <FollowButton contact={this.getContact()} />
 
-
+                            <ContactDeleteButton contact={this.getContact()} />
                         </div>
 
                     </div>
@@ -200,7 +221,7 @@ var ContactProfileView = React.createClass({
                         <ContactShareForm
                             contact_ids={[this.getParams().id]}
                             current_user={this.getUser()}
-                            onHandleSubmit={this.onShareSubmit} 
+                            onHandleSubmit={this.onShareSubmit}
                             onCancel={this.resetState} />
                     </Modal>
                 </div>

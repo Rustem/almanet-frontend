@@ -14,7 +14,7 @@ var FilterActionCreators = require('../../actions/FilterActionCreators');
 var AppContextMixin = require('../../mixins/AppContextMixin');
 var inputs = require('../../forms/input');
 var SVGCheckbox = inputs.SVGCheckbox;
-var Input = inputs.Input;
+var SimpleInput = inputs.SimpleInput;
 var Div = require('../../forms/Fieldset.react').Div;
 
 var CommonFilterBar = React.createClass({
@@ -37,7 +37,7 @@ var CommonFilterBar = React.createClass({
                                 <IconSvg iconKey='arrow-down' />
                             </Div>
                             <Div className="row-body-primary">
-                                <Input name="filter_text" type="text" className="input-filter" placeholder="Фильтр" />
+                                <SimpleInput name="filter_text" type="text" className="input-filter" placeholder="Фильтр" />
                             </Div>
                         </Div>
                     </Div>
@@ -117,9 +117,9 @@ var FilterList = React.createClass({
         return contacts;
     },
 
-    renderFilter: function(f) {
-        var Component = this.state.isEdit ? 
-            (<div className="row row--oneliner row--link">
+    renderFilter: function(f, index) {
+        var Component = this.state.isEdit ?
+            (<div key={index} className="row row--oneliner row--link">
                 <div className="row-icon">
                     <button onClick={this.deleteFilter.bind(null, f.id)} >
                         <IconSvg iconKey="remove" />
@@ -134,7 +134,7 @@ var FilterList = React.createClass({
                   </div>
                 </div>
             </div>) :
-            (<Link to="filtered" params={{id: f.id}} className="row row--oneliner row--link">
+            (<Link key={index} to="filtered" params={{id: f.id}} className="row row--oneliner row--link">
                 <div className="row-icon">
                 </div>
                 <div className="row-body">
@@ -148,7 +148,7 @@ var FilterList = React.createClass({
             </Link>
             )
         return Component
-              
+
     },
 
     renderEditButton: function() {

@@ -22,7 +22,6 @@ var ContactShareForm = require('../../../forms/ContactShareForm.react');
 var Form = require('../../../forms/Form.react');
 var inputs = require('../../../forms/input');
 var SVGCheckbox = inputs.SVGCheckbox;
-var Input = inputs.Input;
 var Div = require('../../../forms/Fieldset.react').Div;
 var Crumb = require('../../common/BreadCrumb.react').Crumb;
 var CommonFilterBar = require('../FilterComposer.react').CommonFilterBar;
@@ -176,7 +175,7 @@ var AllBaseList = React.createClass({
 
     render: function() {
         var prevContact = null;
-        var contactListItems = this.filterContacts().map(function(contact) {
+        var contactListItems = this.filterContacts().map(function(contact, index) {
             var GroupContent = null;
 
             if(prevContact == null || prevContact.vcard.fn[0] !== contact.vcard.fn[0] ) {
@@ -185,7 +184,7 @@ var AllBaseList = React.createClass({
             var is_selected = this.props.selection_map[contact.id];
             prevContact = contact;
             return(
-                <div>
+                <div key={index}>
                 {GroupContent ? GroupContent : null}
                 <ContactListItem
                     key={'contact__' + contact.id}

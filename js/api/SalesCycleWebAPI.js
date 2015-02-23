@@ -2,7 +2,7 @@ var _ = require('lodash');
 var request = require('../utils').request;
 var SignalManager = require('./utils');
 var CRMConstants = require('../constants/CRMConstants');
-var AppCommonStore = require('../stores/AppCommonStore');
+var utils = require('../utils');
 
 var ActionTypes = CRMConstants.ActionTypes;
 
@@ -15,10 +15,12 @@ module.exports = api = {
     },
     close: function(salesCycleObject, success, failure) {
         request('put', '/api/v1/sales_cycle/'+salesCycleObject.id+'/close/')
+            .on('error', failure.bind(null, salesCycleObject))
             .send(salesCycleObject.closing_stats)
             .end(function(res) {
                 if (res.ok) {
-                    SignalManager.send(ActionTypes.CLOSE_SALES_CYCLE_SUCCESS, salesCycleObject);
+                    var extra = {'sales_cycle_title': salesCycleObject.title};
+                    SignalManager.send(ActionTypes.CLOSE_SALES_CYCLE_SUCCESS, extra);
                     success(res.body);
                 } else {
                     failure(res);
@@ -26,13 +28,14 @@ module.exports = api = {
             });
     },
     create: function(salesCycleObject, success, failure) {
-        var SALES_CYCLE_STATUS = AppCommonStore.get_constants('sales_cycle').statuses_hash;
+        var SALES_CYCLE_STATUS = utils.get_constants('sales_cycle').statuses_hash;
             object = _.assign(salesCycleObject, {
                 status: SALES_CYCLE_STATUS.NEW
             });
 
         request('POST', '/api/v1/sales_cycle/')
             .send(object)
+            .on('error', failure.bind(null, object))
             .end(function(res) {
                 if (res.ok) {
                     object = _.assign(object, res.body);
@@ -49,6 +52,7 @@ module.exports = api = {
 
         request('put', '/api/v1/sales_cycle/'+salesCycleData.sales_cycle_id+'/products/')
             .send(put_object)
+            .on('error', failure.bind(null, put_object))
             .end(function(res) {
                 if (res.ok) {
                     salesCycleData.product_ids = res.body.object_ids;

@@ -19,6 +19,9 @@ var ActivityListItem = React.createClass({
         activity: React.PropTypes.object,
         onCommentLinkClick: React.PropTypes.func,
     },
+    componentWillMount: function() {
+        this.FEEDBACK_ICONS = utils.get_constants('activity').feedback_icons;
+    },
 
     isItemSelected: function(act_id) {
         var id = this.getParams().id;
@@ -61,7 +64,7 @@ var ActivityListItem = React.createClass({
             <div className={classNames}>
                 <div className="row">
                     <div className="row-icon">
-                        <IconSvg iconKey={activity.feedback_status} />
+                        <IconSvg iconKey={this.FEEDBACK_ICONS[activity.feedback_status]} />
                   </div>
                   <div className="row-body row-body--no-trailer">
                     <div className="row">
@@ -78,6 +81,7 @@ var ActivityListItem = React.createClass({
                           <div className="row-body-secondary">
                             <Link to='activity_selected'
                                   params={{menu: menu, id: activity.id}}
+                                  query={this.getQuery()}
                                   className="stream-breadcrumbs">
                                   <IconSvg iconKey="comment" />
                             </Link>
@@ -86,15 +90,23 @@ var ActivityListItem = React.createClass({
                         <div className="row-body-message">
                             {activity.description}
                         </div>
-                        {contact ?
                         <ul className="stream-breadcrumbs">
                             <li>
-                                <Link to='contact_profile' params={{id: contact.id}} className="stream-breadcrumbs">{contact.vcard.fn}</Link>
+                                <Link to='contact_profile' 
+                                      params={{id: contact.id}} 
+                                      className="stream-breadcrumbs">
+                                      {contact.vcard.fn}
+                                </Link>
                             </li>
                             <li>→</li>
-                            <li><a href="#" className="stream-breadcrumbs">{this.getSalesCycle(activity).title}</a></li>
+                            <li>
+                                <Link to='activities_by' 
+                                      params={{id: contact.id, sales_cycle_id: this.getSalesCycle(activity).id}} 
+                                      className="stream-breadcrumbs">
+                                      {this.getSalesCycle(activity).title}
+                                </Link>
+                            </li>
                         </ul>
-                        : null}
                       </div>
                     </div>
                   </div>
@@ -111,10 +123,9 @@ var ActivityList = React.createClass({
     },
 
     render: function() {
-        var activityListItems = this.props.activities.map(function(activity) {
+        var activityListItems = this.props.activities.map(function(activity, index) {
             return(
-                <ActivityListItem
-                    activity={activity} />
+                <ActivityListItem key={index} activity={activity} />
             )
         }.bind(this));
 
