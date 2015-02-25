@@ -30,6 +30,7 @@
   "scripts": {
     "start": "NODE_ENV=dev watchify -o js/bundle.js -v -d .",
     "build_prod": "NODE_ENV=demo browserify . --ignore-missing | uglifyjs -cm > js/bundle.min.js",
+    "build_stage": "NODE_ENV=stage browserify . --ignore-missing | uglifyjs -cm > js/bundle.min.js",
     "build": "NODE_ENV=dev browserify . -o js/bundle.js --ignore-missing",
     "test": "jest"
   },
