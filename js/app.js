@@ -13,6 +13,7 @@ var routes = require('./router').routes;
 var NODES = require('./router').NODES;
 var relationships = require('./router').relationships;
 var moment = require('moment');
+var moment_locale_ru = require('moment/locale/ru');
 //var Fixtures = require('./fixtures');
 //Fixtures.init();
 
@@ -21,7 +22,7 @@ var moment = require('moment');
 
 
 function configure() {
-  moment.locale('ru-RU');
+  moment.locale('ru', moment_locale_ru);
 };
 
 function render_app() {
