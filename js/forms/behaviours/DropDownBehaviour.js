@@ -26,6 +26,10 @@ var DropDownBehaviour = {
     },
 
     handleClick: function(evt) {
+        if( !this.state.isOpen || typeof this.refs.menuToggler === 'undefined' ) {
+            window.removeEventListener('click', this.handleClick);
+            return;
+        }
         if( !ReactInstanceHandles.isAncestorIDOf(this.refs.menuToggler.getDOMNode().dataset.reactid, evt.target.dataset.reactid) &&
             !ReactInstanceHandles.isAncestorIDOf(this.refs.menuBody.getDOMNode().dataset.reactid, evt.target.dataset.reactid) )
             this.setState({isOpen: false});
