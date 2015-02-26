@@ -1,3 +1,5 @@
+var ReactInstanceHandles = require("react/lib/ReactInstanceHandles");
+
 var ESCAPE_KEY_CODE = 27;
 
 var DropDownBehaviour = {
@@ -14,6 +16,21 @@ var DropDownBehaviour = {
         }
     },
 
+
+    componentWillUpdate: function(nextProps, nextState) {
+        if( nextState.isOpen ) {
+            window.addEventListener('click', this.handleClick);
+        } else {
+            window.removeEventListener('click', this.handleClick);
+        }
+    },
+
+    handleClick: function(evt) {
+        if( !ReactInstanceHandles.isAncestorIDOf(this.refs.menuToggler.getDOMNode().dataset.reactid, evt.target.dataset.reactid) &&
+            !ReactInstanceHandles.isAncestorIDOf(this.refs.menuBody.getDOMNode().dataset.reactid, evt.target.dataset.reactid) )
+            this.setState({isOpen: false});
+    },
+
     onMenuToggle: function(evt) {
         evt.preventDefault();
         this.setState({isOpen: !this.isOpen()}, function() {
@@ -28,14 +45,6 @@ var DropDownBehaviour = {
         evt.preventDefault();
         this.setState({isOpen: false});
       }
-    },
-
-    onMenuTogglerBlur: function(evt) {
-        // to fix problem when DropDown doesn't close on blur
-        // there is setTimeout, because Blur happens first than Click on the Menu
-        setTimeout(
-           function(){ this.isMounted() && this.setState({isOpen: false}); }.bind(this),
-           100);
     },
 
     onChoice: function(choice_idx) {

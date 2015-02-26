@@ -72,12 +72,11 @@ var FeedbackDropDownWidget = React.createClass({
             <div className="inputLine-submitComment-dropdown">
                 <div className={className}>
                     <button ref="menuToggler" type="button" className="btn"
-                                              onKeyDown={this.onKeyDown}
-                                              onClick={this.onMenuToggle}
-                                              onBlur={this.onMenuTogglerBlur}>
+                            onKeyDown={this.onKeyDown}
+                            onClick={this.onMenuToggle}>
                       {this.props.value && this.copyRenderedChoice() || this.renderDefaultChoice()}
                     </button>
-                    <div className="dropdown-menu">
+                    <div ref="menuBody" className="dropdown-menu">
                         {this.props.choices.map(this.renderChoice)}
                     </div>
                 </div>
