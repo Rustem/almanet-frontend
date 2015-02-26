@@ -10,8 +10,6 @@ var RequestStore = require('../stores/RequestStore');
 var n = require('./notifications');
 var NotificationCenterView = n.NotificationCenterView;
 var RecentNotificationListView = n.RecentNotificationListView;
-var Shutter = require('./common/Shutter.react');
-var utils = require('../utils');
 
 
 function getAppState() {
@@ -19,7 +17,6 @@ function getAppState() {
         current_user: SessionStore.current_user(),
         isAuth: SessionStore.loggedIn(),
         notif_center_is_active: false,
-        appStateLoaded: RequestStore.is_app_state_loaded()
     }
 };
 
@@ -76,11 +73,6 @@ var CRMApp = React.createClass({
     },
 
     componentDidMount: function() {
-        utils.initial_load(function() {
-            this.appStateLoaded = true;
-            this.forceUpdate();
-        }.bind(this));
-
         RequestStore.addChangeListener(this._onChange);
     },
 
@@ -100,17 +92,12 @@ var CRMApp = React.createClass({
     },
 
     render: function() {
-        var classes = cx({
-            'body-container': true,
-            'display-shutter': !this.appStateLoaded,
-        });
         return (
-            <div className={classes}>
+            <div className='body-container'>
                 <Preloader />
                 <RouteHandler />
                 <RecentNotificationListView />
                 <NotificationCenterView isActive={this.state.notif_center_is_active} />
-                <Shutter />
             </div>
         )
     }

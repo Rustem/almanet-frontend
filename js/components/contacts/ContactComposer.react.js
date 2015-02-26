@@ -47,14 +47,10 @@ var ContactComposerForm = React.createClass({
 
   render: function() {
     return (
-      <div className="dropdown-menu dropdown-menu--verticalfit" style={{height: '310px'}}>
+      <div className="dropdown-menu dropdown-menu--verticalfit dropdown-menu--addContact">
         <div className="addContact">
-          <div className="addContact-import">
-            <ImportContactForm handleChoice={this.props.handleImportSubmit} />
-          </div>
-          <div className="addContact-edit">
-              <ContactCreateForm ref={FORM_REF} onHandleSubmit={this.props.handleSubmit} />
-          </div>
+          <ImportContactForm handleChoice={this.props.handleImportSubmit} />
+          <ContactCreateForm ref={FORM_REF} onHandleSubmit={this.props.handleSubmit} />
         </div>
       </div>
     )
@@ -79,7 +75,7 @@ var ContactComposer = React.createClass({
     },
 
     render: function() {
-        var stateClass = this.state['isOpen'] && 'open' || undefined;
+        var stateClass = this.isOpen() && 'open' || undefined;
         var classNames = ["dropdown", "dropdown--inline", "dropdown--right"];
         classNames.push(stateClass);
         classNames = _.compact(classNames)

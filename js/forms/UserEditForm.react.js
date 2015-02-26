@@ -10,6 +10,8 @@ var VCardElement = require('./VCardWidgets.react').VCardElement;
 var AppContextMixin = require('../mixins/AppContextMixin');
 var VCardProcessingBehaviour = require('./behaviours/VCardProcessingBehaviour');
 
+var VCARD_MODE = require('../constants/CRMConstants').VCARD_MODE;
+
 var UserEditForm = React.createClass({
   mixins : [AppContextMixin, VCardProcessingBehaviour],
 
@@ -22,7 +24,7 @@ var UserEditForm = React.createClass({
     var fields = ['fn', 'titles', 'tels', 'emails', 'urls', 'adrs'];
     return (
       <Form {...this.props} value={value} ref='user_edit_form' onSubmit={this.onHandleSubmit}>
-        <VCardElement name="vcard" fields={fields} />
+        <VCardElement name="vcard" fields={fields} mode={VCARD_MODE.USER} />
       </Form>
     )
   },

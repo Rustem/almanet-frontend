@@ -7,6 +7,7 @@ var UserEditForm = require('../../forms/UserEditForm.react');
 var VIEW_MODES_MAP = require('../../constants/CRMConstants').CONTACT_VIEW_MODE;
 var VIEW_MODES = _.values(VIEW_MODES_MAP);
 var keyMirror = require('react/lib/keyMirror');
+var utils = require('../../utils');
 
 var ContactStore = require('../../stores/ContactStore');
 
@@ -197,6 +198,7 @@ var ContactVCard = React.createClass({
     },    
 
     render_read: function() {
+        var CONTACT_TYPES = utils.get_constants('contact').tp_hash;
         var contact = this.props.contact;
         var RelatedContactsWidget = this.renderContacts(contact);
         var RelatedCompanyWidget = this.renderCompany(contact.id);
@@ -209,12 +211,14 @@ var ContactVCard = React.createClass({
                         <div className="inputLine-negativeTrail text-large text-strong">
                           {contact.vcard.fn}
                       </div>
-                      <div className="inputLine-negativeTrail text-secondary">
+                      {contact.tp == CONTACT_TYPES.USER ? 
+                      [<div className="inputLine-negativeTrail text-secondary">
                         {contact.vcard.orgs.map(this.renderOrg)}
-                      </div>
+                      </div>,
                       <div className="inputLine-negativeTrail text-secondary">
                         {contact.vcard.titles.map(this.renderTitle)}
-                      </div>
+                      </div>]
+                       : undefined}
                     </div>
                   </div>
                 </div>
