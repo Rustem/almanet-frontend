@@ -84,7 +84,7 @@ var SharedContactLink = React.createClass({
         var routes = this.getRoutes();
         var route = routes[routes.length - 1];
         if(!route) { return false; }
-        return route.name === 'shared' || route.name === 'shared_default';
+        return route.name === 'shared';
     },
 });
 

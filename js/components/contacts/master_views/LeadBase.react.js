@@ -14,8 +14,9 @@ var Link = Router.Link;
 var IconSvg = require('../../common/IconSvg.react');
 var Modal = require('../../common/Modal.react');
 var ContactActionCreators = require('../../../actions/ContactActionCreators');
-var ContactStore = require('../../../stores/ContactStore');
 var ShareStore = require('../../../stores/ShareStore');
+var ContactStore = require('../../../stores/ContactStore');
+var ActivityStore = require('../../../stores/ActivityStore');
 var AppContextMixin = require('../../../mixins/AppContextMixin');
 var ContactShareForm = require('../../../forms/ContactShareForm.react');
 var Form = require('../../../forms/Form.react');
@@ -25,31 +26,33 @@ var Div = require('../../../forms/Fieldset.react').Div;
 var Crumb = require('../../common/BreadCrumb.react').Crumb;
 var CommonFilterBar = require('../FilterComposer.react').CommonFilterBar;
 
-function get_contacts_number() {
-    return _.size(ContactStore.getLeads(true));
+function get_contacts_number(user) {
+    return _.size(ContactStore.getLeads(user));
 }
 
 
 var LeadBaseLink = React.createClass({
-    mixins: [Router.State],
+    mixins: [Router.State, AppContextMixin],
     propTypes: {
         label: React.PropTypes.string,
     },
 
     getInitialState: function() {
-        return {'amount': get_contacts_number()};
+        return {'amount': get_contacts_number(this.getUser())};
     },
 
     componentDidMount: function() {
         ContactStore.addChangeListener(this._onChange);
+        ActivityStore.addChangeListener(this._onChange);
     },
 
     componentWillUnmount: function() {
         ContactStore.removeChangeListener(this._onChange);
+        ActivityStore.removeChangeListener(this._onChange);
     },
 
     _onChange: function() {
-        this.setState({'amount': get_contacts_number()});
+        this.setState({'amount': get_contacts_number(this.getUser())});
     },
 
     render: function() {
@@ -77,7 +80,7 @@ var LeadBaseLink = React.createClass({
         var routes = this.getRoutes();
         var route = routes[routes.length - 1];
         if(!route) { return false; }
-        return route.name === 'leadbase';
+        return route.name === 'leadbase' || route.name === 'leadbase_default';
     }
 });
 
@@ -205,13 +208,13 @@ var LeadBaseList = React.createClass({
 
 
 var LeadBaseDetailView = React.createClass({
-    mixins: [Router.Navigation,AppContextMixin],
+    mixins: [Router.Navigation, AppContextMixin],
     propTypes: {
         label: React.PropTypes.string
     },
     getInitialState: function() {
         var selection_map = {};
-        contacts = ContactStore.getLeads(true);
+        contacts = ContactStore.getLeads(this.getUser());
         for(var i = 0; i < contacts.length; i++) {
             selection_map[contacts[i].id] = false;
         }
@@ -250,11 +253,13 @@ var LeadBaseDetailView = React.createClass({
     componentDidMount: function() {
         ShareStore.addChangeListener(this._onChange);
         ContactStore.addChangeListener(this._onChange);
+        ActivityStore.addChangeListener(this._onChange);
     },
 
     componentWillUnmount: function(nextProps, nextState) {
         ShareStore.removeChangeListener(this._onChange);
         ContactStore.removeChangeListener(this._onChange);
+        ActivityStore.removeChangeListener(this._onChange);
     },
 
     componentDidUpdate: function(prevProps, prevState) {
@@ -301,7 +306,7 @@ var LeadBaseDetailView = React.createClass({
                 this.state.contacts, value.filter_text, {
                     'keys': ['vcard.fn', 'vcard.emails.value']});
         } else {
-            contacts = ContactStore.getLeads(true);
+            contacts = ContactStore.getLeads(this.getUser());
         }
         for(var contact_id in this.state.selection_map) {
             _map[contact_id] = false;
