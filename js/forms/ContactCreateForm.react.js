@@ -64,8 +64,8 @@ var ContactCreateForm = React.createClass({
       'vcard': {
         'fn': undefined,
         'orgs': [{'organization_name': undefined}],
-        'emails': [{'idx': 0, 'type': 'internet', 'value': undefined}],
-        'tels': [{'idx': 0, 'type': 'work', 'value': undefined}],
+        'emails': [{'type': 'internet', 'value': undefined}],
+        'tels': [{'type': 'work', 'value': undefined}],
         'urls': [],
         'adrs': [],
       },

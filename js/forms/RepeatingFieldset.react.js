@@ -65,7 +65,7 @@ var RepeatingFieldsetMixin = {
 
         value.splice(idx, 1);
         upd[this.props.name] = value;
-        this.updateValue(this.prepValue(this.props.name, value));
+        this.onValueUpdate(upd);
     },
 
      /**
