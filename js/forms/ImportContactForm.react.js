@@ -35,18 +35,12 @@ var ImportContactForm = React.createClass({
         return (
             <form ref="contact_import_form">
                 <input name="vcfile" type="file" onChange={this.handleFileDialogChange} ref="file_dialog" hidden />
-                <button onClick={this.handleClick} type="button" className="btn btn--import">
-                  <div className="row-body">
-                    <div className="row-icon">
-                        <IconSvg iconKey="upload" />
-                    </div>
-                    <div className="row-body">
-                      Импорт
-                    </div>
-                  </div>
-                </button>
-                <div className="inputLine-caption">
-                  Поддерживаемые форматы: vCard
+                <div className='addContact-import'>
+                  <button onClick={this.handleClick} type="button" className="btn btn--import">
+                    <IconSvg iconKey='upload' />
+                    Импорт
+                  </button>
+                  <div className="inputLine-caption">Поддерживаемые форматы: .vcf, .xls, .xlsx</div>
                 </div>
             </form>
         )

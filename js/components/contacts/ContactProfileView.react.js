@@ -75,9 +75,8 @@ var DropdownControlBar = React.createClass({
         return (
             <div className={className}>
                 <button ref='menuToggler' type="button" className="row row--oneliner row--link"
-                                          onKeyDown={this.onKeyDown}
-                                          onClick={this.onMenuToggle}
-                                          onBlur={this.onMenuTogglerBlur}>
+                        onKeyDown={this.onKeyDown}
+                        onClick={this.onMenuToggle}>
                     <div className="row-icon">
                         <IconSvg iconKey="more" />
                     </div>
@@ -85,7 +84,7 @@ var DropdownControlBar = React.createClass({
                         Опции
                     </div>
                 </button>
-                <div className="dropdown-menu">
+                <div ref="menuBody" className="dropdown-menu">
                     <a href="#" onClick={this.props.actionSelected.bind(null, ACTIONS.SHARE)} className="row row--oneliner row--link">
                         <div className="row-icon text-good">
                             <IconSvg iconKey="share" />

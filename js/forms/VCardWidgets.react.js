@@ -31,6 +31,7 @@ var InputText = inputs.InputText;
 var InputTextarea = inputs.InputTextarea;
 var SVGCheckbox = inputs.SVGCheckbox;
 
+var VCARD_MODE = require('../constants/CRMConstants').VCARD_MODE;
 
 var getDefaultEmailValue = function() {
     return {
@@ -42,7 +43,7 @@ var getDefaultEmailValue = function() {
 
 var getDefaultTelValue = function() {
     return {
-        type: 'mobile',
+        type: 'home',
         value: undefined
     }
 };
@@ -69,35 +70,23 @@ var VCardRow = React.createClass({
     mixins: [FieldsetMixin],
 
     propTypes: {
-        label: React.PropTypes.string
+        label: React.PropTypes.string,
+        placeholder: React.PropTypes.string,
     },
 
     render: function() {
         return (
-            <div className="inputLine inputLine--vcardRow">
-                <div className="row">
-                    <div className="row-icon"></div>
+            <div className='inputLines'>
+              <div className='inputLine'>
+                <div className='inputLine--inflated'>
+                  <strong>{ this.props.label }</strong>
                 </div>
-                <div className="row-body">
-                    <div className="inputLine-negativeTrail row-body--aligned">
-                        {this.renderLabel()}
-                    </div>
-                </div>
-                <div className="inputLine-div">
-                    <InputTextarea {...this.props} className='input-div input-div--area'/>
-                </div>
+                <InputTextarea {...this.props} />
+              </div>
             </div>
         )
     },
-    renderLabel: function() {
-        return (
-          <label
-            className="text-caption text-secondary row-body--aligned"
-            htmlFor={this.props.name}>
-            {this.props.label}
-          </label>
-        );
-    }
+
 });
 
 var EmailVCardComponentItem = React.createClass({
@@ -115,31 +104,28 @@ var EmailVCardComponentItem = React.createClass({
         var value = this.props.value;
         var options = this.props.options;
         return (
-            <div {...this.props} className="inputLine inputLine--vcardRow">
-                <div className="row">
-                    <div className="row-icon">
-                        <button type="button" onClick={this.onRemove.bind(null, this.props.index)}>
-                            <IconSvg iconKey="remove" />
-                        </button>
-                    </div>
-                    <div className="row-body">
-                        <div onFocus={this.props.onAddItem.bind(null, this.props.index)} className="inputLine-negativeTrail row-body--aligned">
-                            <SimpleSelect
-                                name="type"
-                                options={options}
-                                value={value.type}
-                                Component='div'
-                                onValueUpdate={this.props.onTypeChange.bind(null, this.props.index)} />
-                            <div className="inputLine-div">
-                                <InputText
-                                    value={value.value}
-                                    name="value"
-                                    onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div'
-                                    placeholder="E-mail" />
-                            </div>
-                        </div>
-                    </div>
+            <div {...this.props} className='inputLine inputLine--compound'>
+                <div className='inputLine'>
+                  <button type='button' onClick={this.onRemove.bind(null, this.props.index)}>
+                    <IconSvg iconKey='remove' />
+                  </button>
+                </div>
+                <div className='inputLine inputLine--body'>
+                  <div className='inputLine--inflated'>
+                    <strong className='addContact-inputLine-label'>
+                      Email:
+                    </strong>
+                    <SimpleSelect
+                        name="type"
+                        options={options}
+                        value={value.type}
+                        Component='div'
+                        onValueUpdate={this.props.onTypeChange.bind(null, this.props.index)} />
+                  </div>
+                  <InputText value={value.value}
+                             name="value"
+                             onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
+                             placeholder='Введите email' />
                 </div>
             </div>
         )
@@ -164,13 +150,19 @@ var EmailVCardComponent = React.createClass({
     render: function() {
         var self = this;
         var extraOptions = {
-            'onAddItem': self.onAddItem,
             'options': self.props.options,
             'onTypeChange': self.onChange,
             'onValueChange': self.onChange};
         var fields = this.renderFields(extraOptions);
         return (
-            <div {...this.props} className="">{fields}</div>
+            <div className='inputLines'>
+                <div {...this.props} className="">{fields}</div>
+                <div className='inputLine inputLine---inflated inputLine--r'>
+                    <button type='button' className='button-u button-u--safe' onClick={this.onAddItem} >
+                      Добавить email
+                    </button>
+                </div>
+            </div>
         )
     },
 
@@ -198,31 +190,28 @@ var TelVCardComponentItem = React.createClass({
         var value = this.props.value;
         var options = this.props.options;
         return (
-            <div {...this.props} className="inputLine inputLine--vcardRow">
-                <div className="row">
-                    <div className="row-icon">
-                        <button type="button" onClick={this.onRemove.bind(null, this.props.index)}>
-                            <IconSvg iconKey="remove" />
-                        </button>
-                    </div>
-                    <div className="row-body">
-                        <div onFocus={this.props.onAddItem.bind(null, this.props.index)} className="inputLine-negativeTrail row-body--aligned">
-                            <SimpleSelect
-                                name="type"
-                                options={options}
-                                value={value.type}
-                                Component='div'
-                                onValueUpdate={this.props.onTypeChange.bind(null, this.props.index)} />
-                            <div className="inputLine-div">
-                                <InputText
-                                    value={value.value}
-                                    name="value"
-                                    onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div'
-                                    placeholder="Телефон" />
-                            </div>
-                        </div>
-                    </div>
+            <div {...this.props} className='inputLine inputLine--compound'>
+                <div className='inputLine'>
+                  <button type='button' onClick={this.onRemove.bind(null, this.props.index)}>
+                    <IconSvg iconKey='remove' />
+                  </button>
+                </div>
+                <div className='inputLine inputLine--body'>
+                  <div className='inputLine--inflated'>
+                    <strong className='addContact-inputLine-label'>
+                      Телефон:
+                    </strong>
+                    <SimpleSelect
+                        name="type"
+                        options={options}
+                        value={value.type}
+                        Component='div'
+                        onValueUpdate={this.props.onTypeChange.bind(null, this.props.index)} />
+                  </div>
+                  <InputText value={value.value}
+                             name="value"
+                             onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
+                             placeholder='Введите телефон' />
                 </div>
             </div>
         )
@@ -247,13 +236,19 @@ var TelVCardComponent = React.createClass({
     render: function() {
         var self = this;
         var extraOptions = {
-            'onAddItem': self.onAddItem,
             'options': self.props.options,
             'onTypeChange': self.onChange,
             'onValueChange': self.onChange};
         var fields = this.renderFields(extraOptions);
         return (
-            <div {...this.props} className="">{fields}</div>
+            <div className='inputLines'>
+                <div {...this.props} className="">{fields}</div>
+                <div className='inputLine inputLine---inflated inputLine--r'>
+                    <button type='button' className='button-u button-u--safe' onClick={this.onAddItem} >
+                      Добавить телефон
+                    </button>
+                </div>
+            </div>
         )
     },
 
@@ -280,31 +275,28 @@ var UrlVCardComponentItem = React.createClass({
         var value = this.props.value;
         var options = this.props.options;
         return (
-            <div {...this.props} className="inputLine inputLine--vcardRow">
-                <div className="row">
-                    <div className="row-icon">
-                        <button type="button" onClick={this.onRemove.bind(null, this.props.index)}>
-                            <IconSvg iconKey="remove" />
-                        </button>
-                    </div>
-                    <div className="row-body">
-                        <div onFocus={this.props.onAddItem.bind(null, this.props.index)} className="inputLine-negativeTrail row-body--aligned">
-                            <SimpleSelect
-                                name="type"
-                                options={options}
-                                value={value.type}
-                                Component='div'
-                                onValueUpdate={this.props.onTypeChange.bind(null, this.props.index)} />
-                            <div className="inputLine-div">
-                                <InputText
-                                    value={value.value}
-                                    name="value"
-                                    onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div'
-                                    placeholder="URL" />
-                            </div>
-                        </div>
-                    </div>
+            <div {...this.props} className='inputLine inputLine--compound'>
+                <div className='inputLine'>
+                  <button type='button' onClick={this.onRemove.bind(null, this.props.index)}>
+                    <IconSvg iconKey='remove' />
+                  </button>
+                </div>
+                <div className='inputLine inputLine--body'>
+                  <div className='inputLine--inflated'>
+                    <strong className='addContact-inputLine-label'>
+                      Сайт:
+                    </strong>
+                    <SimpleSelect
+                        name="type"
+                        options={options}
+                        value={value.type}
+                        Component='div'
+                        onValueUpdate={this.props.onTypeChange.bind(null, this.props.index)} />
+                  </div>
+                  <InputText value={value.value}
+                             name="value"
+                             onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
+                             placeholder='Введите url' />
                 </div>
             </div>
         )
@@ -329,13 +321,19 @@ var UrlVCardComponent = React.createClass({
     render: function() {
         var self = this;
         var extraOptions = {
-            'onAddItem': self.onAddItem,
             'options': self.props.options,
             'onTypeChange': self.onChange,
             'onValueChange': self.onChange};
         var fields = this.renderFields(extraOptions);
         return (
-            <div {...this.props} className="">{fields}</div>
+            <div className='inputLines'>
+                <div {...this.props} className="">{fields}</div>
+                <div className='inputLine inputLine---inflated inputLine--r'>
+                    <button type='button' className='button-u button-u--safe' onClick={this.onAddItem} >
+                      Добавить сайт
+                    </button>
+                </div>
+            </div>
         )
     },
 
@@ -362,62 +360,44 @@ var AddressVCardComponentItem = React.createClass({
         var value = this.props.value;
         var options = this.props.options;
         return (
-            <div {...this.props} className="inputLine inputLine--vcardRow">
-                <div className="row">
-                    <div className="row-icon">
-                        <button type="button" onClick={this.onRemove.bind(null, this.props.index)}>
-                            <IconSvg iconKey="remove" />
-                        </button>
-                    </div>
-                    <div className="row-body">
-                        <div onFocus={this.props.onAddItem.bind(null, this.props.index)} className="inputLine-negativeTrail row-body--aligned">
-                            <SimpleSelect
-                                name="type"
-                                options={options}
-                                value={value.type}
-                                Component='div'
-                                onValueUpdate={this.props.onTypeChange.bind(null, this.props.index)} />
-                            <div className="inputLine-div">
-                                <InputText
-                                    value={value.street_address}
-                                    name="street_address"
-                                    onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div'
-                                    placeholder="Улица" />
-                            </div>
-                            <div className="inputLine-div">
-                                <InputText
-                                    value={value.region}
-                                    name="region"
-                                    onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div'
-                                    placeholder="Город" />
-
-                                <InputText
-                                    value={value.locality}
-                                    name="locality"
-                                    onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div'
-                                    placeholder="Район" />
-                            </div>
-                            <div className="inputLine-div">
-                                <InputText
-                                    value={value.country_name}
-                                    name="country_name"
-                                    onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div'
-                                    placeholder="Страна" />
-                            </div>
-                            <div className="inputLine-div">
-                                <InputText
-                                    value={value.postal_code}
-                                    name="postal_code"
-                                    onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
-                                    className='input-div'
-                                    placeholder="Почтовый индекс" />
-                            </div>
-                        </div>
-                    </div>
+            <div {...this.props} className='inputLine inputLine--compound'>
+                <div className='inputLine'>
+                  <button type='button' onClick={this.onRemove.bind(null, this.props.index)}>
+                    <IconSvg iconKey='remove' />
+                  </button>
+                </div>
+                <div className='inputLine inputLine--body'>
+                  <div className='inputLine--inflated'>
+                    <strong className='addContact-inputLine-label'>
+                      Адрес:
+                    </strong>
+                    <SimpleSelect
+                        name="type"
+                        options={options}
+                        value={value.type}
+                        Component='div'
+                        onValueUpdate={this.props.onTypeChange.bind(null, this.props.index)} />
+                  </div>
+                  <InputText value={value.street_address}
+                             name="street_address"
+                             onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
+                             placeholder='Улица' /> <br />
+                  <InputText value={value.region}
+                             name="region"
+                             onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
+                             placeholder='Город' />
+                  <InputText value={value.locality}
+                             name="locality"
+                             onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
+                             placeholder='Район' /> <br />
+                  <InputText value={value.country_name}
+                             name="country_name"
+                             onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
+                             placeholder='Страна' /> <br />
+                  <InputText value={value.postal_code}
+                             name="postal_code"
+                             onValueUpdate={this.props.onValueChange.bind(null, this.props.index)}
+                             placeholder='Почтовый индекс' />
                 </div>
             </div>
         )
@@ -443,13 +423,19 @@ var AddressVCardComponent = React.createClass({
     render: function() {
         var self = this;
         var extraOptions = {
-            'onAddItem': self.onAddItem,
             'options': self.props.options,
             'onTypeChange': self.onChange,
             'onValueChange': self.onChange};
         var fields = this.renderFields(extraOptions);
         return (
-            <div {...this.props} className="">{fields}</div>
+            <div className='inputLines'>
+                <div {...this.props} className="">{fields}</div>
+                <div className='inputLine inputLine---inflated inputLine--r'>
+                    <button type='button' className='button-u button-u--safe' onClick={this.onAddItem} >
+                      Добавить адрес
+                    </button>
+                </div>
+            </div>
         )
     },
 
@@ -465,9 +451,9 @@ var FNVCardComponent = React.createClass({
 
     render: function() {
         return (
-            <Fieldset className="inputLine-negativeTrail">
-              <InputText className="input-div input-div--strong" name='fn' {...this.props} placeholder="Имя Фамилия" />
-            </Fieldset>
+            <div className='inputLine inputLine--heading inputLine--body'>
+                <InputText name='fn' {...this.props} />
+            </div>
         )
     },
 });
@@ -476,9 +462,9 @@ var OrgsVCardComponent = React.createClass({
 
     render: function() {
         return (
-            <Fieldset className="inputLine-negativeTrail">
-              <InputText className="input-div text-secondary" name='orgs' {...this.props} placeholder="Организация" />
-            </Fieldset>
+            <div className='inputLine'>
+                <InputText name='orgs' {...this.props} placeholder='Организация' />
+            </div>
         )
     },
 });
@@ -487,9 +473,9 @@ var TitlesVCardComponent = React.createClass({
 
     render: function() {
         return (
-            <Fieldset className="inputLine-negativeTrail">
-              <InputText className="input-div text-secondary" name='titles' {...this.props} placeholder="Должность" />
-            </Fieldset>
+            <div className='inputLine inputLine--caption'>
+                <InputText placeholder='Должность' name='titles' {...this.props} />
+            </div>
         )
     },
 });
@@ -500,48 +486,105 @@ var VCardElement = React.createClass({
         fields: React.PropTypes.array.isRequired,
     },
 
+    getDefaultProps: function() {
+        return {
+            mode: VCARD_MODE.CONTACT
+        }
+    },
+
+    getInitialState: function() {
+        var value = this.value() || {};
+        return {
+            company_mode: this.tpUnConverter(value.tp)
+        };
+    },
+
+    handleCompanyModeChange: function() {
+        this.setState({
+            company_mode: !this.state.company_mode
+        });
+    },
+
     componentWillMount: function() {
+        this.CONTACT_TYPES = utils.get_constants('contact').tp_hash;
         var value = this.value();
         _.forEach(this.props.fields, function(f){
             this[f] = value[f];
         }.bind(this));
-
-        this.CONTACT_TYPES = utils.get_constants('contact') && utils.get_constants('contact').tp_hash;
+        this.setState(this.getInitialState());
     },
 
-    renderFields: function() {
+    renderContact: function() {
         var value = this.value() || {};
-        var Components = {
-            'fn': <FNVCardComponent value={value.fn} onValueUpdate={this.onFnChange} />,
-            'orgs': <OrgsVCardComponent value={this.orgValue(value.orgs)} onValueUpdate={this.onOrgChange} />,
-            'titles': <TitlesVCardComponent value={this.titleValue(value.titles)} onValueUpdate={this.onTitlesChange} />,
+        var importHeading;
+        var individualFields;
 
-            'tp': <SVGCheckbox name="tp" label="Компания" className="row input-checkboxCompact" value={this.tpUnConverter(value.tp)} onValueUpdate={this.onTPChange} />,
-
-            'emails': (<div><EmailVCardComponent name="emails" value={this.emailValue(value.emails)} options={[['internet', 'адрес в формате интернета'], ['pref', 'предпочитаемый']]} onValueUpdate={this.onEmailsChange} />
-                     <div className="space-verticalBorder"></div></div>),
-
-            'tels': (<div><TelVCardComponent name="tels" value={this.telValue(value.tels)} options={[['home', 'по месту проживания'], ['work', 'по месту работы']]} onValueUpdate={this.onTelsChange} />
-                   <div className="space-verticalBorder"></div></div>),
-
-            'urls': (<div><UrlVCardComponent name="urls" value={this.urlValue(value.urls)} options={[['website', 'website'], ['github', 'github']]} onValueUpdate={this.onUrlsChange} />
-                   <div className="space-verticalBorder"></div></div>),
-
-            'adrs': <AddressVCardComponent name="adrs" value={this.adrValue(value.adrs)} options={[['home', 'место проживания'], ['work', 'место работы']]} onValueUpdate={this.onAdrsChange} />,
+        if (this.state.company_mode) {
+            importHeading = <FNVCardComponent key='org_fn' value={value.fn} onValueUpdate={this.onFnChange} placeholder='Название организации'/>;
+        } else {
+            importHeading = <FNVCardComponent key='fiz_fn' value={value.fn} onValueUpdate={this.onFnChange} placeholder='Имя фамилия'/>;
+            individualFields = [
+                <OrgsVCardComponent value={this.orgValue(value.orgs)} onValueUpdate={this.onOrgChange} />,
+                <TitlesVCardComponent value={this.titleValue(value.titles)} onValueUpdate={this.onTitlesChange} />
+            ];
         }
-        var rv = {};
-        this.props.fields.forEach(function(f, index){
-            rv['key_'+index] = Components[f];
-        });
-        return rv;
+
+        return (
+            <div>
+                <div className='inputLines'>
+                  <div className='inputLine inputLine--compound'>
+                    {importHeading}
+                    <div className='inputLine'>
+                        <SVGCheckbox name="tp" 
+                                     label="Компания" 
+                                     className="compact" 
+                                     value={this.tpUnConverter(value.tp)} 
+                                     onValueUpdate={this.onTPChange} />
+                    </div>
+                  </div>
+                  {individualFields}
+                </div>
+                <TelVCardComponent name="tels" value={value.tels} options={[['home', 'по месту проживания'], ['work', 'по месту работы']]} onValueUpdate={this.onTelsChange} />
+                <EmailVCardComponent name="emails" value={value.emails} options={[['internet', 'работа'], ['pref', 'персональный']]} onValueUpdate={this.onEmailsChange} />
+                <UrlVCardComponent name="urls" value={value.urls} options={[['website', 'работа'], ['github', 'персональный']]} onValueUpdate={this.onUrlsChange} />
+                <AddressVCardComponent name="adrs" value={value.adrs} options={[['home', 'место проживания'], ['work', 'место работы']]} onValueUpdate={this.onAdrsChange} />
+            </div>
+        )
+    },
+
+    renderUser: function() {
+        var value = this.value() || {};
+
+        var importHeading = <FNVCardComponent key='fiz_fn' value={value.fn} onValueUpdate={this.onFnChange} placeholder='Имя фамилия'/>;
+        var individualFields = [
+            <OrgsVCardComponent value={this.orgValue(value.orgs)} onValueUpdate={this.onOrgChange} />,
+            <TitlesVCardComponent value={this.titleValue(value.titles)} onValueUpdate={this.onTitlesChange} />
+        ];
+
+        return (
+            <div>
+                <div className='inputLines'>
+                  <div className='inputLine inputLine--compound'>
+                    {importHeading}
+                  </div>
+                  {individualFields}
+                </div>
+                <TelVCardComponent name="tels" value={value.tels} options={[['home', 'по месту проживания'], ['work', 'по месту работы']]} onValueUpdate={this.onTelsChange} />
+                <EmailVCardComponent name="emails" value={value.emails} options={[['internet', 'работа'], ['pref', 'персональный']]} onValueUpdate={this.onEmailsChange} />
+                <UrlVCardComponent name="urls" value={value.urls} options={[['website', 'работа'], ['github', 'персональный']]} onValueUpdate={this.onUrlsChange} />
+                <AddressVCardComponent name="adrs" value={value.adrs} options={[['home', 'место проживания'], ['work', 'место работы']]} onValueUpdate={this.onAdrsChange} />
+            </div>
+        )
     },
 
     render: function() {
-        return (
-            <div>
-                {this.renderFields()}
-            </div>
-        )
+        var Component;
+
+        if(this.props.mode == VCARD_MODE.CONTACT)
+            Component = this.renderContact();
+        else
+            Component = this.renderUser();
+        return Component
     },
 
     orgValue: function(orgs) {
@@ -554,30 +597,6 @@ var VCardElement = React.createClass({
         if(titles == undefined || titles.length == 0)
             return ''
         return titles[0].data
-    },
-
-    emailValue: function(emails) {
-        if(emails == undefined || emails.length == 0)
-            return [getDefaultEmailValue()]
-        return emails
-    },
-
-    telValue: function(tels) {
-        if(tels == undefined || tels.length == 0)
-            return [getDefaultTelValue()]
-        return tels
-    },
-
-    urlValue: function(urls) {
-        if(urls == undefined || urls.length == 0)
-            return [getDefaultUrlValue()]
-        return urls
-    },
-
-    adrValue: function(adrs) {
-        if(adrs == undefined || adrs.length == 0)
-            return [getDefaultAddressValue()]
-        return adrs
     },
 
     tpUnConverter: function(v) {
@@ -608,6 +627,7 @@ var VCardElement = React.createClass({
     },
 
     onTPChange: function(value) {
+        this.handleCompanyModeChange();
         this.tp = this.tpConverter(value.tp);
         this.onChange();
     },

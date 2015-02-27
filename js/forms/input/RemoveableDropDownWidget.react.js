@@ -38,8 +38,7 @@ var FilterableDropDownWidget = React.createClass({
 
                     <div ref="menuToggler"  className="row-body row-body--inverted"
                                             onKeyDown={this.onKeyDown}
-                                            onClick={this.onMenuToggle}
-                                            onBlur={this.onMenuTogglerBlur}>
+                                            onClick={this.onMenuToggle}>
                         <div className="row-body-secondary">
                             <div className="row-icon">
                                 <IconSvg iconKey="arrow-down" />
@@ -50,7 +49,7 @@ var FilterableDropDownWidget = React.createClass({
                         </div>
                     </div>
                 </div>
-                <div className="dropdown-menu dropdown-menu--wide">
+                <div ref="menuBody" className="dropdown-menu dropdown-menu--wide">
                     <div className="dropdown-menu-body">
                         <ul className="dropdown-menu-list">
                             {this.props.choices.map(this.renderChoice)}

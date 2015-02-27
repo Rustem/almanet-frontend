@@ -6,49 +6,22 @@
 var _ = require('lodash');
 var RSVP = require('rsvp');
 var React = require('react');
-var Router = require('react-router');
-var whenKeysAll = require('when/keys').all;
-var BreadcrumbStore = require('./stores/BreadcrumbStore');
-var routes = require('./router').routes;
-var NODES = require('./router').NODES;
-var relationships = require('./router').relationships;
-var moment = require('moment');
-//var Fixtures = require('./fixtures');
-//Fixtures.init();
+var InitialLoadingView = require('./components/common/InitialLoadingView.react');
 
-// TODO: use promises
-// load initial data to services
+// var moment = require('moment');
+// var moment_locale_ru = require('moment/locale/ru');
+// //var Fixtures = require('./fixtures');
+// //Fixtures.init();
 
+// // TODO: use promises
+// // load initial data to services
 
-function configure() {
-  moment.locale('ru-RU');
-};
+// function configure() {
+//   moment.locale('ru', moment_locale_ru);
+// };
 
 function render_app() {
-  // breadcrumb store is mutable store but the logic remaining as flux
-  BreadcrumbStore.initialize(NODES, relationships);
-
-  // render app
-
-  configure();
-  Router.run(routes, function(Handler, state){
-      // create the promises hash
-      var promises = state.routes.filter(function (route) {
-        // gather up the handlers that have a static `fetchData` method
-        return route.handler.fetchData;
-      }).reduce(function (promises, route) {
-        // reduce to a hash of `key:promise`
-        promises[route.name] = route.handler.fetchData(state.params);
-        return promises;
-      }, {});
-
-      whenKeysAll(promises).then(function (data) {
-        // wait until we have data to render, the old screen stays up
-        // until we render
-        BreadcrumbStore.update(state.routes, state.params, state.query);
-        React.render(<Handler />, document.getElementById('js-crm-app'));
-      });
-  });
+    React.render(<InitialLoadingView />, document.getElementById('js-crm-app'));
 }
 
 render_app();

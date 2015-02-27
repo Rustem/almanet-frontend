@@ -29,7 +29,7 @@ var ProfileView = require('./components/profile/ProfileView.react')
 var routes = (
     <Route name="main" path="/" handler={CRMApp}>
         <Route name="contacts" path="/contacts" handler={Contacts}>
-            <DefaultRoute name='shared_default' handler={contacts_master_views.Shared.DetailView} />
+            <DefaultRoute name='leadbase_default' handler={contacts_master_views.LeadBase.DetailView} />
             <Route name='shared' handler={contacts_master_views.Shared.DetailView} />
             <Route name='allbase' handler={contacts_master_views.AllBase.DetailView} />
             <Route name='recent' handler={contacts_master_views.Recent.DetailView} />
@@ -89,7 +89,7 @@ module.exports.NODES = {
     'filtered': new Node('filtered', function(params) {
         return this.get(params.id).title;
     }.bind(require('./stores/FilterStore'))),
-    'shared_default': new Node('shared_default', 'Входящие'),
+    'leadbase_default': new Node('leadbase_default', 'Контакты в обработке'),
     'main': new Node('main', 'главная'),
     'activities': new Node('activities', 'События'),
     'activity_selected': new Node('activity_selected', "Выбранное взаимодействие"),
@@ -108,7 +108,7 @@ module.exports.NODES = {
 }
 
 module.exports.relationships = {
-    'contacts_selected': ['contacts', 'shared', 'shared_default', 'coldbase', 'allbase', 'leadbase', 'recent'],
+    'contacts_selected': ['contacts', 'shared', 'leadbase_default', 'coldbase', 'allbase', 'leadbase', 'recent'],
     'contact_profile': ['contact_selected', 'contacts_selected'],
     'activities_by': ['contact_selected', 'contacts_selected'],
     'activities_by_default': ['contact_selected', 'contacts_selected'],

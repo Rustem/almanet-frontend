@@ -34,10 +34,11 @@ var RepeatingFieldsetMixin = {
    * @returns {Array.<ReactComponent>}
    */
     renderFields: function(extraOptions) {
-        var value = (this.value() && this.value().length > 0) ? this.value() : [this.props.getDefaultItemValue()];
+        var value = this.value()
         var ItemComponent = this.props.item;
         var self = this;
         var children = value.map(function(itemValue, idx){
+
             var unique_name = self.props.name + '--' + idx;
             return (
                 <ItemComponent
@@ -59,34 +60,27 @@ var RepeatingFieldsetMixin = {
     */
 
     onRemoveItem: function(idx) {
-        var value = (this.value() && this.value().length > 0) ? this.value() : [this.props.getDefaultItemValue()];
+        var value = this.value();
         var upd = {};
-        if(idx === 0 && value.length === 1) {
-            var defaultItem = this.props.getDefaultItemValue();
-            upd[this.props.name] = [defaultItem];
-            this.context.onValueUpdate(upd);
-        } else {
-            value.splice(idx, 1);
-            upd[this.props.name] = value;
-            this.context.onValueUpdate(upd);
-        }
+
+        value.splice(idx, 1);
+        upd[this.props.name] = value;
+        this.updateValue(this.prepValue(this.props.name, value));
     },
 
      /**
        * Add new value to fieldset's value.
        */
-    onAddItem: function(index) {
-        var value = (this.value() && this.value().length > 0) ? this.value() : [this.props.getDefaultItemValue()];
+    onAddItem: function() {
+        var value = this.value();
 
-        if(value.length - 1 === index) {
-            var itemValue = this.props.getDefaultItemValue();
-            // itemValue['idx'] = value.length;
-            value.push(itemValue);
+        var itemValue = this.props.getDefaultItemValue();
+        // itemValue['idx'] = value.length;
+        value.push(itemValue);
 
-            var upd = {};
-            upd[this.props.name] = value;
-            this.onValueUpdate(upd);
-        }
+        var upd = {};
+        upd[this.props.name] = value;
+        this.onValueUpdate(upd);
     }
 
 };

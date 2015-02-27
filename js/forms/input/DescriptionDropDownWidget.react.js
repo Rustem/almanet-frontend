@@ -30,9 +30,8 @@ var DescriptionDropDownWidget = React.createClass({
         return (
             <div className={className}>
                 <button ref="menuToggler" type="button" className="row row--oneliner row--dropdown"
-                                          onKeyDown={this.onKeyDown}
-                                          onClick={this.onMenuToggle}
-                                          onBlur={this.onMenuTogglerBlur}>
+                        onKeyDown={this.onKeyDown}
+                        onClick={this.onMenuToggle}>
                     <div className="row-body">
                         <div className="row-body-primary">
                             Или выберите из шаблона
@@ -44,7 +43,7 @@ var DescriptionDropDownWidget = React.createClass({
                         </div>
                     </div>
                 </button>
-                <div className="dropdown-menu dropdown-menu--wide">
+                <div ref="menuBody" className="dropdown-menu dropdown-menu--wide">
                     <div className="dropdown-menu-body">
                         <ul className="dropdown-menu-list">
                             {this.props.choices.map(this.renderChoice)}
