@@ -12,7 +12,9 @@ var Footer = require('../Footer.react');
 var ContactStore = require('../../stores/ContactStore');
 var ShareStore = require('../../stores/ShareStore');
 var FilterStore = require('../../stores/FilterStore');
+var ActivityStore = require('../../stores/ActivityStore');
 var ContactActionCreators = require('../../actions/ContactActionCreators');
+var AppContextMixin = require('../../mixins/AppContextMixin');
 var BreadCrumb = require('../common/BreadCrumb.react');
 var AllBase = require('./master_views').AllBase;
 var SharedBase = require('./master_views').Shared;
@@ -43,10 +45,12 @@ var ContactsSelectedViewMixin = {
 
     componentDidMount: function() {
         ContactStore.addChangeListener(this._onChange);
+        ActivityStore.addChangeListener(this._onChange);
     },
 
     componentWillUnmount: function(nextProps, nextState) {
         ContactStore.removeChangeListener(this._onChange);
+        ActivityStore.removeChangeListener(this._onChange);
     },
 
     shouldComponentUpdate: function(nextProps, nextState) {
@@ -415,7 +419,7 @@ var ColdBaseSelectedView = React.createClass({
 });
 
 var LeadBaseSelectedView = React.createClass({
-    mixins:[Router.State, ContactsSelectedViewMixin],
+    mixins:[Router.State, ContactsSelectedViewMixin, AppContextMixin],
 
     getList: function() {
         return <LeadBase.LeadBaseList
@@ -427,7 +431,7 @@ var LeadBaseSelectedView = React.createClass({
 
     getInitialState: function() {
         var selection_map = {},
-            contacts = ContactStore.getLeads(true);
+            contacts = ContactStore.getLeads(this.getUser());
 
         _selected_contacts = this.getQuery()['ids'] || [];
         var cnt = 0;
@@ -452,7 +456,7 @@ var LeadBaseSelectedView = React.createClass({
         if(value.filter_text) {
             contacts = ContactStore.fuzzySearch(value.filter_text, {'asc': false});
         } else {
-            contacts = ContactStore.getLeads(true);
+            contacts = ContactStore.getLeads(this.getUser());
         }
         for(var contact_id in this.state.selection_map) {
             _map[contact_id] = false;
@@ -491,7 +495,7 @@ var LeadBaseSelectedView = React.createClass({
         var contacts = null,
             newSelectionItems = {};
 
-        contacts = ContactStore.getLeads();
+        contacts = ContactStore.getLeads(this.getUser());
         for(var i = 0; i<contacts.length; i++) {
             if(!contacts[i].id in this.state.selection_map) {
                 newSelectionItems[contacts[i].id] = false;
@@ -618,7 +622,7 @@ var SharedBaseSelectedView = React.createClass({
 });
 
 var FilteredSelectedView = React.createClass({
-    mixins:[Router.State, ContactsSelectedViewMixin],
+    mixins:[Router.State, ContactsSelectedViewMixin, AppContextMixin],
 
     getList: function() {
         return <Filtered.FilteredList
@@ -645,7 +649,7 @@ var FilteredSelectedView = React.createClass({
             case 'cold':
                 return ContactStore.getColdByDate(true);
             case 'lead':
-                return ContactStore.getLeads(true);
+                return ContactStore.getLeads(this.getUser());
         }
     },
 

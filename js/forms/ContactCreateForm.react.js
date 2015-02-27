@@ -34,8 +34,10 @@ var ContactCreateForm = React.createClass({
         <VCardElement name="vcard" fields={fields} />
 
         <VCardRow name='note' label='Заметка' placeholder='Заметка' />
-        <div className="inputLine text-right">
-            <button className="btn btn--save" type="submit">Сохранить</button>
+        <div className='inputLine inputLine--submit'>
+          <button className='btn btn--save' type='submit'>
+            Сохранить
+          </button>
         </div>
       </Form>
     )
@@ -55,17 +57,17 @@ var ContactCreateForm = React.createClass({
   },
 
   getDefaultFormState: function() {
-    var CONTACT_TYPES = utils.get_constants('contact') && utils.get_constants('contact').tp_hash;
+    var CONTACT_TYPES = utils.get_constants('contact').tp_hash;
 
     return {
-      'tp': CONTACT_TYPES && CONTACT_TYPES.COMPANY,
+      'tp': CONTACT_TYPES.USER,
       'vcard': {
         'fn': undefined,
         'orgs': [{'organization_name': undefined}],
         'emails': [{'idx': 0, 'type': 'internet', 'value': undefined}],
         'tels': [{'idx': 0, 'type': 'work', 'value': undefined}],
-        'urls': [{'idx': 0, 'type': 'website', 'value': undefined}],
-        'adrs': [{'idx': 0, 'type': 'home', 'street_address': undefined, 'region': undefined, 'locality': undefined, 'country_name': undefined, 'postal_code': undefined}],
+        'urls': [],
+        'adrs': [],
       },
       'note': undefined
     };

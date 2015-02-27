@@ -10,6 +10,7 @@ var IconSvg = require('../common/IconSvg.react');
 var Form = require('../../forms/Form.react');
 var ContactStore = require('../../stores/ContactStore');
 var FilterStore = require('../../stores/FilterStore');
+var ActivityStore = require('../../stores/ActivityStore');
 var FilterActionCreators = require('../../actions/FilterActionCreators');
 var AppContextMixin = require('../../mixins/AppContextMixin');
 var inputs = require('../../forms/input');
@@ -85,11 +86,13 @@ var FilterList = React.createClass({
     componentDidMount: function() {
         FilterStore.addChangeListener(this._onChange);
         ContactStore.addChangeListener(this._onChange);
+        ActivityStore.addChangeListener(this._onChange);
     },
 
     componentWillUnmount: function() {
         FilterStore.removeChangeListener(this._onChange);
         ContactStore.removeChangeListener(this._onChange);
+        ActivityStore.removeChangeListener(this._onChange);
     },
 
     getFilters: function() {
@@ -105,7 +108,7 @@ var FilterList = React.createClass({
             case 'cold':
                 return ContactStore.getColdByDate(true);
             case 'lead':
-                return ContactStore.getLeads(true);
+                return ContactStore.getLeads(this.getUser());
         }
     },
 

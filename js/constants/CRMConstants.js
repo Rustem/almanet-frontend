@@ -95,6 +95,10 @@ module.exports = {
         EDIT: null,
         READ: null
     }),
+    VCARD_MODE: keyMirror({
+        USER: null,
+        CONTACT: null
+    }),
     NotifTypes: keyMirror({
         CONTACT_CREATE: null,
         CONTACT_EDIT: null,

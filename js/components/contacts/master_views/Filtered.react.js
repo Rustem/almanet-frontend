@@ -17,6 +17,7 @@ var EmptyView = require('../../common/EmptyView.react');
 var FilterActionCreators = require('../../../actions/FilterActionCreators');
 var ContactStore = require('../../../stores/ContactStore');
 var ShareStore = require('../../../stores/ShareStore');
+var ActivityStore = require('../../../stores/ActivityStore');
 var FilterStore = require('../../../stores/FilterStore');
 var AppContextMixin = require('../../../mixins/AppContextMixin');
 var ContactShareForm = require('../../../forms/ContactShareForm.react');
@@ -183,7 +184,7 @@ var FilteredViewMixin = {
             case 'cold':
                 return ContactStore.getColdByDate(true);
             case 'lead':
-                return ContactStore.getLeads(true);
+                return ContactStore.getLeads(this.getUser());
         }
     },
 
@@ -214,11 +215,13 @@ var FilteredViewMixin = {
     componentDidMount: function() {
         ShareStore.addChangeListener(this._onChange);
         ContactStore.addChangeListener(this._onChange);
+        ActivityStore.addChangeListener(this._onChange);
     },
 
     componentWillUnmount: function(nextProps, nextState) {
         ShareStore.removeChangeListener(this._onChange);
         ContactStore.removeChangeListener(this._onChange);
+        ActivityStore.removeChangeListener(this._onChange);
     },
 
     componentDidUpdate: function(prevProps, prevState) {

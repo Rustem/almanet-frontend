@@ -291,7 +291,7 @@ var SalesCycleDropDownList = React.createClass({
                     </div>
                   </div>
             </button>
-            <div className="dropdown-menu">
+            <div ref="menuBody" className="dropdown-menu">
                 <div className="dropdown-menu-body">
                     <ul className="dropdown-menu-list">
                         <li>
@@ -539,16 +539,16 @@ var ActivityListView = React.createClass({
                     </div>
                     <ul className="stream-breadcrumbs">
                         <li>
-                            <Link to='contact_profile' 
-                                  params={{id: contact.id}} 
+                            <Link to='contact_profile'
+                                  params={{id: contact.id}}
                                   className="stream-breadcrumbs">
                                   {contact.vcard.fn}
                             </Link>
                         </li>
                         <li>→</li>
                         <li>
-                            <Link to='activities_by' 
-                                  params={{id: contact.id, sales_cycle_id: act.sales_cycle_id}} 
+                            <Link to='activities_by'
+                                  params={{id: contact.id, sales_cycle_id: act.sales_cycle_id}}
                                   className="stream-breadcrumbs">
                                   {SalesCycleStore.get(act.sales_cycle_id).title}
                             </Link>

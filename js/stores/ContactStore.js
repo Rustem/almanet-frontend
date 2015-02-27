@@ -45,8 +45,12 @@ var ContactStore = assign({}, EventEmitter.prototype, {
         return _.filter(this.getByDate(true), utils.isCold);
     },
 
-    getLeads: function(reversed) {
-        return _.reject(this.getByDate(true), utils.isCold);
+    getLeads: function(user) {
+        var actvs = ActivityStore.byUser(user);
+        return _.chain(actvs)
+                .map(function(a) { return this.byActivity(a)}.bind(this))
+                .uniq(function(c) { return c.id })
+                .value();
     },
 
     getRecent: function() {
