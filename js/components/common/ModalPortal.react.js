@@ -39,8 +39,10 @@ var ModalPortal = React.createClass({
 
         if( this.state.isOpen ) {
             window.addEventListener('click', this.handleClick);
+            window.addEventListener('keyup', this.handleKeyUp);
         } else {
             window.removeEventListener('click', this.handleClick);
+            window.removeEventListener('keyup', this.handleKeyUp);
         }
     },
 
@@ -109,7 +111,7 @@ var ModalPortal = React.createClass({
                         </button>
                         {this.props.modalTitle}
                     </div>
-                    <div ref='content' className="modal-body" onKeyDown={this.handleKeyUp}>
+                    <div ref='content' className="modal-body">
                         {this.props.children}
                     </div>
                 </div>
