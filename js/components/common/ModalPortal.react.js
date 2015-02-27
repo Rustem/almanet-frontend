@@ -82,7 +82,7 @@ var ModalPortal = React.createClass({
     },
 
     handleKeyUp: function(evt) {
-        if(evt.which === ESCAPE_KEY) {
+        if((evt.which || evt.keyCode) === ESCAPE_KEY) {
             this.close();
         }
     },

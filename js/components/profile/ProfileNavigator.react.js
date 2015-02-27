@@ -3,6 +3,7 @@
  */
 
 var React = require('react');
+var ReactInstanceHandles = require("react/lib/ReactInstanceHandles");
 var cx = React.addons.classSet;
 var Router = require('react-router');
 var Link = Router.Link;
@@ -13,17 +14,17 @@ var UserStore = require('../../stores/UserStore');
 var LOGOUT_URL = require('../../constants/CRMConstants').LOGOUT_URL;
 var URL_PREFIX   = require('../../constants/CRMConstants').URL_PREFIX;
 
+var ESCAPE_KEY_CODE = 27;
+
+
 var ProfileNavigator = React.createClass({
     mixins: [AppContextMixin],
 
     getInitialState: function() {
         return {
-            user: UserStore.get(this.getUser().crm_user_id) || this.getUser()
+            user: UserStore.get(this.getUser().crm_user_id) || this.getUser(),
+            isOpen: false
         }
-    },
-
-    componentWillMount: function() {
-      this.opened = false;
     },
 
     componentDidMount: function() {
@@ -32,12 +33,54 @@ var ProfileNavigator = React.createClass({
 
     componentWillUnmount: function() {
       UserStore.removeChangeListener(this._onChange);
+
+      this._removeEvents();
+    },
+
+    componentDidUpdate: function(prevProps, prevState) {
+        (this.state.isOpen ? this._addEvents : this._removeEvents)();
+        // if( this.state.isOpen ) {
+        //     this._addEvents();
+        // } else {
+        //     this._removeEvents();
+        // }
+    },
+
+    _addEvents: function() {
+        window.addEventListener('click', this.handleClick);
+        window.addEventListener('keyup', this.handleKeyUp);
+    },
+
+    _removeEvents: function() {
+        window.removeEventListener('click', this.handleClick);
+        window.removeEventListener('keyup', this.handleKeyUp);
+    },
+
+    handleClick: function(evt) {
+        if( !ReactInstanceHandles.isAncestorIDOf(this.getDOMNode().dataset.reactid, evt.target.dataset.reactid) ) {
+            this.setState({
+                isOpen: false
+            });
+        }
+    },
+
+    handleKeyUp: function(evt) {
+        if( (evt.which || evt.keyCode) === ESCAPE_KEY_CODE ) {
+            this.setState({
+                isOpen: false
+            });
+        }
     },
 
     onToggleMenu: function(e) {
         e.preventDefault();
-        this.opened = !this.opened;
-        this.forceUpdate();
+        this.setState({
+            isOpen: !this.state.isOpen
+        })
+    },
+
+    _onChange: function() {
+      this.setState(this.getInitialState());
     },
 
     render: function() {
@@ -46,7 +89,7 @@ var ProfileNavigator = React.createClass({
             'dropdown': true,
             'dropdown--inline': true,
             'dropdown--right': true,
-            'open': this.opened,
+            'open': this.state.isOpen,
         })
         return (
             <div className={classes}>
@@ -73,12 +116,8 @@ var ProfileNavigator = React.createClass({
                 </div>
             </div>
         )
-    },
-
-    _onChange: function() {
-      this.opened = false;
-      this.setState(this.getInitialState());
     }
+
 });
 
 module.exports = ProfileNavigator;
