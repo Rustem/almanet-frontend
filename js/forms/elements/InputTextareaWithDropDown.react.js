@@ -1,6 +1,7 @@
 var _ = require('lodash');
 
 var React = require('react/addons');
+var cx = React.addons.classSet;
 var inputs = require('../input');
 var InputTextarea = inputs.InputTextarea;
 var DescriptionDropDownWidget = inputs.DescriptionDropDownWidget;
@@ -12,7 +13,14 @@ var InputTextareaWithDropDown = React.createClass({
     propTypes: {
         choices: React.PropTypes.array.isRequired,
         placeholder: React.PropTypes.string,
+        inModal: React.PropTypes.string,
     },
+    getDefaultProps: function() {
+        return {
+            inModal: false, 
+        }
+    },
+
     getInitialState: function() {
         return {
             isOpen: false,
@@ -30,8 +38,12 @@ var InputTextareaWithDropDown = React.createClass({
     },
 
     render: function() {
+        var className = cx({
+            'input-addComment': true,
+            'modal-inputLine': this.props.inModal
+        });
         return (
-            <div className="input-addComment">
+            <div className={className}>
                 <InputTextarea
                     ref="target_input"
                     name={this.props.name}

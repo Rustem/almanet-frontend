@@ -93,7 +93,7 @@ var ContactShareForm = React.createClass({
             <Form ref="contact_share_form"
                   value={form_value}
                   onSubmit={this.onHandleSubmit}>
-                <Fieldset className="input-addComment">
+                <Fieldset className="modal-inputLine input-addComment">
                     <InputTextarea
                         name='note'
                         placeholder='Заметка ..'
