@@ -176,6 +176,7 @@ ContactStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             break;
         case ActionTypes.IMPORT_CONTACTS_SUCCESS:
             var newContacts = _.map(action.object, ContactStore.getCreatedContact);
+            console.log(_.sortBy(_.map(newContacts, 'id')));
             _.forEach(newContacts, function(c) {
                 _contacts[c.id] = c;
             })

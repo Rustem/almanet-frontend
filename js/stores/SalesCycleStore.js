@@ -138,7 +138,6 @@ var SalesCycleStore = assign({}, EventEmitter.prototype, {
         _salescycles[sales_cycle.id] = this.getCreatedSalesCycle(sales_cycle);
         _salescycles[sales_cycle.id].activities = [];
         _salescycles[sales_cycle.id].product_ids = [];
-        this.emitChange();
     },
 
     updateStatusToPending: function(sales_cycle_id) {
@@ -185,6 +184,7 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             break;
         case ActionTypes.CREATE_SALES_CYCLE_SUCCESS:
             SalesCycleStore.set(SalesCycleStore.getCreatedSalesCycle(action.object));
+            SalesCycleStore.emitChange();
             break;
         case ActionTypes.ADD_PRODUCT_TO_SALES_CYCLE:
             var salesCycle = SalesCycleStore.getCreatedSalesCycle(action.object);
@@ -205,8 +205,19 @@ SalesCycleStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             if( _.isObject(action.object.global_sales_cycle) ) {
                 var sc = SalesCycleStore.getCreatedSalesCycle(action.object.global_sales_cycle);
                 SalesCycleStore.set(sc);
+                SalesCycleStore.emitChange();
             }
             break;
+        case ActionTypes.IMPORT_CONTACTS_SUCCESS:
+            var ContactStore = require('./ContactStore');
+            CRMAppDispatcher.waitFor([ContactStore.dispatchToken]);
+            _.forEach(action.object, function(c) {
+                if( _.isObject(c.global_sales_cycle) ) {
+                    var sc = SalesCycleStore.getCreatedSalesCycle(c.global_sales_cycle);
+                    SalesCycleStore.set(sc);
+                    SalesCycleStore.emitChange();
+                }
+            });
         default:
             // do nothing
     }
