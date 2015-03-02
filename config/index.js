@@ -14,6 +14,13 @@ this.DEMO_ENV = {
     }
 };
 
+this.STAGE_ENV = {
+    "Almanet": {
+        "URL_PREFIX": "http://almasales.kz:3082",
+        "LOGOUT_URL": "http://almasales.kz:3082/auth/logout/"
+    }  
+}
+
 
 var loadConfig = function (env) {
     var env_attr = env.toUpperCase() + '_ENV';
