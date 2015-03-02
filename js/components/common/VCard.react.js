@@ -98,6 +98,35 @@ VCardFields = {
     )
   },
 
+  renderAdrs: function(adrs) {
+    var renderer = function(adr, idx) {
+      return (
+        <div key={'adr--' + idx} className="inputLine inputLine--vcardRow">
+          <div className="row">
+            <div className="row-icon">
+            </div>
+            <div className="row-body">
+              <div className="inputLine-negativeTrail">
+                <div className="text-caption text-secondary">
+                  {adr.type}
+                </div>
+              </div>
+              <div className="inputLine-div">
+                {_.compact([adr.postal_code, adr.country_name, adr.locality, adr.region, adr.street_address]).join(', ')}
+              </div>
+            </div>
+          </div>
+        </div>)
+      }
+
+      return (
+      <div>
+        {adrs.map(renderer)}
+        {adrs.length > 0 ? <div className="space-verticalBorder"></div> : null}
+      </div>
+    )
+  },
+
   renderContacts: function(contact) {
     if(contact.children == undefined || contact.children.length == 0)
         return null;
@@ -229,6 +258,8 @@ var ContactVCard = React.createClass({
                 {this.renderTels(contact.vcard.tels)}
 
                 {this.renderUrls(contact.vcard.urls)}
+
+                {this.renderAdrs(contact.vcard.adrs)}
 
                 {this.renderNote(contact.share)}
 

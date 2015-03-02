@@ -168,7 +168,7 @@ var AddActivityForm = React.createClass({
             <Form {...this.props} value={form_value}
                                   ref="add_event_form"
                                   onSubmit={this.onHandleSubmit}>
-                <InputTextareaWithDropDown name="description" choices={NOTE_TEMPLATES} placeholder="Кратко опишите произошедшее"/>
+                <InputTextareaWithDropDown name="description" choices={NOTE_TEMPLATES} placeholder="Кратко опишите произошедшее" inModal={true} />
                 <FeedbackDropDown name="feedback_status" />
                 <hr className="text-neutral" />
                 <SalesCycleDropDownList name="sales_cycle_id" sales_cycles={this.buildSalesCycleChoices()} />

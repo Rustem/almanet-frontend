@@ -108,8 +108,8 @@ ShareStore.dispatchToken = CRMAppDispatcher.register(function(payload) {
             break;
         case ActionTypes.CREATE_CONTACT_SUCCESS:
             CRMAppDispatcher.waitFor([ContactStore.dispatchToken]);
-            if(contact.share !== undefined) {
-                var contact = action.object;
+            var contact = action.object;
+            if(contact.share !== undefined && contact.share !== null) {
                 _shares[contact.share.id] = contact.share;
                 ShareStore.emitChange();
             }

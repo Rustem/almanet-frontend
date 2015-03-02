@@ -41,13 +41,13 @@ var ProductEditForm = React.createClass({
         return (
             <div>
                 <Form {...this.props} className="row-body" ref="product_form" onSubmit={this.onHandleSubmit}>
-                    <Fieldset className="inputLine-negativeTrail">
+                    <Fieldset className="inputLine inputLine-negativeTrail">
                       <InputText className="input-div input-div--strong"
                             value={this.props.value.name}
                             name='name'
                             placeholder='Введите название продукта' />
                     </Fieldset>
-                    <Fieldset className="inputLine-negativeTrail">
+                    <Fieldset className="inputLine inputLine-negativeTrail">
                       <InputTextarea className='input-div text-secondary'
                             value={this.props.value.description}
                             name='description'

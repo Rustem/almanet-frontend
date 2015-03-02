@@ -24,6 +24,12 @@ var InputText = React.createClass({
         return nextProps.value !== this.props.value || nextState.inputValue !== this.state.inputValue;
     },
 
+    componentWillReceiveProps: function(nextProps) {
+        if(nextProps.value !== this.props.value) {
+            var newState = React.addons.update(this.state, {inputValue: {$set: nextProps.value || ''}});
+            this.setState(newState);
+        }
+    },
 
     emitChange: function(value) {
         this.updateValue(this.prepValue(this.props.name, value));

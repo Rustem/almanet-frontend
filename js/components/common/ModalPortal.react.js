@@ -1,4 +1,5 @@
 var React = require('react');
+var ReactInstanceHandles = require("react/lib/ReactInstanceHandles");
 var div = React.DOM.div;
 var IconSvg = require('./IconSvg.react');
 var cx        = React.addons.classSet;
@@ -6,6 +7,11 @@ var cx        = React.addons.classSet;
 ESCAPE_KEY = 27;
 
 var ModalPortal = React.createClass({
+    getInitialState: function() {
+        return {
+            isOpen: this.props.isOpen
+        }
+    },
 
     componentDidMount: function() {
         if(this.props.isOpen){
@@ -30,6 +36,14 @@ var ModalPortal = React.createClass({
             this.focusContent();
             this.setFocusAfterRender(false);
         }
+
+        if( this.state.isOpen ) {
+            window.addEventListener('click', this.handleClick);
+            window.addEventListener('keyup', this.handleKeyUp);
+        } else {
+            window.removeEventListener('click', this.handleClick);
+            window.removeEventListener('keyup', this.handleKeyUp);
+        }
     },
 
     setFocusAfterRender: function(focus) {
@@ -52,6 +66,15 @@ var ModalPortal = React.createClass({
         }.bind(this));
     },
 
+    handleClick: function(evt) {
+        if (ReactInstanceHandles.isAncestorIDOf(
+                this.refs.modalBackdrop.getDOMNode().dataset.reactid,
+                evt.target.dataset.reactid
+                )) {
+            this.close();
+        }
+    },
+
     handleCloseClick: function() {
         if(this.ownerHandlesClose()) {
             this.props.onRequestClose();
@@ -59,9 +82,8 @@ var ModalPortal = React.createClass({
     },
 
     handleKeyUp: function(evt) {
-        if(evt.which === ESCAPE_KEY) {
-            this.props.isOpen = false;
-            this.forceUpdate();
+        if((evt.which || evt.keyCode) === ESCAPE_KEY) {
+            this.close();
         }
     },
 
@@ -70,28 +92,30 @@ var ModalPortal = React.createClass({
     },
 
     haveTobeClosed: function() {
-        return !this.props.isOpen;
+        return !this.state.isOpen;
     },
 
     render: function() {
         className = cx({
             'modal': true,
-            'open': this.props.isOpen
+            'open': true
         });
         return this.haveTobeClosed() ? div() :  (
             <div>
                 <div className={className}>
                     <div className="modal-header">
-                        <button ref="cancel_btn" onKeyDown={this.handleKeyUp} onClick={this.handleCloseClick} type="button" className="modal-close">
+                        <button ref="cancel_btn" type="button" className="modal-close"
+                                onKeyDown={this.handleKeyUp}
+                                onClick={this.handleCloseClick}>
                             <IconSvg iconKey='close' />
                         </button>
                         {this.props.modalTitle}
                     </div>
-                    <div ref='content' className="modal-body" onKeyDown={this.handleKeyUp}>
+                    <div ref='content' className="modal-body">
                         {this.props.children}
                     </div>
                 </div>
-                <div className="modal-backdrop"></div>
+                <div ref='modalBackdrop' className="modal-backdrop"></div>
             </div>
         );
     }

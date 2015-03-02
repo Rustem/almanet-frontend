@@ -26,19 +26,19 @@ var Div = require('../../../forms/Fieldset.react').Div;
 var Crumb = require('../../common/BreadCrumb.react').Crumb;
 var CommonFilterBar = require('../FilterComposer.react').CommonFilterBar;
 
-function get_contacts_number() {
-    return _.size(ContactStore.getRecent());
+function get_contacts_number(user) {
+    return _.size(ContactStore.getRecent(user));
 }
 
 
 var RecentLink = React.createClass({
-    mixins: [Router.State],
+    mixins: [Router.State, AppContextMixin],
     propTypes: {
         label: React.PropTypes.string,
     },
 
     getInitialState: function() {
-        return {'amount': get_contacts_number()};
+        return {'amount': get_contacts_number(this.getUser())};
     },
 
     componentDidMount: function() {
@@ -52,7 +52,7 @@ var RecentLink = React.createClass({
     },
 
     _onChange: function() {
-        this.setState({'amount': get_contacts_number()});
+        this.setState({'amount': get_contacts_number(this.getUser())});
     },
 
     render: function() {
@@ -202,13 +202,13 @@ var RecentList = React.createClass({
 
 
 var RecentDetailView = React.createClass({
-    mixins: [Router.Navigation,AppContextMixin],
+    mixins: [Router.Navigation, AppContextMixin],
     propTypes: {
         label: React.PropTypes.string
     },
     getInitialState: function() {
         var selection_map = {};
-        contacts = ContactStore.getRecent();
+        contacts = ContactStore.getRecent(this.getUser());
         for(var i = 0; i < contacts.length; i++) {
             selection_map[contacts[i].id] = false;
         }
@@ -297,7 +297,7 @@ var RecentDetailView = React.createClass({
                 this.state.contacts, value.filter_text, {
                     'keys': ['vcard.fn', 'vcard.emails.value']});
         } else {
-            contacts = ContactStore.getRecent();
+            contacts = ContactStore.getRecent(this.getUser());
         }
         for(var contact_id in this.state.selection_map) {
             _map[contact_id] = false;

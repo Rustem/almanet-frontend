@@ -41,8 +41,12 @@ var ContactStore = assign({}, EventEmitter.prototype, {
         return contacts;
     },
 
-    getColdByDate: function(reversed) {
-        return _.filter(this.getByDate(true), utils.isCold);
+    getCold: function(user) {
+        var leads = this.getLeads(user)
+        var leads_id = _.map(leads, 'id');
+        return _.reject(_contacts, function(c) {
+            return _.contains(leads_id, c.id);
+        });
     },
 
     getLeads: function(user) {
@@ -53,13 +57,13 @@ var ContactStore = assign({}, EventEmitter.prototype, {
                 .value();
     },
 
-    getRecent: function() {
-        var recent_acts = ActivityStore.getByDate();
-        return _.chain(recent_acts)
-                .map(function(act){ return SalesCycleStore.get(act.sales_cycle_id).contact_id; })
-                .compact()
-                .uniq()
-                .map(this.get)
+    getRecent: function(user) {
+        var today = moment();
+        var actvs = ActivityStore.byUser(user);
+        return _.chain(actvs)
+                .filter(function(a) { return moment(today).diff(a.date_created, 'days') < 7;  })
+                .map(function(a) { return this.byActivity(a)}.bind(this))
+                .uniq(function(c) { return c.id })
                 .value();
     },
 

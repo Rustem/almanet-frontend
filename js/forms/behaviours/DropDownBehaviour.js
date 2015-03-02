@@ -45,7 +45,7 @@ var DropDownBehaviour = {
     },
 
     onKeyDown: function(evt) {
-      if(evt.keyCode == ESCAPE_KEY_CODE) {
+      if((evt.which || evt.keyCode) === ESCAPE_KEY_CODE) {
         evt.preventDefault();
         this.setState({isOpen: false});
       }

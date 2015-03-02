@@ -6,7 +6,7 @@ var utils = require('../utils');
 
 var ActionTypes = CRMConstants.ActionTypes;
 
-module.exports = api = {
+module.exports = {
     getAll: function(success, failure) {
         var salescycles = JSON.parse(localStorage.getItem('salescycles'));
         setTimeout(function(){

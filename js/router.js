@@ -112,6 +112,7 @@ module.exports.relationships = {
     'contact_profile': ['contact_selected', 'contacts_selected'],
     'activities_by': ['contact_selected', 'contacts_selected'],
     'activities_by_default': ['contact_selected', 'contacts_selected'],
+    'activity_selected': ['my_feed', 'company_feed', 'contact_profile']
 }
 module.exports.routes = routes
 

@@ -6,6 +6,7 @@ var CRMConstants = require('../constants/CRMConstants');
 var NotifTypes = CRMConstants.NotifTypes;
 var ActionTypes = CRMConstants.ActionTypes;
 
+var api;
 module.exports = api = {
     getAll: function(success, failure) {
         var notifications = JSON.parse(localStorage.getItem('notifications'));
