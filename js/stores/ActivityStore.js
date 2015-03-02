@@ -36,7 +36,7 @@ var ActivityStore = assign({}, EventEmitter.prototype, {
 
     byUser: function(user) {
         return _.filter(this.getByDate(true), function(actv){
-            return actv.author_id === user.id;
+            return actv.author_id == user.crm_user_id;
         })
     },
 
