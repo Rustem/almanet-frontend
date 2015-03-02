@@ -181,7 +181,7 @@ var LeadBaseList = React.createClass({
         var prevContact = null;
         var contactListItems = this.filterContacts().map(function(contact, index) {
             var GroupContent = null;
-            if(prevContact == null || prevContact.vcard.fn[0] !== contact.vcard.fn[0] ) {
+            if(prevContact == null || prevContact.vcard.fn[0].toLowerCase() !== contact.vcard.fn[0].toLowerCase() ) {
                 GroupContent = this.renderGroup(contact.vcard.fn[0]);
             }
             var is_selected = this.props.selection_map[contact.id];

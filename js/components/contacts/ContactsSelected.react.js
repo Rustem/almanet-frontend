@@ -324,7 +324,7 @@ var RecentBaseSelectedView = React.createClass({
 });
 
 var ColdBaseSelectedView = React.createClass({
-    mixins:[Router.State, ContactsSelectedViewMixin],
+    mixins:[Router.State, ContactsSelectedViewMixin, AppContextMixin],
 
     getList: function() {
         return <ColdBase.ColdBaseList
@@ -336,7 +336,7 @@ var ColdBaseSelectedView = React.createClass({
 
     getInitialState: function() {
         var selection_map = {},
-            contacts = ContactStore.getColdByDate(true);
+            contacts = ContactStore.getCold(this.getUser());
 
         _selected_contacts = this.getQuery()['ids'] || [];
         var cnt = 0;
@@ -361,7 +361,7 @@ var ColdBaseSelectedView = React.createClass({
         if(value.filter_text) {
             contacts = ContactStore.fuzzySearch(value.filter_text, {'asc': false});
         } else {
-            contacts = ContactStore.getColdByDate(true);
+            contacts = ContactStore.getCold(this.getUser());
         }
         for(var contact_id in this.state.selection_map) {
             _map[contact_id] = false;
@@ -400,7 +400,7 @@ var ColdBaseSelectedView = React.createClass({
         var contacts = null,
             newSelectionItems = {};
 
-        contacts = ContactStore.getColdByDate();
+        contacts = ContactStore.getCold(this.getUser());
         for(var i = 0; i<contacts.length; i++) {
             if(!contacts[i].id in this.state.selection_map) {
                 newSelectionItems[contacts[i].id] = false;
@@ -647,7 +647,7 @@ var FilteredSelectedView = React.createClass({
             case 'recent':
                 return ContactStore.getRecent(this.getUser());
             case 'cold':
-                return ContactStore.getColdByDate(true);
+                return ContactStore.getCold(this.getUser());
             case 'lead':
                 return ContactStore.getLeads(this.getUser());
         }

@@ -25,19 +25,19 @@ var Div = require('../../../forms/Fieldset.react').Div;
 var Crumb = require('../../common/BreadCrumb.react').Crumb;
 var CommonFilterBar = require('../FilterComposer.react').CommonFilterBar;
 
-function get_coldbase_contacts() {
-    return _.size(ContactStore.getColdByDate());
+function get_coldbase_contacts(user) {
+    return _.size(ContactStore.getCold(user));
 }
 
 
 var ColdBaseLink = React.createClass({
-    mixins: [Router.State],
+    mixins: [Router.State, AppContextMixin],
     propTypes: {
         label: React.PropTypes.string,
     },
 
     getInitialState: function() {
-        return {'amount': get_coldbase_contacts()};
+        return {'amount': get_coldbase_contacts(this.getUser())};
     },
 
     componentDidMount: function() {
@@ -49,7 +49,7 @@ var ColdBaseLink = React.createClass({
     },
 
     _onChange: function() {
-        this.setState({'amount': get_coldbase_contacts()});
+        this.setState({'amount': get_coldbase_contacts(this.getUser())});
     },
 
     render: function() {
@@ -177,7 +177,7 @@ var ColdBaseList = React.createClass({
         var prevContact = null;
         var contactListItems = this.filterContacts().map(function(contact, index) {
             var GroupContent = null;
-            if(prevContact == null || prevContact.vcard.fn[0] !== contact.vcard.fn[0] ) {
+            if(prevContact == null || prevContact.vcard.fn[0].toLowerCase() !== contact.vcard.fn[0].toLowerCase() ) {
                 GroupContent = this.renderGroup(contact.vcard.fn[0]);
             }
             var is_selected = this.props.selection_map[contact.id];
@@ -210,7 +210,7 @@ var ColdBaseDetailView = React.createClass({
     },
     getInitialState: function() {
         var selection_map = {};
-        contacts = ContactStore.getColdByDate(true);
+        contacts = ContactStore.getCold(this.getUser());
         for(var i = 0; i < contacts.length; i++) {
             selection_map[contacts[i].id] = false;
         }
@@ -299,7 +299,7 @@ var ColdBaseDetailView = React.createClass({
                 this.state.contacts, value.filter_text, {
                     'keys': ['vcard.fn', 'vcard.emails.value']});
         } else {
-            contacts = ContactStore.getColdByDate(true);
+            contacts = ContactStore.getCold(this.getUser());
         }
         for(var contact_id in this.state.selection_map) {
             _map[contact_id] = false;

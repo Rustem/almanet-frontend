@@ -127,7 +127,7 @@ var FilteredList = React.createClass({
         var prevContact = null;
         var contactListItems = this.props.contacts.map(function(contact, index) {
             var GroupContent = null;
-            if(prevContact == null || prevContact.vcard.fn[0] !== contact.vcard.fn[0] ) {
+            if(prevContact == null || prevContact.vcard.fn[0].toLowerCase() !== contact.vcard.fn[0].toLowerCase() ) {
                 GroupContent = this.renderGroup(contact.vcard.fn[0]);
             }
             var is_selected = this.props.selection_map[contact.id];
@@ -182,7 +182,7 @@ var FilteredViewMixin = {
             case 'recent':
                 return ContactStore.getRecent(this.getUser());
             case 'cold':
-                return ContactStore.getColdByDate(true);
+                return ContactStore.getCold(this.getUser());
             case 'lead':
                 return ContactStore.getLeads(this.getUser());
         }
