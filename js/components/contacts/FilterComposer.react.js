@@ -104,7 +104,7 @@ var FilterList = React.createClass({
             case 'all':
                 return ContactStore.getByDate(true);
             case 'recent':
-                return ContactStore.getRecent();
+                return ContactStore.getRecent(this.getUser());
             case 'cold':
                 return ContactStore.getColdByDate(true);
             case 'lead':
